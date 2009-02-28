@@ -1,0 +1,410 @@
+html, body {
+  margin:0;
+  padding:0;
+  height:100%;
+  font-family:'Times New Roman';
+  font-size:13px;
+}
+
+#header {
+  width:100%;
+  height:10%;
+  float:left;
+  min-height:80px;
+  background-color:#373F42;
+}
+
+#main {
+  width:100%;
+  background-color:#9CB6CD;
+  z-index:3;
+  height: 87%;
+  min-height: 87%;
+  padding-bottom:2%;
+}
+
+html>body #main{
+  height:auto
+}
+
+#shadow {
+  height:100%;
+  padding:1%;
+  margin:1%;
+  margin-right:0;
+  width:96%;
+  background-color:#8EAEC7;
+}
+
+#content {
+  background-color:#ECEDEF;
+  height:98%;
+  margin-right:0px;
+  padding:1%;
+  width:98%;
+}
+
+#logo {
+  padding:10px;
+}
+
+#search_box {
+  width: 250px;
+  height: 31px;
+  background: url("../images/bg_search_box.gif") 30px no-repeat;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+#search_box #search_text {
+  margin-top: 7px;
+  border: 0;
+  width: 150px;
+  background:none;
+  color: #FFFFFE;
+  margin-left:45px;
+}
+#search_box #search_image {
+	position:relative;
+	height:24px;
+	width:28px;
+	margin-right:25px;
+	margin-top:3px;
+	float:left;
+}
+
+#contentHeader {
+  height:auto;
+  width:100%;
+}
+
+#contentHeader ul {
+  margin:0px;
+  padding:0px;
+  font-size:12px;
+}
+
+#contentHeader ul li {
+  display: inline;
+  margin-left: 20px;
+}
+
+#contentHeader ul li span {
+  float:left;
+  color:#000; background: #ccc url('../images/top_left.gif') no-repeat left top;
+  margin:0 2px 0 0;
+  padding:0 0 0 2px;
+  text-decoration:none;
+  letter-spacing:1px;
+}
+
+.current {
+  background: #FFFFFF !important;
+}
+
+#contentHeader ul li a {
+  text-decoration:none;
+  color: #000;
+  float:left;
+  display:block;
+  background:transparent url('../images/top_right.gif') no-repeat right top;
+  /*padding:5px 16px 5px 12px;*/
+  padding:4px;
+}
+
+#contentWrapper {
+  height:100%;
+  width:98%;
+  background-image:url("../images/bg_contentwrapper.gif");
+  background-repeat: repeat-x;
+  padding:1% 0 1% 2%;
+}
+
+#contentDepartments {
+  width:34%;
+  height:auto;
+}
+
+#contentDisplay {
+  width:65%;
+  height:auto;
+}
+
+#contentDisplay #ticketHeader {
+  margin-top:0.5%;
+  background-color:#E6E7E9;
+  padding-top:1%;
+	width: 99%;
+}
+
+#ticketTitle{
+	color:#02764F;
+  font-size:14px;
+  font-variant:small-caps;
+  font-weight:bold;
+  text-align:left;
+  padding-bottom:8px;
+}
+
+#ticketHistory, #ticketAnswer{
+	margin-top: 2.5%;
+	background-color:#E6E7E9;
+	padding-top:0.5%;
+	width: 99%;
+}
+
+#historyCaption, #answerCaption{
+  color:#006A42;
+  height:100%;
+  margin:1% 1% 1% 0;
+  text-align:left;
+  width:100%;
+  padding-bottom:8px;
+}
+
+
+#historyContent, #answerContent{
+	width:100%;
+	height: auto;
+	background-color:#E6E7E9;
+}
+
+#messageType {
+  padding-right:2%;
+}
+
+#answerOptions {
+  padding-bottom:10px;
+  margin:1% 1% 1% 0;
+}
+
+#cannedAnswers {
+  margin-right:10px;
+}
+
+
+#answerAttach {
+  margin-right:1%;
+}
+
+.Right {
+  float:right;
+}
+
+.Left {
+  float:left;
+}
+
+.Invisible {
+  display: none;
+}
+
+.departmentRows {
+  height:auto;
+  margin-top:1%;
+  padding-top:5px;
+  padding-bottom:5px;
+  width:100%;
+  background-image:url("../images/bg_department.gif");
+  background-repeat: repeat-x;
+}
+
+.departmentContent {
+  background-color:#E6E7E9;
+  width:95%;
+  margin-bottom:1%;
+}
+
+.menuArrow {
+  margin-left:5px;
+  margin-right:5px;
+  vertical-align:middle;
+  cursor:pointer;
+}
+
+.menuRefresh {
+  padding-right:5px;
+  vertical-align:middle;
+  cursor:pointer;
+}
+
+.tableTickets {
+  text-align:left;
+  width:100%;
+}
+
+.tableTickets caption{
+	color:#02764F;
+  font-size:14px;
+  font-variant:small-caps;
+  font-weight:bold;
+  text-align:left;
+}
+
+.tableTickets tbody td {
+  background-color:#EFEFF2;
+  font-size:12px;
+}
+
+.tableTickets tbody .Alt td{
+  background-color:#E6E7E9 !important;
+}
+
+.tableTickets tbody .Selected td{
+  background-color:#9EB5C8 !important;
+  font-weight:normal;
+}
+
+.tableTickets tbody .notRead td{
+  font-weight:bold;
+}
+
+.TicketNumber {
+  color:#006A42;
+}
+
+.tableTickets thead th {
+  background-image:url("../images/bg_table_th.gif");
+  background-repeat: repeat-x;
+  color:#4679A8;
+}
+
+.answerArea {
+  height:200px;
+  width:98%;
+  background-color:#D8E1E6;
+}
+
+
+.message {
+  padding:1%;
+  background-color:#B3C3CF;
+  margin-bottom:5px;
+}
+
+.messageAlt {
+  padding:1%;
+  background-color:#ADC6DA;
+  margin-bottom:5px;
+}
+
+.messageSystem {
+  padding:1%;
+  background-color:#87BBA9;
+  margin-bottom:5px;
+}
+
+.messageInternal {
+  padding:1%;
+  background-color:#FFFFF0;
+  margin-bottom:5px;
+}
+
+
+.button {
+  border-width: 0px;
+  height:25px;
+  background-color: #708FAE;
+  color: white;
+  vertical-align:middle;
+}
+
+.inputCombo {
+  border:1px solid #2E669F;
+  color:#7B9FC3;
+  font-weight:bold;
+  font-size:12px;
+}
+
+.inputFile {
+  background-color:#D8E1E6;
+}
+
+#ajaxSubmit {
+  display:block;
+}
+
+/* LOGIN TEMPLATE */
+#loginTemplate{
+	text-align:center;
+}
+#loginBox{
+	border:2px ridge #3D689E;
+	margin:55px auto;
+	text-align:left;
+	width:50%;
+}
+#loginBox #boxTitle{
+	background-color:#9CB6CD;
+	border-bottom:2px ridge #3D689E;
+	color:white;
+	font-weight:bold;
+	padding:5px;
+}
+#loginBox #boxContent{
+	padding:10px;
+}
+#loginBox #boxContent input{
+	margin-left:15px;
+}
+/*LOGIN TEMPLATE END;*/
+
+/*HOME TEMPLATE*/
+#homeTemplate{
+	text-align:center;
+}
+
+.homeBox{
+	margin:20px auto;
+	text-align:left;
+	width:80%;
+}
+.homeBox .homeBoxTitle{
+	background:#9CB6CD none repeat scroll 0 0;
+	padding:5px 5px 3px;
+	cursor: default;
+}
+.newCannedResponse{
+	cursor: pointer !important;
+}
+.loadingRequest{
+	-x-system-font:none;
+	background:scroll 3px 4px;
+	border:2px solid #DDDDDD;
+	font-family:'Trebuchet MS',verdana,sans;
+	font-size:10px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	padding:8px 5px 4px 5px !important;
+	color:#ffffff;
+	visibility:hidden;
+}
+.homeBox .homeBoxContent{
+	padding:15px;
+	border: 2px ridge #9CB6CD;
+}
+.homeBox .homeBoxContent .editAreaTitle{
+	background-color: #B6CFDC;
+	padding:2px 5px;
+	margin: 5px;
+}
+.homeBox .homeBoxContent .editAreaTitle img{
+	cursor: pointer;
+	margin-right: 2px;
+}
+.homeBox .homeBoxContent .editAreaContent{
+	margin: 10px;
+	font-weight: bold;
+}
+.homeBox .homeBoxContent .editAreaContent input, .homeBox .homeBoxContent .editAreaContent textarea{
+	margin-left: 5px;
+	font-weight: none;
+}
+.homeBox .homeBoxContent .cannedAction{
+	margin-left:2px;
+	cursor: pointer;
+}
+/*HOME TEMPLATE END;*/
