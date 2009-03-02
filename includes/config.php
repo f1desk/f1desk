@@ -5,8 +5,8 @@ define('MAILUSER','contato=dimitrilameri.com');
 define('MAILPASS','f!2d2m');
 define('MAILFROM','contato@dimitrilameri.com');
 
-define('ABSPATH','www/helpdesk/');
-define('APPDIR', '/home/f1desk/' . ABSPATH); //PREENCHIDO NO MOMENTO DA INSTALACAO
+define('ABSPATH','helpdesk/'); //PREENCHIDO NO MOMENTO DA INSTALACAO
+define('APPDIR', 'C:/Documents and Settings/Administrador/Meus documentos/' . ABSPATH);
 define('CLASSDIR',APPDIR . 'class/');
 define('INCLUDESDIR',APPDIR . 'includes/');
 define('LANGDIR',APPDIR . 'lang/');
