@@ -20,7 +20,9 @@ $IDDepartment = $ArHeaders['IDDepartment'];
 $StSituation = constant($ArHeaders['StSituation']);
 $DtOpened = F1DeskUtils::formatDate('datetime_format',$ArHeaders['DtOpened']);
 
-$ArResponses = TemplateHandler::getCannedResponses($_SESSION['IDSupporter'],$IDDepartment);
+if (getSessionProp('isSupporter') == 'true') {
+  $ArResponses = TemplateHandler::getCannedResponses(getSessionProp('IDSupporter'),$IDDepartment);
+}
 
 require_once(TEMPLATEDIR . '/ticket.php');
 

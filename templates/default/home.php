@@ -4,6 +4,7 @@ handleLanguage(__FILE__);
 require_once('header.php');
 ?>
 <div id="homeTemplate">
+
 	<!-- First Box: User Datas -->
 	<?
 	if ( getSessionProp('isSupporter') == "true" ){
@@ -59,11 +60,11 @@ require_once('header.php');
 		</div>
 	</div>
 	<!-- First Box End -->
-	
+
 	<!-- Second Box: Supporter Canned Responses -->
 	<?require_once("cannedResponses.php");?>
 	<!-- Second Box End -->
-	
+
 	<!--<div class="homeBox">
 		<span id="homeBoxTitle">Teste do Mario3</span>
 		<div id="homeBoxContent">
@@ -77,7 +78,7 @@ require_once('header.php');
 			</div>
 		</div>
 	</div>-->
-	
+
 </div><!-- HOME TEMPLATE -->
 <?php
 require_once('footer.php');

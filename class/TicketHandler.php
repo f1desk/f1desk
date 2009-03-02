@@ -185,6 +185,38 @@ AND
   }
 
   /**
+   * get the tickets read by a supporter, from a specific department
+   *
+   * @param integer $IDDepartment
+   * @param integer $IDUser
+   *
+   * @return array
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+   public function getUserReadTickets($IDUser) {
+
+  	$StSQL = "
+SELECT
+	T.IDTicket
+FROM
+	Ticket T
+	LEFT JOIN isRead R ON (T.IDTicket = R.IDTicket)
+	LEFT JOIN User U ON (U.IDUser = R.IDUser)
+WHERE
+  U.IDUser = $IDUser
+AND
+  T.StSituation IN ('NOT_READ','WAITING_SUP','WAITING_USER')";
+
+  	$this->execSQL($StSQL);
+  	$ArResult = $this->getResult("string");
+
+  	$ArRead = F1DeskUtils::sortByID($ArResult, 'IDTicket');
+
+  	return $ArRead;
+
+  }
+
+  /**
    * Set a Call as read for a certain supporter
    *
    * @param integer $ItIDUser
@@ -251,7 +283,9 @@ FROM
 	User U
   LEFT JOIN Ticket T ON (T.IDUser = U.IDUser)
 WHERE
-	U.IDUser = $IDUser";
+	U.IDUser = $IDUser
+AND
+  T.StSituation = 'WAITING_USER'";
 
   	  $StSQLRead = "
 SELECT
@@ -261,7 +295,9 @@ FROM
 	LEFT JOIN isRead R ON (R.IDTicket = T.IDTicket)
 	LEFT JOIN User U ON (U.IDUser = R.IDUser)
 WHERE
-		U.IDUser = $IDUser";
+	U.IDUser = $IDUser
+AND
+  T.StSituation = 'WAITING_USER'";
 
   	$this->execSQL($StSQLOpened);
   	$ArResult = $this->getResult("string");
@@ -273,7 +309,7 @@ WHERE
 
   	$notRead = $Opened - $Read;
 
-  	return array('opened' => $notRead, 'closed' => 0);
+  	return array('opened' => array('notRead'  => $notRead), 'closed' => array('notRead'  => $notRead));
   }
 
   /**
@@ -289,13 +325,13 @@ WHERE
 
 		$StSQL = "
 SELECT
-	D.IDDepartment, COUNT( T.IDTicket ) AS notRead
+  D.IDDepartment, COUNT( T.IDTicket ) AS notRead
 FROM
   User U
   LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDUser = U.IDUser)
   LEFT JOIN " . DBPREFIX . "DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
-	LEFT JOIN " . DBPREFIX . "Department D ON (D.IDDepartment = DS.IDDepartment)
-  LEFT JOIN	" . DBPREFIX . "TicketDepartment TD ON (D.IDDepartment = TD.IDDepartment)
+  LEFT JOIN " . DBPREFIX . "Department D ON (D.IDDepartment = DS.IDDepartment)
+  LEFT JOIN " . DBPREFIX . "TicketDepartment TD ON (D.IDDepartment = TD.IDDepartment)
   LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDTicket = TD.IDTicket)
 WHERE
   U.IDUser = $IDUser
@@ -303,6 +339,8 @@ AND
   NOT EXISTS(SELECT I.IDTicket FROM " . DBPREFIX . "Ignored I WHERE I.IDTicket = T.IDTicket AND I.IDSupporter = S.IDSupporter)
 AND
   NOT EXISTS(SELECT IR.IDTicket FROM " . DBPREFIX . "isRead IR WHERE IR.IDTicket = T.IDTicket AND IR.IDUser = U.IDUser)
+AND
+  T.StSituation IN ('NOT_READ','WAITING_SUP')
 GROUP BY
   D.IDDepartment";
 
@@ -663,18 +701,23 @@ AND
   		throw new ErrorHandler(EXC_CALL_INVALIDLISTOFCALLS);
   	}
 
-  	$StConditionStatus = ( ($BoOpened)?'!=':'=' ) . ' "CLOSED" ';
+  	if ($BoOpened) {
+      $StConditionStatus = "'NOT_READ','WAITING_SUP','WAITING_USER'";
+  	} else {
+  	  $StConditionStatus = "'CLOSED'";
+  	}
 
   	$StSQL = "
 SELECT
-  T.*, U.StName as StSupporter,
-  IF(EXISTS (SELECT R.IDTicket FROM isRead R WHERE R.IDUser = U.IDUser AND R.IDTicket = T.IDTicket), 'READ', 'NOT_READ') AS isRead
-FROM Client C
-  LEFT JOIN User U on (C.IDUser = U.IDUser)
-  LEFT JOIN Ticket T on (T.IDUser = U.IDUser)
-  LEFT JOIN Supporter S on (S.IDSupporter = T.IDSupporter)
+  T.*, U2.StName as StSupporter
+FROM
+  " . DBPREFIX . "Client C
+  LEFT JOIN " . DBPREFIX . "User U on (C.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T on (T.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Supporter S on (S.IDSupporter = T.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "User U2 on (U2.IDUser = S.IDUser)
 WHERE
-  T.StSituation $StConditionStatus
+  T.StSituation IN ($StConditionStatus)
 AND
   U.IDUser = $IDUser
   	";
@@ -699,13 +742,17 @@ AND
   public function listIgnoredTickets($IDSupporter) {
     $StSQL = "
 SELECT
-  T.*
+  T.*, U.StName as StSupporter
 FROM
-  " . DBPREFIX . "Ticket T
+  " . DBPREFIX . "User U
+  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDSupporter = S2.IDSupporter)
   LEFT JOIN " . DBPREFIX . "Ignored I ON (I.IDTicket = T.IDTicket)
   LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = I.IDSupporter)
 WHERE
-  I.IDSupporter = $IDSupporter";
+  I.IDSupporter = $IDSupporter
+AND
+  T.StSituation IN ('NOT_READ','WAITING_SUP')";
 
     $this->execSQL($StSQL);
 		$ArTickets = $this->getResult("string");

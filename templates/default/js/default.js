@@ -103,7 +103,7 @@ function reloadTicketList( IDDepartment, First ){
     'okCallBack':function(HTMLTickets) {
       animateReload( IDDepartment, 'stop' );
       insertTickets(IDDepartment, HTMLTickets);
-      if (IDDepartment !== 'closed') { refreshNotReadCount( IDDepartment ); }
+      if (IDDepartment !== 'closed' && IDDepartment !== 'ignored') { refreshNotReadCount( IDDepartment ); }
       if (First === true) { toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment); }
     },
     'errCallBack':function(Return) {
@@ -124,24 +124,29 @@ function showDepartmentTickets( IDDepartment, StUser ) {
   }
 }
 
-function selectTicket(IDDepartment, Clicked) {
-	var table = gID('ticketTable' + IDDepartment);
-	var tbody = gTN('tbody',table)[0];
-	var trs = gTN('tr',tbody);
-	var className = '';
+function selectTicket(Clicked) {
 
-	for (var i=0; i < trs.length; i++) {
-	  if (trs[i].className.indexOf('notRead') !== -1) {
-      className = 'notRead';
-	  } else {
-	    className = '';
-	  }
+  var div = gID('contentDepartments');
+	var table = gTN('table');
 
-	  if (i % 2 == 0) {
-       trs[i].className = className + ' Alt';
-	  } else {
-	    trs[i].className = className;
-	  }
+	for (var i=0; i < table.length; i++) {
+  	var tbody = gTN('tbody',table[i])[0];
+  	var trs = gTN('tr',tbody);
+  	var className = '';
+
+  	for (var j=0; j < trs.length; j++) {
+  	  if (trs[j].className.indexOf('notRead') !== -1) {
+        className = 'notRead';
+  	  } else {
+  	    className = '';
+  	  }
+
+  	  if (j % 2 == 0) {
+         trs[j].className = className + ' Alt';
+  	  } else {
+  	    trs[j].className = className;
+  	  }
+  	}
 	}
 
 	Clicked.className = 'Selected';
@@ -160,7 +165,8 @@ function showCall( IDTicket, IDDepartment, Clicked ) {
       var contentDisplay = gID('contentDisplay');
       removeChilds(contentDisplay);
       appendHTML(returnedValue, contentDisplay);
-      selectTicket(IDDepartment, Clicked);
+      selectTicket(Clicked);
+      refreshNotReadCount( IDDepartment )
     }
   };
   var tUrl = 'ticketDetails.php';
@@ -224,7 +230,7 @@ function submitCannedResponse (action) {
 			case "Editar":
 				editCannedResponse();
 			break;
-
+	
 			case "Criar":
 				newCannedResponse();
 			break;
@@ -248,7 +254,7 @@ function editCannedResponse () {
 	var tParams = {
     'enqueue':1,
     'method':'post',
-    'content': content,
+    'content':content,
     'okCallBack': function(returnedValue){
     	var tableTDs = gID('cannedTR'+content.IDCannedResponse).getElementsByTagName('TD');
     	tableTDs[0].textContent = content.StAlias;
@@ -317,7 +323,7 @@ function newCannedResponse(){
 	var editForm = gID("cannedForm");
 	var content = {
 		'action':'insert',
-		'IDCannedResponse': 'auto-increment',
+		'IDCannedResponse': 'autoincrement',
 		'StAlias': editForm.elements['StAlias'].value,
 		'StTitle': editForm.elements['StTitle'].value,
 		'TxMessage': editForm.elements['TxCannedResponse'].value
@@ -344,7 +350,7 @@ function _updateTableRow( IDCannedResponse, content ){
 	var tableTDs=[];
 	tableTDs[0] = createElement( 'TD', {'class':'TicketNumber'},[content.StAlias,createElement('input', {'type':'hidden', 'id':'StAlias'+IDCannedResponse,'value':content.StAlias })] );
 	tableTDs[1] = createElement( 'TD', {}, [content.StTitle,createElement('input', {'type':'hidden', 'id':'StTitle'+IDCannedResponse,'value':content.StTitle })] );
-	tableTDs[2] = createElement( 'TD', {}, [createElement('input', {'type':'hidden', 'id':'TxCannedResponse'+IDCannedResponse,'value':content.TxMessage }),createElement('img', {'src':'templates/default/images/button_edit.png', 'alt':'Editar', 'class':'cannedAction', 'onclick':"toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'show'); startEditResponse ('"+IDCannedResponse+"');"} ),createElement('img', {'src':'templates/default/images/button_cancel.png', 'alt':'Remover', 'class':'cannedAction', 'onclick':"removeCannedResponse('"+IDCannedResponse+"');",'style':'margin-left:6px'} ),createElement('img', {'src':'templates/default/images/visualizar.png', 'alt':'Visualizar', 'class':'cannedAction','style':'margin-left:6px'} )] );
+	tableTDs[2] = createElement( 'TD', {}, [createElement('input', {'type':'hidden', 'id':'TxCannedResponse'+IDCannedResponse,'value':content.TxMessage }),createElement('img', {'src':'templates/default/images/button_edit.png', 'alt':'Editar', 'class':'cannedAction', 'onclick':"toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'show'); startEditResponse ('"+IDCannedResponse+"');"} ),createElement('img', {'src':'templates/default/images/button_cancel.png', 'alt':'Remover', 'class':'cannedAction', 'style':'margin-left:6px;','onclick':"removeCannedResponse('"+IDCannedResponse+"');"} ),createElement('img', {'src':'templates/default/images/visualizar.png', 'alt':'Visualizar', 'class':'cannedAction','style':'margin-left:6px'} )] );
 	cannedTable.appendChild ( createElement('TR',{'id':'cannedTR'+IDCannedResponse},tableTDs) );
 }
 
@@ -375,4 +381,4 @@ function updateInformations(){
 	var tUrl = 'userData.submit.php';
 	xhr.makeRequest('newCannedResponse',tUrl,tParams);
 }
-/* CannedResponses - END*/
+/* CannedResponses  END*/

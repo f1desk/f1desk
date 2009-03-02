@@ -20,7 +20,7 @@
       <img id='reload<?=$ID?>' class='menuRefresh Right' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' onclick="reloadTicketList('<?=$ID?>');" />
       <img id='arrow<?=$ID?>' class='menuArrow' src='<?= TEMPLATEDIR ?>images/arrow_show.gif' alt='Show' onclick="showDepartmentTickets('<?=$ID?>')"/>
       <span class='TxPadrao'><?= $ArDepartment['StDepartment'] ?></span>
-      <? if ($ID != 'closed') :?>
+      <? if ($ID != 'closed' && $ID != 'ignored') :?>
     	  <span> - </span>
   	    <span class='TxDestaque'>
     		  <span id="notReadCount<?=$ID?>">

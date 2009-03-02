@@ -13,7 +13,7 @@
         $StClass = $Ticket['isRead'] == '0' ? 'notRead' : '';
         $StClass = ($i++ % 2 == 1) ? $StClass . ' Alt' : $StClass;
       ?>
-      <tr style='cursor:pointer;' onclick='showCall( <?=$Ticket['IDTicket']?>, <?=$IDDepartment?>, this )' class='<?= $StClass ?>'>
+      <tr style='cursor:pointer;' onclick='showCall( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this )' class='<?= $StClass ?>'>
         <td class='TicketNumber'>#<?= $Ticket['IDTicket']?></td>
         <td><?= $Ticket['StTitle']?></td>
         <td id='TicketSupporter<?= $Ticket['IDTicket']?>'><?= $Ticket['StSupporter']?></td>

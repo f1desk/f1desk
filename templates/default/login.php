@@ -13,7 +13,7 @@ require_once('header.php');
 			      <td>Informe seu e-mail</td>
 			    </tr>
 			    <tr>
-			      <td><input type='text' class="inputCombo" name='StEmail' /></td>
+			      <td><input type='text'  class="inputCombo" name='StEmail' /></td>
 			    </tr>
 			    <tr>
 			    <tr>

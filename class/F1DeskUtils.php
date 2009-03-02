@@ -151,6 +151,9 @@ ORDER BY
     	$ArDepartments[$ArQuery['IDDepartment']] = $ArQuery['StDepartment'];
     }
 
+    $ArDepartments['ignored'] = DEPT_IGNORED;
+    /*$ArDepartments['bookmark'] = DEPT_BOOKMARK;*/
+
     return $ArDepartments;
   }
 
@@ -431,19 +434,19 @@ FROM
 LEFT JOIN
   " . DBPREFIX . "$StTable ON (U.IDUser = $StTable.IDUser)
 WHERE
-	  $StTable.$StField = $ID";
-	
-	  $DBHandler = self::getDBinstance();
-	  $DBHandler->execSQL($StSQL);
-	  $ArResult = $DBHandler->getResult('string');
+  $StTable.$StField = $ID";
+
+  $DBHandler = self::getDBinstance();
+  $DBHandler->execSQL($StSQL);
+  $ArResult = $DBHandler->getResult('string');
     return array_shift($ArResult);
   }
   
-  public static function updateUserData( $IDUser, $ArData ){
+	public static function updateUserData( $IDUser, $ArData ){
   	$StTableName = DBPREFIX . "User";
   	$StCondition = "IDUser = $IDUser";
-  	
   	$DBHandler = self::getDBinstance();
+  	
   	return $DBHandler->updateTable($StTableName, $ArData, $StCondition);
   }
 
@@ -478,56 +481,33 @@ OR
     return $ArResult;
   }
   
-  public static function editCannedResponse( $IDCannedResponse, $ArData ){
-  	$ArFields = array_keys($ArData);
-		$FirstKey = array_shift($ArFields);
-		$FirstValue = array_shift($ArData);
-		
-		$StSQL = "
-UPDATE 
-	".DBPREFIX."CannedResponse
-SET	
-	$FirstKey = '".addslashes($FirstValue)."'";
-		foreach ($ArData as $Field => $Value) {
-		 $StSQL .= ", $Field = '".addslashes($Value)."'";
-		}
-		$StSQL .= " 
-WHERE 
-	IDCannedResponse = " . $IDCannedResponse;
-		
-		$DBHandler = self::getDBinstance();
-		$DBHandler->setQuery($StSQL);
-		$DBHandler->commit();
-		
-		return $DBHandler->getAffectedRows();
-		
-  }
-  
-  public static function removeCannedResponse ( $IDCannedResponse ) {
-  	$StSQL = "
-DELETE CR.*
-FROM 
-	".DBPREFIX."CannedResponse CR
-WHERE 
-	CR.IDCannedResponse = $IDCannedResponse 
-  	";
-  	$DBHandler = self::getDBinstance();
-		$DBHandler->setQuery($StSQL);
-		$DBHandler->commit();
-		
-		return $DBHandler->getAffectedRows();
-  }
-  
   public static function createCannedResponse ( $ArData ){
   	$ArFields = array_keys($ArData);
   	$StTableName = DBPREFIX . "CannedResponse";
   	$DBHandler = self::getDBinstance();
-  	
+
   	if ( $DBHandler->insertIntoTable($StTableName, $ArFields, array($ArData)) ) {
   		return $DBHandler->getID();
   	} else {
   		return false;
   	}
-  	
+
   }
+
+  public static function editCannedResponse( $IDCannedResponse, $ArData ){
+		$StTableName = DBPREFIX . "CannedResponse";
+		$StCondition = "IDCannedResponse = " . $IDCannedResponse;
+		$DBHandler = self::getDBinstance();
+		
+		return $DBHandler->updateTable( $StTableName, $ArData, $StCondition );
+  }
+  
+  public static function removeCannedResponse ( $IDCannedResponse ) {
+		$StTableName = DBPREFIX . 'CannedResponse';
+		$StCondition = 'IDCannedResponse = ' . $IDCannedResponse;
+  	$DBHandler = self::getDBinstance();
+
+ 		return $DBHandler->deleteFromTable($StTableName,$StCondition);
+  }
+  
 }

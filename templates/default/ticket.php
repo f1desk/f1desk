@@ -1,11 +1,116 @@
+<!--[TICKET HEADER]-->
 <div id='ticketHeader'>
- <? require_once('ticketHeader.php'); ?>
-</div>
+  <div id="ticketTitle">
+    <img id='reloadHeader' class='menuRefresh Right' onclick='refreshCall( <?= $IDTicket ?> )' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
+  	<img alt="Ticket" id='arrowHeader' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "ticketContent")' class='menuArrow'/>
+  	<span><?= $StTitle ?></span>
+  </div>
 
+
+  <div id="ticketContent">
+  	<table class='tableTickets'>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Atendente</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class='TicketNumber'>#<?= $IDTicket ?></td>
+          <td><?= $DtOpened ?></td>
+          <td><?= $StSituation ?></td>
+          <td>
+          	<select id='StSupporter' onchange='setTicketOwner(<?= $IDTicket ?>, this.value)' class='inputCombo'>
+          	  <? foreach ( $ArSupporters as $IDSupporter => $StSupporter ) : ?>
+            	  <? if ($ArHeaders['IDSupporter'] != $IDSupporter) : ?>
+            	  <option value=<?=$IDSupporter?>><?=$StSupporter?></option>
+            		<? else : ?>
+            		<option selected='selected' value=<?=$IDSupporter?>><?=$StSupporter?></option>
+            		<? endif; ?>
+          		<? endforeach; ?>
+          	</select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--[/TICKET HEADER]-->
+
+<!--[TICKET HISTORY]-->
 <div id='ticketHistory'>
-	<? require_once('ticketHistory.php'); ?>
-</div>
+  <div id="historyCaption">
+  	<img alt="Ticket"  id='arrowHistory' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "historyContent")' class="menuArrow"/>
+  	<span>Hist&oacute;rico</span>
+  </div>
 
-<div id='ticketAnswer'>
-  <? require_once('ticketAnswer.php'); ?>
+  <div id="historyContent" >
+
+    <? foreach ($ArMessages as $ArMessage) : ?>
+      <? $DtSended = F1DeskUtils::formatDate('datetime_format',$ArMessage['DtSended']); ?>
+      <div class='<?= $ArMessage['StClass'] ?>'>
+        <?= MSG_HEAD1 . $DtSended . MSG_HEAD2 . $ArMessage['SentBy'] . MSG_HEAD3 . $ArMessage['TxMessage'] ?>
+      </div>
+    <? endforeach ?>
+
+  </div>
 </div>
+<!--[/TICKET HISTORY]-->
+
+<!--[TICKET ANSWER]-->
+<div id='ticketAnswer'>
+  <div id="answerCaption">
+  	<img alt="Ticket" id='arrowAnswer' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "answerContent")' class="menuArrow"/>
+  	<span>Responder</span>
+  </div>
+  
+  <div id="answerContent" >
+    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data">
+      <div id='messageType' class='Right'>
+    	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
+    				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
+    				<option value="INTERNAL"><?=MSGTYPE_INTERNAL?></option>
+    				<option value="SYSTEM"><?=MSGTYPE_SYSTEM?></option>
+    				<option value="SATISFACTION"><?=MSGTYPE_SATISFACTION?></option>
+    		</select>
+      </div>
+  
+    	<textarea id='TxMessage' name='TxMessage' cols='65' rows='33' class='answerArea'></textarea>
+  
+      <div id='displayCommands'>
+        <div id='answerOptions'>
+  
+      		<div class='Right' id='answerAttach'>
+      		  <label for='Attachment'> Anexo : </label>
+      			<input id='Attachment' name='Attachment' class='inputFile' type="file" value="Anexo" />
+      			<iframe id='ajaxSubmit' name='ajaxSubmit' src='answerTicket.php'></iframe>
+      		</div>
+    		  <div>
+    		    <input type='hidden' name='IDDepartment' id='IDDepartment' value='<?= $IDDepartment ?>' />
+    		    <input type='hidden' name='IDTicket' id='IDTicket' value='<?= $IDTicket ?>' />
+    		    <? if (getSessionProp('isSupporter') == 'true') : ?>
+      		    <select class='inputCombo' id='cannedAnswers'>
+              <? if ($ArResponses[0]['IDCannedResponse'] != ''): ?>
+                  <? foreach ($ArResponses as $Response): ?>
+                    <option value="<?=$Response['IDCannedResponse'];?>"><?=$Response['StTitle']?></option>
+                  <?endforeach; ?>
+              <? else: ?>
+                   <option value='null'><?=NO_ANSWER?></option>
+              <? endif; ?>
+      			  </select>
+      			  <button class='button'>Incluir</button>
+    			  <? endif; ?>
+    		</div>
+    	</div>
+  
+    	<div>
+    			<input type='submit' class='button' value='Responder' name='Responder'>
+    	</div>
+    </div>
+    </form>
+  </div>
+</div>
+<!--[/TICKET ANSWER]-->

@@ -4,6 +4,6 @@
 <? require_once('departmentList.php'); ?>
 </div>
 
-<div id='contentDisplay' class='Right'>Bem-vindo ao Helpdesk</div>
+<div id='contentDisplay' class='Right'></div>
 
 <? require_once('footer.php'); ?>

@@ -260,6 +260,7 @@ html>body #main{
 
 .TicketNumber {
   color:#006A42;
+  font-weight:bold;
 }
 
 .tableTickets thead th {
@@ -319,10 +320,6 @@ html>body #main{
   background-color:#D8E1E6;
 }
 
-#ajaxSubmit {
-  display:block;
-}
-
 /* LOGIN TEMPLATE */
 #loginTemplate{
 	text-align:center;
@@ -352,57 +349,65 @@ html>body #main{
 #homeTemplate{
 	text-align:center;
 }
-
 .homeBox{
 	margin:20px auto;
 	text-align:left;
 	width:80%;
 }
+
+.newCannedResponse{
+	cursor: pointer !important;
+}
+
+.loadingRequest{
+	xsystemfont:none;
+	background:scroll 3px 4px;
+	border:2px solid #DDDDDD;
+	fontfamily:'Trebuchet MS',verdana,sans;
+	fontsize:10px;
+	fontsizeadjust:none;
+	fontstretch:normal;
+	fontstyle:normal;
+	fontvariant:normal;
+	fontweight:bold;
+	lineheight:normal;
+	padding:8px 5px 4px 5px !important;
+	color:#ffffff;
+	visibility:hidden;
+}
+
 .homeBox .homeBoxTitle{
 	background:#9CB6CD none repeat scroll 0 0;
 	padding:5px 5px 3px;
 	cursor: default;
 }
-.newCannedResponse{
-	cursor: pointer !important;
-}
-.loadingRequest{
-	-x-system-font:none;
-	background:scroll 3px 4px;
-	border:2px solid #DDDDDD;
-	font-family:'Trebuchet MS',verdana,sans;
-	font-size:10px;
-	font-size-adjust:none;
-	font-stretch:normal;
-	font-style:normal;
-	font-variant:normal;
-	font-weight:bold;
-	line-height:normal;
-	padding:8px 5px 4px 5px !important;
-	color:#ffffff;
-	visibility:hidden;
-}
+
 .homeBox .homeBoxContent{
 	padding:15px;
 	border: 2px ridge #9CB6CD;
 }
+
 .homeBox .homeBoxContent .editAreaTitle{
 	background-color: #B6CFDC;
 	padding:2px 5px;
 	margin: 5px;
 }
+
 .homeBox .homeBoxContent .editAreaTitle img{
 	cursor: pointer;
 	margin-right: 2px;
 }
+
 .homeBox .homeBoxContent .editAreaContent{
 	margin: 10px;
 	font-weight: bold;
 }
+
 .homeBox .homeBoxContent .editAreaContent input, .homeBox .homeBoxContent .editAreaContent textarea{
 	margin-left: 5px;
 	font-weight: none;
 }
+
 .homeBox .homeBoxContent .cannedAction{
 	margin-left:2px;
 	cursor: pointer;

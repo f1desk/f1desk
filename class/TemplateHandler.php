@@ -75,15 +75,15 @@ abstract class TemplateHandler {
   public static function getUserDepartments() {
     $ArDepartment = array();
 
-    $ArDepartment[0] = array (
+    $ArDepartment['opened'] = array (
   		'ID' => 'opened',
-  		'StName' => OPENEDCALLS,
+  		'StDepartment' => OPENEDCALLS,
   		'SubDepartment' => array()
   	);
 
-  	$ArDepartment[1] = array (
+  	$ArDepartment['closed'] = array (
   		'ID' => 'closed',
-  		'StName' => CLOSEDCALLS,
+  		'StDepartment' => CLOSEDCALLS,
   		'SubDepartment' => array()
   	);
 
@@ -99,23 +99,30 @@ abstract class TemplateHandler {
   public static function listTickets( $IDDepartment, $IDSupporter, $IDUser ){
 
   	$ObTicket = self::getInstance( "TicketHandler" );
-  	$openTickets = $ObTicket->listTickets( $IDDepartment );
-  	$ignoredTickets = $ObTicket->listIgnoredTickets($IDSupporter);
-  	$readTickets = $ObTicket->getReadTickets($IDDepartment, $IDUser);
+  	if ($IDDepartment != 'ignored' && $IDDepartment != 'favorite') {
+    	$openTickets = $ObTicket->listTickets( $IDDepartment );
+    	$ignoredTickets = $ObTicket->listIgnoredTickets($IDSupporter);
+    	$readTickets = $ObTicket->getReadTickets($IDDepartment, $IDUser);
 
 
-    foreach ($openTickets as $IDTicket => &$ArTicket) {
-      if (array_key_exists($IDTicket,$ignoredTickets) == true) {
-        unset($openTickets[$IDTicket]);
-        continue;
+      foreach ($openTickets as $IDTicket => &$ArTicket) {
+        if (array_key_exists($IDTicket,$ignoredTickets) == true) {
+          unset($openTickets[$IDTicket]);
+          continue;
+        }
+
+        if (array_key_exists($IDTicket,$readTickets) == true) {
+          $ArTicket['isRead'] = 1;
+        } else {
+          $ArTicket['isRead'] = 0;
+        }
       }
-
-      if (array_key_exists($IDTicket,$readTickets) == true) {
+  	} else {
+  	  $openTickets = $ObTicket->listIgnoredTickets($IDSupporter);
+  	  foreach ($openTickets as $IDTicket => &$ArTicket) {
         $ArTicket['isRead'] = 1;
-      } else {
-        $ArTicket['isRead'] = 0;
-      }
-    }
+  	  }
+  	}
 
   	return $openTickets;
   }
@@ -130,7 +137,21 @@ abstract class TemplateHandler {
   public static function listClientTickets( $IDUser, $BoOpened = true ) {
 
   	$ObTicket = self::getInstance( "TicketHandler" );
+  	if ($BoOpened == true) {
+  	  $IDDepartment = 'opened';
+  	} else {
+  	  $IDDepartment = 'closed';
+  	}
   	$openTickets = $ObTicket->listClientTickets( $IDUser, $BoOpened );
+  	$readTickets = $ObTicket->getUserReadTickets($IDUser);
+
+  	foreach ($openTickets as $IDTicket => &$ArTicket) {
+        if (array_key_exists($IDTicket,$readTickets) == true) {
+          $ArTicket['isRead'] = 1;
+        } else {
+          $ArTicket['isRead'] = 0;
+        }
+      }
 
   	return $openTickets;
 
@@ -156,29 +177,6 @@ abstract class TemplateHandler {
   	}
 
     return $ArSupporters;
-  }
-
-  /**
-   * Check if a Ticket was read by a supporter
-   *
-   * @param integer $IDSupporter
-   * @param integer $IDTicket
-   *
-   * @return boolean
-   */
-  public static function isTicketRead( $IDSupporter, $IDTicket ) {
-
-  	$ObTicket = self::getInstance( "TicketHandler" );
-  	$BoRead = $ObTicket->isRead( $IDSupporter, $IDTicket );
-  	#
-  	# If this ticket was read by this supporter, we'll find them on isRead table
-  	#
-  	if ( $BoRead[0]['Total'] == 0 ) {
-  		return false;
-  	} else {
-  		return true;
-  	}
-
   }
 
   /**
@@ -292,7 +290,7 @@ abstract class TemplateHandler {
 
 		return $ArMenu;
 	}
-
+	
 	/**
 	 * Get all ticket types
 	 *
@@ -332,7 +330,7 @@ abstract class TemplateHandler {
     $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter, $IDDepartment);
     return $ArResponses;
 	}
-	
+
 	/**
 	 * edits a Canned Response
 	 *
@@ -354,7 +352,7 @@ abstract class TemplateHandler {
 	 */
 	public static function removeCannedResponse ( $IDCannedResponse ) {
 		$ItAffected = F1DeskUtils::removeCannedResponse( $IDCannedResponse );
-		if ($ItAffected <= -1) {
+		if ($ItAffected <= 0) {
 			 return false;
 		}
 		return $ItAffected;
@@ -379,6 +377,7 @@ abstract class TemplateHandler {
 		);
 		return F1DeskUtils::createCannedResponse( $ArData );
 	}
+	
 }
 
 ?>
