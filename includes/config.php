@@ -6,7 +6,7 @@ define('MAILPASS','f!2d2m');
 define('MAILFROM','contato@dimitrilameri.com');
 
 define('ABSPATH','www/helpdesk/');
-define('APPDIR', '/home/f1desk/' . ABSPATH); //PREENCHIDO NO MOMENTO DA INSTALACAO
+define('APPDIR', '/var/' . ABSPATH); //PREENCHIDO NO MOMENTO DA INSTALACAO
 define('CLASSDIR',APPDIR . 'class/');
 define('INCLUDESDIR',APPDIR . 'includes/');
 define('LANGDIR',APPDIR . 'lang/');
