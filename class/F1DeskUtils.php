@@ -550,7 +550,32 @@ WHERE
 		$StCondition = 'IDNote = ' . $IDNote;
   	$DBHandler = self::getDBinstance();
 
- 		return $DBHandler->deleteFromTable($StTableName,$StCondition);
+ 		return $DBHandler->deleteFromTable($StTableName,$StCondition, 1);
+  }
+  
+  public static function listSupporterBookmark( $IDSupporter ){
+  	$StSQL = "
+SELECT T.StTitle, B.IDSupporter, B.IDTicket
+FROM
+	". DBPREFIX ."Bookmark B
+	LEFT JOIN	". DBPREFIX ."Ticket T
+		on ( T.IDTicket = B.IDTicket )
+WHERE 
+	B.IDSupporter = $IDSupporter 
+  	";
+  	
+  	$DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('string');
+    return $ArResult;
+  }
+  
+  public static function removeBookmark ( $IDTicket, $IDSupporter ) {
+		$StTableName = DBPREFIX . 'Bookmark';
+		$StCondition = 'IDTicket = ' . $IDTicket . ' AND IDSupporter = ' . $IDSupporter;
+  	$DBHandler = self::getDBinstance();
+
+ 		return $DBHandler->deleteFromTable($StTableName,$StCondition, 1);
   }
   
 }

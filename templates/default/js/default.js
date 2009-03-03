@@ -529,6 +529,41 @@ function updateInformations(){
 	var tUrl = 'userData.submit.php';
 	xhr.makeRequest('newCannedResponse',tUrl,tParams);
 }
+
+
+function removeBookmark (IDTicket) {
+	if(!IDTicket){
+		alert('Erro: ID do chamado não informado');
+	}
+	if (confirm("Excluir chamado dos favoritos definitivamente?")) {
+		_doLoading( 'bookmark','show' );
+		var tParams = {
+	    'enqueue':1,
+	    'method':'post',
+	    'content':{
+	    	'action':'remove',
+	    	'IDTicket': IDTicket,
+	    },
+	    'okCallBack': function(returnedValue){
+	    	if(returnedValue == 'error'){
+	    		alert('Erro: Nenhum chamado removido com o ID '+IDTicket);
+	    	} else {
+	    		removeElements( gID('bookmarkTR'+IDTicket) );
+	    		if( gID('bookmarkTable').getElementsByTagName('TR').length == 0){
+	    			gID('bookmarkTable').appendChild( createElement('TR',{'id':'noBookmark'},
+	    				createElement('TD',{
+	    					'colspan':'3',	'align':'center'
+	    				},'Não há chamados favoritados.')
+	    			) );
+	    		}
+	    		_doLoading( 'bookmark','hide' );
+	    	}
+	    }
+	  };
+	  var tUrl = 'bookmarkAction.php';
+	  xhr.makeRequest('removeBookmark',tUrl,tParams);
+	}
+}
 /* Templates->HOME END*/
 
 

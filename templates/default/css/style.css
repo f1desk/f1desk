@@ -371,15 +371,16 @@ html>body #main{
 	fontvariant:normal;
 	fontweight:bold;
 	lineheight:normal;
-	padding:8px 5px 4px 5px !important;
+	padding:8px 5px 1px 5px !important;
 	color:#ffffff;
 	visibility:hidden;
 }
 
 .homeBox .homeBoxTitle{
 	background:#9CB6CD none repeat scroll 0 0;
-	padding:5px 5px 3px;
+	padding:5px 5px 2px;
 	cursor: default;
+	font-weight: bold;
 }
 
 .homeBox .homeBoxContent{
