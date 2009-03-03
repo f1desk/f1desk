@@ -510,4 +510,47 @@ OR
  		return $DBHandler->deleteFromTable($StTableName,$StCondition);
   }
   
+  public static function listNotes( $IDSupporter ){
+  	$StSQL = "
+SELECT N.*
+FROM
+	". DBPREFIX ."Note N
+WHERE
+	N.IDSupporter = $IDSupporter 
+  	";
+  	
+  	$DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('string');
+    return $ArResult;
+  }
+  
+  public static function createNote( $ArData ){
+  	$ArFields = array_keys($ArData);
+  	$StTableName = DBPREFIX . "Note";
+  	$DBHandler = self::getDBinstance();
+
+  	if ( $DBHandler->insertIntoTable($StTableName, $ArFields, array($ArData)) ) {
+  		return $DBHandler->getID();
+  	} else {
+  		return false;
+  	}
+  }
+  
+  public static function editNote( $IDNote, $ArData ){
+		$StTableName = DBPREFIX . "Note";
+		$StCondition = "IDNote = " . $IDNote;
+		$DBHandler = self::getDBinstance();
+		
+		return $DBHandler->updateTable( $StTableName, $ArData, $StCondition );
+  }
+  
+  public static function removeNote ( $IDNote ) {
+		$StTableName = DBPREFIX . 'Note';
+		$StCondition = 'IDNote = ' . $IDNote;
+  	$DBHandler = self::getDBinstance();
+
+ 		return $DBHandler->deleteFromTable($StTableName,$StCondition);
+  }
+  
 }

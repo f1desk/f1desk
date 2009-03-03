@@ -14,5 +14,8 @@
 	define("TITLE","T&iacute;tulo");
 	define("ACTIONS","A&ccedil;&otilde;es");
 	define("RESPONSE","Resposta Elaborada");
-
+	
+	define("NOTES", "Anota&ccedil;&otilde;es");
+	define("NO_NOTES", "N&atilde;o h&aacute; anota&ccedil;&otilde;es cadastradas.");
+	
 ?>

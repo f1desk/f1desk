@@ -330,6 +330,26 @@ abstract class TemplateHandler {
     $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter, $IDDepartment);
     return $ArResponses;
 	}
+	
+	/**
+	 * Creates a new cannedResponse for a supporter
+	 *
+	 * @param string $StAlias
+	 * @param string $StTitle
+	 * @param text $TxMessage
+	 * 
+	 * @return integer $ItAffected
+	 */
+	public static function createCannedResponse ( $StAlias, $StTitle, $TxMessage, $ItIDSupporter ){
+		$ArData = array(
+			"StAlias" => $StAlias,
+			"StTitle" => $StTitle,
+			"TxMessage" => $TxMessage,
+			"BoPersonal" => "1",
+			"IDSupporter" => $ItIDSupporter
+		);
+		return F1DeskUtils::createCannedResponse( $ArData );
+	}
 
 	/**
 	 * edits a Canned Response
@@ -359,23 +379,57 @@ abstract class TemplateHandler {
 	}
 	
 	/**
-	 * Creates a new cannedResponse for a supporter
+	 * lists all Notes of a supporter
 	 *
-	 * @param string $StAlias
+	 * @param integer $IDSupporter
+	 * @return array
+	 */
+	public static function listNotes( $IDSupporter ){
+		return F1DeskUtils::listNotes( $IDSupporter );
+	}
+	
+	/**
+	 * Creates a new Note for a supporter
+	 *
 	 * @param string $StTitle
 	 * @param text $TxMessage
 	 * 
 	 * @return integer $ItAffected
 	 */
-	public static function createCannedResponse ( $StAlias, $StTitle, $TxMessage, $ItIDSupporter ){
+	public static function createNote ( $StTitle, $TxMessage, $ItIDSupporter ){
 		$ArData = array(
-			"StAlias" => $StAlias,
 			"StTitle" => $StTitle,
-			"TxMessage" => $TxMessage,
-			"BoPersonal" => "1",
+			"TxNote" => $TxMessage,
 			"IDSupporter" => $ItIDSupporter
 		);
-		return F1DeskUtils::createCannedResponse( $ArData );
+		return F1DeskUtils::createNote( $ArData );
+	}
+	
+	/**
+	 * edits a Note
+	 *
+	 * @param integer $IDCannedResponse
+	 * @param array $ArData
+	 */
+	public static function editNote( $IDNote, $ArData ){
+		$ItAffected = F1DeskUtils::editNote( $IDNote, $ArData );
+		if ($ItAffected <= -1) {
+			 return false;
+		}
+		return $ItAffected;
+	}
+	
+	/**
+	 * reova a note
+	 *
+	 * @param integer $IDCannedResponse
+	 */
+	public static function removeNote ( $IDNote ) {
+		$ItAffected = F1DeskUtils::removeNote( $IDNote );
+		if ($ItAffected <= 0) {
+			 return false;
+		}
+		return $ItAffected;
 	}
 	
 }

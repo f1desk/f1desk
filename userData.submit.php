@@ -22,10 +22,7 @@
 	}
 	
 	$ItAffected = TemplateHandler::updateUserData( getSessionProp('IDUser'), $ArData );
-	if ( !$ItAffected ) {
-		die('error');
-	} else {
-		die('sucess');
-	}
+	if ( !$ItAffected ) {	die('error');	}
+	else {	die('sucess');  }
 	
 ?>
