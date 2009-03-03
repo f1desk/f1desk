@@ -72,10 +72,10 @@
       <div id='messageType' class='Right'>
     	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
     				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
-    				<?php if (TemplateHandler::IsSupporter()): ?>
+    				<?php //if (TemplateHandler::IsSupporter()): ?>
     				<option value="INTERNAL"><?=MSGTYPE_INTERNAL?></option>
     				<option value="SATISFACTION"><?=MSGTYPE_SATISFACTION?></option>
-    				<?php endif; ?>
+    				<?php //endif; ?>
     		</select>
       </div>
 
@@ -92,7 +92,7 @@
     		  <div>
     		    <input type='hidden' name='IDDepartment' id='IDDepartment' value='<?= $IDDepartment ?>' />
     		    <input type='hidden' name='IDTicket' id='IDTicket' value='<?= $IDTicket ?>' />
-    		    <? if (getSessionProp('isSupporter') == 'true') : ?>
+    		    <? if (TemplateHandler::IsSupporter()) : ?>
       		    <select class='inputCombo' id='cannedAnswers'>
               <? if ($ArResponses[0]['IDCannedResponse'] != ''): ?>
                   <? foreach ($ArResponses as $Response): ?>
