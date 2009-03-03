@@ -530,3 +530,11 @@ function updateInformations(){
 	xhr.makeRequest('newCannedResponse',tUrl,tParams);
 }
 /* Templates->HOME END*/
+
+
+function submitTicketForm(IDTicket) {
+  gID('StMessageType').selectedIndex = 0;
+  gID('TxMessage').value = '';
+  gID('Attachment').value = '';
+  refreshCall(IDTicket);
+}
