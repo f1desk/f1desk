@@ -212,6 +212,13 @@ function setTicketOwner(IDTicket, IDSupporter) {
   return true;
 }
 
+function submitTicketForm(IDTicket) {
+  gID('StMessageType').selectedIndex = 0;
+  gID('TxMessage').value = '';
+  gID('Attachment').value = '';
+  refreshCall(IDTicket);
+}
+
 /* CannedResponses - Templates->HOME */
 function startEditResponse ( IDResponse ){
 	var editForm = gID("cannedForm");
@@ -230,7 +237,7 @@ function submitCannedResponse (action) {
 			case "Editar":
 				editCannedResponse();
 			break;
-	
+
 			case "Criar":
 				newCannedResponse();
 			break;

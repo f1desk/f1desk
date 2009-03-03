@@ -466,14 +466,16 @@ GROUP BY
     #
     # message types availables
     #
-    $ArTypes = array( 'NORMAL' , 'INTERNAL' , 'SYSTEM');
+    $ArTypes = array( 'NORMAL' , 'INTERNAL' , 'SYSTEM', 'SATISFACTION');
+
+    $StMsgType = ($ItMsgType != 4) ? $ArTypes[$ItMsgType] : $ArTypes[0];
 
     #
     # preparing to insert on the table
     #
     $StTableName = DBPREFIX . 'Message';
     $ArFields = array( 'TxMessage' , 'DtSended' , 'BoAvailable' , 'EnMessageType' , 'IDTicket' , 'IDUser' );
-    $ArValues = array( $StMessage , date('Y-m-d H:i:s',time()) , $BoAvailable, $ArTypes[$ItMsgType], $IDTicket, $IDUser );
+    $ArValues = array( $StMessage , date('Y-m-d H:i:s',time()) , $BoAvailable, $StMsgType, $IDTicket, $IDUser );
 
     $this->insertIntoTable($StTableName,$ArFields,$ArValues);
     $IDMessage = $this->getID();
@@ -804,7 +806,7 @@ WHERE
   public function answerTicket ($IDWriter, $IDTicket, $TxMessage, $StMsgType, $ArFiles = array()) {
 
     #check if the answer came from a supporter or a client
-    if (isset($_SESSION['isSupporter']) && $_SESSION['isSupporter'] == true) {
+    if (getSessionProp('isSupporter') && getSessionProp('isSupporter') == true) {
       $this->_supporterAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);
     } else {
       $this->_clientAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);
@@ -844,7 +846,7 @@ WHERE
       $this->attachFile($ArFiles,$IDMessage);
     }
 
-    if ($StMsgType != 'SATISFACTION' || $StMsgType == '0') {
+    if ($StMsgType != '3' || $StMsgType == '0') {
       #Changing Tickets's situation
       $StTableName = DBPREFIX . 'Ticket';
       $ArFields = array('StSituation' => 'WAITING_USER', 'IDSupporter' => $IDWriter);
