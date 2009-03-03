@@ -804,9 +804,8 @@ WHERE
    * @author Matheus Ashton <matheus@digirati.com.br>
    */
   public function answerTicket ($IDWriter, $IDTicket, $TxMessage, $StMsgType, $ArFiles = array()) {
-
     #check if the answer came from a supporter or a client
-    if (getSessionProp('isSupporter') && getSessionProp('isSupporter') == true) {
+    if (getSessionProp('isSupporter') && getSessionProp('isSupporter') == 'true') {
       $this->_supporterAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);
     } else {
       $this->_clientAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);

@@ -290,7 +290,7 @@ abstract class TemplateHandler {
 
 		return $ArMenu;
 	}
-	
+
 	/**
 	 * Get all ticket types
 	 *
@@ -308,12 +308,12 @@ abstract class TemplateHandler {
       return $ArReturn;
     }
 	}
-	
+
 	public static function getUserData( $ID, $ItType ){
 		$ArUserData = F1DeskUtils::getUserData( $ID, $ItType );
 		return $ArUserData;
 	}
-	
+
 	public static function updateUserData($IDUser, $ArData){
 		$ItAffected = F1DeskUtils::updateUserData( $IDUser, $ArData );
 		return $ItAffected;
@@ -330,14 +330,14 @@ abstract class TemplateHandler {
     $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter, $IDDepartment);
     return $ArResponses;
 	}
-	
+
 	/**
 	 * Creates a new cannedResponse for a supporter
 	 *
 	 * @param string $StAlias
 	 * @param string $StTitle
 	 * @param text $TxMessage
-	 * 
+	 *
 	 * @return integer $ItAffected
 	 */
 	public static function createCannedResponse ( $StAlias, $StTitle, $TxMessage, $ItIDSupporter ){
@@ -364,7 +364,7 @@ abstract class TemplateHandler {
 		}
 		return $ItAffected;
 	}
-	
+
 	/**
 	 * reova a canned response
 	 *
@@ -377,7 +377,7 @@ abstract class TemplateHandler {
 		}
 		return $ItAffected;
 	}
-	
+
 	/**
 	 * lists all Notes of a supporter
 	 *
@@ -387,13 +387,13 @@ abstract class TemplateHandler {
 	public static function listNotes( $IDSupporter ){
 		return F1DeskUtils::listNotes( $IDSupporter );
 	}
-	
+
 	/**
 	 * Creates a new Note for a supporter
 	 *
 	 * @param string $StTitle
 	 * @param text $TxMessage
-	 * 
+	 *
 	 * @return integer $ItAffected
 	 */
 	public static function createNote ( $StTitle, $TxMessage, $ItIDSupporter ){
@@ -404,7 +404,7 @@ abstract class TemplateHandler {
 		);
 		return F1DeskUtils::createNote( $ArData );
 	}
-	
+
 	/**
 	 * edits a Note
 	 *
@@ -418,7 +418,7 @@ abstract class TemplateHandler {
 		}
 		return $ItAffected;
 	}
-	
+
 	/**
 	 * reova a note
 	 *
@@ -431,7 +431,10 @@ abstract class TemplateHandler {
 		}
 		return $ItAffected;
 	}
-	
+
+	public static function isSupporter() {
+	  return (getSessionProp('isSupporter') && getSessionProp('isSupporter') == 'true');
+	}
 }
 
 ?>
