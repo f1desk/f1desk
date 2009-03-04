@@ -127,7 +127,7 @@ abstract class F1DeskUtils {
    *
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public static function getDepartments( $IDUser ) {
+  public static function getDepartments( $IDSupporter ) {
     $ArDepartments = array();
 
     $StSQL = '
@@ -137,9 +137,8 @@ FROM
 	' . DBPREFIX . 'Department D
   LEFT JOIN ' . DBPREFIX . 'DepartmentSupporter DS ON (DS.IDDepartment = D.IDDepartment)
   LEFT JOIN ' . DBPREFIX . 'Supporter S ON (S.IDSupporter = DS.IDSupporter)
-  LEFT JOIN ' . DBPREFIX . 'User U ON (U.IDUser = S.IDUser)
 WHERE
-  U.IDUser = ' . $IDUser . '
+  S.IDSupporter = ' . $IDSupporter . '
 ORDER BY
 	D.StDepartment';
 
@@ -165,7 +164,7 @@ ORDER BY
    *
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public static function getSubDepartments( $IDUser ){
+  public static function getSubDepartments( $IDSupporter ){
 
     #
     # Getting who is Department and who is SubDepartment
@@ -178,9 +177,8 @@ FROM
   LEFT JOIN ".DBPREFIX."Department D ON (SD.IDDepartment = D.IDDepartment)
   LEFT JOIN ".DBPREFIX."DepartmentSupporter DS ON (DS.IDDepartment = D.IDDepartment)
   LEFT JOIN ".DBPREFIX."Supporter S ON (S.IDSupporter = DS.IDSupporter)
-  LEFT JOIN ".DBPREFIX."User U ON (U.IDUser = S.IDUser)
 WHERE
-  U.IDUser = $IDUser
+  S.IDSupporter = $IDSupporter
 GROUP BY
   SD.IDDepartment";
 
@@ -427,63 +425,69 @@ WHERE
     $StField = ($ItType == 0) ? 'IDSupporter' : 'IDClient';
     $StTable = ($ItType == 0) ? 'Supporter' : 'Client';
     $StSQL = "
-SELECT
-  U.*
-FROM
-  " . DBPREFIX . "User U
-LEFT JOIN
-  " . DBPREFIX . "$StTable ON (U.IDUser = $StTable.IDUser)
-WHERE
-  $StTable.$StField = $ID";
+  SELECT
+    U.*
+  FROM
+    " . DBPREFIX . "User U
+  LEFT JOIN
+    " . DBPREFIX . "$StTable ON (U.IDUser = $StTable.IDUser)
+  WHERE
+    $StTable.$StField = $ID";
 
-  $DBHandler = self::getDBinstance();
-  $DBHandler->execSQL($StSQL);
-  $ArResult = $DBHandler->getResult('string');
+    $DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('string');
     return array_shift($ArResult);
   }
-  
+
 	public static function updateUserData( $IDUser, $ArData ){
   	$StTableName = DBPREFIX . "User";
   	$StCondition = "IDUser = $IDUser";
   	$DBHandler = self::getDBinstance();
-  	
+
   	return $DBHandler->updateTable($StTableName, $ArData, $StCondition);
   }
 
-  public static function listCannedResponses($IDSupporter,$IDDepartment = false) {
+  public static function listCannedResponses($IDSupporter) {
+
+    #get Supporter's Departments
+    $ArDepartments = self::getDepartments($IDSupporter);
+
+    $ArIDs = array_keys($ArDepartments);
+
+    #get only the real departmets, excluding ignored and singles
+    foreach ($ArIDs as $Key => $Value) {
+      if (! preg_match('/[0-9]+/', $Value)) {
+        unset($ArIDs[$Key]);
+      }
+      $StIDs = implode(',',$ArIDs);
+    }
+
     $StSQL = "
 SELECT
   C.*
 FROM
   " . DBPREFIX . "Supporter S
 LEFT JOIN
-  " . DBPREFIX . "CannedResponse C ON(C.IDSupporter = S.IDSupporter)";
-
-    if ($IDDepartment !== false) {
-      $StSQL .= "
+  " . DBPREFIX . "CannedResponse C ON(C.IDSupporter = S.IDSupporter)
 LEFT JOIN
   " . DBPREFIX . "DepartmentCannedResponse DCR ON(DCR.IDCannedResponse = C.IDCannedResponse)
 LEFT JOIN
-  " . DBPREFIX . "Department D ON(DCR.IDDepartment = D.IDDepartment)";
-    }
-
-    $StSQL .= "
+  " . DBPREFIX . "Department D ON(DCR.IDDepartment = D.IDDepartment)
 WHERE
-  S.IDSupporter = $IDSupporter";
-    if ($IDDepartment !== false) {
-      $StSQL .= "
+  S.IDSupporter = $IDSupporter
 OR
-  D.IDDepartment = $IDDepartment";
-    }
+  D.IDDepartment IN ($StIDs)";
+
     $DBHandler = self::getDBinstance();
     $DBHandler->execSQL($StSQL);
     $ArResult = $DBHandler->getResult('string');
     return $ArResult;
   }
-  
+
   public static function createCannedResponse ( $ArData ){
   	$ArFields = array_keys($ArData);
-  	$StTableName = DBPREFIX . "CannedResponse";
+  	$StTableName = DBPREFIX . 'CannedResponse';
   	$DBHandler = self::getDBinstance();
 
   	if ( $DBHandler->insertIntoTable($StTableName, $ArFields, array($ArData)) ) {
@@ -495,13 +499,13 @@ OR
   }
 
   public static function editCannedResponse( $IDCannedResponse, $ArData ){
-		$StTableName = DBPREFIX . "CannedResponse";
-		$StCondition = "IDCannedResponse = " . $IDCannedResponse;
+		$StTableName = DBPREFIX . 'CannedResponse';
+		$StCondition = 'IDCannedResponse = ' . $IDCannedResponse;
 		$DBHandler = self::getDBinstance();
-		
+
 		return $DBHandler->updateTable( $StTableName, $ArData, $StCondition );
   }
-  
+
   public static function removeCannedResponse ( $IDCannedResponse ) {
 		$StTableName = DBPREFIX . 'CannedResponse';
 		$StCondition = 'IDCannedResponse = ' . $IDCannedResponse;
@@ -509,22 +513,35 @@ OR
 
  		return $DBHandler->deleteFromTable($StTableName,$StCondition);
   }
-  
+
+  public static function getResponseByAlias($StAlias) {
+    $StSQL = '
+SELECT
+  TxMessage
+FROM
+  ' . DBPREFIX . "CannedResponse
+WHERE
+  StAlias = '$StAlias'";
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('num');
+    return $ArResult[0][0];
+  }
+
   public static function listNotes( $IDSupporter ){
   	$StSQL = "
 SELECT N.*
 FROM
 	". DBPREFIX ."Note N
 WHERE
-	N.IDSupporter = $IDSupporter 
+	N.IDSupporter = $IDSupporter
   	";
-  	
+
   	$DBHandler = self::getDBinstance();
     $DBHandler->execSQL($StSQL);
     $ArResult = $DBHandler->getResult('string');
     return $ArResult;
   }
-  
+
   public static function createNote( $ArData ){
   	$ArFields = array_keys($ArData);
   	$StTableName = DBPREFIX . "Note";
@@ -536,15 +553,15 @@ WHERE
   		return false;
   	}
   }
-  
+
   public static function editNote( $IDNote, $ArData ){
 		$StTableName = DBPREFIX . "Note";
 		$StCondition = "IDNote = " . $IDNote;
 		$DBHandler = self::getDBinstance();
-		
+
 		return $DBHandler->updateTable( $StTableName, $ArData, $StCondition );
   }
-  
+
   public static function removeNote ( $IDNote ) {
 		$StTableName = DBPREFIX . 'Note';
 		$StCondition = 'IDNote = ' . $IDNote;
@@ -552,7 +569,7 @@ WHERE
 
  		return $DBHandler->deleteFromTable($StTableName,$StCondition, 1);
   }
-  
+
   public static function listSupporterBookmark( $IDSupporter ){
   	$StSQL = "
 SELECT T.StTitle, B.IDSupporter, B.IDTicket
@@ -560,16 +577,16 @@ FROM
 	". DBPREFIX ."Bookmark B
 	LEFT JOIN	". DBPREFIX ."Ticket T
 		on ( T.IDTicket = B.IDTicket )
-WHERE 
-	B.IDSupporter = $IDSupporter 
+WHERE
+	B.IDSupporter = $IDSupporter
   	";
-  	
+
   	$DBHandler = self::getDBinstance();
     $DBHandler->execSQL($StSQL);
     $ArResult = $DBHandler->getResult('string');
     return $ArResult;
   }
-  
+
   public static function removeBookmark ( $IDTicket, $IDSupporter ) {
 		$StTableName = DBPREFIX . 'Bookmark';
 		$StCondition = 'IDTicket = ' . $IDTicket . ' AND IDSupporter = ' . $IDSupporter;
@@ -577,5 +594,4 @@ WHERE
 
  		return $DBHandler->deleteFromTable($StTableName,$StCondition, 1);
   }
-  
 }

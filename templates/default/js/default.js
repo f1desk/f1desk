@@ -229,7 +229,7 @@ function setTicketOwner(IDTicket, IDSupporter) {
 			tableTDs[2] = createElement( 'TD', {}, [createElement('input', {'type':'hidden', 'id':'TxCannedResponse'+IDReturn,'value':content.TxMessage }),createElement('img', {'src':'templates/default/images/button_edit.png', 'alt':'Editar', 'class':'cannedAction', 'onclick':"startEditElement ('canned','"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/button_cancel.png', 'alt':'Remover', 'class':'cannedAction', 'style':'margin-left:6px;','onclick':"removeCannedResponse('"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/visualizar.png', 'alt':'Visualizar', 'class':'cannedAction','style':'margin-left:6px'} )] );
 		} else if( formName == 'note' ){
 			tableTDs[0] = createElement( 'TD', {}, [content.StTitle,createElement('input', {'type':'hidden', 'id':'StNoteTitle'+IDReturn,'value':content.StTitle })] );
-			tableTDs[1] = createElement( 'TD', {}, [createElement('input', {'type':'hidden', 'id':'TxNote'+IDReturn,'value':content.TxNote }),createElement('img', {'src':'templates/default/images/button_edit.png', 'alt':'Editar', 'class':'cannedAction', 'onclick':"startEditElement('note','"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/button_cancel.png', 'alt':'Remover', 'class':'cannedAction', 'style':'margin-left:6px;','onclick':"removeNote('"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/visualizar.png', 'alt':'Visualizar', 'class':'cannedAction','style':'margin-left:6px'} )] );			
+			tableTDs[1] = createElement( 'TD', {}, [createElement('input', {'type':'hidden', 'id':'TxNote'+IDReturn,'value':content.TxNote }),createElement('img', {'src':'templates/default/images/button_edit.png', 'alt':'Editar', 'class':'cannedAction', 'onclick':"startEditElement('note','"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/button_cancel.png', 'alt':'Remover', 'class':'cannedAction', 'style':'margin-left:6px;','onclick':"removeNote('"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/visualizar.png', 'alt':'Visualizar', 'class':'cannedAction','style':'margin-left:6px'} )] );
 		}
 		editTable.appendChild ( createElement('TR',{'id':formName+'TR'+IDReturn},tableTDs) );
 	}
@@ -254,7 +254,7 @@ function submitForm (formName, action) {
 				case "Editar":	// if action is edit
 					editCannedResponse();
 				break;
-		
+
 				case "Criar": // if action is create
 					newCannedResponse();
 				break;
@@ -264,7 +264,7 @@ function submitForm (formName, action) {
 				case "Editar": // if action is edit
 					editNote();
 				break;
-		
+
 				case "Criar": // if action is create
 					newNote();
 				break;
@@ -506,7 +506,7 @@ function updateInformations(){
 		'TxHeader': dataForm.elements['TxDataHeader'].value,
 		'TxSign': dataForm.elements['TxDataSign'].value
   };
-  
+
 	var tParams = {
     'enqueue':1,
     'method':'post',
@@ -519,7 +519,7 @@ function updateInformations(){
 				gID('StDataName').textContent = dataForm.elements['StDataName'].value;
 				gID('StDataEmail').textContent = dataForm.elements['StDataEmail'].value;
 				gID('TxDataHeader').getElementsByTagName('pre')[0].textContent = (!TxHeader)?'--':TxHeader;
-				gID('TxDataSign').getElementsByTagName('pre')[0].textContent = (!TxSign)?'--':TxSign;    		
+				gID('TxDataSign').getElementsByTagName('pre')[0].textContent = (!TxSign)?'--':TxSign;
 				toogleArrow('dataArrow', 'dataBoxEditAreaContent','hide');
     	} else {
    			alert('Ocorreu um erro na atualização de seus dados. Por favor, recarregue a página');
@@ -566,10 +566,29 @@ function removeBookmark (IDTicket) {
 }
 /* Templates->HOME END*/
 
-
+/* Ticket */
 function submitTicketForm(IDTicket) {
   gID('StMessageType').selectedIndex = 0;
   gID('TxMessage').value = '';
   gID('Attachment').value = '';
   refreshCall(IDTicket);
+}
+
+function addCannedResponse(IDDepartment,IDSupporter) {
+  var Responses = gID('cannedAnswers');
+  var IDResponse = Responses[Responses.selectedIndex].value;
+  tParams = {
+    'method':'post',
+    'content': {
+      'IDResponse':IDResponse,
+      'IDDepartment':IDDepartment,
+      'IDSupporter':IDSupporter
+    },
+    'okCallBack':function(response) {
+      gID('TxMessage').value += response + "\n";
+      gID('TxMessage').focus();
+    }
+  };
+  xhr.makeRequest('getCannedResponse','getResponse.php',tParams);
+  return false;
 }

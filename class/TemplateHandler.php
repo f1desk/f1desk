@@ -28,11 +28,11 @@ abstract class TemplateHandler {
    *
    * @return array
    */
-  public static function getDepartments( $IDUser, $Format = false ) {
+  public static function getDepartments( $IDSupporter, $Format = false ) {
     $ArFormatted = array();
 
-    $ArDepartments = F1DeskUtils::getDepartments($IDUser);
-    $ArSubDepartments = F1DeskUtils::getSubDepartments($IDUser);
+    $ArDepartments = F1DeskUtils::getDepartments($IDSupporter);
+    $ArSubDepartments = F1DeskUtils::getSubDepartments($IDSupporter);
 
     foreach ($ArDepartments as $IDDepartment => $StDepartment) {
       if (array_key_exists($IDDepartment,$ArSubDepartments) === true) {
@@ -458,6 +458,7 @@ abstract class TemplateHandler {
 	public static function IsSupporter() {
 	  return (getSessionProp('isSupporter') && getSessionProp('isSupporter') == 'true');
 	}
+
 }
 
 ?>

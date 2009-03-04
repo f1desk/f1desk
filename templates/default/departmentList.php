@@ -2,11 +2,12 @@
   /*default*/
   handleLanguage(__FILE__);
 
-  $IDUser = getSessionProp("IDUser");
+  $IDSupporter = getSessionProp('IDSupporter');
+  $IDUser = getSessionProp('IDUser');
 
   if (getSessionProp( 'isSupporter' ) == 'true') {
-  	$ArDepartments = TemplateHandler::getDepartments( $IDUser, true );
-  	$ArNotRead = TemplateHandler::notReadCount( $IDUser );
+  	$ArDepartments = TemplateHandler::getDepartments( $IDSupporter, true );
+  	$ArNotRead = TemplateHandler::notReadCount( $IDSupporter );
   } else {
     $ArDepartments = TemplateHandler::getUserDepartments();
     $ArNotRead = TemplateHandler::notReadCount( $IDUser, false );

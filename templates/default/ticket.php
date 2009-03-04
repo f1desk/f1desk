@@ -72,10 +72,10 @@
       <div id='messageType' class='Right'>
     	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
     				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
-    				<?php //if (TemplateHandler::IsSupporter()): ?>
+    				<?php if (TemplateHandler::IsSupporter()): ?>
     				<option value="INTERNAL"><?=MSGTYPE_INTERNAL?></option>
     				<option value="SATISFACTION"><?=MSGTYPE_SATISFACTION?></option>
-    				<?php //endif; ?>
+    				<?php endif; ?>
     		</select>
       </div>
 
@@ -102,12 +102,13 @@
                    <option value='null'><?=NO_ANSWER?></option>
               <? endif; ?>
       			  </select>
-      			  <button class='button'>Incluir</button>
+      			  <button class='button' onclick='addCannedResponse("<?=$IDDepartment?>","<?=getSessionProp('IDSupporter')?>"); return false;'>Incluir</button>
     			  <? endif; ?>
     		</div>
     	</div>
 
     	<div>
+    	    <button class='button' onclick='alert("To esperando a flow"); return false;'>Visualizar</button>
     			<input type='submit' class='button' value='Responder' name='Responder'>
     	</div>
     </div>

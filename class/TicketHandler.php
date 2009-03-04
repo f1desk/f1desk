@@ -838,6 +838,8 @@ WHERE
     #Get table's User ID
     $IDUser = array_shift(F1DeskUtils::getUserData($IDWriter));
 
+    $TxMessage = $this->replaceAlias($TxMessage,$IDWriter);
+
     #Add the reply
     $this->addMessage($IDUser, $IDTicket, $TxMessage, $BoReleased, $StMsgType);
     $IDMessage = $this->getID();
@@ -947,6 +949,24 @@ WHERE
     $ArFields = array('IDSupporter' => $IDSupporter);
     $NumRows = $this->updateTable($StTableName, $ArFields, "IDTicket = $IDTicket", 1);
     return $NumRows;
+  }
+
+  /**
+	 * Catch the alias in the message given replacing them with the corresponded answers
+	 *
+	 * @param str $TxMessage
+	 * @return str $TxReturn
+	 *
+	 * @author Matheus Ashton <matheus@digirati.com.br>
+	 */
+	public function replaceAlias($TxMessage,$IDSupporter) {
+	  $ArAlias = array();
+    $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter);
+    foreach ($ArResponses as $Response) {
+      $ArReplace[$Response['StAlias']] = F1DeskUtils::getResponseByAlias($Response['StAlias']);
+    }
+    $StMessage = strtr($TxMessage,$ArReplace);
+    return $StMessage;
   }
 }
 ?>
