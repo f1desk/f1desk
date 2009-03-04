@@ -522,8 +522,9 @@ FROM
   ' . DBPREFIX . "CannedResponse
 WHERE
   StAlias = '$StAlias'";
-    $this->execSQL($StSQL);
-    $ArResult = $this->getResult('num');
+    $DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('num');
     return $ArResult[0][0];
   }
 
