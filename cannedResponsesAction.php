@@ -28,6 +28,7 @@
 		break;
 		
 		case 'insert':
+			//$ArCannedResponses = F1desk
 			$ItAffedcted = TemplateHandler::createCannedResponse( $_POST['StAlias'], $_POST['StTitle'], $_POST['TxMessage'], getSessionProp('IDSupporter') );
 			if ( !$ItAffedcted ) {
 				die('Erro ao criar resposta. Por favor, tente novamente');

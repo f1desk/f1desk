@@ -30,8 +30,8 @@ if ( getSessionProp('isSupporter') == "true" ){
 			</tbody>
 		</table>
 		<div id="dataBoxEditArea" class="editArea">
-			<div class="editAreaTitle">
-				<img id="dataArrow" src="<?= TEMPLATEDIR ?>images/arrow_show.gif" onclick="toogleArrow('dataArrow', 'dataBoxEditAreaContent'); startDataEdit();">
+			<div class="editAreaTitle"  onclick="startDataEdit();">
+				<img id="dataArrow" src="<?= TEMPLATEDIR ?>images/arrow_show.gif">
 				<span><?=EDIT_AREA?></span>
 			</div>
 			<div id="dataBoxEditAreaContent" class="editAreaContent" style="display: none">

@@ -488,6 +488,7 @@ function removeNote (IDNote) {
 
 
 function startDataEdit(){
+	toogleArrow('dataArrow', 'dataBoxEditAreaContent');
 	var dataForm = gID('dataForm');
 	var TxHeader = gID('TxDataHeader').getElementsByTagName('pre')[0].textContent;
 	var TxSign = gID('TxDataSign').getElementsByTagName('pre')[0].textContent;

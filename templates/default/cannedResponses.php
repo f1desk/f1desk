@@ -39,8 +39,8 @@
 				</tbody>
 			</table>
 			<div id="cannedBoxEditArea" class="editArea">
-				<div class="editAreaTitle">
-					<img id="cannedArrow" src="<?= TEMPLATEDIR ?>images/arrow_show.gif" onclick="toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide')">
+				<div class="editAreaTitle" onclick="toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide')">
+					<img id="cannedArrow" src="<?= TEMPLATEDIR ?>images/arrow_show.gif" >
 					<span><?=EDIT_AREA?></span>
 				</div>
 				<div id="cannedBoxEditAreaContent" class="editAreaContent" style="display: none">
