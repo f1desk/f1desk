@@ -96,13 +96,13 @@
       		    <select class='inputCombo' id='cannedAnswers'>
               <? if ($ArResponses[0]['IDCannedResponse'] != ''): ?>
                   <? foreach ($ArResponses as $Response): ?>
-                    <option value="<?=$Response['IDCannedResponse'];?>"><?=$Response['StTitle']?></option>
+                    <option value="<?=$Response['StAlias'];?>"><?=$Response['StTitle']?></option>
                   <?endforeach; ?>
               <? else: ?>
                    <option value='null'><?=NO_ANSWER?></option>
               <? endif; ?>
       			  </select>
-      			  <button class='button' onclick='addCannedResponse("<?=$IDDepartment?>","<?=getSessionProp('IDSupporter')?>"); return false;'>Incluir</button>
+      			  <button class='button' onclick='addCannedResponse(); return false;'>Incluir</button>
     			  <? endif; ?>
     		</div>
     	</div>

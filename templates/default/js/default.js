@@ -576,19 +576,7 @@ function submitTicketForm(IDTicket) {
 
 function addCannedResponse(IDDepartment,IDSupporter) {
   var Responses = gID('cannedAnswers');
-  var IDResponse = Responses[Responses.selectedIndex].value;
-  tParams = {
-    'method':'post',
-    'content': {
-      'IDResponse':IDResponse,
-      'IDDepartment':IDDepartment,
-      'IDSupporter':IDSupporter
-    },
-    'okCallBack':function(response) {
-      gID('TxMessage').value += response + "\n";
-      gID('TxMessage').focus();
-    }
-  };
-  xhr.makeRequest('getCannedResponse','getResponse.php',tParams);
+  var StAlias = Responses[Responses.selectedIndex].value
+  gID('TxMessage').value += StAlias + '\n';
   return false;
 }
