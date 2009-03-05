@@ -17,6 +17,7 @@ if (isset($ArResult['BoPermission']) && $ArResult['BoPermission'] == 'true') {
   } else {
     $StFileName = $ArResult['StFile'];
   }
+  $StFileName = strtr($StFileName,' ','_');
   if (isset($ArResult['StLink']) && ! is_dir($ArResult['StLink'])) {
     $ItFileSize = filesize($ArResult['StLink']);
     $tmpFile = F1DeskUtils::toTMP($ArResult['StLink'],'path');

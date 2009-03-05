@@ -94,13 +94,20 @@ SET
    * @return string/boolean
    */
   private function _validateFile( $StFile ) {
+    $ArSearch = array("Á"=>"A","À"=>"A","Ã"=>"A","Â"=>"A",
+                "á"=>"a","à"=>"a","ã"=>"a","â"=>"a",
+                "É"=>"E","Ê"=>"E",
+                "é"=>"e","ê"=>"e",
+                "Í"=>"I",
+                "í"=>"i",
+                "Ó"=>"O","Õ"=>"O","Ô"=>"O",
+                "ó"=>"o","õ"=>"o","ô"=>"o",
+                "Ú"=>"U",
+                "ú"=>"u",
+                "Ç"=>"C","ç"=>"c",
+                "?"=>"_","#"=>"_","$"=>"_","<"=>"_",">"=>"_","%"=>"_","&"=>"_","@"=>"_","¬"=>"_");
 
-    $ArCharOld = explode(' ', 'À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï Ð Ñ Ò Ó Ô Õ Ö Ø Ù Ú Û Ü Ý Þ ß à á â ã ä å æ ç è é ê ë ì í î ï ð ñ ò ó ô õ ö ø ù ú û ý ý þ ÿ Ŕ ŕ' );
-    $ArCharNew = explode(' ', 'a a a a a a a c e e e e i i i i d n o o o o o o u u u u y b b a a a a a a a c e e e e i i i i d n o o o o o o u u u y y b y R r');
-
-    $ArReplace = array_combine( $ArCharOld, $ArCharNew );
-    $StFile = strtr( $StFile, $ArReplace );
-
+    $StFile = strtr( $StFile, $ArSearch );
     $ArInvalidEXT = array('exe','bin','sh','cmd','ceo','bat','pif','com','scr','vbs','vbe','reg','jse','lnk','mhtml','asp');
 
     $ItLast = strrpos( $StFile,'.' );
