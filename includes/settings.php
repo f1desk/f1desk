@@ -45,16 +45,32 @@ function setOption($StSetting, $StValue) {
 }
 
 /**
- * outputs the default header
+ * outputs the default header JS
  *
  * @return string
  */
 function defaultJS() {
   $Html = '';
-  $ArDefaultJs = array('json2','utils','libAjax','DragNdrop','flow', 'global');
+  $ArDefaultJs = array('json2','utils','libAjax','DragNdrop','Flow', 'global');
 
   foreach ($ArDefaultJs as $JsFile) {
     $Html .= '<script type="text/javascript" src="' . JSDIR . $JsFile . '.js"></script>' . "\n";
+  }
+
+  return $Html;
+}
+
+/**
+ * outputs the default header CSS
+ *
+ * @return string
+ */
+function defaultCSS() {
+  $Html = '';
+  $ArDefaultCss = array('Flow');
+
+  foreach ($ArDefaultCss as $CssFile) {
+  	$Html .= '<link rel="stylesheet" type="text/css" href="' . CSSDIR . $CssFile .'.css">' . "\n";
   }
 
   return $Html;

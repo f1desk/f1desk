@@ -20,6 +20,7 @@
          @import url('<?= TEMPLATEDIR ?>css/style.css');
          @import url('<?= TEMPLATEDIR ?>css/fonts.css');
       </style>
+      <?= defaultCSS() ?>
    </head>
 
     <body>

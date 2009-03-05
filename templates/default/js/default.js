@@ -581,3 +581,21 @@ function addCannedResponse(IDDepartment,IDSupporter) {
   gID('TxMessage').value += StAlias + '\n';
   return false;
 }
+
+function previewInFlow( content ){
+	var tParams = {
+     'x':100,
+     'y':100,
+     'width':250,
+     'height':150,
+     'definicao': 'response',
+     'innerHTML': content,
+     'TB': true,
+     'Janela': 'simples',
+     'TBStyle':{'BackgroundColor': '#9CB6CD','Color':'#fff','Font':'12px verdana, sans-serif', 'Imagem': 'visualizar.png', 'Caption': 'Preview'},
+     'JanStyle':{'BackgroundColor':'#fff','BackgroundImage':'','Caption':'Conteudo'},
+     'EventFuncs':""/*{'Confirm':Confirm, 'Prompt':Prompt, 'Close':""}*/
+  };
+  
+  var ID = Flow.novo(tParams);
+}
