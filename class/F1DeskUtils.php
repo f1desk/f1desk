@@ -606,4 +606,18 @@ WHERE
     fwrite($tmpFile,$Content);
     return $tmpFile;
   }
+
+  public static function getUserHeaderSign($IDUser) {
+    $DBHandler = self::getDBinstance();
+    $StSQL = '
+SELECT
+  U.TxHeader, U.TxSign
+FROM
+  ' . DBPREFIX . "User U
+WHERE
+  U.IDUser = $IDUser";
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('string');
+    return array_shift($ArResult);
+  }
 }

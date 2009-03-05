@@ -461,16 +461,20 @@ GROUP BY
    */
   public function addMessage($IDUser, $IDTicket, $StMessage, $BoAvailable, $ItMsgType = 0) {
 
-    #
     # message types availables
-    #
     $ArTypes = array( 'NORMAL' , 'INTERNAL' , 'SYSTEM', 'SATISFACTION');
 
     $StMsgType = ($ItMsgType != 4) ? $ArTypes[$ItMsgType] : $ArTypes[0];
 
-    #
-    # preparing to insert on the table
-    #
+    $ArHeaderSign = F1DeskUtils::getUserHeaderSign($IDUser);
+    if (!empty($ArHeaderSign['TxHeader'])) {
+      $ArHeaderSign['TxHeader'] .= '\n';
+    }
+    if (!empty($ArHeaderSign['TxSign'])) {
+      $ArHeaderSign['TxSign'] = '\n' . $ArHeaderSign['TxSign'];
+    }
+    $StMessage = $ArHeaderSign['TxHeader'] . $StMessage . $ArHeaderSign['TxSign'];
+    # preparing to insert on Message table
     $StTableName = DBPREFIX . 'Message';
     $ArFields = array( 'TxMessage' , 'DtSended' , 'BoAvailable' , 'EnMessageType' , 'IDTicket' , 'IDUser' );
     $ArValues = array( $StMessage , date('Y-m-d H:i:s',time()) , $BoAvailable, $StMsgType, $IDTicket, $IDUser );
