@@ -52,10 +52,16 @@
     <? foreach ($ArMessages as $ArMessage) : ?>
       <? $DtSended = F1DeskUtils::formatDate('datetime_format',$ArMessage['DtSended']); ?>
       <div class='<?= $ArMessage['StClass'] ?>'>
-        <?= MSG_HEAD1 . $DtSended . MSG_HEAD2 . $ArMessage['SentBy'] . MSG_HEAD3 . $ArMessage['TxMessage'] ?>
+        <?= MSG_HEAD1 . $DtSended . MSG_HEAD2 . $ArMessage['SentBy'] . MSG_HEAD3 ?>
+        <? if (array_key_exists($ArMessage['IDMessage'],$ArAttachments)): ?>
+          <?  foreach ($ArAttachments[$ArMessage['IDMessage']] as $Attachment): ?>
+              <p class='AttachLink'><a href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></p>
+          <?  endforeach; ?>
+        <? endif;?>
+        <?= $ArMessage['TxMessage'] ?>
       </div>
     <? endforeach ?>
-
+    <?php ?>
   </div>
 </div>
 <!--[/TICKET HISTORY]-->

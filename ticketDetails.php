@@ -13,6 +13,7 @@ $TicketHandler->setAsRead(getSessionProp('IDUser'),$IDTicket);
 $ArHeaders = TemplateHandler::getTicketHeaders($IDTicket);
 $ArSupporters = TemplateHandler::listSupporters($IDTicket);
 $ArMessages = TemplateHandler::getHistory($IDTicket);
+$ArAttachments = TemplateHandler::getAttachments($IDTicket);
 
 $StTitle = $ArHeaders['StTitle'];
 $IDTicket = $ArHeaders['IDTicket'];

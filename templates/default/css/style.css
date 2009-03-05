@@ -414,3 +414,17 @@ html>body #main{
 	cursor: pointer;
 }
 /*HOME TEMPLATE END;*/
+
+.AttachLink {
+  margin-top:0px;
+}
+
+.AttachLink a {
+  color: #02764F;
+  text-decoration: underline;
+}
+
+.AttachLink a visited {
+  color: #003C25;
+  text-decoration: underline;
+}

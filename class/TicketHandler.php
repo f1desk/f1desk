@@ -23,20 +23,17 @@ class TicketHandler extends DBHandler {
    * @return boolean
    */
   public function attachFile( $Files, $IDMessage ) {
-
     if (count($Files) == 1) {
       $StField = key($Files);
 
-      #
+
       # get file information
-      #
       $StFile = $Files[$StField]['name'];
       $StTmp = $Files[$StField]['tmp_name'];
       $ItSize = $Files[$StField]['size'];
 
-      #
+
       # checking if file is valid
-      #
       if ( ! is_uploaded_file($StTmp)) {
         throw new ErrorHandler(EXC_CALL_NOTUPLOADFILE);
       }
@@ -49,14 +46,10 @@ class TicketHandler extends DBHandler {
         throw new ErrorHandler(EXC_CALL_INVALIDTYPE);
       }
 
-      #
       # checking if upload its to db or ftp
-      #
       if (UPLOAD_OPT == 'DB') {
 
-        #
         # inserting file content on DB
-        #
         $ByFile = file_get_contents($StTmp);
         $ByFile = addslashes($ByFile);
 
@@ -70,11 +63,9 @@ SET
 
       } else {
 
-        #
         # uploading file to ftp
-        #
-        $StUploadedFile = UPLOADDIR . '/' . $this->_generateFileName();
 
+        $StUploadedFile = UPLOADDIR . $this->_generateFileName();
         if (! move_uploaded_file($StTmp,$StUploadedFile) ) {
           throw new ErrorHandler(EXC_CALL_NOTUPLOADFILE);
         }
@@ -808,7 +799,7 @@ WHERE
     if (getSessionProp('isSupporter') && getSessionProp('isSupporter') == 'true') {
       $this->_supporterAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);
     } else {
-      $this->_clientAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);
+      $this->_clientAnswer($IDWriter,$IDTicket,$TxMessage, $ArFiles);
     }
 
     #Setting Ticket as not read
@@ -967,6 +958,68 @@ WHERE
     }
     $StMessage = strtr($TxMessage,$ArReplace);
     return $StMessage;
+  }
+
+  /**
+   * Get the attachments of the message given
+   *
+   * @param int $IDMessage
+   * @return array
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+  public function getAttachments($IDMessage) {
+    $StSQL = '
+SELECT
+  A.*
+FROM
+  ' . DBPREFIX . 'Attachment A
+LEFT JOIN
+  ' . DBPREFIX . "Message M ON (A.IDMessage = M.IDMessage)
+WHERE
+  M.IDMessage = $IDMessage";
+    $this->execSQL($StSQL);
+    $ArReturn = $this->getResult('string');
+
+    return $ArReturn;
+  }
+
+  /**
+   * Check's if the user have permission to download the file given
+   *
+   * @param int $IDAttachment
+   * @param int $ID
+   * @return array [Permission and Link]
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+  public function canDownload($IDAttachment, $ID) {
+    $StSQL = '
+SELECT
+  A.StLink, A.StFile,
+IF(EXISTS(
+    SELECT
+      T.IDTicket
+    FROM
+      ' . DBPREFIX . 'Attachment A
+    LEFT JOIN ' . DBPREFIX . 'Message M ON (A.IDMessage = M.IDMessage)
+    LEFT JOIN ' . DBPREFIX . 'Ticket T ON (M.IDTicket = T.IDTicket)
+    LEFT JOIN ' . DBPREFIX . "User U ON (T.IDUser = U.IDUser)
+    WHERE
+      A.IDAttachment = $IDAttachment
+    AND
+      U.IDUser = $ID
+  ),'true','false')
+AS
+  BoPermission
+FROM
+  Attachment A
+WHERE
+  A.IDAttachment = $IDAttachment";
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+
+    return array_shift($ArResult);
   }
 }
 ?>
