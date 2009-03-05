@@ -1,4 +1,4 @@
-<?if ( getSessionProp('isSupporter')=="true" ):?>
+<?if (TemplateHandler::IsSupporter()) :?>
 <?$ArCannedResponses = TemplateHandler::getCannedResponses( getSessionProp('IDSupporter') );?>
 	<div id="cannedBox" class="homeBox">
 		<span class="homeBoxTitle"><?=CANNED_RESPONSES?></span>
