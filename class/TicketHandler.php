@@ -996,7 +996,7 @@ WHERE
   public function canDownload($IDAttachment, $ID) {
     $StSQL = '
 SELECT
-  A.StLink, A.StFile,
+  A.StLink, A.StFile, A.ByFile,
 IF(EXISTS(
     SELECT
       T.IDTicket

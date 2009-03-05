@@ -595,4 +595,15 @@ WHERE
 
  		return $DBHandler->deleteFromTable($StTableName,$StCondition, 1);
   }
+
+  public static function toTMP($StIncome,$StMode = 'path') {
+    $tmpFile = tmpfile();
+    if ($StMode == 'path') {
+      $Content = file_get_contents($StIncome);
+    } else {
+      $Content = $StIncome;
+    }
+    fwrite($tmpFile,$Content);
+    return $tmpFile;
+  }
 }
