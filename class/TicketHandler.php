@@ -468,10 +468,10 @@ GROUP BY
 
     $ArHeaderSign = F1DeskUtils::getUserHeaderSign($IDUser);
     if (!empty($ArHeaderSign['TxHeader'])) {
-      $ArHeaderSign['TxHeader'] .= '\n';
+      $ArHeaderSign['TxHeader'] .= '<br>';
     }
     if (!empty($ArHeaderSign['TxSign'])) {
-      $ArHeaderSign['TxSign'] = '\n' . $ArHeaderSign['TxSign'];
+      $ArHeaderSign['TxSign'] = '<br>' . $ArHeaderSign['TxSign'];
     }
     $StMessage = $ArHeaderSign['TxHeader'] . $StMessage . $ArHeaderSign['TxSign'];
     # preparing to insert on Message table
