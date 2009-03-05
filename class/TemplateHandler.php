@@ -189,7 +189,7 @@ abstract class TemplateHandler {
    *
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-   public static function notReadCount( $IDUser, $isSupporter = true ) {
+  public static function notReadCount( $IDUser, $isSupporter = true ) {
   	$ObTicket = self::getInstance( "TicketHandler" );
 
   	if ($isSupporter) {
@@ -309,11 +309,25 @@ abstract class TemplateHandler {
     }
 	}
 
-	public static function getUserData( $ID, $ItType ){
+	/**
+	 * Get's user data from an IDSupporter or an IDClient
+	 *
+	 * @param unknown_type $ID
+	 * @param unknown_type $ItType
+	 * @return unknown
+	 */
+  public static function getUserData( $ID, $ItType ){
 		$ArUserData = F1DeskUtils::getUserData( $ID, $ItType );
 		return $ArUserData;
 	}
 
+	/**
+	 * Enter description here...
+	 *
+	 * @param unknown_type $IDUser
+	 * @param unknown_type $ArData
+	 * @return unknown
+	 */
 	public static function updateUserData($IDUser, $ArData){
 		$ItAffected = F1DeskUtils::updateUserData( $IDUser, $ArData );
 		return $ItAffected;
@@ -455,10 +469,28 @@ abstract class TemplateHandler {
 		return $ItAffected;
 	}
 
+	/**
+	 * Checks if the user is a supporter
+	 *
+	 * @return unknown
+	 */
 	public static function IsSupporter() {
 	  return (getSessionProp('isSupporter') && getSessionProp('isSupporter') == 'true');
 	}
 
+	public static function getAttachments($IDTicket) {
+	  $ArAttachments = array();
+	  $TicketHandler = self::getInstance('TicketHandler');
+
+	  $ArMessages = $TicketHandler->listTicketMessages($IDTicket);
+
+	  foreach ($ArMessages as $ArMessage) {
+	    $ArAttachment = $TicketHandler->getAttachments($ArMessage['IDMessage']);
+	    if (! empty($ArAttachment))
+	    $ArAttachments[$ArMessage['IDMessage']] = $ArAttachment;
+	  }
+	  return $ArAttachments;
+	}
 }
 
 ?>

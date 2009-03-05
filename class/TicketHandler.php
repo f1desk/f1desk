@@ -23,20 +23,17 @@ class TicketHandler extends DBHandler {
    * @return boolean
    */
   public function attachFile( $Files, $IDMessage ) {
-
     if (count($Files) == 1) {
       $StField = key($Files);
 
-      #
+
       # get file information
-      #
       $StFile = $Files[$StField]['name'];
       $StTmp = $Files[$StField]['tmp_name'];
       $ItSize = $Files[$StField]['size'];
 
-      #
+
       # checking if file is valid
-      #
       if ( ! is_uploaded_file($StTmp)) {
         throw new ErrorHandler(EXC_CALL_NOTUPLOADFILE);
       }
@@ -49,14 +46,10 @@ class TicketHandler extends DBHandler {
         throw new ErrorHandler(EXC_CALL_INVALIDTYPE);
       }
 
-      #
       # checking if upload its to db or ftp
-      #
       if (UPLOAD_OPT == 'DB') {
 
-        #
         # inserting file content on DB
-        #
         $ByFile = file_get_contents($StTmp);
         $ByFile = addslashes($ByFile);
 
@@ -70,11 +63,9 @@ SET
 
       } else {
 
-        #
         # uploading file to ftp
-        #
-        $StUploadedFile = UPLOADDIR . '/' . $this->_generateFileName();
 
+        $StUploadedFile = UPLOADDIR . $this->_generateFileName();
         if (! move_uploaded_file($StTmp,$StUploadedFile) ) {
           throw new ErrorHandler(EXC_CALL_NOTUPLOADFILE);
         }
@@ -103,13 +94,20 @@ SET
    * @return string/boolean
    */
   private function _validateFile( $StFile ) {
+    $ArSearch = array("Á"=>"A","À"=>"A","Ã"=>"A","Â"=>"A",
+                "á"=>"a","à"=>"a","ã"=>"a","â"=>"a",
+                "É"=>"E","Ê"=>"E",
+                "é"=>"e","ê"=>"e",
+                "Í"=>"I",
+                "í"=>"i",
+                "Ó"=>"O","Õ"=>"O","Ô"=>"O",
+                "ó"=>"o","õ"=>"o","ô"=>"o",
+                "Ú"=>"U",
+                "ú"=>"u",
+                "Ç"=>"C","ç"=>"c",
+                "?"=>"_","#"=>"_","$"=>"_","<"=>"_",">"=>"_","%"=>"_","&"=>"_","@"=>"_","¬"=>"_");
 
-    $ArCharOld = explode(' ', 'À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï Ð Ñ Ò Ó Ô Õ Ö Ø Ù Ú Û Ü Ý Þ ß à á â ã ä å æ ç è é ê ë ì í î ï ð ñ ò ó ô õ ö ø ù ú û ý ý þ ÿ Ŕ ŕ' );
-    $ArCharNew = explode(' ', 'a a a a a a a c e e e e i i i i d n o o o o o o u u u u y b b a a a a a a a c e e e e i i i i d n o o o o o o u u u y y b y R r');
-
-    $ArReplace = array_combine( $ArCharOld, $ArCharNew );
-    $StFile = strtr( $StFile, $ArReplace );
-
+    $StFile = strtr( $StFile, $ArSearch );
     $ArInvalidEXT = array('exe','bin','sh','cmd','ceo','bat','pif','com','scr','vbs','vbe','reg','jse','lnk','mhtml','asp');
 
     $ItLast = strrpos( $StFile,'.' );
@@ -463,16 +461,20 @@ GROUP BY
    */
   public function addMessage($IDUser, $IDTicket, $StMessage, $BoAvailable, $ItMsgType = 0) {
 
-    #
     # message types availables
-    #
     $ArTypes = array( 'NORMAL' , 'INTERNAL' , 'SYSTEM', 'SATISFACTION');
 
     $StMsgType = ($ItMsgType != 4) ? $ArTypes[$ItMsgType] : $ArTypes[0];
 
-    #
-    # preparing to insert on the table
-    #
+    $ArHeaderSign = F1DeskUtils::getUserHeaderSign($IDUser);
+    if (!empty($ArHeaderSign['TxHeader'])) {
+      $ArHeaderSign['TxHeader'] .= '<br>';
+    }
+    if (!empty($ArHeaderSign['TxSign'])) {
+      $ArHeaderSign['TxSign'] = '<br>' . $ArHeaderSign['TxSign'];
+    }
+    $StMessage = $ArHeaderSign['TxHeader'] . $StMessage . $ArHeaderSign['TxSign'];
+    # preparing to insert on Message table
     $StTableName = DBPREFIX . 'Message';
     $ArFields = array( 'TxMessage' , 'DtSended' , 'BoAvailable' , 'EnMessageType' , 'IDTicket' , 'IDUser' );
     $ArValues = array( $StMessage , date('Y-m-d H:i:s',time()) , $BoAvailable, $StMsgType, $IDTicket, $IDUser );
@@ -808,7 +810,7 @@ WHERE
     if (getSessionProp('isSupporter') && getSessionProp('isSupporter') == 'true') {
       $this->_supporterAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);
     } else {
-      $this->_clientAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);
+      $this->_clientAnswer($IDWriter,$IDTicket,$TxMessage, $ArFiles);
     }
 
     #Setting Ticket as not read
@@ -967,6 +969,68 @@ WHERE
     }
     $StMessage = strtr($TxMessage,$ArReplace);
     return $StMessage;
+  }
+
+  /**
+   * Get the attachments of the message given
+   *
+   * @param int $IDMessage
+   * @return array
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+  public function getAttachments($IDMessage) {
+    $StSQL = '
+SELECT
+  A.*
+FROM
+  ' . DBPREFIX . 'Attachment A
+LEFT JOIN
+  ' . DBPREFIX . "Message M ON (A.IDMessage = M.IDMessage)
+WHERE
+  M.IDMessage = $IDMessage";
+    $this->execSQL($StSQL);
+    $ArReturn = $this->getResult('string');
+
+    return $ArReturn;
+  }
+
+  /**
+   * Check's if the user have permission to download the file given
+   *
+   * @param int $IDAttachment
+   * @param int $ID
+   * @return array [Permission and Link]
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+  public function canDownload($IDAttachment, $ID) {
+    $StSQL = '
+SELECT
+  A.StLink, A.StFile, A.ByFile,
+IF(EXISTS(
+    SELECT
+      T.IDTicket
+    FROM
+      ' . DBPREFIX . 'Attachment A
+    LEFT JOIN ' . DBPREFIX . 'Message M ON (A.IDMessage = M.IDMessage)
+    LEFT JOIN ' . DBPREFIX . 'Ticket T ON (M.IDTicket = T.IDTicket)
+    LEFT JOIN ' . DBPREFIX . "User U ON (T.IDUser = U.IDUser)
+    WHERE
+      A.IDAttachment = $IDAttachment
+    AND
+      U.IDUser = $ID
+  ),'true','false')
+AS
+  BoPermission
+FROM
+  Attachment A
+WHERE
+  A.IDAttachment = $IDAttachment";
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+
+    return array_shift($ArResult);
   }
 }
 ?>

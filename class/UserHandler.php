@@ -71,7 +71,7 @@ class UserHandler extends DBHandler {
    *
    * @return str $StReturn  Safe string
    */
-  public function SQLInjectionLogin(&$StArgs) {
+  public static function SQLInjectionHandle(&$StArgs) {
     $StArgs = strip_tags($StArgs);
     $StArgs = addslashes($StArgs);
     $StArgs = strtolower($StArgs);
@@ -89,8 +89,8 @@ class UserHandler extends DBHandler {
    * @return unknown
    */
   public function getLogged($StLogin, $StPwd) {
-    $this->SQLInjectionLogin($StLogin);
-    $this->SQLInjectionLogin($StPwd);
+    UserHandler::SQLInjectionHandle($StLogin);
+    UserHandler::SQLInjectionHandle($StPwd);
     $this->StLogin = $StLogin;
     $StSQL = "
 SELECT

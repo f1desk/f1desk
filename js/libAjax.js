@@ -159,7 +159,7 @@ var xhr = {
         alert(msg);
       }
     } catch(e) {
-      alert('Erro na requisição ' + xhr.curName + ':\n' + e.message); }
+      alert('Erro na requisição ' + xhr.curName + ':\n' + e.message + '\n\nArquivo:\n' + e.fileName + '\nLinha: ' + e.lineNumber); }
   },
 
   'timedOutRequest':function(reqName, uID) {

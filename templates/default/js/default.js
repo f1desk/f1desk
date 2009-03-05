@@ -55,6 +55,9 @@ function animateReload( ID, action ) {
 * @param int IDDepartment
 */
 function refreshNotReadCount( IDDepartment ){
+  if (IDDepartment == 'closed' || IDDepartment == 'ignored') {
+    return false;
+  }
   var count = 0;
 	var table = gID('ticketTable' + IDDepartment);
 	var tbody = gTN('tbody',table)[0];
@@ -103,7 +106,7 @@ function reloadTicketList( IDDepartment, First ){
     'okCallBack':function(HTMLTickets) {
       animateReload( IDDepartment, 'stop' );
       insertTickets(IDDepartment, HTMLTickets);
-      if (IDDepartment !== 'closed' && IDDepartment !== 'ignored') { refreshNotReadCount( IDDepartment ); }
+      refreshNotReadCount( IDDepartment );
       if (First === true) { toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment); }
     },
     'errCallBack':function(Return) {
@@ -166,7 +169,7 @@ function showCall( IDTicket, IDDepartment, Clicked ) {
       removeChilds(contentDisplay);
       appendHTML(returnedValue, contentDisplay);
       selectTicket(Clicked);
-      refreshNotReadCount( IDDepartment )
+      refreshNotReadCount( IDDepartment );
     }
   };
   var tUrl = 'ticketDetails.php';

@@ -306,7 +306,7 @@ function bindPlus(method,handler) {
 function appendHTML(HTML, Target) {
     var tmpDiv = createElement('div');
     tmpDiv.innerHTML = HTML;
-    var nodes = tmpDiv.childNodes, clone;
+    var nodes = tmpDiv.childNodes, element;
 
     for (var i = 0, node = null; node = nodes[i]; i++) {
         element = node.cloneNode(true);

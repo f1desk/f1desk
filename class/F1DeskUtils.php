@@ -595,4 +595,29 @@ WHERE
 
  		return $DBHandler->deleteFromTable($StTableName,$StCondition, 1);
   }
+
+  public static function toTMP($StIncome,$StMode = 'path') {
+    $tmpFile = tmpfile();
+    if ($StMode == 'path') {
+      $Content = file_get_contents($StIncome);
+    } else {
+      $Content = $StIncome;
+    }
+    fwrite($tmpFile,$Content);
+    return $tmpFile;
+  }
+
+  public static function getUserHeaderSign($IDUser) {
+    $DBHandler = self::getDBinstance();
+    $StSQL = '
+SELECT
+  U.TxHeader, U.TxSign
+FROM
+  ' . DBPREFIX . "User U
+WHERE
+  U.IDUser = $IDUser";
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('string');
+    return array_shift($ArResult);
+  }
 }

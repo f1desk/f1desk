@@ -37,13 +37,6 @@ class DBHandler {
       }
    }
 
-   public static function SQLInjectionHandle($StArgs, $Entities = 1) {
-     $StArgs = $this->ObjConnection->mysqli_real_escape_string($StArgs);
-     if ($Entities)
-       $StArgs = htmlentities($StArgs);
-     return $StArgs;
-   }
-
    /**
     * Armazena as transacoes a serem realizadas
     *
