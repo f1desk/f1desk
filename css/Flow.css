@@ -3,7 +3,7 @@
            }
 
 .Janela { position: absolute; top: 30px; left: 0; width: 99%; height: 0px; z-index: 0;
-          border:none; overflow: hidden; background:white; padding: 1px;
+          border:none; overflow: hidden; background:#ECEDEF; padding: 1px;
         }	
 
 .Janela .Msg { text-align: center; margin:10px; }
