@@ -1,0 +1,86 @@
+.WindigBase{ position: absolute; bottom:0; top: 0; left: 0; width: 0px; height: 0px;
+             z-index: 0; border:none; overflow: none; background-color: white;
+           }
+
+.Janela { position: absolute; top: 30px; left: 0; width: 99%; height: 0px; z-index: 0;
+          border:none; overflow: hidden; background:white; padding: 1px;
+        }	
+
+.Janela .Msg { text-align: center; margin:10px; }
+
+.Janela .Prompt { text-align: center; margin:10px; }
+
+.Janela .Msg img { vertical-align:middle; padding-right:10px;}
+
+.Janela .Msg input {font-size:10px; font-family:Verdana,Helvetica; font-weight:bold; color:white;
+                    background:#638cb5; width:80px; height:19px; border-style:ridge; border-width:thin;
+                   }
+
+.TitleBar { position: absolute; top: 0; left: 0; width: 100%; height: 30px; cursor: move;
+            -moz-user-select: none; z-index: 0; color: white; font:12px verdana, sans-serif;
+            line-height: 30px; border: none;
+          }
+
+.TitleBar .img { display: block; white-space: nowrap; text-align: left; margin-left: 5px;
+                 position:absolute; left:0px; top:2px; margin-top: 2px;
+               }
+
+.TitleBar .cap { display: block; white-space: nowrap; text-align: left; padding-left: 30px;
+                 width:80%; height: 100%;
+               }
+
+.TitleBar .min { width:auto; height:auto; cursor: pointer; position: absolute; padding: 11px;
+                 top:6px; right: 43px; z-index: 1500;
+                 background: url('../images/flow_minimize.gif') no-repeat;
+               }
+
+.TitleBar .minres { width:auto; cursor: pointer; padding: 11px;
+                    position: absolute; top:6px; right: 43px;
+                    background: url('../images/flow_restaur.gif') no-repeat;
+                  }
+
+.TitleBar .max { width:auto; cursor: pointer; padding: 11px; position: absolute;
+                 top:6px; right: 24px;
+                 background: url('../images/flow_maximize.gif') no-repeat;
+               }
+
+.TitleBar .res { width:auto; cursor: pointer; padding: 11px; position: absolute;
+                 top:6px; right: 24px; background: url('../images/flow_restaur.gif') no-repeat;
+               }
+
+.TitleBar .fec { width:auto; cursor: pointer; padding: 11px; position: absolute;
+                 top:6px; right: 5px; background: url('../images/flow_close.gif') no-repeat;
+               }
+
+.TitleBar .loading{ text-align: center; vertical-align: center; align: center;
+                    background: black;
+                  }
+
+.ResV1 { height: 100%; -moz-user-select: none; position: absolute; left: 0; top: 0;
+         width: 4px; z-index: 15000; border-style: groove; border-width: 2px;
+         border-color: #CECECE; visibility: visible; border-right: none; border-top: none;
+         border-bottom: none;
+       }
+
+.ResV2 { height: 100%; cursor: w-resize; -moz-user-select: none; position: absolute; right: 0;
+         top: 0; width: 4px; z-index: 15000; border-style: groove; border-width: 2px;
+         border-color: #CECECE; visibility: visible; border-left: none; border-top: none;
+         border-bottom: none;
+       }
+
+.ResH1 { height: 4px; -moz-user-select:none; position: absolute;
+         left: 0; top: 0; width: 100%; z-index: 15000; border-style: groove;
+         border-width: 2px; border-color: #CECECE; visibility: visible; border-bottom:none;
+         border-left: none; border-right: none;
+      }
+
+.ResH2 { height: 4px; cursor: n-resize; -moz-user-select:none; position: absolute;
+         left: 0; bottom: 0; top:; width: 100%; z-index: 15000; border-style: groove;
+         border-width: 2px; border-color: #CECECE; visibility: visible; border-top:none;
+         border-left: none; border-right: none;
+      }
+
+.ResHV { height: 15px; cursor: nw-resize; -moz-user-select:none; position: absolute;
+         right: 0; bottom: 0; width: 15px; z-index: 150000; border-style: goroove;
+         border-width: 2px; border-color: yellow; visibility: visible; border-top:none; border-left: none;
+       }
