@@ -151,13 +151,15 @@ SET
    *
    * @param integer $IDDepartment
    * @param integer $IDUser
+   * @param array   $$TicketList
    *
    * @return array
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public function getReadTickets($IDDepartment, $IDUser) {
+  public function getReadTickets($IDDepartment, $IDUser, $TicketList = '') {
 
-  	$StSQL = "
+    if ($TicketList === '') {
+    	$StSQL = "
 SELECT
 	T.IDTicket
 FROM
@@ -170,9 +172,26 @@ FROM
 WHERE
   D.IDDepartment = $IDDepartment
 AND
-  R.IDUser = $IDUser
+  U.IDUser = $IDUser
 AND
   T.StSituation IN ('NOT_READ','WAITING_SUP')";
+    } else {
+      $Tickets = implode(', ',$TicketList);
+      $Tickets = empty($Tickets) ? "''" : $Tickets;
+      $StSQL = "
+SELECT
+	T.IDTicket
+FROM
+	Ticket T
+	LEFT JOIN isRead R ON (T.IDTicket = R.IDTicket)
+	LEFT JOIN User U ON (U.IDUser = R.IDUser)
+WHERE
+  T.IDTicket IN ($Tickets)
+AND
+  U.IDUser = $IDUser
+AND
+  T.StSituation IN ('NOT_READ','WAITING_SUP')";
+    }
   	$this->execSQL($StSQL);
   	$ArResult = $this->getResult("string");
 
@@ -343,9 +362,38 @@ GROUP BY
   D.IDDepartment";
 
   	$this->execSQL($StSQL);
-  	$ArNotRead = $this->getResult("string");
+  	$ArNotRead1 = $this->getResult("string");
 
-  	$ArNotRead = F1DeskUtils::sortByID($ArNotRead, 'IDDepartment');
+		$StSQL = "
+SELECT
+  D.IDDepartment, COUNT( T.IDTicket ) AS notRead
+FROM
+  User U
+  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "Department D ON (D.IDDepartment = DS.IDDepartment)
+  LEFT JOIN " . DBPREFIX . "TicketDepartment TD ON (D.IDDepartment = TD.IDDepartment)
+  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDTicket = TD.IDTicket)
+WHERE
+  U.IDUser = $IDUser
+AND
+  EXISTS(SELECT B.IDTicket FROM " . DBPREFIX . "Bookmark B WHERE B.IDTicket = T.IDTicket AND B.IDSupporter = S.IDSupporter)
+AND
+  NOT EXISTS(SELECT IR.IDTicket FROM " . DBPREFIX . "isRead IR WHERE IR.IDTicket = T.IDTicket AND IR.IDUser = U.IDUser)
+AND
+  T.StSituation IN ('NOT_READ','WAITING_SUP')
+GROUP BY
+  D.IDDepartment";
+
+		$this->execSQL($StSQL);
+  	$ArNotRead2 = $this->getResult("string");
+
+  	foreach ($ArNotRead2 as &$ArRow) {
+  	  $ArRow['IDDepartment'] = 'bookmark';
+  	}
+
+  	$ArNotRead = array_merge($ArNotRead1,$ArNotRead2);
+		$ArNotRead = F1DeskUtils::sortByID($ArNotRead, 'IDDepartment');
 
   	return $ArNotRead;
 
@@ -777,13 +825,15 @@ AND
   public function listBookmarkTickets($IDSupporter) {
     $StSQL = "
 SELECT
-  T.*
+  T.*,  U.StName as StSupporter
 FROM
-  " . DBPREFIX . "Ticket T
+  " . DBPREFIX . "User U
+  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDSupporter = S2.IDSupporter)
   LEFT JOIN " . DBPREFIX . "Bookmark B ON (B.IDTicket = T.IDTicket)
   LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = B.IDSupporter)
 WHERE
-  I.IDSupporter = $IDSupporter";
+  S.IDSupporter = $IDSupporter";
 
     $this->execSQL($StSQL);
 		$ArTickets = $this->getResult("string");

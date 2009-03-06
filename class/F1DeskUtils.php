@@ -150,8 +150,8 @@ ORDER BY
     	$ArDepartments[$ArQuery['IDDepartment']] = $ArQuery['StDepartment'];
     }
 
+    $ArDepartments['bookmark'] = DEPT_BOOKMARK;
     $ArDepartments['ignored'] = DEPT_IGNORED;
-    /*$ArDepartments['bookmark'] = DEPT_BOOKMARK;*/
 
     return $ArDepartments;
   }
@@ -296,59 +296,6 @@ FROM
       $DBHandler->execSQL($StSQL);
     $ArTypes = $DBHandler->getResult('string');
     return $ArTypes;
-  }
-
-  /**
-   * Check if ticket given is read or not by the supporter given
-   *
-   * @param integer $IDTicket
-   * @return boolean
-   */
-  public static function isTicketRead($IDTicket, $IDSupporter) {
-    $StSQL = "
-SELECT
-  COUNT(R.IDTicket)
-FROM
-  " . DBPREFIX . "Read R
-LEFT JOIN" . DBPREFIX . "Supporter S ON  (R.IDSupporter = S.IDSupporter)
-LEFT JOIN" . DBPREFIX . "Ticket T ON (R.IDTicket = T.IDTicket)
-WHERE
-  T.IDTicket = $IDTicket
-AND
-  S.Supporter = $IDSupporter";
-
-    self::getDBinstance();
-    self::$DBHandler->execSQL($StSQL);
-    $ArResult = self::$DBHandler->getResult('num');
-
-    return ($ArResult[0][0] == 1) ? true : false;
-  }
-
-  /**
-   * Check if the ticket given is ignored by the supporter given
-   *
-   * @param unknown_type $IDTicket
-   * @param unknown_type $IDSupporter
-   * @return unknown
-   */
-  public static function isTicketIgnored($IDTicket, $IDSupporter) {
-    $StSQL = "
-SELECT
-  COUNT(I.IDTicket)
-FROM
-  " . DBPREFIX . "Ignored I
-LEFT JOIN" . DBPREFIX . "Supporter S ON  (I.IDSupporter = S.IDSupporter)
-LEFT JOIN" . DBPREFIX . "Ticket T ON (I.IDTicket = T.IDTicket)
-WHERE
-  T.IDTicket = $IDTicket
-AND
-  S.Supporter = $IDSupporter";
-
-    self::getDBinstance();
-    self::$DBHandler->execSQL($StSQL);
-    $ArResult = self::$DBHandler->getResult('num');
-
-    return ($ArResult[0][0] == 1) ? true : false;
   }
 
   /**
