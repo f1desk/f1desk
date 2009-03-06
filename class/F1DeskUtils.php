@@ -620,4 +620,39 @@ WHERE
     $ArResult = $DBHandler->getResult('string');
     return array_shift($ArResult);
   }
+
+  public static function isBookmarked($IDSupporter,$IDTicket) {
+    $StSQL = '
+SELECT
+  COUNT(*)
+FROM
+' . DBPREFIX . "Bookmark
+WHERE
+  IDSupporter = $IDSupporter
+AND
+  IDTicket = $IDTicket";
+    $DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ArReturn = $DBHandler->getResult('num');
+
+    return ($ArReturn[0][0] > 0) ? true : false;
+  }
+
+  public static function isIgnored($IDSupporter,$IDTicket) {
+    $StSQL = '
+SELECT
+  COUNT(*)
+FROM
+' . DBPREFIX . "Ignored
+WHERE
+  IDSupporter = $IDSupporter
+AND
+  IDTicket = $IDTicket";
+    $DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ItAffected = $DBHandler->getNumRows();
+    $ArReturn = $DBHandler->getResult('num');
+
+    return ($ArReturn[0][0] > 0) ? true : false;
+  }
 }

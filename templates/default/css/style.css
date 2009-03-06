@@ -6,6 +6,10 @@ html, body {
   font-size:13px;
 }
 
+img {
+ border:none;
+}
+
 #header {
   width:100%;
   height:10%;
@@ -145,14 +149,14 @@ html>body #main{
   padding-bottom:8px;
 }
 
-#ticketHistory, #ticketAnswer{
+.defaultBody {
 	margin-top: 2.5%;
 	background-color:#E6E7E9;
 	padding-top:0.5%;
 	width: 99%;
 }
 
-#historyCaption, #answerCaption{
+.defaultCaption {
   color:#006A42;
   height:100%;
   margin:1% 1% 1% 0;
@@ -415,16 +419,29 @@ html>body #main{
 }
 /*HOME TEMPLATE END;*/
 
-.AttachLink {
+.Link {
   margin-top:0px;
 }
 
-.AttachLink a {
+.Link a {
+  color: #003C25;
+  text-decoration: underline;
+}
+
+.Link a visited {
   color: #02764F;
   text-decoration: underline;
 }
 
-.AttachLink a visited {
-  color: #003C25;
-  text-decoration: underline;
+#AttachCall {
+  float: left;
+  margin-right: 10px;
+}
+
+#ticketActions {
+  margin-top: 25px;
+}
+
+#ticketContent div {
+  padding-left:200px;
 }

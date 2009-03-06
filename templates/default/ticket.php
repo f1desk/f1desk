@@ -15,6 +15,7 @@
           <th>Data</th>
           <th>Status</th>
           <th>Atendente</th>
+          <th colspan='3'>A&ccedil;&otilde;es</th>
         </tr>
       </thead>
       <tbody>
@@ -33,6 +34,26 @@
           		<? endforeach; ?>
           	</select>
           </td>
+          <td>
+            <a href='javascript:void(0);' onclick='alert("esperando a flow");'>
+              <img src='<?= TEMPLATEDIR ?>images/attach.png' alt='Attach Call' title='Attach Call'>
+            </a>
+          </td>
+          <td>
+              <?php if (F1DeskUtils::isIgnored(getSessionProp('IDSupporter'),$IDTicket)): ?>
+            <a href='javascript:void(0);' onclick='unignoreTicket(<?=getSessionProp('IDSupporter')?>,<?=$IDTicket?>)'>
+              <img src='<?= TEMPLATEDIR ?>images/unignore.png' alt='Ignore Call' title='Ignore Call'>
+              <?php else: ?>
+            <a href='javascript:void(0);' onclick='ignoreTicket(<?=getSessionProp('IDSupporter')?>,<?=$IDTicket?>)'>
+              <img src='<?= TEMPLATEDIR ?>images/ignore.png' alt='Ignore Call' title='Ignore Call'>
+              <?php endif;?>
+            </a>
+          </td>
+          <td>
+            <a href='javascript:void(0);' onclick='bookmarkTicket(<?=getSessionProp('IDSupporter')?>,<?=$IDTicket?>)'>
+              <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Call' title='Bookmark Call'>
+            </a>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -41,8 +62,8 @@
 <!--[/TICKET HEADER]-->
 
 <!--[TICKET HISTORY]-->
-<div id='ticketHistory'>
-  <div id="historyCaption">
+<div id='ticketHistory' class='defaultBody'>
+  <div id="historyCaption" class='defaultCaption'>
   	<img alt="Ticket"  id='arrowHistory' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "historyContent")' class="menuArrow"/>
   	<span>Hist&oacute;rico</span>
   </div>
@@ -55,7 +76,7 @@
         <?= MSG_HEAD1 . $DtSended . MSG_HEAD2 . $ArMessage['SentBy'] . MSG_HEAD3 ?>
         <? if (array_key_exists($ArMessage['IDMessage'],$ArAttachments)): ?>
           <?  foreach ($ArAttachments[$ArMessage['IDMessage']] as $Attachment): ?>
-              <p class='AttachLink'>Anexo: <a href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></p>
+              <p class='Link'>Anexo: <a href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></p>
           <?  endforeach; ?>
         <? endif;?>
         <?= $ArMessage['TxMessage'] ?>
@@ -66,9 +87,21 @@
 </div>
 <!--[/TICKET HISTORY]-->
 
+<!--[TICKET ACTIONS]-->
+<div id='ticketActions' class='defaultBody'>
+  <div id='actionsCaption' class='defaultCaption'>
+    <img alt="Actions"  id='arrowActions' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "actionsContent")' class="menuArrow"/>
+    <span>Anexos</span>
+  </div>
+  <div id='actionsContent'>
+
+  </div>
+</div>
+<!--[/TICKET ACTIONS]-->
+
 <!--[TICKET ANSWER]-->
-<div id='ticketAnswer'>
-  <div id="answerCaption">
+<div id='ticketAnswer' class='defaultBody'>
+  <div id='answerCaption' class='defaultCaption'>
   	<img alt="Ticket" id='arrowAnswer' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "answerContent")' class="menuArrow"/>
   	<span>Responder</span>
   </div>
