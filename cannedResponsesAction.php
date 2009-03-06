@@ -11,7 +11,7 @@
 			$ArData = array(
 				"StTitle" => $_POST['StTitle'],
 				"StAlias" => $_POST['StAlias'],
-				"TxMessage" => $_POST['TxMessage']
+				"TxMessage" => nl2br($_POST['TxMessage'])
 			);
 			$ItAffedcted = TemplateHandler::editCannedResponse( $IDCannedResponse, $ArData );
 			if ( !$ItAffedcted ) {
@@ -29,7 +29,7 @@
 
 		case 'insert':
 			//$ArCannedResponses = F1desk
-			$ItAffedcted = TemplateHandler::createCannedResponse( $_POST['StAlias'], $_POST['StTitle'], $_POST['TxMessage'], getSessionProp('IDSupporter') );
+			$ItAffedcted = TemplateHandler::createCannedResponse( $_POST['StAlias'], $_POST['StTitle'], nl2br($_POST['TxMessage']), getSessionProp('IDSupporter') );
 			if ( !$ItAffedcted ) {
 				die(ERROR_RESP);
 			} else {

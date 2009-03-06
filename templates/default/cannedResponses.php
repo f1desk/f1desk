@@ -31,7 +31,7 @@
 								<input type="hidden" id="TxCannedResponse<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value="<?=($ArCannedResponsesSettings['TxMessage'])?>">
 								<img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" class="cannedAction" onclick="startEditElement('canned', <?=$ArCannedResponsesSettings['IDCannedResponse']?>);">
 								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" class="cannedAction" onclick="removeCannedResponse(<?=$ArCannedResponsesSettings['IDCannedResponse']?>)">
-								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction" onclick="previewInFlow('asd');">
+								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction" onclick="previewCannedInFlow('<?=addslashes($ArCannedResponsesSettings['StAlias'])?>', '<?=addslashes($ArCannedResponsesSettings['StTitle'])?>', '<?=str_replace("\n","",$ArCannedResponsesSettings['TxMessage'])?>');">
 							</td>
 						</tr>
 					<?endforeach;?>

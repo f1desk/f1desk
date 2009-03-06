@@ -1,4 +1,24 @@
 var initialized = [];
+var windowParams = {
+   'x':100,
+   'y':100,
+   'width':350,
+   'height':250,
+   'definition': 'response',
+   'innerHTML': 'TEXTO DA PAGINA',
+   'TB': true,
+   'Window': 'default',
+   'TBStyle':{'BackgroundColor': '#9CB6CD','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'TEXTO CAPTION BARRA DE TITULO'},
+   'WindowStyle':{'BackgroundColor':'#fff','BackgroundImage':'','Caption':'TEXTO TITULO DA JANELA'},
+   'EventFuncs':{
+   		'Confirm':function(){ alert('callback confirm'); },
+   		'Prompt':function(){ alert('callbakc prompt'); },
+ 			'Close':"",
+ 			'Max':"",
+ 			'Min':"",
+ 			'Rest':""
+   }
+};
 
 
 /**
@@ -597,20 +617,26 @@ function addCannedResponse(IDDepartment,IDSupporter) {
   return false;
 }
 
-function previewInFlow( content ){
-	var tParams = {
-     'x':100,
-     'y':100,
-     'width':250,
-     'height':150,
-     'definicao': 'response',
-     'innerHTML': content,
-     'TB': true,
-     'Janela': 'simples',
-     'TBStyle':{'BackgroundColor': '#9CB6CD','Color':'#fff','Font':'12px verdana, sans-serif', 'Imagem': 'visualizar.png', 'Caption': 'Preview'},
-     'JanStyle':{'BackgroundColor':'#fff','BackgroundImage':'','Caption':'Conteudo'},
-     'EventFuncs':""/*{'Confirm':Confirm, 'Prompt':Prompt, 'Close':""}*/
-  };
-  
-  var ID = Flow.novo(tParams);
+function previewCannedInFlow( StAlias, StTitle, TxMessage ) {
+	windowParams.innerHTML = ''+
+		'<p style="font-weight: bold">'+
+			'Alias:'+
+		'</p>'+
+		'<p style="padding-left: 10px">'+
+			StAlias +
+		'</p>'+
+		'<p style="font-weight: bold">'+
+			'T&iacute;tulo:'+
+		'</p>'+
+		'<p style="padding-left: 10px">'+
+			StTitle +
+		'</p>'+
+		'<p style="font-weight: bold">'+
+			'Texto:'+
+		'</p>'+
+		'<p style="padding-left: 10px">'+
+				TxMessage + 
+		'</p>';
+	windowParams.TBStyle.Caption = StTitle;
+  var ID = Flow.open(windowParams);
 }
