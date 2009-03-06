@@ -9,7 +9,7 @@ var windowParams = {
    'TB': true,
    'Window': 'default',
    'TBStyle':{'BackgroundColor': '#9CB6CD','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'TEXTO CAPTION BARRA DE TITULO'},
-   'WindowStyle':{'BackgroundColor':'#fff','BackgroundImage':'','Caption':'TEXTO TITULO DA JANELA'},
+   'WindowStyle':{'BackgroundColor':'#ECEDEF','BackgroundImage':'','Caption':'TEXTO TITULO DA JANELA'},
    'EventFuncs':{
    		'Confirm':function(){ alert('callback confirm'); },
    		'Prompt':function(){ alert('callbakc prompt'); },
