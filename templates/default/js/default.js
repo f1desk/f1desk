@@ -130,7 +130,7 @@ function showDepartmentTickets( IDDepartment, StUser ) {
 function selectTicket(Clicked) {
 
   var div = gID('contentDepartments');
-	var table = gTN('table');
+	var table = gTN('table',div);
 
 	for (var i=0; i < table.length; i++) {
   	var tbody = gTN('tbody',table[i])[0];
@@ -155,6 +155,15 @@ function selectTicket(Clicked) {
 	Clicked.className = 'Selected';
 }
 
+function findTicket(IDTicket) {
+  var Ticket = gID('ticket1');
+  if (Ticket && Ticket.parentNode.className.indexOf == 'notRead') {
+    var TicketTable = Ticket.parentNode.parentNode.parentNode.id;
+    var ID = TicketTable.split('ticketTable');
+    reloadTicketList(ID[1]);
+  }
+}
+
 function showCall( IDTicket, IDDepartment, Clicked ) {
    var tParams = {
     'enqueue':1,
@@ -170,6 +179,9 @@ function showCall( IDTicket, IDDepartment, Clicked ) {
       appendHTML(returnedValue, contentDisplay);
       selectTicket(Clicked);
       refreshNotReadCount( IDDepartment );
+      if (IDDepartment == 'bookmark') {
+        findTicket(IDTicket);
+      }
     }
   };
   var tUrl = 'ticketDetails.php';
