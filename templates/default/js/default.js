@@ -674,6 +674,7 @@ function bookmarkTicket(IDSupporter, IDTicket) {
     }
   };
   xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+}
 
 function previewCannedInFlow( StAlias, StTitle, TxMessage ) {
 	windowParams.innerHTML = ''+
