@@ -174,21 +174,27 @@ function _setOpacity(element, value) {
  *  @param style < string >
  */
 function setStyle(element, styles) {
-  var elementStyle = element.style, match;
-  if ( typeof(styles) == 'string' ) {
-    elementStyle.cssText += ';' + styles;
-    return element;
-  }
-  for (var property in styles) {
-    if (property == 'opacity') {
-      _setOpacity(element,styles[property]);
-    } else {
-      elementStyle[(property == 'float' || property == 'cssFloat') ?
-        ((elementStyle.styleFloat === undefined) ? 'cssFloat' : 'styleFloat') :
-          property] = styles[property];
-    }
-  }
-  return element;
+	if( element instanceof Array ){
+		for(var aux=0; aux < element.length; aux++){
+			setStyle( element[aux], styles );
+		}
+	} else {
+	  var elementStyle = element.style, match;
+	  if ( typeof(styles) == 'string' ) {
+	    elementStyle.cssText += ';' + styles;
+	    return element;
+	  }
+	  for (var property in styles) {
+	    if (property == 'opacity') {
+	      _setOpacity(element,styles[property]);
+	    } else {
+	      elementStyle[(property == 'float' || property == 'cssFloat') ?
+	        ((elementStyle.styleFloat === undefined) ? 'cssFloat' : 'styleFloat') :
+	          property] = styles[property];
+	    }
+	  }
+	  return element;
+	}
 }
 
 /**

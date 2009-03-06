@@ -187,7 +187,8 @@ DragNdrop.prototype = {
     setStyle(clone,Styles);
 
     //insertBefore(this.element, clone);
-    tBody.appendChild(clone);
+    this.element.parentNode.appendChild(clone);
+    //tBody.appendChild(clone);
 
     return clone;
   },

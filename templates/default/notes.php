@@ -34,8 +34,8 @@
 				</tbody>
 			</table>
 			<div id="noteBoxEditArea" class="editArea">
-				<div class="editAreaTitle">
-					<img id="noteArrow" src="<?= TEMPLATEDIR ?>images/arrow_show.gif" onclick="toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')">
+				<div class="editAreaTitle" onclick="toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')">
+					<img id="noteArrow" src="<?= TEMPLATEDIR ?>images/arrow_show.gif">
 					<span><?=EDIT_AREA?></span>
 				</div>
 				<div id="noteBoxEditAreaContent" class="editAreaContent" style="display: none">

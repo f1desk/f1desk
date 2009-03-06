@@ -1,4 +1,24 @@
 var initialized = [];
+var windowParams = {
+   'x':100,
+   'y':100,
+   'width':350,
+   'height':250,
+   'definition': 'response',
+   'innerHTML': 'TEXTO DA PAGINA',
+   'TB': true,
+   'Window': 'default',
+   'TBStyle':{'BackgroundColor': '#9CB6CD','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'TEXTO CAPTION BARRA DE TITULO'},
+   'WindowStyle':{'BackgroundColor':'#fff','BackgroundImage':'','Caption':'TEXTO TITULO DA JANELA'},
+   'EventFuncs':{
+   		'Confirm':function(){ alert('callback confirm'); },
+   		'Prompt':function(){ alert('callbakc prompt'); },
+ 			'Close':"",
+ 			'Max':"",
+ 			'Min':"",
+ 			'Rest':""
+   }
+};
 
 
 /**
@@ -130,7 +150,7 @@ function showDepartmentTickets( IDDepartment, StUser ) {
 function selectTicket(Clicked) {
 
   var div = gID('contentDepartments');
-	var table = gTN('table');
+	var table = gTN('table',div);
 
 	for (var i=0; i < table.length; i++) {
   	var tbody = gTN('tbody',table[i])[0];
@@ -155,6 +175,15 @@ function selectTicket(Clicked) {
 	Clicked.className = 'Selected';
 }
 
+function findTicket(IDTicket) {
+  var Ticket = gID('ticket1');
+  if (Ticket && Ticket.parentNode.className.indexOf == 'notRead') {
+    var TicketTable = Ticket.parentNode.parentNode.parentNode.id;
+    var ID = TicketTable.split('ticketTable');
+    reloadTicketList(ID[1]);
+  }
+}
+
 function showCall( IDTicket, IDDepartment, Clicked ) {
    var tParams = {
     'enqueue':1,
@@ -170,6 +199,9 @@ function showCall( IDTicket, IDDepartment, Clicked ) {
       appendHTML(returnedValue, contentDisplay);
       selectTicket(Clicked);
       refreshNotReadCount( IDDepartment );
+      if (IDDepartment == 'bookmark') {
+        findTicket(IDTicket);
+      }
     }
   };
   var tUrl = 'ticketDetails.php';
@@ -491,6 +523,7 @@ function removeNote (IDNote) {
 
 
 function startDataEdit(){
+	toogleArrow('dataArrow', 'dataBoxEditAreaContent');
 	var dataForm = gID('dataForm');
 	var TxHeader = gID('TxDataHeader').getElementsByTagName('pre')[0].textContent;
 	var TxSign = gID('TxDataSign').getElementsByTagName('pre')[0].textContent;
@@ -641,4 +674,27 @@ function bookmarkTicket(IDSupporter, IDTicket) {
     }
   };
   xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+
+function previewCannedInFlow( StAlias, StTitle, TxMessage ) {
+	windowParams.innerHTML = ''+
+		'<p style="font-weight: bold">'+
+			'Alias:'+
+		'</p>'+
+		'<p style="padding-left: 10px">'+
+			StAlias +
+		'</p>'+
+		'<p style="font-weight: bold">'+
+			'T&iacute;tulo:'+
+		'</p>'+
+		'<p style="padding-left: 10px">'+
+			StTitle +
+		'</p>'+
+		'<p style="font-weight: bold">'+
+			'Texto:'+
+		'</p>'+
+		'<p style="padding-left: 10px">'+
+				TxMessage +
+		'</p>';
+	windowParams.TBStyle.Caption = StTitle;
+  var ID = Flow.open(windowParams);
 }

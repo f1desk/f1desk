@@ -396,6 +396,7 @@ html>body #main{
 	background-color: #B6CFDC;
 	padding:2px 5px;
 	margin: 5px;
+	cursor: pointer;
 }
 
 .homeBox .homeBoxContent .editAreaTitle img{
