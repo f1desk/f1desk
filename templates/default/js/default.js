@@ -617,6 +617,64 @@ function addCannedResponse(IDDepartment,IDSupporter) {
   return false;
 }
 
+function ignoreTicket(IDSupporter,IDTicket) {
+  var tParams = {
+    'method':'post',
+    'content': {
+      'IDSupporter':IDSupporter,
+      'IDTicket':IDTicket,
+      'StAction':'ignore',
+    },
+    'okCallBack':function(response) {
+      if(response == 'ok') {
+        window.location = window.location;
+      } else {
+        alert(response);
+      }
+    }
+  };
+  if(confirm('Deseja realmente ignorar este chamado?')) {
+    xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+  }
+}
+
+function unignoreTicket(IDSupporter,IDTicket) {
+  var tParams = {
+    'method':'post',
+    'content': {
+      'IDSupporter':IDSupporter,
+      'IDTicket':IDTicket,
+      'StAction':'unignore',
+    },
+    'okCallBack':function(response) {
+      if(response == 'ok') {
+        window.location = window.location;
+      } else {
+        alert(response);
+      }
+    }
+  };
+  xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+}
+
+function bookmarkTicket(IDSupporter, IDTicket) {
+  var tParams = {
+    'method':'post',
+    'content': {
+      'IDSupporter':IDSupporter,
+      'IDTicket':IDTicket,
+      'StAction':'bookmark',
+    },
+    'okCallBack':function(response) {
+      if(response == 'ok') {
+        reloadTicketList('bookmark',false);
+      } else {
+        alert(response);
+      }
+    }
+  };
+  xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+
 function previewCannedInFlow( StAlias, StTitle, TxMessage ) {
 	windowParams.innerHTML = ''+
 		'<p style="font-weight: bold">'+
@@ -635,7 +693,7 @@ function previewCannedInFlow( StAlias, StTitle, TxMessage ) {
 			'Texto:'+
 		'</p>'+
 		'<p style="padding-left: 10px">'+
-				TxMessage + 
+				TxMessage +
 		'</p>';
 	windowParams.TBStyle.Caption = StTitle;
   var ID = Flow.open(windowParams);

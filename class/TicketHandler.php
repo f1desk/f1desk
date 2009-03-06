@@ -408,29 +408,39 @@ GROUP BY
    * @return array
    * @author Mario Vítor <mario@digirati.com.br>
    */
-  public function ignoreTicket($ItIDUser, $ItIDCall){
+  public function ignoreTicket($IDSupporter, $IDTicket){
 
-    if ( empty($ItIDUser) || empty($ItIDCall) ) {
+    if ( empty($IDSupporter) || empty($IDTicket) ) {
     	throw new ErrorHandler(EXC_CALL_INVALIDIGNOREID);
     }
 
-    #
-    # array -> fields of table Read
-    #
-    $ArFields = array(  'IDUser', 'IDCall'  );
+    # Table Ignored's Fields
+    $ArFields = array(  'IDSupporter', 'IDTicket'  );
 
-    #
-    # array -> fields of inserting
-    # ( $this->insertIntoTable funciton needs a array of arrays to insert )
-    #
-    $ArInsert = array(  array(  $ItIDUser, $ItIDCall  )  );
-
+    $ArInsert = array(  array(  $IDSupporter, $IDTicket  )  );
     $StTableName = DBPREFIX . 'Ignored';
-
     $ItAffected = $this->insertIntoTable($StTableName, $ArFields, $ArInsert);
 
-    return array(  (!$ItAffected)?'error':'sucess' => $ArInsert  );
+    return (!$ItAffected) ? false : true;
 
+  }
+
+  /**
+   * Bookmarks a ticket
+   *
+   * @param int $IDSupporter
+   * @param int $IDTicket
+   * @return boolean
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+  public function bookmarkTicket($IDSupporter, $IDTicket) {
+    $ArFields = array('IDSupporter', 'IDTicket');
+    $ArValues = array($IDSupporter,$IDTicket);
+    $StTableName = DBPREFIX . 'Bookmark';
+    $ItAffected = $this->insertIntoTable($StTableName,$ArFields,$ArValues);
+
+    return ($ItAffected < 0) ? false : true;
   }
 
   /**
