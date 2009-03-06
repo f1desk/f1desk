@@ -15,7 +15,9 @@
           <th>Data</th>
           <th>Status</th>
           <th>Atendente</th>
+          <?php if (TemplateHandler::IsSupporter()): ?>
           <th colspan='3'>A&ccedil;&otilde;es</th>
+          <?php endif; ?>
         </tr>
       </thead>
       <tbody>
@@ -34,8 +36,9 @@
           		<? endforeach; ?>
           	</select>
           </td>
+          <?php if (TemplateHandler::IsSupporter()): ?>
           <td>
-            <a href='javascript:void(0);' onclick='alert("esperando a flow");'>
+            <a href='javascript:void(0);' onclick='attachTicket(<?=$IDTicket?>);'>
               <img src='<?= TEMPLATEDIR ?>images/attach.png' alt='Attach Call' title='Attach Call'>
             </a>
           </td>
@@ -54,6 +57,7 @@
               <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Call' title='Bookmark Call'>
             </a>
           </td>
+          <?php endif; ?>
         </tr>
       </tbody>
     </table>

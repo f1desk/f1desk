@@ -1,11 +1,16 @@
 <?php
-if (empty($_POST['IDSupporter']) || empty($_POST['IDTicket']) ||  empty($_POST['StAction'])) {
-  die('error');
-}
 require_once('main.php');
 handleLanguage(__FILE__);
-$IDSupporter = $_POST['IDSupporter'];
-$IDTicket = $_POST['IDTicket'];
+
+if(empty($_POST['StAction']))
+  die(EXC_GLOBAL_EXPPARAM);
+
+if (! empty($_POST['IDSupporter']))
+  $IDSupporter = $_POST['IDSupporter'];
+
+if(! empty($_POST['IDTicket']))
+  $IDTicket = $_POST['IDTicket'];
+
 $StAction = $_POST['StAction'];
 $TicketHandler = new TicketHandler();
 
@@ -28,5 +33,16 @@ if ($StAction == 'ignore') {
     die('ok');
   else
     die(ERROR_BOOKMARKING);
+} elseif ($StAction == 'attach') {
+  if (empty($_POST['IDAttached']))
+    die(EXC_GLOBAL_EXPPARAM);
+  else
+    $IDAttached = $_POST['IDAttached'];
+  if (F1DeskUtils::isAttached($IDTicket,$IDAttached))
+    die(ALREADY_ATTACHED);
+  else {
+    $TicketHandler->attachTicket($IDTicket,$IDAttached);
+    die('ok');
+  }
 }
 ?>
