@@ -6,6 +6,7 @@ require_once(dirname(__FILE__) . '/main.php');
 handleLanguage(__FILE__);
 
 $IDTicket = $_POST['IDTicket'];
+$preview = (isset($_POST['preview']))?true:false;
 
 $TicketHandler = new TicketHandler();
 $TicketHandler->setAsRead(getSessionProp('IDUser'),$IDTicket);
@@ -26,5 +27,6 @@ if (getSessionProp('isSupporter') == 'true') {
 }
 
 require_once(TEMPLATEDIR . '/ticket.php');
+
 
 ?>

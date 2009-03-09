@@ -28,7 +28,7 @@
 							</td>
 							<td>
 								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" class="cannedAction" onclick="removeBookmark(<?=$ArBookMarkSettings['IDTicket']?>)">
-								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction">
+								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction" onclick="previewTicketInFlow(<?=$ArBookMarkSettings['IDTicket']?>)">
 							</td>
 						</tr>
 					<?endforeach;?>

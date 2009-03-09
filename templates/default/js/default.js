@@ -754,3 +754,20 @@ function previewNoteInFlow ( StTitle, TxNote ) {
 	windowParams.width = 550; windowParams.height = 380;
   var ID = Flow.open(windowParams);
 }
+
+function previewTicketInFlow( IDTicket ) {
+	var tParams = {
+    'method':'post',
+    'content': {
+      'IDTicket':IDTicket,
+      'preview':'true'
+    },
+    'okCallBack':function( ticketHTML ) {
+      windowParams.innerHTML = ticketHTML;
+      windowParams.TBStyle.Caption = "Visualizando Chamado #" + IDTicket;
+      windowParams.width = 600; windowParams.height = 450;
+      var ID = Flow.open(windowParams);
+    }
+  };
+  xhr.makeRequest('Bookmark Ticket','ticketDetails.php',tParams);
+}
