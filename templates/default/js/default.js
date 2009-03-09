@@ -8,7 +8,7 @@ var windowParams = {
    'innerHTML': 'TEXTO DA PAGINA',
    'TB': true,
    'Window': 'default',
-   'TBStyle':{'BackgroundColor': '#9CB6CD','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'TEXTO CAPTION BARRA DE TITULO'},
+   'TBStyle':{'BackgroundColor': '#4F6C9C','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'TEXTO CAPTION BARRA DE TITULO'},
    'WindowStyle':{'BackgroundColor':'#ECEDEF','BackgroundImage':'','Caption':'TEXTO TITULO DA JANELA'},
    'EventFuncs':{
    		'Confirm':function(){ },
@@ -255,22 +255,18 @@ function setTicketOwner(IDTicket, IDSupporter) {
 			'visibility': ( action=='hide' )?'hidden':'visible'
 		});
 	}
-	function _updateTableRow( formName, IDReturn, content ){
-		var editTable = gID(formName + 'Table').getElementsByTagName('tbody')[0];
-		var tableTDs=[];
-		if( formName == 'canned' ){
-			tableTDs[0] = createElement( 'TD', {'class':'TicketNumber'},[content.StAlias,createElement('input', {'type':'hidden', 'id':'StCannedAlias'+IDReturn,'value':content.StAlias })] );
-			tableTDs[1] = createElement( 'TD', {}, [content.StTitle,createElement('input', {'type':'hidden', 'id':'StCannedTitle'+IDReturn,'value':content.StTitle })] );
-			tableTDs[2] = createElement( 'TD', {}, [createElement('input', {'type':'hidden', 'id':'TxCannedResponse'+IDReturn,'value':content.TxMessage }),createElement('img', {'src':'templates/default/images/button_edit.png', 'alt':'Editar', 'class':'cannedAction', 'onclick':"startEditElement ('canned','"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/button_cancel.png', 'alt':'Remover', 'class':'cannedAction', 'style':'margin-left:6px;','onclick':"removeCannedResponse('"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/visualizar.png', 'alt':'Visualizar', 'class':'cannedAction','style':'margin-left:6px'} )] );
-		} else if( formName == 'note' ){
-			tableTDs[0] = createElement( 'TD', {}, [content.StTitle,createElement('input', {'type':'hidden', 'id':'StNoteTitle'+IDReturn,'value':content.StTitle })] );
-			tableTDs[1] = createElement( 'TD', {}, [createElement('input', {'type':'hidden', 'id':'TxNote'+IDReturn,'value':content.TxNote }),createElement('img', {'src':'templates/default/images/button_edit.png', 'alt':'Editar', 'class':'cannedAction', 'onclick':"startEditElement('note','"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/button_cancel.png', 'alt':'Remover', 'class':'cannedAction', 'style':'margin-left:6px;','onclick':"removeNote('"+IDReturn+"');"} ),createElement('img', {'src':'templates/default/images/visualizar.png', 'alt':'Visualizar', 'class':'cannedAction','style':'margin-left:6px'} )] );
-		}
-		editTable.appendChild ( createElement('TR',{'id':formName+'TR'+IDReturn},tableTDs) );
+	function _addSlashes( Text ){
+		Text=Text.split('"').join('\\"');
+		Text=Text.split("'").join("\\'");
+		return Text;
 	}
 	function _removeSlashes( Text ){
 		Text=Text.split('\\"').join('"');
 		Text=Text.split("\\'").join("'");
+		return Text;
+	}
+	function _nl2br( Text ){
+		Text=Text.split('\n').join('<br>');
 		return Text;
 	}
 	/* auxFunctions end*/
@@ -327,8 +323,8 @@ function newNote(){
     'enqueue':1,
     'method':'post',
     'content':content,
-    'okCallBack': function( IDInserted ){
-    	_updateTableRow('note', IDInserted, content);
+    'okCallBack': function( htmlCallBack ){
+    	gID('noteTable').getElementsByTagName('tbody')[0].innerHTML += htmlCallBack;
     	/*Testando se exista a coluna "nao ha respostas"*/
     	var noNote = gID( 'noNote' );
     	if( noNote ){	removeElements(noNote);	}
@@ -355,8 +351,8 @@ function newCannedResponse(){
     'enqueue':1,
     'method':'post',
     'content':content,
-    'okCallBack': function( IDInserted ){
-    	_updateTableRow( 'canned', IDInserted, content);
+    'okCallBack': function( htmlCallBack ){
+    	gID('cannedTable').getElementsByTagName('tbody')[0].innerHTML += htmlCallBack;
     	/*Testando se exista a coluna "nao ha respostas"*/
     	var noCanned = gID('noCanned');
     	if( noCanned ){	removeElements(noCanned);	}
@@ -374,13 +370,13 @@ function startEditElement ( formName, IDMessage ){
 	var editForm = gID(formName + 'Form');
 	if( formName == 'canned' ){
 		editForm.elements['IDCanned'].value = IDMessage;	/*ID*/
-		editForm.elements['StAlias'].value = gID('StCannedAlias'+IDMessage).value;	/*StAlias*/
-		editForm.elements['StTitle'].value = gID('StCannedTitle'+IDMessage).value;	/*StTitle*/
-		editForm.elements['TxCannedResponse'].value = _removeSlashes(gID('TxCannedResponse'+IDMessage).value);	/*TxMessage*/
+		editForm.elements['StAlias'].value = unescape(gID('StCannedAlias'+IDMessage).value);	/*StAlias*/
+		editForm.elements['StTitle'].value = unescape(gID('StCannedTitle'+IDMessage).value);	/*StTitle*/
+		editForm.elements['TxCannedResponse'].value = unescape(gID('TxCannedResponse'+IDMessage).value);	/*TxMessage*/
 	} else if( formName == 'note' ){
 		editForm.elements['IDNote'].value = IDMessage;	/*ID*/
-		editForm.elements['StTitle'].value = gID('StNoteTitle'+IDMessage).value;	/*StTitle*/
-		editForm.elements['TxNote'].value = gID('TxNote'+IDMessage).value;	/*TxMessage*/
+		editForm.elements['StTitle'].value = unescape(gID('StNoteTitle'+IDMessage).value);	/*StTitle*/
+		editForm.elements['TxNote'].value = unescape(gID('TxNote'+IDMessage).value);	/*TxMessage*/
 	}
 	gID(formName + 'FormButton').value = "Editar";
 }
@@ -403,17 +399,8 @@ function editCannedResponse () {
     'enqueue':1,
     'method':'post',
     'content':content,
-    'okCallBack': function(returnedValue){
-    	var tableTDs = gID('cannedTR'+content.IDCannedResponse).getElementsByTagName('TD');
-    	tableTDs[0].textContent = content.StAlias;
-    	tableTDs[0].appendChild( createElement('input',{
-    		'type':'hidden', 'id':'StCannedAlias'+content.IDCannedResponse, 'value':content.StAlias
-    	}) );
-    	tableTDs[1].textContent = content.StTitle;
-    	tableTDs[1].appendChild( createElement('input',{
-    		'type':'hidden', 'id':'StCannedTitle'+content.IDCannedResponse, 'value':content.StTitle
-    	}) );
-    	gID('TxCannedResponse'+content.IDCannedResponse).value = content.TxMessage;
+    'okCallBack': function(htmlEdited){
+    	gID('cannedTR'+content.IDCannedResponse).innerHTML = htmlEdited;
     	_doLoading( 'canned','hide' );
     	toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide');
     }
@@ -439,13 +426,8 @@ function editNote () {
     'enqueue':1,
     'method':'post',
     'content':content,
-    'okCallBack': function(returnedValue){
-    	var tableTDs = gID('noteTR'+content.IDNote).getElementsByTagName('TD');
-    	tableTDs[0].textContent = content.StTitle;
-    	tableTDs[0].appendChild( createElement('input',{
-    		'type':'hidden', 'id':'StNoteTitle'+content.IDNote, 'value':content.StTitle
-    	}) );
-    	gID('TxNote'+content.IDNote).value = content.TxNote;
+    'okCallBack': function( htmlEdited ){
+    	gID('noteTR'+content.IDNote).innerHTML = htmlEdited;
     	_doLoading( 'note','hide' );
     	toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide');
     }
@@ -722,19 +704,53 @@ function attachTicket(IDTicket) {
 }
 
 function previewCannedInFlow( StAlias, StTitle, TxMessage ) {
+	StAlias = unescape( StAlias );	StTitle = unescape( StTitle );	TxMessage = unescape( TxMessage );
 	windowParams.innerHTML = ''+
 		'<table class="tableTickets">'+
 			'<thead>'+
-				'<th>Álias</th>'+
+				'<th>Alias</th>'+
 				'<th>Título</th>'+
-				'<th>Mensagem</th>'+
 			'</thead>'+
 			'<tbody>'+
 				'<td class="TicketNumber">'+ StAlias +'</td>'+
 				'<td>'+ StTitle +'</td>'+
+			'</tbody>'+
+		'</table>'+
+		'<br />'+
+		'<table class="tableTickets">'+
+			'<thead>'+
+				'<th>Mensagem</th>'+
+			'</thead>'+
+			'<tbody>'+
 				'<td>'+ TxMessage +'</td>'+
 			'</tbody>'+
 		'</table>';
 	windowParams.TBStyle.Caption = StTitle;
+	windowParams.width = 550; windowParams.height = 380;
+  var ID = Flow.open(windowParams);
+}
+
+function previewNoteInFlow ( StTitle, TxNote ) {
+	StTitle = unescape( StTitle );	TxNote = unescape( TxNote );
+	windowParams.innerHTML = ''+
+		'<table class="tableTickets">'+
+			'<thead>'+
+				'<th>Alias</th>'+
+			'</thead>'+
+			'<tbody>'+
+				'<td class="TicketNumber">'+ StTitle +'</td>'+
+			'</tbody>'+
+		'</table>'+
+		'<br />'+
+		'<table class="tableTickets">'+
+			'<thead>'+
+				'<th>Anota&ccedil;&atilde;o</th>'+
+			'</thead>'+
+			'<tbody>'+
+				'<td>'+ TxNote +'</td>'+
+			'</tbody>'+
+		'</table>';
+	windowParams.TBStyle.Caption = StTitle;
+	windowParams.width = 550; windowParams.height = 380;
   var ID = Flow.open(windowParams);
 }

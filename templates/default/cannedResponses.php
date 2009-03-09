@@ -21,17 +21,17 @@
 						<tr id="cannedTR<?=$ArCannedResponsesSettings['IDCannedResponse']?>">
 							<td class="TicketNumber">
 								<?=$ArCannedResponsesSettings['StAlias']?>
-								<input type="hidden" id="StCannedAlias<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value="<?=$ArCannedResponsesSettings['StAlias']?>">
+								<input type="hidden" id="StCannedAlias<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value=<?=f1desk_escape_string($ArCannedResponsesSettings['StAlias'])?> >
 							</td>
 							<td>
 								<?=$ArCannedResponsesSettings['StTitle']?>
-								<input type="hidden" id="StCannedTitle<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value="<?=$ArCannedResponsesSettings['StTitle']?>">
+								<input type="hidden" id="StCannedTitle<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value=<?=f1desk_escape_string($ArCannedResponsesSettings['StTitle'])?> >
 							</td>
 							<td>
-								<input type="hidden" id="TxCannedResponse<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value='<?=addslashes($ArCannedResponsesSettings['TxMessage'])?>'>
+								<input type="hidden" id="TxCannedResponse<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value='<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'])?>'>
 								<img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" class="cannedAction" onclick="startEditElement('canned', <?=$ArCannedResponsesSettings['IDCannedResponse']?>);">
 								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" class="cannedAction" onclick="removeCannedResponse(<?=$ArCannedResponsesSettings['IDCannedResponse']?>)">
-								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction" onclick='previewCannedInFlow("<?=addslashes($ArCannedResponsesSettings['StAlias'])?>", "<?=addslashes($ArCannedResponsesSettings['StTitle'])?>", "<?=addslashes(str_replace("\n", "<br>",$ArCannedResponsesSettings['TxMessage']))?>");'>
+								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" id="previemCanned<?=$ArCannedResponsesSettings['IDCannedResponse']?>" alt="Visualizar" class="cannedAction" onclick='previewCannedInFlow("<?=f1desk_escape_string($ArCannedResponsesSettings['StAlias'])?>", "<?=f1desk_escape_string($ArCannedResponsesSettings['StTitle'])?>", "<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'], true)?>");'>
 							</td>
 						</tr>
 					<?endforeach;?>
