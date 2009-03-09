@@ -602,4 +602,22 @@ AND
 
     return ($ArReturn[0][0] > 0) ? true : false;
   }
+
+  public static function isAttached($IDTicket, $IDAttach) {
+    $StSQL = '
+SELECT
+  COUNT(*)
+FROM
+' . DBPREFIX . "AttachedTicket
+WHERE
+  IDTicket = $IDTicket
+AND
+  IDAttachedTicket = $IDAttach";
+    $DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ItAffected = $DBHandler->getNumRows();
+    $ArReturn = $DBHandler->getResult('num');
+
+    return ($ArReturn[0][0] > 0) ? true : false;
+  }
 }

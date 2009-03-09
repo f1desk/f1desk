@@ -11,8 +11,8 @@ var windowParams = {
    'TBStyle':{'BackgroundColor': '#9CB6CD','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'TEXTO CAPTION BARRA DE TITULO'},
    'WindowStyle':{'BackgroundColor':'#ECEDEF','BackgroundImage':'','Caption':'TEXTO TITULO DA JANELA'},
    'EventFuncs':{
-   		'Confirm':function(){ alert('callback confirm'); },
-   		'Prompt':function(){ alert('callbakc prompt'); },
+   		'Confirm':function(){ },
+   		'Prompt':function(){ },
  			'Close':"",
  			'Max':"",
  			'Min':"",
@@ -114,7 +114,7 @@ function insertTickets(IDDepartment, HTMLTickets) {
 * @param string StUser
 * @param bool First
 */
-function reloadTicketList( IDDepartment, First ){
+function reloadTicketList( IDDepartment, First, Force ){
 	var tParams = {
     'enqueue':1,
     'returnType':'txt',
@@ -127,7 +127,7 @@ function reloadTicketList( IDDepartment, First ){
       animateReload( IDDepartment, 'stop' );
       insertTickets(IDDepartment, HTMLTickets);
       refreshNotReadCount( IDDepartment );
-      if (First === true) { toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment); }
+      if (First === true) { toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, Force); }
     },
     'errCallBack':function(Return) {
       toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, 'hide');
@@ -632,7 +632,10 @@ function ignoreTicket(IDSupporter,IDTicket) {
     },
     'okCallBack':function(response) {
       if(response == 'ok') {
-        window.location = window.location;
+        var department = gID('IDDepartment').value;
+        reloadTicketList('ignored',true,'show');
+        reloadTicketList(department,false);
+        refreshCall(IDTicket);
       } else {
         alert(response);
       }
@@ -653,13 +656,16 @@ function unignoreTicket(IDSupporter,IDTicket) {
     },
     'okCallBack':function(response) {
       if(response == 'ok') {
-        window.location = window.location;
+        var department = gID('IDDepartment').value;
+        reloadTicketList('ignored',false);
+        reloadTicketList(department,false);
+        refreshCall(IDTicket);
       } else {
         alert(response);
       }
     }
   };
-  xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+  xhr.makeRequest('Unignore Ticket','ticketActions.php',tParams);
 }
 
 function bookmarkTicket(IDSupporter, IDTicket) {
@@ -672,13 +678,47 @@ function bookmarkTicket(IDSupporter, IDTicket) {
     },
     'okCallBack':function(response) {
       if(response == 'ok') {
-        reloadTicketList('bookmark',false);
+        reloadTicketList('bookmark',true, 'show');
       } else {
         alert(response);
       }
     }
   };
-  xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+  xhr.makeRequest('Bookmark Ticket','ticketActions.php',tParams);
+}
+
+function attachTicket(IDTicket) {
+  with(windowParams) {
+    TBStyle.Caption = 'Attach Ticket';
+    Window = 'prompt';
+    innerHTML = '#';
+    WindowStyle.Caption = 'Digite o número do Chamado à ser incluido:';
+    height = 175;
+    width = 350;
+    x = screen.availWidth / 2.67;
+    y = screen.availHeight / 2.67;
+    EventFuncs.Prompt = function(IDAttached) {
+      IDAttached = IDAttached.replace(/[#]|[^0-9]/g,'');
+      var tParams = {
+       'method':'post',
+        'content': {
+        'IDTicket':IDTicket,
+        'IDAttached':IDAttached,
+        'StAction':'attach',
+        },
+        'okCallBack':function(response) {
+          if(response == 'ok') {
+            refreshCall(IDTicket);
+          } else {
+            alert(response);
+          }
+        }
+      };
+      xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
+    };
+  }
+
+  var ID = Flow.open(windowParams);
 }
 
 function previewCannedInFlow( StAlias, StTitle, TxMessage ) {

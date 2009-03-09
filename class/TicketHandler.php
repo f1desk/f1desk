@@ -688,9 +688,9 @@ GROUP BY
    *
    * @author Mario Vítor <mario@digirati.com.br>
    */
-  public function attachTicket($ItIDTicket, $ItIDAttachedTicket) {
+  public function attachTicket($IDTicket, $IDAttachedTicket) {
 
-    if ( empty($ItIDAttachedTicket) || empty($ItIDTicket) ) {
+    if ( empty($IDAttachedTicket) || empty($IDTicket) ) {
     	throw new ErrorHandler(EXC_CALL_INVALIDATTACHID);
     }
 
@@ -698,11 +698,11 @@ GROUP BY
 
     $ArFields = array(  'IDTicket', 'IDAttachedTicket'  );
 
-    $ArInsert = array(  $ItIDTicket, $ItIDAttachedTicket  );
+    $ArInsert = array(  $IDTicket, $IDAttachedTicket  );
 
     $ItAffected = $this->insertIntoTable($StTableName, $ArFields, $ArInsert);
 
-    return array(  (!$ItAffected)?'error':'sucess' => $ArInsert  );
+    return ($ItAffected) ? true : false;
 
   }
 
