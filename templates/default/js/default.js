@@ -268,6 +268,11 @@ function setTicketOwner(IDTicket, IDSupporter) {
 		}
 		editTable.appendChild ( createElement('TR',{'id':formName+'TR'+IDReturn},tableTDs) );
 	}
+	function _removeSlashes( Text ){
+		Text=Text.split('\\"').join('"');
+		Text=Text.split("\\'").join("'");
+		return Text;
+	}
 	/* auxFunctions end*/
 
 function startCreatingElement ( StElement ) {
@@ -371,7 +376,7 @@ function startEditElement ( formName, IDMessage ){
 		editForm.elements['IDCanned'].value = IDMessage;	/*ID*/
 		editForm.elements['StAlias'].value = gID('StCannedAlias'+IDMessage).value;	/*StAlias*/
 		editForm.elements['StTitle'].value = gID('StCannedTitle'+IDMessage).value;	/*StTitle*/
-		editForm.elements['TxCannedResponse'].value = gID('TxCannedResponse'+IDMessage).value;	/*TxMessage*/
+		editForm.elements['TxCannedResponse'].value = _removeSlashes(gID('TxCannedResponse'+IDMessage).value);	/*TxMessage*/
 	} else if( formName == 'note' ){
 		editForm.elements['IDNote'].value = IDMessage;	/*ID*/
 		editForm.elements['StTitle'].value = gID('StNoteTitle'+IDMessage).value;	/*StTitle*/
@@ -678,24 +683,18 @@ function bookmarkTicket(IDSupporter, IDTicket) {
 
 function previewCannedInFlow( StAlias, StTitle, TxMessage ) {
 	windowParams.innerHTML = ''+
-		'<p style="font-weight: bold">'+
-			'Alias:'+
-		'</p>'+
-		'<p style="padding-left: 10px">'+
-			StAlias +
-		'</p>'+
-		'<p style="font-weight: bold">'+
-			'T&iacute;tulo:'+
-		'</p>'+
-		'<p style="padding-left: 10px">'+
-			StTitle +
-		'</p>'+
-		'<p style="font-weight: bold">'+
-			'Texto:'+
-		'</p>'+
-		'<p style="padding-left: 10px">'+
-				TxMessage +
-		'</p>';
+		'<table class="tableTickets">'+
+			'<thead>'+
+				'<th>Álias</th>'+
+				'<th>Título</th>'+
+				'<th>Mensagem</th>'+
+			'</thead>'+
+			'<tbody>'+
+				'<td class="TicketNumber">'+ StAlias +'</td>'+
+				'<td>'+ StTitle +'</td>'+
+				'<td>'+ TxMessage +'</td>'+
+			'</tbody>'+
+		'</table>';
 	windowParams.TBStyle.Caption = StTitle;
   var ID = Flow.open(windowParams);
 }
