@@ -1,14 +1,14 @@
 <?if ( getSessionProp('isSupporter')=="true" ):?>
 <?$ArNotes = TemplateHandler::listNotes( getSessionProp('IDSupporter') );?>
 	<div id="noteBox" class="homeBox">
-		<span class="homeBoxTitle"><?=NOTES?></span>
-		<span class="homeBoxTitle newCannedResponse" onclick="startCreatingElement('note')"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
+		<span class="homeBoxTitle" onclick="toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')"><?=NOTES?></span>
+		<span class="homeBoxTitle newElement" onclick="startCreatingElement('note')"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
 		<span class="homeBoxTitle loadingRequest" id="noteLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
 		<div id="noteBoxContent" class="homeBoxContent">
 			<table class="tableTickets" id="noteTable">
 				<thead>
 					<th><?=TITLE?></th>
-					<th><?=ACTIONS?></th>
+					<th width="20%"><?=ACTIONS?></th>
 				</thead>
 				<tbody>
 				<?if (count( $ArNotes ) == 0):?>
@@ -20,13 +20,13 @@
 						<tr id="noteTR<?=$ArNoteSettings['IDNote']?>">
 							<td>
 								<?=$ArNoteSettings['StTitle']?>
-								<input type="hidden" id="StNoteTitle<?=$ArNoteSettings['IDNote']?>" value="<?=$ArNoteSettings['StTitle']?>">
+								<input type="hidden" id="StNoteTitle<?=$ArNoteSettings['IDNote']?>" value=<?=f1desk_escape_string($ArNoteSettings['StTitle'])?> >
 							</td>
 							<td>
-								<input type="hidden" id="TxNote<?=$ArNoteSettings['IDNote']?>" value="<?=$ArNoteSettings['TxNote']?>">
+								<input type="hidden" id="TxNote<?=$ArNoteSettings['IDNote']?>" value='<?=f1desk_escape_string($ArNoteSettings['TxNote'])?>'>
 								<img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" class="cannedAction" onclick="startEditElement('note', <?=$ArNoteSettings['IDNote']?>);">
 								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" class="cannedAction" onclick="removeNote(<?=$ArNoteSettings['IDNote']?>)">
-								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction">
+								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction" onclick='previewInFlow.Note("<?=f1desk_escape_string($ArNoteSettings['StTitle'])?>", "<?=f1desk_escape_string($ArNoteSettings['TxNote'], true)?>");'>
 							</td>
 						</tr>
 					<?endforeach;?>

@@ -4,6 +4,7 @@
       <th>N&uacute;mero</th>
       <th>Nome</th>
       <th>Atendente</th>
+      <th>Abrir</th>
     </tr>
   </thead>
   <tbody>
@@ -21,6 +22,7 @@
         <td id='<?= $ID ?>' class='TicketNumber'>#<?= $Ticket['IDTicket']?></td>
         <td><?= $Ticket['StTitle']?></td>
         <td id='TicketSupporter<?= $Ticket['IDTicket']?>'><?= $Ticket['StSupporter']?></td>
+        <td style='text-align:center;'><img src="<?=TEMPLATEDIR?>images/visualizar.png" onclick="previewInFlow.Ticket(<?=$Ticket['IDTicket']?>);"></td>
       </tr>
       <? endforeach; ?>
     <? else : ?>
