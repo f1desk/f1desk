@@ -8,7 +8,7 @@
 				<thead>
 					<th><?=ID_TICKET?></th>
 					<th><?=TITLE?></th>
-					<th><?=ACTIONS?></th>
+					<th width="20%"><?=ACTIONS?></th>
 				</thead>
 				<tbody>
 				<?if ( count( $ArBookMark ) == 0 ):?>
@@ -28,7 +28,7 @@
 							</td>
 							<td>
 								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" class="cannedAction" onclick="removeBookmark(<?=$ArBookMarkSettings['IDTicket']?>)">
-								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction" onclick="previewTicketInFlow(<?=$ArBookMarkSettings['IDTicket']?>)">
+								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction" onclick="previewInFlow.Ticket(<?=$ArBookMarkSettings['IDTicket']?>)">
 							</td>
 						</tr>
 					<?endforeach;?>

@@ -25,7 +25,7 @@
 						<input type='hidden' id='TxNote$IDNote' value='".f1desk_escape_string($_POST['TxNote'])."'>
 						<img src='". TEMPLATEDIR ."images/button_edit.png' alt='Editar' class='cannedAction' onclick='startEditElement(\"note\", $IDNote);'>
 						<img src='". TEMPLATEDIR ."images/button_cancel.png' alt='Remover' class='cannedAction' onclick='removeNote($IDNote)'>
-						<img src='". TEMPLATEDIR ."images/visualizar.png' alt='Visualizar' class='cannedAction' onclick='previewNoteInFlow(\"". f1desk_escape_string($_POST['StTitle'])."\", \"". f1desk_escape_string($_POST['TxNote'], true)."\")' >
+						<img src='". TEMPLATEDIR ."images/visualizar.png' alt='Visualizar' class='cannedAction' onclick='previewInFlow.Note(\"". f1desk_escape_string($_POST['StTitle'])."\", \"". f1desk_escape_string($_POST['TxNote'], true)."\")' >
 					</td>
 				");
 			}
@@ -52,7 +52,7 @@
 							<input type='hidden' id='TxNote$ItAffedcted' value='".f1desk_escape_string($_POST['TxNote'])."'>
 							<img src='". TEMPLATEDIR ."images/button_edit.png' alt='Editar' class='cannedAction' onclick='startEditElement(\"note\", $ItAffedcted);'>
 							<img src='". TEMPLATEDIR ."images/button_cancel.png' alt='Remover' class='cannedAction' onclick='removeNote($ItAffedcted)'>
-							<img src='". TEMPLATEDIR ."images/visualizar.png' alt='Visualizar' class='cannedAction' onclick='previewNoteInFlow(\"". f1desk_escape_string($_POST['StTitle'])."\", \"". f1desk_escape_string($_POST['TxNote'], true)."\")' >
+							<img src='". TEMPLATEDIR ."images/visualizar.png' alt='Visualizar' class='cannedAction' onclick='previewInFlow.Note(\"". f1desk_escape_string($_POST['StTitle'])."\", \"". f1desk_escape_string($_POST['TxNote'], true)."\")' >
 						</td>
 					</tr>
 				");

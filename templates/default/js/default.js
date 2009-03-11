@@ -247,27 +247,17 @@ function setTicketOwner(IDTicket, IDSupporter) {
   return true;
 }
 
-/* Templates->HOME */
+
+
+/**
+ * Templates->HOME 
+ */
 
 	/* auxFunctions */
 	function _doLoading( formName, action ){
 		setStyle(	gID(formName+'Loading'),	{
 			'visibility': ( action=='hide' )?'hidden':'visible'
 		});
-	}
-	function _addSlashes( Text ){
-		Text=Text.split('"').join('\\"');
-		Text=Text.split("'").join("\\'");
-		return Text;
-	}
-	function _removeSlashes( Text ){
-		Text=Text.split('\\"').join('"');
-		Text=Text.split("\\'").join("'");
-		return Text;
-	}
-	function _nl2br( Text ){
-		Text=Text.split('\n').join('<br>');
-		return Text;
 	}
 	/* auxFunctions end*/
 
@@ -512,16 +502,15 @@ function removeNote (IDNote) {
 function startDataEdit(){
 	toogleArrow('dataArrow', 'dataBoxEditAreaContent');
 	var dataForm = gID('dataForm');
-	var TxHeader = gID('TxDataHeader').getElementsByTagName('pre')[0].textContent;
-	var TxSign = gID('TxDataSign').getElementsByTagName('pre')[0].textContent;
-	dataForm.elements['StDataName'].value = gID('StDataName').textContent;
-	dataForm.elements['StDataEmail'].value = gID('StDataEmail').textContent;
-	dataForm.elements['TxDataHeader'].value = (TxHeader == "--")?'':TxHeader;
-	dataForm.elements['TxDataSign'].value = (TxSign == "--")?'':TxSign;
+	dataForm.elements['StDataName'].value = unescape(gID('StDataName').value);
+	dataForm.elements['StDataEmail'].value = unescape(gID('StDataEmail').value);
+	dataForm.elements['TxDataHeader'].value = unescape(gID('TxDataHeader').value);
+	dataForm.elements['TxDataSign'].value = unescape(gID('TxDataSign').value);
 }
 
 
 function updateInformations(){
+  _doLoading('data','show');  toogleArrow('dataArrow', 'dataBoxEditAreaContent','hide');
 	var dataForm = gID('dataForm');
 	var content = {
 		'StName': dataForm.elements['StDataName'].value,
@@ -539,11 +528,17 @@ function updateInformations(){
 				var dataForm = gID('dataForm');
 				var TxHeader = dataForm.elements['TxDataHeader'].value;
 				var TxSign = dataForm.elements['TxDataSign'].value;
-				gID('StDataName').textContent = dataForm.elements['StDataName'].value;
-				gID('StDataEmail').textContent = dataForm.elements['StDataEmail'].value;
-				gID('TxDataHeader').getElementsByTagName('pre')[0].textContent = (!TxHeader)?'--':TxHeader;
-				gID('TxDataSign').getElementsByTagName('pre')[0].textContent = (!TxSign)?'--':TxSign;
-				toogleArrow('dataArrow', 'dataBoxEditAreaContent','hide');
+				/*Update TD's*/
+				gID('StDataNameTD').getElementsByTagName('pre')[0].textContent = dataForm.elements['StDataName'].value;
+				gID('StDataEmailTD').getElementsByTagName('pre')[0].textContent = dataForm.elements['StDataEmail'].value;
+				gID('TxDataHeaderTD').getElementsByTagName('pre')[0].innerHTML = (!TxHeader)?'<i>vazio</i>':TxHeader;
+				gID('TxDataSignTD').getElementsByTagName('pre')[0].innerHTML = (!TxSign)?'<i>vazio</i>':TxSign;
+				/*Update Hiddens*/
+				gID('StDataName').value = escape(dataForm.elements['StDataName'].value);
+				gID('StDataEmail').value = escape(dataForm.elements['StDataEmail'].value);
+				gID('TxDataHeader').value = escape(TxHeader);
+				gID('TxDataSign').value = escape(TxSign);
+				_doLoading('data','hide');
     	} else {
    			alert('Ocorreu um erro na atualização de seus dados. Por favor, recarregue a página');
     	}
@@ -587,9 +582,15 @@ function removeBookmark (IDTicket) {
 	  xhr.makeRequest('removeBookmark',tUrl,tParams);
 	}
 }
-/* Templates->HOME END*/
+/**
+ * Templates->HOME END
+ */
 
-/* Ticket */
+
+
+/**
+ * Templates->Ticket 
+ */
 function submitTicketForm(IDTicket) {
   gID('StMessageType').selectedIndex = 0;
   gID('TxMessage').value = '';
@@ -597,12 +598,14 @@ function submitTicketForm(IDTicket) {
   refreshCall(IDTicket);
 }
 
+
 function addCannedResponse(IDDepartment,IDSupporter) {
   var Responses = gID('cannedAnswers');
   var StAlias = Responses[Responses.selectedIndex].value
   gID('TxMessage').value += StAlias + '\n';
   return false;
 }
+
 
 function ignoreTicket(IDSupporter,IDTicket) {
   var tParams = {
@@ -628,6 +631,7 @@ function ignoreTicket(IDSupporter,IDTicket) {
   }
 }
 
+
 function unignoreTicket(IDSupporter,IDTicket) {
   var tParams = {
     'method':'post',
@@ -650,6 +654,7 @@ function unignoreTicket(IDSupporter,IDTicket) {
   xhr.makeRequest('Unignore Ticket','ticketActions.php',tParams);
 }
 
+
 function bookmarkTicket(IDSupporter, IDTicket) {
   var tParams = {
     'method':'post',
@@ -668,6 +673,7 @@ function bookmarkTicket(IDSupporter, IDTicket) {
   };
   xhr.makeRequest('Bookmark Ticket','ticketActions.php',tParams);
 }
+
 
 function attachTicket(IDTicket) {
   with(windowParams) {
@@ -702,72 +708,88 @@ function attachTicket(IDTicket) {
 
   var ID = Flow.open(windowParams);
 }
+/**
+ * Templates->Ticket END
+ */
 
-function previewCannedInFlow( StAlias, StTitle, TxMessage ) {
-	StAlias = unescape( StAlias );	StTitle = unescape( StTitle );	TxMessage = unescape( TxMessage );
-	windowParams.innerHTML = ''+
-		'<table class="tableTickets">'+
-			'<thead>'+
-				'<th>Alias</th>'+
-				'<th>Título</th>'+
-			'</thead>'+
-			'<tbody>'+
-				'<td class="TicketNumber">'+ StAlias +'</td>'+
-				'<td>'+ StTitle +'</td>'+
-			'</tbody>'+
-		'</table>'+
-		'<br />'+
-		'<table class="tableTickets">'+
-			'<thead>'+
-				'<th>Mensagem</th>'+
-			'</thead>'+
-			'<tbody>'+
-				'<td>'+ TxMessage +'</td>'+
-			'</tbody>'+
-		'</table>';
-	windowParams.TBStyle.Caption = StTitle;
-	windowParams.width = 550; windowParams.height = 380;
-  var ID = Flow.open(windowParams);
-}
 
-function previewNoteInFlow ( StTitle, TxNote ) {
-	StTitle = unescape( StTitle );	TxNote = unescape( TxNote );
-	windowParams.innerHTML = ''+
-		'<table class="tableTickets">'+
-			'<thead>'+
-				'<th>Alias</th>'+
-			'</thead>'+
-			'<tbody>'+
-				'<td class="TicketNumber">'+ StTitle +'</td>'+
-			'</tbody>'+
-		'</table>'+
-		'<br />'+
-		'<table class="tableTickets">'+
-			'<thead>'+
-				'<th>Anota&ccedil;&atilde;o</th>'+
-			'</thead>'+
-			'<tbody>'+
-				'<td>'+ TxNote +'</td>'+
-			'</tbody>'+
-		'</table>';
-	windowParams.TBStyle.Caption = StTitle;
-	windowParams.width = 550; windowParams.height = 380;
-  var ID = Flow.open(windowParams);
-}
-
-function previewTicketInFlow( IDTicket ) {
-	var tParams = {
-    'method':'post',
-    'content': {
-      'IDTicket':IDTicket,
-      'preview':'true'
-    },
-    'okCallBack':function( ticketHTML ) {
-      windowParams.innerHTML = ticketHTML;
-      windowParams.TBStyle.Caption = "Visualizando Chamado #" + IDTicket;
-      windowParams.width = 600; windowParams.height = 450;
-      var ID = Flow.open(windowParams);
-    }
-  };
-  xhr.makeRequest('Bookmark Ticket','ticketDetails.php',tParams);
-}
+/**
+ * PREVIEWS => All functions that open previews in Flow's Library
+ */
+var previewInFlow = {
+  
+  'CannedResponse': function(StAlias, StTitle, TxMessage) {
+  	StAlias = unescape( StAlias );	StTitle = unescape( StTitle );	TxMessage = unescape( TxMessage );
+  	windowParams.innerHTML = ''+
+  		'<table class="tableTickets">'+
+  			'<thead>'+
+  				'<th>Alias</th>'+
+  				'<th>Título</th>'+
+  			'</thead>'+
+  			'<tbody>'+
+  				'<td class="TicketNumber">'+ StAlias +'</td>'+
+  				'<td>'+ StTitle +'</td>'+
+  			'</tbody>'+
+  		'</table>'+
+  		'<br />'+
+  		'<table class="tableTickets">'+
+  			'<thead>'+
+  				'<th>Mensagem</th>'+
+  			'</thead>'+
+  			'<tbody>'+
+  				'<td>'+ TxMessage +'</td>'+
+  			'</tbody>'+
+  		'</table>';
+  	windowParams.TBStyle.Caption = StTitle;
+  	windowParams.width = 550; windowParams.height = 380;
+    var ID = Flow.open(windowParams);
+  },
+  
+  'Note': function(StTitle, TxNote) {
+  	StTitle = unescape( StTitle );	TxNote = unescape( TxNote );
+  	windowParams.innerHTML = ''+
+  		'<table class="tableTickets">'+
+  			'<thead>'+
+  				'<th>Alias</th>'+
+  			'</thead>'+
+  			'<tbody>'+
+  				'<td class="TicketNumber">'+ StTitle +'</td>'+
+  			'</tbody>'+
+  		'</table>'+
+  		'<br />'+
+  		'<table class="tableTickets">'+
+  			'<thead>'+
+  				'<th>Anota&ccedil;&atilde;o</th>'+
+  			'</thead>'+
+  			'<tbody>'+
+  				'<td>'+ TxNote +'</td>'+
+  			'</tbody>'+
+  		'</table>';
+  	windowParams.TBStyle.Caption = StTitle;
+  	windowParams.width = 550; windowParams.height = 380;
+    var ID = Flow.open(windowParams);
+  },
+  
+  'Ticket': function(IDTicket) {
+    _doLoading('bookmark', 'show');
+  	var tParams = {
+      'method':'post',
+      'content': {
+        'IDTicket':IDTicket,
+        'preview':'true'
+      },
+      'okCallBack':function( ticketHTML ) {
+        windowParams.innerHTML = ticketHTML;
+        windowParams.TBStyle.Caption = "Visualizando Chamado #" + IDTicket;
+        windowParams.width = 600; windowParams.height = 450;
+        _doLoading('bookmark', 'hide');
+        var ID = Flow.open(windowParams);
+      }
+    };
+    xhr.makeRequest('Bookmark Ticket','ticketDetails.php',tParams);
+  }
+  
+};
+/**
+ * END PREVIEWS
+ */

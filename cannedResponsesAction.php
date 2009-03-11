@@ -30,7 +30,7 @@
 							<input id='TxCannedResponse$IDCannedResponse' type='hidden' value='". f1desk_escape_string($_POST['TxMessage'], false) ."'/>
 							<img class='cannedAction' onclick='startEditElement(\"canned\", $IDCannedResponse);' alt='Editar' src='templates/default/images/button_edit.png'/>
 							<img class='cannedAction' onclick='removeCannedResponse($IDCannedResponse)' alt='Remover' src='templates/default/images/button_cancel.png'/>
-							<img id='previemCanned$IDCannedResponse' class='cannedAction' onclick='previewCannedInFlow(\"". f1desk_escape_string($_POST['StAlias']) ."\", \"". f1desk_escape_string($_POST['StTitle']) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true) ."\")' src='templates/default/images/visualizar.png'/>
+							<img id='previemCanned$IDCannedResponse' class='cannedAction' onclick='previewInFlow.CannedResponse(\"". f1desk_escape_string($_POST['StAlias']) ."\", \"". f1desk_escape_string($_POST['StTitle']) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true) ."\")' src='templates/default/images/visualizar.png'/>
 						</td>
 				");
 			}
@@ -61,7 +61,7 @@
 									<input id='TxCannedResponse$ItAffedcted' type='hidden' value='". f1desk_escape_string($_POST['TxMessage']) ."'/>
 									<img class='cannedAction' onclick='startEditElement(\"canned\", $ItAffedcted);' alt='Editar' src='templates/default/images/button_edit.png'/>
 									<img class='cannedAction' onclick='removeCannedResponse($ItAffedcted)' alt='Remover' src='templates/default/images/button_cancel.png'/>
-									<img id='previemCanned$ItAffedcted' class='cannedAction' onclick='previewCannedInFlow(\"". f1desk_escape_string($_POST['StAlias']) ."\", \"". f1desk_escape_string($_POST['StTitle']) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true) ."\")' src='templates/default/images/visualizar.png'/>
+									<img id='previemCanned$ItAffedcted' class='cannedAction' onclick='previewInFlow.CannedResponse(\"". f1desk_escape_string($_POST['StAlias']) ."\", \"". f1desk_escape_string($_POST['StTitle']) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true) ."\")' src='templates/default/images/visualizar.png'/>
 								</td>
 							</tr>
 				 		");

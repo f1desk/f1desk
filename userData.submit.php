@@ -6,19 +6,19 @@
 	# We need to know what we have to update, otherwise it would clear and overwrite
 	#
 	if ( key_exists( 'StName', $_POST ) ) {
-		$ArData['StName'] = $_POST['StName'];
+		$ArData['StName'] = f1desk_real_escape_string($_POST['StName']);
 	}
 
 	if ( key_exists( 'StEmail', $_POST ) ) {
-		$ArData['StEmail'] = $_POST['StEmail'];
+		$ArData['StEmail'] = f1desk_real_escape_string($_POST['StEmail']);
 	}
 
 	if ( key_exists( 'TxHeader', $_POST ) ) {
-		$ArData['TxHeader'] = nl2br($_POST['TxHeader']);
+		$ArData['TxHeader'] = f1desk_real_escape_string($_POST['TxHeader']);
 	}
 
 	if ( key_exists( 'TxSign', $_POST ) ) {
-		$ArData['TxSign'] = nl2br($_POST['TxSign']);
+		$ArData['TxSign'] = f1desk_real_escape_string($_POST['TxSign']);
 	}
 
 	$ItAffected = TemplateHandler::updateUserData( getSessionProp('IDUser'), $ArData );
