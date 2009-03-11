@@ -771,7 +771,7 @@ var previewInFlow = {
   },
   
   'Ticket': function(IDTicket) {
-    _doLoading('bookmark', 'show');
+    //_doLoading('bookmark', 'show');
   	var tParams = {
       'method':'post',
       'content': {
@@ -782,7 +782,7 @@ var previewInFlow = {
         windowParams.innerHTML = ticketHTML;
         windowParams.TBStyle.Caption = "Visualizando Chamado #" + IDTicket;
         windowParams.width = 600; windowParams.height = 450;
-        _doLoading('bookmark', 'hide');
+        //_doLoading('bookmark', 'hide');
         var ID = Flow.open(windowParams);
       }
     };
