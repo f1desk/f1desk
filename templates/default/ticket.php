@@ -65,6 +65,18 @@
 </div>
 <!--[/TICKET HEADER]-->
 
+<!--[TICKET ATTACHMENTS]-->
+<div id='ticketAttachments' class='defaultBody'>
+  <div id='actionsCaption' class='defaultCaption'>
+    <img alt='Attchments'  id='arrowAttachments' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "AttachmentsContent")' class="menuArrow"/>
+    <span>Anexos</span>
+  </div>
+  <div id='AttachmentsContent'>
+
+  </div>
+</div>
+<!--[/TICKET ATTACHMENTS]-->
+
 <!--[TICKET HISTORY]-->
 <div id='ticketHistory' class='defaultBody'>
   <div id="historyCaption" class='defaultCaption'>
@@ -90,18 +102,6 @@
   </div>
 </div>
 <!--[/TICKET HISTORY]-->
-
-<!--[TICKET ACTIONS]-->
-<div id='ticketActions' class='defaultBody'>
-  <div id='actionsCaption' class='defaultCaption'>
-    <img alt="Actions"  id='arrowActions' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "actionsContent")' class="menuArrow"/>
-    <span>Anexos</span>
-  </div>
-  <div id='actionsContent'>
-
-  </div>
-</div>
-<!--[/TICKET ACTIONS]-->
 
 <!--[TICKET ANSWER]-->
 <div id='ticketAnswer' class='defaultBody'>

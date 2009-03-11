@@ -9,6 +9,17 @@ html, body {
 img {
  border:none;
 }
+a.Link:link {
+  margin-top:0px;
+  color: #02764F;
+  text-decoration: underline;
+}
+
+a.Link:visited {
+  margin-top:0px;
+  color: #003C25;
+  text-decoration: underline;
+}
 
 #header {
   width:100%;
@@ -420,29 +431,37 @@ html>body #main{
 }
 /*HOME TEMPLATE END;*/
 
-.Link {
-  margin-top:0px;
-}
-
-.Link a {
-  color: #003C25;
-  text-decoration: underline;
-}
-
-.Link a visited {
-  color: #02764F;
-  text-decoration: underline;
-}
-
 #AttachCall {
   float: left;
   margin-right: 10px;
 }
 
-#ticketActions {
+#ticketAttachments {
   margin-top: 25px;
 }
 
 #ticketContent div {
   padding-left:200px;
+}
+
+/*CREATE TICKET*/
+
+#createWrapper h3 {
+  color: #02764F;
+  border-bottom: 1px solid #ABABAB;
+  width:98%;
+  margin-bottom:20px;
+}
+
+#createWrapper input {
+ width: 98%;
+}
+
+#StPriority, #StCategory {
+  margin-left: 5px;
+}
+
+#AttachFile {
+  width: 98%;
+  margin-right:15px;
 }
