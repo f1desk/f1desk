@@ -465,3 +465,43 @@ html>body #main{
   width: 98%;
   margin-right:15px;
 }
+
+#listSup {
+  background-color:#ECEDEF;
+  height:95%;
+  margin-left:3%;
+  margin-top:1%;
+  width:95%;
+}
+
+#listSup h2 {
+  color: #003C25;
+  margin-top:0;
+  padding-left:15%;
+  padding-top:0;
+}
+
+#listSup p {
+  padding-left:2%;
+}
+
+#supporters {
+  background-color:#ECEDEF;
+  height:40%;
+  margin-top:5%;
+  width:100%;
+}
+
+.supporterName {
+  color:#006A42;
+  font-size:14px;
+}
+
+#sendTo h4, #respondTo h4{
+  color: #003C25;
+  border-bottom: 1px solid #ABABAB;
+}
+
+#addedResponders {
+  margin-left:5px;
+}

@@ -24,9 +24,9 @@
 							</td>
 							<td>
 								<input type="hidden" id="TxNote<?=$ArNoteSettings['IDNote']?>" value='<?=f1desk_escape_string($ArNoteSettings['TxNote'])?>'>
-								<img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" class="cannedAction" onclick="startEditElement('note', <?=$ArNoteSettings['IDNote']?>);">
-								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" class="cannedAction" onclick="removeNote(<?=$ArNoteSettings['IDNote']?>)">
-								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" class="cannedAction" onclick='previewInFlow.Note("<?=f1desk_escape_string($ArNoteSettings['StTitle'])?>", "<?=f1desk_escape_string($ArNoteSettings['TxNote'], true)?>");'>
+								<img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" title="Editar" class="cannedAction" onclick="startEditElement('note', <?=$ArNoteSettings['IDNote']?>);">
+								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="removeNote(<?=$ArNoteSettings['IDNote']?>)">
+								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" title="Visualizar" class="cannedAction" onclick='previewInFlow.Note("<?=f1desk_escape_string($ArNoteSettings['StTitle'])?>", "<?=f1desk_escape_string($ArNoteSettings['TxNote'], true)?>");'>
 							</td>
 						</tr>
 					<?endforeach;?>

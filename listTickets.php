@@ -14,6 +14,6 @@
 		$ArTickets = TemplateHandler::listClientTickets( getSessionProp('IDUser'), ($IDDepartment=='opened')?true:false );
 	}
 
-	require_once(TEMPLATEDIR . '/ticketList.php');
+	require_once(TEMPLATEDIR . 'ticketList.php');
 
 ?>

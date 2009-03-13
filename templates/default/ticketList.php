@@ -18,11 +18,19 @@
           $ID = 'ticket' . $Ticket['IDTicket'];
         }
       ?>
-      <tr style='cursor:pointer;' onclick='showCall( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this )' class='<?= $StClass ?>'>
-        <td id='<?= $ID ?>' class='TicketNumber'>#<?= $Ticket['IDTicket']?></td>
-        <td><?= $Ticket['StTitle']?></td>
-        <td id='TicketSupporter<?= $Ticket['IDTicket']?>'><?= $Ticket['StSupporter']?></td>
-        <td style='text-align:center;'><img src="<?=TEMPLATEDIR?>images/visualizar.png" onclick="previewInFlow.Ticket(<?=$Ticket['IDTicket']?>);"></td>
+      <tr style='cursor:pointer;' class='<?= $StClass ?>'>
+        <td onclick='showCall( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this.parentNode )' id='<?= $ID ?>' class='TicketNumber'>
+          #<?= $Ticket['IDTicket']?>
+        </td>
+        <td onclick='showCall( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this.parentNode )'>
+          <?= $Ticket['StTitle']?>
+        </td>
+        <td onclick='showCall( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this.parentNode )' id='TicketSupporter<?= $Ticket['IDTicket']?>'>
+          <?= $Ticket['StSupporter']?>
+        </td>
+        <td onclick="previewInFlow.Ticket(<?=$Ticket['IDTicket']?>);" style='text-align:center;'>
+          <img src="<?=TEMPLATEDIR?>images/visualizar.png">
+        </td>
       </tr>
       <? endforeach; ?>
     <? else : ?>

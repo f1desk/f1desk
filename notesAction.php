@@ -5,12 +5,12 @@
 	}
 	$IDNote = ($_POST['IDNote'])?$_POST['IDNote']:"";
 	if ( !$IDNote ) die(NOT_ID);
-	
+
 	switch ( $_POST['action'] ) {
 		case 'edit':
 			$ArData = array(
-				"StTitle" => f1desk_real_escape_string($_POST['StTitle']),
-				"TxNote" => f1desk_real_escape_string($_POST['TxNote'])
+				"StTitle" => f1desk_escape_string($_POST['StTitle']),
+				"TxNote" => f1desk_escape_string($_POST['TxNote'])
 			);
 			$ItAffedcted = TemplateHandler::editNote( $IDNote, $ArData );
 			if ( !$ItAffedcted ) {
@@ -30,15 +30,15 @@
 				");
 			}
 		break;
-		
+
 		case 'remove':
 			$ItAffedcted = TemplateHandler::removeNote( $IDNote );
-			if ( !$ItAffedcted ) {	die('error');	} 
+			if ( !$ItAffedcted ) {	die('error');	}
 			else {	die('sucess');	}
 		break;
-		
+
 		case 'insert':
-			$ItAffedcted = TemplateHandler::createNote( f1desk_real_escape_string($_POST['StTitle']), f1desk_real_escape_string($_POST['TxNote']), getSessionProp('IDSupporter') );
+			$ItAffedcted = TemplateHandler::createNote( f1desk_escape_string($_POST['StTitle']), f1desk_escape_string($_POST['TxNote']), getSessionProp('IDSupporter') );
 			if ( !$ItAffedcted ) {
 				die(ERROR_RESP);
 			} else {
@@ -58,7 +58,7 @@
 				");
 			}
 		break;
-	
+
 		default:
 			die(ERROR_NONE_ACTION);
 		break;

@@ -9,9 +9,9 @@
 	switch ( $_POST['action'] ) {
 		case 'edit':
 			$ArData = array(
-				"StTitle" => f1desk_real_escape_string($_POST['StTitle']),
-				"StAlias" => f1desk_real_escape_string($_POST['StAlias']),
-				"TxMessage" => f1desk_real_escape_string($_POST['TxMessage'])
+				"StTitle" => f1desk_escape_string($_POST['StTitle']),
+				"StAlias" => f1desk_escape_string($_POST['StAlias']),
+				"TxMessage" => f1desk_escape_string($_POST['TxMessage'])
 			);
 			$ItAffedcted = TemplateHandler::editCannedResponse( $IDCannedResponse, $ArData );
 			if ( !$ItAffedcted ) {
@@ -43,7 +43,7 @@
 		break;
 
 		case 'insert':
-			$ItAffedcted = TemplateHandler::createCannedResponse( f1desk_real_escape_string($_POST['StAlias']), f1desk_real_escape_string($_POST['StTitle']), f1desk_real_escape_string($_POST['TxMessage']), getSessionProp('IDSupporter') );
+			$ItAffedcted = TemplateHandler::createCannedResponse( f1desk_escape_string($_POST['StAlias']), f1desk_escape_string($_POST['StTitle']), f1desk_escape_string($_POST['TxMessage']), getSessionProp('IDSupporter') );
 			if ( !$ItAffedcted ) {
 				die(ERROR_RESP);
 			} else {

@@ -620,4 +620,22 @@ AND
 
     return ($ArReturn[0][0] > 0) ? true : false;
   }
+
+  /**
+   * Get all supporters
+   *
+   */
+  public static function getAllSupporters() {
+    $StSQL = '
+SELECT
+  S.IDSupporter, U.StName
+FROM
+'.DBPREFIX.'Supporter S
+LEFT JOIN '.DBPREFIX.'User U ON (S.IDUser = U.IDUser)
+ORDER BY S.IDSupporter';
+    $DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('string');
+    return $ArResult;
+  }
 }

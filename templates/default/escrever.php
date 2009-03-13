@@ -24,39 +24,49 @@
         <?php endforeach; ?>
       </select>
     </p>
-    <h3>Enviar Para</h3>
-    <select name='StDepartment' class='inputCombo'>
-    <?php foreach ($ArDepartments as $ArDepartment): ?>
-      <?php if(isset($ArDepartment['SubDepartments'])): ?>
-        <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-        <optgroup>
-        <?php foreach ($ArDepartment['SubDepartments'] as $SubDepartments):?>
-          <option value='<?=$SubDepartments['IDSub']?>'><?=$SubDepartments['StSub']?></option>
-        <?php endforeach;?>
-        </optgroup>
-      <?php else: ?>
-        <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-      <?php endif; ?>
-    <?php endforeach; ?>
-    </select>
-    <p>Clique <a href='' class='Link'>aqui</a> para adicionar atendentes</p>
+    <div id='sendTo'>
+      <h3>Enviar Para</h3>
+      <select name='StDepartment' class='inputCombo'>
+      <?php foreach ($ArDepartments as $ArDepartment): ?>
+        <?php if(isset($ArDepartment['SubDepartments'])): ?>
+          <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
+          <optgroup>
+          <?php foreach ($ArDepartment['SubDepartments'] as $SubDepartments):?>
+            <option value='<?=$SubDepartments['IDSub']?>'><?=$SubDepartments['StSub']?></option>
+          <?php endforeach;?>
+          </optgroup>
+        <?php else: ?>
+          <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
+        <?php endif; ?>
+      <?php endforeach; ?>
+      </select>
+      <p>Clique <a href='javascript:void(0);' class='Link' onclick='listSupporters("Responsers")'>aqui</a> para adicionar atendentes</p>
+      <div id='addedResponsers' class='Invisible'>
+        <h4>Usu&aacute;rios Adicionados</h4>
+      </div>
+    </div>
 
-    <h3>Responder Para</h3>
-    <select size='1' name='StDepartment' class='inputCombo'>
-    <?php foreach ($ArDepartments as $ArDepartment): ?>
-      <?php if(isset($ArDepartment['SubDepartments'])): ?>
-        <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-        <optgroup>
-        <?php foreach ($ArDepartment['SubDepartments'] as $SubDepartments):?>
-          <option value='<?=$SubDepartments['IDSub']?>'><?=$SubDepartments['StSub']?></option>
-        <?php endforeach;?>
-        </optgroup>
-      <?php else: ?>
-        <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-      <?php endif; ?>
-    <?php endforeach; ?>
-    </select>
-    <p>Clique <a href='' class='Link'>aqui</a> para adicionar atendentes</p>
+    <div id='respondTo'>
+      <h3>Responder Para</h3>
+      <select size='1' name='StDepartment' class='inputCombo'>
+      <?php foreach ($ArDepartments as $ArDepartment): ?>
+        <?php if(isset($ArDepartment['SubDepartments'])): ?>
+          <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
+          <optgroup>
+          <?php foreach ($ArDepartment['SubDepartments'] as $SubDepartments):?>
+            <option value='<?=$SubDepartments['IDSub']?>'><?=$SubDepartments['StSub']?></option>
+          <?php endforeach;?>
+          </optgroup>
+        <?php else: ?>
+          <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
+        <?php endif; ?>
+      <?php endforeach; ?>
+      </select>
+      <p>Clique <a href='javascript:void(0);' class='Link' onclick='listSupporters("Readers")'>aqui</a> para adicionar atendentes</p>
+      <div id='addedReaders' class='Invisible'>
+        <h4>Usu&aacute;rios Adicionados</h4>
+      </div>
+    </div>
     <h3>Mensagem</h3>
     <p>
       <label for='StTitle'>T&iacute;tulo:</label>
@@ -67,7 +77,7 @@
       <textarea id='TxMessage' name='TxMessage' class='answerArea'></textarea>
     </p>
     <p class='Right'>
-      <input type='file' id='AttachFile' name='AttachFile' />
+      <input type='file' id='Attachment' name='Attachment' />
       <iframe id='ajaxSubmit' name='ajaxSubmit' src='createTicket.submit.php'></iframe>
     </p>
     <p class='Left'>
