@@ -102,16 +102,22 @@ function setSessionProp( $StProp, $StValue ){
 	return $StValue;
 }
 
-function f1desk_escape_string( $toEscape, $nl2br = false ) {
+function f1desk_escape_string($toEscape, $nl2br = false, $BoEncode = false) {
 	if ( is_array( $toEscape ) ) {
 		foreach ( $toEscape as &$scape ){
-			$scape = f1desk_real_escape_string( $scape );
+			$scape = f1desk_escape_string( $scape );
 		}
 		return $toEscape;
 	} else {
-		if ( $nl2br )
-			$toEscape = nl2br($toEscape);
-  		$toEscape = mysql_escape_string( $toEscape );
+	  if ($nl2br)
+			$toEscape = (str_replace("\n", "<br>",$toEscape));
+		if ($BoEncode) {
+  		$toEscape = (str_replace("'", "%27", $toEscape));
+      $toEscape = (str_replace('"', "%22", $toEscape));
+      $toEscape = (str_replace(' ', "%20", $toEscape));
+		} else {
+		  $toEscape = mysql_escape_string( $toEscape );
+		}
 		return $toEscape;
 	}
 }

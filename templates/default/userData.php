@@ -17,28 +17,28 @@ if ( getSessionProp('isSupporter') == "true" ){
 					<td class="TicketNumber"><?=NAME?>:</td>
 					<td id="StDataNameTD">
 					 <pre><?=$ArUser['StName']?></pre>
-					 <input type="hidden" id="StDataName" value="<?=f1desk_escape_string($ArUser['StName'])?>">
+					 <input type="hidden" id="StDataName" value="<?=f1desk_escape_string($ArUser['StName'],false,true)?>">
 				  </td>
 				</tr>
 				<tr>
 					<td class="TicketNumber"><?=EMAIL?>:</td>
 					<td id="StDataEmailTD">
 					 <pre><?=$ArUser['StEmail']?></pre>
-					 <input type="hidden" id="StDataEmail" value="<?=f1desk_escape_string($ArUser['StEmail'])?>">
+					 <input type="hidden" id="StDataEmail" value="<?=f1desk_escape_string($ArUser['StEmail'],false,true)?>">
 					</td>
 				</tr>
 				<tr>
 					<td class="TicketNumber"><?=HEADER?>:</td>
 					<td id="TxDataHeaderTD" style="border:solid 1px #ccc;">
 					 <pre><?=($ArUser['TxHeader'])?$ArUser['TxHeader']:'<i>'. EMPTY_TEXT .'</i>'?></pre>
-					 <input type="hidden" id="TxDataHeader" value="<?=f1desk_escape_string($ArUser['TxHeader'])?>">
+					 <input type="hidden" id="TxDataHeader" value="<?=f1desk_escape_string($ArUser['TxHeader'],false,true)?>">
 					</td>
 				</tr>
 				<tr>
 					<td class="TicketNumber"><?=SIGN?>:</td>
 					<td id="TxDataSignTD" style="border:solid 1px #ccc;">
 					 <pre><?=($ArUser['TxSign'])?$ArUser['TxSign']:'<i>'. EMPTY_TEXT .'</i>'?></pre>
-					 <input type="hidden" id="TxDataSign" value="<?=f1desk_escape_string($ArUser['TxSign'])?>">
+					 <input type="hidden" id="TxDataSign" value="<?=f1desk_escape_string($ArUser['TxSign'],false,true)?>">
 					</td>
 				</tr>
 			</tbody>
