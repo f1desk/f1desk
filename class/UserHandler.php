@@ -703,7 +703,7 @@ WHERE
 SELECT
 	S.IDSupporter, U.StName
 FROM
-	User U
+	'. DBPREFIX .'User U
   LEFT JOIN ' . DBPREFIX . 'Supporter S ON (S.IDUser = U.IDUser)
   LEFT JOIN ' . DBPREFIX . 'TicketSupporter TS ON(S.IDSupporter = TS.IDSupporter)
   LEFT JOIN ' . DBPREFIX . 'Ticket T ON(TS.IDTicket = T.IDTicket)
@@ -720,7 +720,7 @@ OR
 SELECT
 	S.IDSupporter, U.StName
 FROM
-	User U
+	'. DBPREFIX .'User U
   RIGHT JOIN ' . DBPREFIX . 'Supporter S ON (S.IDUser = U.IDUser)
   LEFT JOIN ' . DBPREFIX . 'DepartmentSupporter DS ON(DS.IDSupporter = DS.IDSupporter)
   LEFT JOIN ' . DBPREFIX . 'Department D ON(DS.IDDepartment = D.IDDepartment)

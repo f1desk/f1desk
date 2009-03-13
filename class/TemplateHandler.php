@@ -242,7 +242,13 @@ abstract class TemplateHandler {
     $i = 0;
     $ObjTicket = self::getInstance('TicketHandler');
     $ArMessages = $ObjTicket->listTicketMessages($IDTicket);
-
+    #
+    # for exibition, replaces "\n" for "<br>"
+    #
+    foreach ($ArMessages as &$ArMessageSettings) {
+      $ArMessageSettings['TxMessage'] = nl2br( $ArMessageSettings['TxMessage'] );
+    }
+    
     foreach ($ArMessages as &$ArMessage) {
       switch ($ArMessage['EnMessageType']) {
         case 'SYSTEM':

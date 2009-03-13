@@ -192,14 +192,14 @@ class DBHandler {
          }
 
          foreach ($StValues as &$Valores) {
-           $Valores = "'$Valores'";
+           $Valores = "'".addslashes($Valores)."'";
          }
 
      	   $StValues = implode(",",$StValues);
      	 }
      } else {
        foreach ($ArData as &$Data) {
-         $Data = "'$Data'";
+         $Data = "'".addslashes($Data)."'";
        }
        $ArData = array(implode(',',$ArData));
      }

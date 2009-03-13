@@ -546,9 +546,10 @@ GROUP BY
     $StTableName = DBPREFIX . 'Message';
     $ArFields = array( 'TxMessage' , 'DtSended' , 'BoAvailable' , 'EnMessageType' , 'IDTicket' , 'IDUser' );
     $ArValues = array( $StMessage , date('Y-m-d H:i:s',time()) , $BoAvailable, $StMsgType, $IDTicket, $IDUser );
-
+    
     $this->insertIntoTable($StTableName,$ArFields,$ArValues);
     $IDMessage = $this->getID();
+    
     return $IDMessage;
   }
 

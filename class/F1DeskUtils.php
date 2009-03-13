@@ -472,7 +472,7 @@ SELECT
 FROM
   ' . DBPREFIX . "CannedResponse
 WHERE
-  StAlias = '$StAlias'";
+  StAlias = '".addslashes($StAlias)."'";
     $DBHandler = self::getDBinstance();
     $DBHandler->execSQL($StSQL);
     $ArResult = $DBHandler->getResult('num');
