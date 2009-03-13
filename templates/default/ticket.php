@@ -1,13 +1,19 @@
+<?
+  #
+  # concatenate arrow's ID and Content's ID with this UID
+  #
+  $uid = uniqid();
+?>
 <!--[TICKET HEADER]-->
 <div id='ticketHeader'>
   <div id="ticketTitle">
     <img id='reloadHeader' class='menuRefresh Right' onclick='refreshCall( <?= $IDTicket ?> )' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
-  	<img alt="Ticket" id='arrowHeader' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "ticketContent")' class='menuArrow'/>
+  	<img alt="Ticket" id='arrowHeader<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "ticketContent<?=$uid?>")' class='menuArrow'/>
   	<span><?= $StTitle ?></span>
   </div>
 
 
-  <div id="ticketContent">
+  <div id="ticketContent<?=$uid?>">
   	<table class='tableTickets'>
       <thead>
         <tr>
@@ -68,11 +74,11 @@
 <!--[TICKET HISTORY]-->
 <div id='ticketHistory' class='defaultBody'>
   <div id="historyCaption" class='defaultCaption'>
-  	<img alt="Ticket"  id='arrowHistory' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "historyContent")' class="menuArrow"/>
+  	<img alt="Ticket"  id='arrowHistory<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "historyContent<?=$uid?>")' class="menuArrow"/>
   	<span>Hist&oacute;rico</span>
   </div>
 
-  <div id="historyContent" >
+  <div id="historyContent<?=$uid?>" >
 
     <? foreach ($ArMessages as $ArMessage) : ?>
       <? $DtSended = F1DeskUtils::formatDate('datetime_format',$ArMessage['DtSended']); ?>
@@ -94,10 +100,10 @@
 <!--[TICKET ACTIONS]-->
 <div id='ticketActions' class='defaultBody'>
   <div id='actionsCaption' class='defaultCaption'>
-    <img alt="Actions"  id='arrowActions' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "actionsContent")' class="menuArrow"/>
+    <img alt="Actions"  id='arrowActions<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "actionsContent<?=$uid?>")' class="menuArrow"/>
     <span>Anexos</span>
   </div>
-  <div id='actionsContent'>
+  <div id='actionsContent<?=$uid?>'>
 
   </div>
 </div>
@@ -107,11 +113,11 @@
 <?if(!$preview):?>
 	<div id='ticketAnswer' class='defaultBody'>
 	  <div id='answerCaption' class='defaultCaption'>
-	  	<img alt="Ticket" id='arrowAnswer' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "answerContent")' class="menuArrow"/>
+	  	<img alt="Ticket" id='arrowAnswer<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "answerContent<?=$uid?>")' class="menuArrow"/>
 	  	<span>Responder</span>
 	  </div>
 	
-	  <div id="answerContent" >
+	  <div id="answerContent<?=$uid?>" >
 	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data">
 	      <div id='messageType' class='Right'>
 	    	  <select name='StMessageType' id='StMessageType' class='inputCombo'>

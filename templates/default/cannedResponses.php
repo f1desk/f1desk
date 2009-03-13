@@ -29,9 +29,9 @@
 							</td>
 							<td>
 								<input type="hidden" id="TxCannedResponse<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value='<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'])?>'>
-								<img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" class="cannedAction" onclick="startEditElement('canned', <?=$ArCannedResponsesSettings['IDCannedResponse']?>);">
-								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" class="cannedAction" onclick="removeCannedResponse(<?=$ArCannedResponsesSettings['IDCannedResponse']?>)">
-								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" id="previemCanned<?=$ArCannedResponsesSettings['IDCannedResponse']?>" alt="Visualizar" class="cannedAction" onclick='previewInFlow.CannedResponse("<?=f1desk_escape_string($ArCannedResponsesSettings['StAlias'])?>", "<?=f1desk_escape_string($ArCannedResponsesSettings['StTitle'])?>", "<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'], true)?>");'>
+								<img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" title="Editar" class="cannedAction" onclick="startEditElement('canned', <?=$ArCannedResponsesSettings['IDCannedResponse']?>);">
+								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="removeCannedResponse(<?=$ArCannedResponsesSettings['IDCannedResponse']?>)">
+								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" title="Visualizar" id="previemCanned<?=$ArCannedResponsesSettings['IDCannedResponse']?>" alt="Visualizar" class="cannedAction" onclick='previewInFlow.CannedResponse("<?=f1desk_escape_string($ArCannedResponsesSettings['StAlias'])?>", "<?=f1desk_escape_string($ArCannedResponsesSettings['StTitle'])?>", "<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'], true)?>");'>
 							</td>
 						</tr>
 					<?endforeach;?>
