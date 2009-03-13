@@ -1,10 +1,10 @@
 <?php
 
-define('DBHOST','mysql.f1desk.org');
-define('DBUSER','f1desk2');
-define('DBPASS','f!2d2m');
-define('DBNAME','f1desk2');
-define('DBPREFIX', '');
+define('DBHOST','localhost');
+define('DBUSER','root');
+define('DBPASS','mario');
+define('DBNAME','helpdesk');
+define('DBPREFIX', 'f1desk_');
 
 
 #

@@ -529,8 +529,6 @@ GROUP BY
    */
   public function addMessage($IDUser, $IDTicket, $StMessage, $BoAvailable, $ItMsgType = 0) {
 
-    $IDUser = array_shift(F1DeskUtils::getUserData($IDUser));
-
     # message types availables
     $ArTypes = array( 'NORMAL' , 'INTERNAL' , 'SYSTEM', 'SATISFACTION');
 
@@ -538,10 +536,10 @@ GROUP BY
 
     $ArHeaderSign = F1DeskUtils::getUserHeaderSign($IDUser);
     if (!empty($ArHeaderSign['TxHeader'])) {
-      $ArHeaderSign['TxHeader'] .= '<br>';
+      $ArHeaderSign['TxHeader'] .= "\n\n";
     }
     if (!empty($ArHeaderSign['TxSign'])) {
-      $ArHeaderSign['TxSign'] = '<br>' . $ArHeaderSign['TxSign'];
+      $ArHeaderSign['TxSign'] = "\n\n" . $ArHeaderSign['TxSign'];
     }
     $StMessage = f1desk_escape_string($ArHeaderSign['TxHeader']) . $StMessage . f1desk_escape_string($ArHeaderSign['TxSign']);
     # preparing to insert on Message table
@@ -635,6 +633,7 @@ GROUP BY
     }
 
     $StMsgType = ($BoInternal == true) ? 1 : 0;
+    
     $IDMessage = $this->addMessage($IDSupporter, $IDTicket, $StMessage,$StMsgType);
 
     if (! empty($ArFiles)) {
@@ -925,6 +924,7 @@ WHERE
 
     $TxMessage = $this->replaceAlias($TxMessage,$IDWriter);
 
+    //die($IDUser . ' wtf?');
     #Add the reply
     $this->addMessage($IDUser, $IDTicket, $TxMessage, $BoReleased, $StMsgType);
     $IDMessage = $this->getID();
