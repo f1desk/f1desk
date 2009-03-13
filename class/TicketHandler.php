@@ -163,12 +163,17 @@ SET
 SELECT
 	T.IDTicket
 FROM
-	Ticket T
-	LEFT JOIN isRead R ON (T.IDTicket = R.IDTicket)
-	LEFT JOIN User U ON (U.IDUser = R.IDUser)
- 	LEFT JOIN Supporter S ON (S.IDUSer = U.IDUSer)
- 	LEFT JOIN DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
- 	LEFT JOIN Department D ON (D.IDDepartment = DS.IDDepartment)
+	". DBPREFIX ."Ticket T
+	LEFT JOIN 
+    ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
+	LEFT JOIN 
+    ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
+ 	LEFT JOIN 
+ 	  ". DBPREFIX ."Supporter S ON (S.IDUSer = U.IDUSer)
+ 	LEFT JOIN 
+ 	  ". DBPREFIX ."DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
+ 	LEFT JOIN 
+ 	  ". DBPREFIX ."Department D ON (D.IDDepartment = DS.IDDepartment)
 WHERE
   D.IDDepartment = $IDDepartment
 AND
@@ -182,9 +187,11 @@ AND
 SELECT
 	T.IDTicket
 FROM
-	Ticket T
-	LEFT JOIN isRead R ON (T.IDTicket = R.IDTicket)
-	LEFT JOIN User U ON (U.IDUser = R.IDUser)
+	". DBPREFIX ."Ticket T
+	LEFT JOIN 
+    ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
+	LEFT JOIN 
+    ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
 WHERE
   T.IDTicket IN ($Tickets)
 AND
@@ -252,7 +259,7 @@ AND
 SELECT
   IDTicket
 FROM
-  isRead
+  ". DBPREFIX ."isRead
 WHERE
   IDTicket = $IDTicket
 AND
@@ -297,8 +304,9 @@ AND
 SELECT
 	COUNT( T.IDTicket ) AS totalOpened
 FROM
-	User U
-  LEFT JOIN Ticket T ON (T.IDUser = U.IDUser)
+	". DBPREFIX ."User U
+  LEFT JOIN 
+  ". DBPREFIX ."Ticket T ON (T.IDUser = U.IDUser)
 WHERE
 	U.IDUser = $IDUser
 AND
@@ -308,9 +316,11 @@ AND
 SELECT
 	COUNT( T.IDTicket ) AS totalRead
 FROM
-	Ticket T
-	LEFT JOIN isRead R ON (R.IDTicket = T.IDTicket)
-	LEFT JOIN User U ON (U.IDUser = R.IDUser)
+	". DBPREFIX ."Ticket T
+	LEFT JOIN 
+	 ". DBPREFIX ."isRead R ON (R.IDTicket = T.IDTicket)
+	LEFT JOIN 
+	 ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
 WHERE
 	U.IDUser = $IDUser
 AND
@@ -344,7 +354,7 @@ AND
 SELECT
   D.IDDepartment, COUNT( T.IDTicket ) AS notRead
 FROM
-  User U
+  ". DBPREFIX ."User U
   LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDUser = U.IDUser)
   LEFT JOIN " . DBPREFIX . "DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
   LEFT JOIN " . DBPREFIX . "Department D ON (D.IDDepartment = DS.IDDepartment)
@@ -368,7 +378,7 @@ GROUP BY
 SELECT
   D.IDDepartment, COUNT( T.IDTicket ) AS notRead
 FROM
-  User U
+  ". DBPREFIX ."User U
   LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDUser = U.IDUser)
   LEFT JOIN " . DBPREFIX . "DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
   LEFT JOIN " . DBPREFIX . "Department D ON (D.IDDepartment = DS.IDDepartment)

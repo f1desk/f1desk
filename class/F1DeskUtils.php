@@ -377,9 +377,9 @@ WHERE
   FROM
     " . DBPREFIX . "User U
   LEFT JOIN
-    " . DBPREFIX . "$StTable ON (U.IDUser = $StTable.IDUser)
+    ". DBPREFIX ."$StTable ON (U.IDUser = ". DBPREFIX ."$StTable.IDUser)
   WHERE
-    $StTable.$StField = $ID";
+    ". DBPREFIX ."$StTable.$StField = $ID ";
 
     $DBHandler = self::getDBinstance();
     $DBHandler->execSQL($StSQL);
@@ -397,12 +397,16 @@ WHERE
 
   public static function listCannedResponses($IDSupporter) {
 
-    #get Supporter's Departments
+    #
+    # get Supporter's Departments
+    #
     $ArDepartments = self::getDepartments($IDSupporter);
 
     $ArIDs = array_keys($ArDepartments);
 
-    #get only the real departmets, excluding ignored and singles
+    #
+    # get only the real departmets, excluding ignored and singles
+    #
     foreach ($ArIDs as $Key => $Value) {
       if (! preg_match('/[0-9]+/', $Value)) {
         unset($ArIDs[$Key]);

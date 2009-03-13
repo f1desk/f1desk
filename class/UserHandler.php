@@ -114,11 +114,11 @@ WHERE
 SELECT
   C.IDClient, S.IDSupporter
 FROM
-  User U
+  " . DBPREFIX . "User U
 LEFT JOIN
-  Supporter S ON (U.IDUser = S.IDUser)
+  " . DBPREFIX . "Supporter S ON (U.IDUser = S.IDUser)
 LEFT JOIN
-  Client C ON (U.IDUser = C.IDUser)
+  " . DBPREFIX . "Client C ON (U.IDUser = C.IDUser)
 WHERE
   U.IDUser = {$ArResult[0]['IDUser']}";
       $this->execSQL($StSQL);
