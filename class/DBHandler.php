@@ -65,7 +65,7 @@ class DBHandler {
    public function execSQL($StQuery) {
       $this->RsResult = $this->ObjConnection->query($StQuery);
       if( $this->RsResult === false ) {
-         throw new ErrorHandler(EXC_DB_EXEC . ' Detalhes:' . $this->ObjConnection->error);
+         throw new ErrorHandler(EXC_DB_EXEC . ' Detalhes:' . $this->ObjConnection->error . '<br>' . $StQuery);
       }
    }
 

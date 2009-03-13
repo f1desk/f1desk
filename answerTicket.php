@@ -1,6 +1,9 @@
 <?php
 require_once('main.php');
 if (!empty($_POST)) {
+  foreach ($_POST as &$Post) {
+    UserHandler::SQLInjectionHandle($Post);
+  }
   $TicketHandler = new TicketHandler();
   $IDWriter = (getSessionProp('IDClient')) ? getSessionProp('IDClient') : getSessionProp('IDSupporter');
   $ArMessageType = array('NORMAL' => '0', 'INTERNAL' => '1', 'SYSTEM' => '2', 'SATISFACTION' => '3');

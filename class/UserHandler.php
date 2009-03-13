@@ -74,10 +74,9 @@ class UserHandler extends DBHandler {
   public static function SQLInjectionHandle(&$StArgs) {
     $StArgs = strip_tags($StArgs);
     $StArgs = addslashes($StArgs);
-    $StArgs = strtolower($StArgs);
-
+    
     $ArBloq = array("select"=>'',"drop"=>'',"delete"=>'',"insert"=>'',"update"=>'',"where"=>'',"having"=>'',"union"=>'',"'"=>'\'',"="=>'',"<"=>'',">"=>'');
-    $StReturn = strstr($StArgs,$ArBloq);
+    $StReturn = strstr(strtolower($StArgs),$ArBloq);
 
     return $StReturn;
   }

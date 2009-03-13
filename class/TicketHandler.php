@@ -534,14 +534,19 @@ GROUP BY
 
     $StMsgType = ($ItMsgType != 4) ? $ArTypes[$ItMsgType] : $ArTypes[0];
 
-    $ArHeaderSign = F1DeskUtils::getUserHeaderSign($IDUser);
-    if (!empty($ArHeaderSign['TxHeader'])) {
-      $ArHeaderSign['TxHeader'] .= "\n\n";
+    #
+    # Add Headers and sign only to normal replys
+    #
+    if ($ItMsgType == 0) {
+      $ArHeaderSign = F1DeskUtils::getUserHeaderSign($IDUser);
+      if (!empty($ArHeaderSign['TxHeader'])) {
+        $ArHeaderSign['TxHeader'] .= "\n\n";
+      }
+      if (!empty($ArHeaderSign['TxSign'])) {
+        $ArHeaderSign['TxSign'] = "\n\n" . $ArHeaderSign['TxSign'];
+      }
+      $StMessage = f1desk_escape_string($ArHeaderSign['TxHeader']) . $StMessage . f1desk_escape_string($ArHeaderSign['TxSign']);
     }
-    if (!empty($ArHeaderSign['TxSign'])) {
-      $ArHeaderSign['TxSign'] = "\n\n" . $ArHeaderSign['TxSign'];
-    }
-    $StMessage = f1desk_escape_string($ArHeaderSign['TxHeader']) . $StMessage . f1desk_escape_string($ArHeaderSign['TxSign']);
     # preparing to insert on Message table
     $StTableName = DBPREFIX . 'Message';
     $ArFields = array( 'TxMessage' , 'DtSended' , 'BoAvailable' , 'EnMessageType' , 'IDTicket' , 'IDUser' );
@@ -634,7 +639,9 @@ GROUP BY
 
     $StMsgType = ($BoInternal == true) ? 1 : 0;
     
-    $IDMessage = $this->addMessage($IDSupporter, $IDTicket, $StMessage,$StMsgType);
+    $IDUser = array_shift(F1DeskUtils::getUserData($IDSupporter));
+    
+    $IDMessage = $this->addMessage($IDUser, $IDTicket, $StMessage,$StMsgType);
 
     if (! empty($ArFiles)) {
       $this->attachFile($ArFiles,$IDMessage);
@@ -658,7 +665,7 @@ GROUP BY
    *
    * @author Matheus Ashton <matheus[at]digirati.com.br>
    */
-  public function createUserTicket ($IDUser, $IDCategory, $IDPriority, $StTitle, $StMessage, $IDDepartment,$ArFiles = array()) {
+  public function createUserTicket ($IDClient, $IDCategory, $IDPriority, $StTitle, $StMessage, $IDDepartment,$ArFiles = array()) {
 
     $StTableName = DBPREFIX . 'Ticket';
     $ArFields = array(
@@ -680,13 +687,15 @@ GROUP BY
                       date('Y-m-d',time()),
                       'NOT_READ',
                       '1',
-                      $IDUser,
+                      $IDClient,
                       $IDCategory,
                       $IDPriority
                      );
     $itReturn = $this->insertIntoTable($StTableName, $ArFields, $ArValues);
     $IDTicket = $this->getID();
 
+    $IDUser = array_shift(F1DeskUtils::getUserData($IDClient));
+    
     $IDMessage = $this->addMessage($IDUser, $IDTicket, $StMessage,0);
     if (!empty($ArFiles)) {
       $this->attachFile($ArFiles,$IDMessage);
@@ -932,7 +941,7 @@ WHERE
       $this->attachFile($ArFiles,$IDMessage);
     }
 
-    if ($StMsgType != '3' || $StMsgType == '0') {
+    if ($StMsgType == '0') {
       #Changing Tickets's situation
       $StTableName = DBPREFIX . 'Ticket';
       $ArFields = array('StSituation' => 'WAITING_USER', 'IDSupporter' => $IDWriter);

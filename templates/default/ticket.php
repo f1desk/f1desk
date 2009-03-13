@@ -72,12 +72,12 @@
 <!--[/TICKET HEADER]-->
 
 <!--[TICKET ATTACHMENTS]-->
-<div id='ticketAttachments' class='defaultBody'>
+<div id='ticketActions' class='defaultBody'>
   <div id='actionsCaption' class='defaultCaption'>
-    <img alt='Attchments'  id='arrowAttachments' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "AttachmentsContent")' class="menuArrow"/>
+    <img alt="Actions"  id='arrowActions<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "actionsContent<?=$uid?>")' class="menuArrow"/>
     <span>Anexos</span>
   </div>
-  <div id='AttachmentsContent'>
+  <div id='actionsContent<?=$uid?>'>
 
   </div>
 </div>
@@ -108,18 +108,6 @@
   </div>
 </div>
 <!--[/TICKET HISTORY]-->
-
-<!--[TICKET ACTIONS]-->
-<div id='ticketActions' class='defaultBody'>
-  <div id='actionsCaption' class='defaultCaption'>
-    <img alt="Actions"  id='arrowActions<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "actionsContent<?=$uid?>")' class="menuArrow"/>
-    <span>Anexos</span>
-  </div>
-  <div id='actionsContent<?=$uid?>'>
-
-  </div>
-</div>
-<!--[/TICKET ACTIONS]-->
 
 <!--[TICKET ANSWER]-->
 <?if(!$preview):?>
