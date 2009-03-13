@@ -250,7 +250,7 @@ function setTicketOwner(IDTicket, IDSupporter) {
 
 
 /**
- * Templates->HOME 
+ * Templates->HOME
  */
 
 	/* auxFunctions */
@@ -589,7 +589,7 @@ function removeBookmark (IDTicket) {
 
 
 /**
- * Templates->Ticket 
+ * Templates->Ticket
  */
 function submitTicketForm(IDTicket) {
   gID('StMessageType').selectedIndex = 0;
@@ -717,7 +717,7 @@ function attachTicket(IDTicket) {
  * PREVIEWS => All functions that open previews in Flow's Library
  */
 var previewInFlow = {
-  
+
   'CannedResponse': function(StAlias, StTitle, TxMessage) {
   	StAlias = unescape( StAlias );	StTitle = unescape( StTitle );	TxMessage = unescape( TxMessage );
   	windowParams.innerHTML = ''+
@@ -744,7 +744,7 @@ var previewInFlow = {
   	windowParams.width = 550; windowParams.height = 380;
     var ID = Flow.open(windowParams);
   },
-  
+
   'Note': function(StTitle, TxNote) {
   	StTitle = unescape( StTitle );	TxNote = unescape( TxNote );
   	windowParams.innerHTML = ''+
@@ -769,7 +769,7 @@ var previewInFlow = {
   	windowParams.width = 550; windowParams.height = 380;
     var ID = Flow.open(windowParams);
   },
-  
+
   'Ticket': function(IDTicket) {
     //_doLoading('bookmark', 'show');
   	var tParams = {
@@ -788,8 +788,157 @@ var previewInFlow = {
     };
     xhr.makeRequest('Bookmark Ticket','ticketDetails.php',tParams);
   }
-  
+
 };
 /**
  * END PREVIEWS
  */
+
+function submitCreateTicket() {
+
+}
+
+function checkAdd(Type) {
+  var combo = gID("supporters"); IDSupporter = []; StName = []; max = combo.options.length; exit = false;
+  for(var i=0;i<max;i++) {
+    if(combo[i].selected == true) {
+      if(!gID('p'+combo[i].value) && Type == 'Responsers') {
+          IDSupporter.push(combo[i].value);
+          StName.push(combo[i].textContent);
+      } else if(!gID('pR'+combo[i].value) && Type == 'Readers') {
+          IDSupporter.push(combo[i].value);
+          StName.push(combo[i].textContent);
+      } else {
+        exit = true;
+        break;
+      }
+    }
+  }
+  if(exit == false) {
+    if(combo.selectedIndex > -1) {
+      if(Type == 'Responsers') {
+        addResponser(IDSupporter,StName);
+      } else {
+        addReader(IDSupporter,StName);
+      }
+    } else {
+      alert("Escolha um atendente!");
+    }
+  }
+}
+
+function addReader() {
+  var hidden;
+
+  if(! gID('ArReaders')) {
+    hidden = createElement('input',{'type':'hidden','name':'ArReaders','id':'ArReaders','value':'['+IDSupporter+']'});
+    document.body.appendChild(hidden);
+  } else {
+    hidden = gID('ArReaders');
+    var value = hidden.value;
+    var arraySup = value.split("]");
+    if(arraySup[0] == '[') {
+      arraySup[0] += IDSupporter + ']';
+    } else {
+      arraySup[0] += ',' + IDSupporter + ']';
+    }
+    value = arraySup.shift();
+    hidden.value = value;
+  }
+  for(i in IDSupporter) {
+    p = createElement('p',{'id':'pR'+IDSupporter[i],'style':'margin:0;padding:0;padding-bottom:5px;'});
+    gID('addedReaders').appendChild(p);
+    img = createElement('img',{'src':'templates/default/images/button_cancel.png','style':'vertical-align:middle;padding-right:5px;'});
+    a = createElement('a',{'href':'javascript:void(0);','onclick':"removeSupporter('Readers',"+"'pR"+IDSupporter[i]+"');"})
+    a.appendChild(img);
+    span = createElement('span',{'id':'respondto'+IDSupporter[i],'class':'supporterName'})
+    textNode = createTextNode(StName[i]);
+    span.appendChild(textNode);
+    gID('pR'+IDSupporter[i]).appendChild(a);
+    gID('pR'+IDSupporter[i]).appendChild(span);
+    gID('addedReaders').className = '';
+  }
+}
+
+function addResponser(IDSupporter,StName) {
+  var hidden;
+
+  if(! gID('ArResponsers')) {
+    hidden = createElement('input',{'type':'hidden','name':'ArResponsers','id':'ArResponsers','value':'['+IDSupporter+']'});
+    document.body.appendChild(hidden);
+  } else {
+    hidden = gID('ArResponsers');
+    var value = hidden.value;
+    var arraySup = value.split("]");
+    if(arraySup[0] == '[') {
+      arraySup[0] += IDSupporter + ']';
+    } else {
+      arraySup[0] += ',' + IDSupporter + ']';
+    }
+    value = arraySup.shift();
+    hidden.value = value;
+  }
+  for(i in IDSupporter) {
+    p = createElement('p',{'id':'p'+IDSupporter[i],'style':'margin:0;padding:0;padding-bottom:5px;'});
+    gID('addedResponsers').appendChild(p);
+    img = createElement('img',{'src':'templates/default/images/button_cancel.png','style':'vertical-align:middle;padding-right:5px;'});
+    a = createElement('a',{'href':'javascript:void(0);','onclick':"removeSupporter('Responsers',"+"'p"+IDSupporter[i]+"');"})
+    a.appendChild(img);
+    span = createElement('span',{'id':'respondto'+IDSupporter[i],'class':'supporterName'})
+    textNode = createTextNode(StName[i]);
+    span.appendChild(textNode);
+    gID('p'+IDSupporter[i]).appendChild(a);
+    gID('p'+IDSupporter[i]).appendChild(span);
+    gID('addedResponsers').className = '';
+  }
+}
+
+function listSupporters(Type) {
+  tParams = {
+    'method':'get',
+    'okCallBack':function(response) {
+      with(windowParams) {
+        x = screen.availWidth / 2.67;
+        y = screen.availHeight / 2.67;
+        width = 410;
+        height = 260;
+        innerHTML = response;
+        TBStyle.Caption = 'Adicione Atendentes';
+      }
+      Flow.open(windowParams);
+    }
+  };
+  xhr.makeRequest('Add Supporters','listSupporters.php',tParams);
+  top.Type = Type;
+}
+
+function removeSupporter(Type,ID) {
+  var ID2 ='',p = false, value = '', pattern = '';
+  var hidden = gID('Ar'+Type);
+  ID2 = (Type == 'Responsers') ? ID.replace(/p/,'') : ID.replace(/pR/,'');
+  value = gID('Ar'+Type).value
+  pattern = new RegExp('('+ID2+',?)|(,?'+ID2+')');
+  hidden.value = value.replace(pattern,'');
+  removeElements(gID(ID));
+  if(Type == 'Responsers') {
+    for(i in gID('addedResponsers').childNodes) {
+      if(gID('addedResponsers').childNodes[i] == '[object HTMLParagraphElement]') {
+        var p = true;
+      }
+    }
+    if(p == false) {
+      gID('addedResponsers').className = 'Invisible';
+      removeElements(hidden);
+    }
+  } else {
+    for(i in gID('addedReaders').childNodes) {
+      if(gID('addedReaders').childNodes[i] == '[object HTMLParagraphElement]') {
+        var p = true;
+      }
+    }
+    if(p == false) {
+      gID('addedReaders').className = 'Invisible';
+      removeElements(hidden);
+    }
+  }
+}

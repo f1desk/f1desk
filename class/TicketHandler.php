@@ -529,6 +529,8 @@ GROUP BY
    */
   public function addMessage($IDUser, $IDTicket, $StMessage, $BoAvailable, $ItMsgType = 0) {
 
+    $IDUser = array_shift(F1DeskUtils::getUserData($IDUser));
+
     # message types availables
     $ArTypes = array( 'NORMAL' , 'INTERNAL' , 'SYSTEM', 'SATISFACTION');
 
@@ -541,7 +543,7 @@ GROUP BY
     if (!empty($ArHeaderSign['TxSign'])) {
       $ArHeaderSign['TxSign'] = '<br>' . $ArHeaderSign['TxSign'];
     }
-    $StMessage = $ArHeaderSign['TxHeader'] . $StMessage . $ArHeaderSign['TxSign'];
+    $StMessage = f1desk_escape_string($ArHeaderSign['TxHeader']) . $StMessage . f1desk_escape_string($ArHeaderSign['TxSign']);
     # preparing to insert on Message table
     $StTableName = DBPREFIX . 'Message';
     $ArFields = array( 'TxMessage' , 'DtSended' , 'BoAvailable' , 'EnMessageType' , 'IDTicket' , 'IDUser' );
@@ -570,7 +572,7 @@ GROUP BY
    *
    * @author Matheus Ashton <matheus[at]digirati.com.br>
    */
-  public function createSupporterTicket ($IDSupporter, $IDCategory, $IDPriority, $StTitle, $StMessage, $IDDepartment = '', $ArUsers = array(), $BoInternal = false, $ArFiles = array()) {
+  public function createSupporterTicket ($IDSupporter, $IDCategory, $IDPriority, $StTitle, $StMessage, $IDDepartment = '', $ArUsers = array(), $ArReaders = array(), $BoInternal = false, $ArFiles = array()) {
 
     if (!empty($ArUser) && $IDDpt == '') {
       throw new ErrorHandler(EXC_GLOBAL_EXPPARAM);
@@ -611,6 +613,16 @@ GROUP BY
       $ArFields = array('IDTicket','IDSupporter');
       foreach ($ArUsers as $IDUser) {
         $ArValue[] = array($IDTicket,$IDUser);
+      }
+
+      $this->insertIntoTable($StTableName,$ArFields,$ArValue);
+    }
+
+    if (!empty($ArUsers)) {
+      $StTableName = DBPREFIX . 'TicketSupporter';
+      $ArFields = array('IDTicket','IDSupporter','BoReader');
+      foreach ($ArUsers as $IDUser) {
+        $ArValue[] = array($IDTicket,$IDUser,1);
       }
 
       $this->insertIntoTable($StTableName,$ArFields,$ArValue);
@@ -1035,11 +1047,13 @@ WHERE
 	public function replaceAlias($TxMessage,$IDSupporter) {
 	  $ArAlias = array();
     $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter);
-    foreach ($ArResponses as $Response) {
-      $ArReplace[$Response['StAlias']] = F1DeskUtils::getResponseByAlias($Response['StAlias']);
+    if (!empty($ArResponses['StAlias'])) {
+      foreach ($ArResponses as $Response) {
+        $ArReplace[$Response['StAlias']] = F1DeskUtils::getResponseByAlias($Response['StAlias']);
+      }
+      $TxMessage = strtr($TxMessage,$ArReplace);
     }
-    $StMessage = strtr($TxMessage,$ArReplace);
-    return $StMessage;
+    return $TxMessage;
   }
 
   /**
@@ -1103,5 +1117,77 @@ WHERE
 
     return array_shift($ArResult);
   }
+
+  /**
+   * Return the non-internal departments or all departments
+   *
+   * @return Array
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+  public function getPublicDepartments($BoPublic = true) {
+
+    $ArDepartments = array();
+    if ($BoPublic !== true) {
+      $StSQL = '
+SELECT
+  D.*
+FROM
+  '.DBPREFIX.'Department D
+LEFT JOIN '.DBPREFIX.'SubDepartment SD ON (D.IDDepartment = SD.IDDepartment)
+GROUP BY
+  D.IDDepartment';
+    } else  {
+      $StSQL = '
+SELECT
+  D.*
+FROM
+  '.DBPREFIX.'Department D
+LEFT JOIN '.DBPREFIX.'SubDepartment SD ON (D.IDDepartment = SD.IDDepartment)
+WHERE
+  BoInternal = 0
+GROUP BY
+  D.IDDepartment';
+    }
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+
+    foreach ($ArResult as $ArDepartment) {
+      $ArDepartments[$ArDepartment['IDDepartment']] = $ArDepartment;
+    }
+
+    $StSQL = '
+SELECT
+  D.IDDepartment, GROUP_CONCAT(SD.IDSubDepartment) as IDSubDepartments
+FROM
+	'.DBPREFIX.'SubDepartment SD
+LEFT JOIN '.DBPREFIX.'Department D ON (SD.IDDepartment = D.IDDepartment)
+LEFT JOIN '.DBPREFIX.'DepartmentSupporter DS ON (DS.IDDepartment = D.IDDepartment)
+GROUP BY
+  SD.IDDepartment';
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+
+    foreach ( $ArResult as $Department ) {
+      $ArSubSeparation = explode(',', $Department[ 'IDSubDepartments' ]);
+      $ArSubDepartments[$Department['IDDepartment']] = array_unique($ArSubSeparation);
+    }
+
+    foreach ($ArDepartments as $ArDepartment) {
+      if (array_key_exists($ArDepartment['IDDepartment'],$ArSubDepartments)) {
+        foreach ($ArSubDepartments as $Key => $SubDepartments) {
+          if ($Key == $ArDepartment['IDDepartment']) {
+            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['IDSub'] = $IDSub = array_shift($SubDepartments);
+            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['StSub'] = $ArDepartments[$IDSub]['StDepartment'];
+            if (isset($ArDepartments[$IDSub]))
+              unset($ArDepartments[$IDSub]);
+          }
+        }
+      }
+    }
+
+    return $ArDepartments;
+  }
+
 }
 ?>

@@ -71,6 +71,18 @@
 </div>
 <!--[/TICKET HEADER]-->
 
+<!--[TICKET ATTACHMENTS]-->
+<div id='ticketAttachments' class='defaultBody'>
+  <div id='actionsCaption' class='defaultCaption'>
+    <img alt='Attchments'  id='arrowAttachments' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "AttachmentsContent")' class="menuArrow"/>
+    <span>Anexos</span>
+  </div>
+  <div id='AttachmentsContent'>
+
+  </div>
+</div>
+<!--[/TICKET ATTACHMENTS]-->
+
 <!--[TICKET HISTORY]-->
 <div id='ticketHistory' class='defaultBody'>
   <div id="historyCaption" class='defaultCaption'>
@@ -116,7 +128,7 @@
 	  	<img alt="Ticket" id='arrowAnswer<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "answerContent<?=$uid?>")' class="menuArrow"/>
 	  	<span>Responder</span>
 	  </div>
-	
+
 	  <div id="answerContent<?=$uid?>" >
 	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data">
 	      <div id='messageType' class='Right'>
@@ -128,12 +140,12 @@
 	    				<?php endif; ?>
 	    		</select>
 	      </div>
-	
+
 	    	<textarea id='TxMessage' name='TxMessage' cols='65' rows='33' class='answerArea'></textarea>
-	
+
 	      <div id='displayCommands'>
 	        <div id='answerOptions'>
-	
+
 	      		<div class='Right' id='answerAttach'>
 	      		  <label for='Attachment'> Anexo : </label>
 	      			<input id='Attachment' name='Attachment' class='inputFile' type="file" value="Anexo" />
@@ -156,7 +168,7 @@
 	    			  <? endif; ?>
 	    		</div>
 	    	</div>
-	
+
 	    	<div>
 	    	    <button class='button' onclick='alert("To esperando a flow"); return false;'>Visualizar</button>
 	    			<input type='submit' class='button' value='Responder' name='Responder'>

@@ -497,6 +497,14 @@ abstract class TemplateHandler {
 	  return (getSessionProp('isSupporter') && getSessionProp('isSupporter') == 'true');
 	}
 
+	/**
+	 * Get all attachments from all messagens of a call
+	 *
+	 * @param int $IDTicket
+	 * @return array
+	 *
+	 * @author Matheus Ashton <matheus@digirati.com.br>
+	 */
 	public static function getAttachments($IDTicket) {
 	  $ArAttachments = array();
 	  $TicketHandler = self::getInstance('TicketHandler');
@@ -509,6 +517,19 @@ abstract class TemplateHandler {
 	    $ArAttachments[$ArMessage['IDMessage']] = $ArAttachment;
 	  }
 	  return $ArAttachments;
+	}
+
+  /**
+   * Return the non-internal departments or all departments
+   *
+   * @return Array
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+	public static function getPublicDepartments($BoPublic = true) {
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  $ArPublic = $TicketHandler->getPublicDepartments($BoPublic);
+	  return $ArPublic;
 	}
 }
 

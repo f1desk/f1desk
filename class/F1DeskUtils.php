@@ -169,14 +169,14 @@ ORDER BY
     #
     # Getting who is Department and who is SubDepartment
     #
-    $StSQL = "
+    $StSQL = '
 SELECT
   D.IDDepartment, GROUP_CONCAT(SD.IDSubDepartment) as IDSubDepartments
 FROM
-	".DBPREFIX."SubDepartment SD
-  LEFT JOIN ".DBPREFIX."Department D ON (SD.IDDepartment = D.IDDepartment)
-  LEFT JOIN ".DBPREFIX."DepartmentSupporter DS ON (DS.IDDepartment = D.IDDepartment)
-  LEFT JOIN ".DBPREFIX."Supporter S ON (S.IDSupporter = DS.IDSupporter)
+	'.DBPREFIX.'SubDepartment SD
+  LEFT JOIN '.DBPREFIX.'Department D ON (SD.IDDepartment = D.IDDepartment)
+  LEFT JOIN '.DBPREFIX.'DepartmentSupporter DS ON (DS.IDDepartment = D.IDDepartment)
+  LEFT JOIN '.DBPREFIX."Supporter S ON (S.IDSupporter = DS.IDSupporter)
 WHERE
   S.IDSupporter = $IDSupporter
 GROUP BY
@@ -623,5 +623,23 @@ AND
     $ArReturn = $DBHandler->getResult('num');
 
     return ($ArReturn[0][0] > 0) ? true : false;
+  }
+
+  /**
+   * Get all supporters
+   *
+   */
+  public static function getAllSupporters() {
+    $StSQL = '
+SELECT
+  S.IDSupporter, U.StName
+FROM
+'.DBPREFIX.'Supporter S
+LEFT JOIN '.DBPREFIX.'User U ON (S.IDUser = U.IDUser)
+ORDER BY S.IDSupporter';
+    $DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('string');
+    return $ArResult;
   }
 }
