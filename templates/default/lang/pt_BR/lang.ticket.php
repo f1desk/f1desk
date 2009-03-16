@@ -9,6 +9,19 @@
   define('TICKET_HEADER_ACTIONS','A&ccedil;&otilde;es');
   
   #
+  # Ticket Informations
+  #
+  define('INFORMATIONS','Informa&ccedil;&otilde;es');
+  define('INFO_FILES','Arquivos Anexados');
+  define('INFO_NOFILES','N&atilde;o h&aacute; arquivos anexados');
+  define('INFO_TICKETS','Chamados Anexados');
+  define('INFO_NOTICKETS','N&atilde;o h&aacute; chamados anexados');
+  define('INFO_DEPARTMENT_SENTTO', 'Enviado para departamento');
+  define('INFO_DEPARTMENT_NOSENTTO', 'N&atilde;o h&aacute; departamentos para este chamado');
+  define('INFO_SUPPORTER_SENTTO','Enviado para atendente');
+  define('INFO_SUPPORTER_NOSENTTO', 'Este chamado n&atilde;o foi aberto para atendentes');
+  
+  #
   # Ticket History
   #
   define('TICKET_HISTORY', 'Hist&oacute;rico');
@@ -32,5 +45,5 @@
   define('ADD','Incluir');
   define('PREVIEW','Visualizar');
 
-  define('INFORMATIONS','Informa&ccedil;&otilde;es');
+  
 ?>

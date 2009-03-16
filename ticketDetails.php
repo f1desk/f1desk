@@ -18,6 +18,9 @@ $ArAttachments = TemplateHandler::getAttachments($IDTicket);
 
 $StTitle = $ArHeaders['StTitle'];
 $IDTicket = $ArHeaders['IDTicket'];
+$ArAttachedTickets = TemplateHandler::getAttachedTickets($IDTicket);
+$ArTicketDepartments = TemplateHandler::getTicketDepartments($IDTicket);
+$ArTicketDestinations = TemplateHandler::getTicketDestination($IDTicket); // who this ticket was sent to
 $IDDepartment = $ArHeaders['IDDepartment'];
 $StSituation = constant($ArHeaders['StSituation']);
 $DtOpened = F1DeskUtils::formatDate('datetime_format',$ArHeaders['DtOpened']);

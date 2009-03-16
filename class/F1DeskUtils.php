@@ -118,7 +118,6 @@ abstract class F1DeskUtils {
     return $Itreturn;
   }
 
-
   /**
    * get all departmentes
    *
@@ -331,7 +330,6 @@ FROM
 
     return $sorttedArray;
   }
-
 
   /**
    * Check if the supporter given have permisssion about the action given

@@ -542,6 +542,39 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter);
 	}
+	
+	/**
+   * get all attacheds tickets from a ID given
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+	public static function getAttachedTickets($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getAttachedTickets($IDTicket);
+	}
+	
+	/**
+	 * get all departments of a ticket given
+	 *
+	 * @param integer $IDTicket
+	 * @return array
+	 */
+	public static function getTicketDepartments($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getTicketDepartments($IDTicket);
+	}
+	
+	/**
+   * get who users a ticket was sent to
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+	public static function getTicketDestination($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getTicketDestination($IDTicket);
+	}
 }
 
 ?>

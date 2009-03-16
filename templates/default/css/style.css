@@ -315,6 +315,28 @@ html>body #main{
   margin-bottom:5px;
 }
 
+.informationsBox{
+  padding:1%;
+  margin-bottom:5px;
+}
+
+.informationsBox ul{
+  list-style-type:none;
+  margin-top:3px;
+  margin-left:-25px;
+}
+
+.informationsBox span{
+  font-weight:bold;
+}
+
+.informationsBox li, .informationsBox li a, .informationsBox p {
+  color: #003C25;
+}
+
+.informationsBox p {
+  margin-left:15px;
+}
 
 .button {
   border-width: 0px;
@@ -443,6 +465,8 @@ html>body #main{
 #ticketContent div {
   padding-left:200px;
 }
+
+
 
 /*CREATE TICKET*/
 

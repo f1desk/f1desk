@@ -23,6 +23,7 @@ class TicketHandler extends DBHandler {
    * @return boolean
    */
   public function attachFile( $Files, $IDMessage ) {
+    
     if (count($Files) == 1) {
       $StField = key($Files);
 
@@ -69,7 +70,6 @@ SET
         if (! move_uploaded_file($StTmp,$StUploadedFile) ) {
           throw new ErrorHandler(EXC_CALL_NOTUPLOADFILE);
         }
-
         $StSQL = "
 INSERT INTO
   " . DBPREFIX . "Attachment
@@ -1127,7 +1127,7 @@ IF(EXISTS(
 AS
   BoPermission
 FROM
-  Attachment A
+  ". DBPREFIX ."Attachment A
 WHERE
   A.IDAttachment = $IDAttachment";
     $this->execSQL($StSQL);
@@ -1232,6 +1232,75 @@ WHERE
     $ArData = F1DeskUtils::getUserHeaderSign($IDUser);
     return $ArData['TxHeader'] . "\n\n" . $TxMessage . "\n\n" . $ArData['TxSign'];
   }
-
+  
+  /**
+   * get all attacheds tickets from a ID given
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getAttachedTickets($IDTicket){
+    $StSQL = '
+SELECT
+  AT.IDAttachedTicket
+FROM
+  '.DBPREFIX.'AttachedTicket AT
+  LEFT JOIN 
+    '.DBPREFIX.'Ticket T ON (T.IDTicket = AT.IDTicket)
+WHERE
+  AT.IDTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
+  }
+  
+  /**
+   * get all departments of a ticket
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getTicketDepartments($IDTicket){
+    $StSQL = '
+SELECT
+  D.*
+FROM
+  '.DBPREFIX.'Ticket T
+  LEFT JOIN 
+    '.DBPREFIX.'TicketDepartment TD ON (T.IDTicket = TD.IDTicket)
+  LEFT JOIN 
+    '.DBPREFIX.'Department D ON (D.IDDepartment = TD.IDDepartment)
+WHERE
+  T.IDTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
+  }
+  
+  /**
+   * get who users a ticket was sent to
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getTicketDestination($IDTicket){
+    $StSQL = '
+SELECT
+  U.*
+FROM
+  '.DBPREFIX.'User U
+  LEFT JOIN 
+    '.DBPREFIX.'Supporter S ON (U.IDUser = S.IDUser)
+  LEFT JOIN 
+    '.DBPREFIX.'TicketSupporter TS ON (S.IDSupporter = TS.IDSupporter)
+  LEFT JOIN 
+    '.DBPREFIX.'Ticket T ON (T.IDTicket = TS.IDTicket)
+WHERE
+  T.IDTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
+  }
+  
 }
 ?>
