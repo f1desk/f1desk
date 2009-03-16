@@ -86,10 +86,10 @@
 <!--[TICKET INFORMATIONS]-->
 <div id='ticketInformations' class='defaultBody'>
   <div id='informationsCaption' class='defaultCaption'>
-    <img alt="Informations"  id='arrowInformations<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "informationsContent<?=$uid?>")' class="menuArrow"/>
+    <img alt="Informations"  id='arrowInformations<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_show.gif"  onclick='toogleArrow( this.id, "informationsContent<?=$uid?>")' class="menuArrow"/>
     <span><?=INFORMATIONS?></span>
   </div>
-  <div id='informationsContent<?=$uid?>' class="informationsBox">
+  <div id='informationsContent<?=$uid?>' class="informationsBox" style="display:none">
     <!--[ATTACHMENT FILES]-->
     <span><?=INFO_FILES?></span>
     <? if (count($ArAttachments)==0): ?>
@@ -97,11 +97,12 @@
     <? else: ?>
     <ul>
       <? foreach ($ArAttachments as $Attachment): $Attachment = $Attachment[0]; ?>
-        <li><a href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></li>
+        <li><a class="Link" href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></li>
       <? endforeach; ?>
     </ul>
     <? endif; ?>
     <!--[/ATTACHMENT FILES]-->
+    
     <!--[ATTACHMENT TICKETS]-->
     <span><?=INFO_TICKETS?></span>
     <? if (count($ArAttachedTickets)==0): ?>
@@ -109,11 +110,37 @@
     <? else: ?>
     <ul>
       <? foreach ($ArAttachedTickets as $AttachedTicket): ?>
-        <li><a href='javascript:void(0);' onclick='previewInFlow.Ticket(<?=$AttachedTicket['IDAttachedTicket']?>)'>#<?=$AttachedTicket['IDAttachedTicket']?></a></li>
+        <li><a class="Link" href='javascript:void(0);' onclick='previewInFlow.Ticket(<?=$AttachedTicket['IDAttachedTicket']?>)'>#<?=$AttachedTicket['IDAttachedTicket']?></a></li>
       <? endforeach; ?>
     </ul>
     <? endif; ?>
     <!--[/ATTACHMENT TICKETS]-->
+    
+    <!--[TICKET DEPARTMENTS]-->
+    <span><?=INFO_DEPARTMENT_SENTTO?></span>
+    <? if (count($ArTicketDepartments)==0): ?>
+      <p><?=INFO_DEPARTMENT_NOSENTTO?></p>
+    <? else: ?>
+    <ul>
+      <? foreach ($ArTicketDepartments as $TicketDepartments): ?>
+        <li class="Link"><?=$TicketDepartments['StDepartment']?></li>
+      <? endforeach; ?>
+    </ul>
+    <? endif; ?>
+    <!--[/TICKET DEPARTMENTS]-->
+    
+    <!--[TICKET SUPPORTERS]-->
+    <span><?=INFO_SUPPORTER_SENTTO?></span>
+    <? if (count($ArTicketDestinations)==0): ?>
+      <p><?=INFO_SUPPORTER_NOSENTTO?></p>
+    <? else: ?>
+    <ul>
+      <? foreach ($ArTicketDestinations as $TicketDestination): ?>
+        <li><?=$TicketDestination['StName']?></li>
+      <? endforeach; ?>
+    </ul>
+    <? endif; ?>
+    <!--[/TICKET SUPPORTERS]-->
   </div>
 </div>
 <!--[/TICKET INFORMATIONS]-->
@@ -133,7 +160,7 @@
         <?= MSG_HEAD1 . $DtSended . MSG_HEAD2 . $ArMessage['SentBy'] . MSG_HEAD3 ?>
         <? if (array_key_exists($ArMessage['IDMessage'],$ArAttachments)): ?>
           <?  foreach ($ArAttachments[$ArMessage['IDMessage']] as $Attachment): ?>
-              <p class='Link'><?=ATTACHMENT?>: <a href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></p>
+              <p><b><?=ATTACHMENT?></b>: <a class='Link' href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></p>
           <?  endforeach; ?>
         <? endif;?>
         <?= $ArMessage['TxMessage'] ?>

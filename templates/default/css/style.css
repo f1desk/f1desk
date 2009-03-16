@@ -330,12 +330,12 @@ html>body #main{
   font-weight:bold;
 }
 
-.informationsBox li a, .informationsBox p {
-  color: #54708C;
+.informationsBox li, .informationsBox li a, .informationsBox p {
+  color: #003C25;
 }
 
 .informationsBox p {
-  margin-left:25px;
+  margin-left:15px;
 }
 
 .button {

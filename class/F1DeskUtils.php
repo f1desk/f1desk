@@ -118,7 +118,6 @@ abstract class F1DeskUtils {
     return $Itreturn;
   }
 
-
   /**
    * get all departmentes
    *

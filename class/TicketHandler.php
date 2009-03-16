@@ -1245,6 +1245,54 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult;
   }
-
+  
+  /**
+   * get all departments of a ticket
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getTicketDepartments($IDTicket){
+    $StSQL = '
+SELECT
+  D.*
+FROM
+  '.DBPREFIX.'Ticket T
+  LEFT JOIN 
+    '.DBPREFIX.'TicketDepartment TD ON (T.IDTicket = TD.IDTicket)
+  LEFT JOIN 
+    '.DBPREFIX.'Department D ON (D.IDDepartment = TD.IDDepartment)
+WHERE
+  T.IDTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
+  }
+  
+  /**
+   * get who users a ticket was sent to
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getTicketDestination($IDTicket){
+    $StSQL = '
+SELECT
+  U.*
+FROM
+  '.DBPREFIX.'User U
+  LEFT JOIN 
+    '.DBPREFIX.'Supporter S ON (U.IDUser = S.IDUser)
+  LEFT JOIN 
+    '.DBPREFIX.'TicketSupporter TS ON (S.IDSupporter = TS.IDSupporter)
+  LEFT JOIN 
+    '.DBPREFIX.'Ticket T ON (T.IDTicket = TS.IDTicket)
+WHERE
+  T.IDTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
+  }
+  
 }
 ?>
