@@ -742,6 +742,8 @@ var previewInFlow = {
   		'</table>';
   	windowParams.TBStyle.Caption = StTitle;
   	windowParams.width = 550; windowParams.height = 380;
+  	windowParams.y = Positions.getScrollOffSet(gTN('body')[0]).y + 50;
+    windowParams.x = Positions.getScrollOffSet(gTN('body')[0]).x + 200;
     var ID = Flow.open(windowParams);
   },
 
@@ -767,11 +769,12 @@ var previewInFlow = {
   		'</table>';
   	windowParams.TBStyle.Caption = StTitle;
   	windowParams.width = 550; windowParams.height = 380;
+  	windowParams.y = Positions.getScrollOffSet(gTN('body')[0]).y + 50;
+    windowParams.x = Positions.getScrollOffSet(gTN('body')[0]).x + 200;
     var ID = Flow.open(windowParams);
   },
 
   'Ticket': function(IDTicket) {
-    //_doLoading('bookmark', 'show');
   	var tParams = {
       'method':'post',
       'content': {
@@ -779,14 +782,37 @@ var previewInFlow = {
         'preview':'true'
       },
       'okCallBack':function( ticketHTML ) {
-        windowParams.innerHTML = ticketHTML;
+        windowParams.innerHTML = '<span style="padding:10px">'+ticketHTML+'</span>';
         windowParams.TBStyle.Caption = "Visualizando Chamado #" + IDTicket;
+        windowParams.y = Positions.getScrollOffSet(gTN('body')[0]).y + 50;
+        windowParams.x = Positions.getScrollOffSet(gTN('body')[0]).x + 200;
         windowParams.width = 600; windowParams.height = 450;
-        //_doLoading('bookmark', 'hide');
         var ID = Flow.open(windowParams);
       }
     };
     xhr.makeRequest('Bookmark Ticket','ticketDetails.php',tParams);
+  },
+  
+  'Answer': function(TxMessage){
+    var  tParams = {
+      'method':'post',
+      'content':{
+        'action':'preview',
+        'TxMessage': TxMessage
+      },
+      'okCallBack':function(response) {
+        with(windowParams) {
+          y = Positions.getScrollOffSet(gTN('body')[0]).y + 100;
+          x = Positions.getScrollOffSet(gTN('body')[0]).x + 250;
+          width = 480;
+          height = 350;
+          innerHTML = response;
+          TBStyle.Caption = 'Visualizando resposta';
+        }
+        Flow.open(windowParams);
+      }
+    };
+    xhr.makeRequest('preview Ticket','answerTicket.php',tParams);
   }
 
 };

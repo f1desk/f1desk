@@ -1,7 +1,7 @@
 <?php
   /*default*/
   handleLanguage(__FILE__);
-
+  
   $IDSupporter = getSessionProp('IDSupporter');
   $IDUser = getSessionProp('IDUser');
 
@@ -12,7 +12,6 @@
     $ArDepartments = TemplateHandler::getUserDepartments();
     $ArNotRead = TemplateHandler::notReadCount( $IDUser, false );
   }
-
 ?>
 
 <? foreach ($ArDepartments as $ID => $ArDepartment) : ?>

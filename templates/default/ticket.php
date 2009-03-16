@@ -1,4 +1,6 @@
 <?
+  /*default language*/
+  handleLanguage(__FILE__);
   #
   # concatenate arrow's ID and Content's ID with this UID
   #
@@ -17,12 +19,12 @@
   	<table class='tableTickets'>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Data</th>
-          <th>Status</th>
-          <th>Atendente</th>
+          <th><?=TICKET_HEADER_ID?></th>
+          <th><?=TICKET_HEADER_DATE?></th>
+          <th><?=TICKET_HEADER_STATUS?></th>
+          <th><?=TICKET_HEADER_SUPPORTER?></th>
           <?php if (TemplateHandler::IsSupporter()): ?>
-          <th colspan='3'>A&ccedil;&otilde;es</th>
+          <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
           <?php endif; ?>
         </tr>
       </thead>
@@ -71,23 +73,23 @@
 </div>
 <!--[/TICKET HEADER]-->
 
-<!--[TICKET ATTACHMENTS]-->
-<div id='ticketActions' class='defaultBody'>
-  <div id='actionsCaption' class='defaultCaption'>
-    <img alt="Actions"  id='arrowActions<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "actionsContent<?=$uid?>")' class="menuArrow"/>
-    <span>Anexos</span>
+<!--[TICKET INFORMATIONS]-->
+<div id='ticketInformations' class='defaultBody'>
+  <div id='informationsCaption' class='defaultCaption'>
+    <img alt="Informations"  id='arrowInformations<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "informationsContent<?=$uid?>")' class="menuArrow"/>
+    <span><?=INFORMATIONS?></span>
   </div>
-  <div id='actionsContent<?=$uid?>'>
+  <div id='informationsContent<?=$uid?>'>
 
   </div>
 </div>
-<!--[/TICKET ATTACHMENTS]-->
+<!--[/TICKET INFORMATIONS]-->
 
 <!--[TICKET HISTORY]-->
 <div id='ticketHistory' class='defaultBody'>
   <div id="historyCaption" class='defaultCaption'>
   	<img alt="Ticket"  id='arrowHistory<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "historyContent<?=$uid?>")' class="menuArrow"/>
-  	<span>Hist&oacute;rico</span>
+  	<span><?=TICKET_HISTORY?></span>
   </div>
 
   <div id="historyContent<?=$uid?>" >
@@ -98,7 +100,7 @@
         <?= MSG_HEAD1 . $DtSended . MSG_HEAD2 . $ArMessage['SentBy'] . MSG_HEAD3 ?>
         <? if (array_key_exists($ArMessage['IDMessage'],$ArAttachments)): ?>
           <?  foreach ($ArAttachments[$ArMessage['IDMessage']] as $Attachment): ?>
-              <p class='Link'>Anexo: <a href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></p>
+              <p class='Link'><?=ATTACHMENT?>: <a href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></p>
           <?  endforeach; ?>
         <? endif;?>
         <?= $ArMessage['TxMessage'] ?>
@@ -114,7 +116,7 @@
 	<div id='ticketAnswer' class='defaultBody'>
 	  <div id='answerCaption' class='defaultCaption'>
 	  	<img alt="Ticket" id='arrowAnswer<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "answerContent<?=$uid?>")' class="menuArrow"/>
-	  	<span>Responder</span>
+	  	<span><?=ANSWER?></span>
 	  </div>
 
 	  <div id="answerContent<?=$uid?>" >
@@ -135,7 +137,7 @@
 	        <div id='answerOptions'>
 
 	      		<div class='Right' id='answerAttach'>
-	      		  <label for='Attachment'> Anexo : </label>
+	      		  <label for='Attachment'><?=ATTACHMENT?>: </label>
 	      			<input id='Attachment' name='Attachment' class='inputFile' type="file" value="Anexo" />
 	      			<iframe id='ajaxSubmit' name='ajaxSubmit' src='answerTicket.php' class="Invisible"></iframe>
 	      		</div>
@@ -152,14 +154,15 @@
 	                   <option value='null'><?=NO_ANSWER?></option>
 	              <? endif; ?>
 	      			  </select>
-	      			  <button class='button' onclick='addCannedResponse(); return false;'>Incluir</button>
+	      			  <button class='button' onclick='addCannedResponse(); return false;'><?=ADD?></button>
 	    			  <? endif; ?>
 	    		</div>
 	    	</div>
 
 	    	<div>
-	    	    <button class='button' onclick='alert("To esperando a flow"); return false;'>Visualizar</button>
-	    			<input type='submit' class='button' value='Responder' name='Responder'>
+	    	    <button type="button" class='button' onclick='previewInFlow.Answer(gID("TxMessage").value);'><?=PREVIEW?></button>
+    	      <input type="hidden" name="action" value="answer">
+	    			<input type='submit' class='button' value='<?=ANSWER?>' name='Responder'>
 	    	</div>
 	    </div>
 	    </form>

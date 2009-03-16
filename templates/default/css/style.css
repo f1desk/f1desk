@@ -505,3 +505,10 @@ html>body #main{
 #addedResponders {
   margin-left:5px;
 }
+
+#previewAnswer h3{
+  border-bottom:1px solid #ABABAB;
+  color:#02764F;
+  margin-bottom:20px;
+  width:98%;
+}

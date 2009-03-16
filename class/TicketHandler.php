@@ -223,9 +223,11 @@ AND
 SELECT
 	T.IDTicket
 FROM
-	Ticket T
-	LEFT JOIN isRead R ON (T.IDTicket = R.IDTicket)
-	LEFT JOIN User U ON (U.IDUser = R.IDUser)
+	". DBPREFIX ."Ticket T
+	LEFT JOIN 
+	 ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
+	LEFT JOIN 
+	 ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
 WHERE
   U.IDUser = $IDUser
 AND
@@ -335,7 +337,6 @@ AND
   	$Read = $ArResult[0]["totalRead"];
 
   	$notRead = $Opened - $Read;
-
   	return array('opened' => array('notRead'  => $notRead), 'closed' => array('notRead'  => $notRead));
   }
 
@@ -814,7 +815,6 @@ WHERE
 AND
   U.IDUser = $IDUser
   	";
-
   	$this->execSQL($StSQL);
 		$ArTickets = $this->getResult("string");
 
@@ -933,7 +933,6 @@ WHERE
 
     $TxMessage = $this->replaceAlias($TxMessage,$IDWriter);
 
-    //die($IDUser . ' wtf?');
     #Add the reply
     $this->addMessage($IDUser, $IDTicket, $TxMessage, $BoReleased, $StMsgType);
     $IDMessage = $this->getID();
@@ -1196,6 +1195,18 @@ GROUP BY
     }
 
     return $ArDepartments;
+  }
+  
+  /**
+   * Return a preview anser for the user
+   *
+   * @param integer $IDUser
+   * @param text $TxMessage
+   */
+  public function getPreviewAnswer($IDUser, $TxMessage) {
+    $TxMessage = $this->replaceAlias($TxMessage,$IDUser);
+    $ArData = F1DeskUtils::getUserHeaderSign($IDUser);
+    return $ArData['TxHeader'] . "\n\n" . $TxMessage . "\n\n" . $ArData['TxSign'];
   }
 
 }

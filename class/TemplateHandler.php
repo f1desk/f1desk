@@ -157,7 +157,7 @@ abstract class TemplateHandler {
   	}
   	$openTickets = $ObTicket->listClientTickets( $IDUser, $BoOpened );
   	$readTickets = $ObTicket->getUserReadTickets($IDUser);
-
+  	
   	foreach ($openTickets as $IDTicket => &$ArTicket) {
         if (array_key_exists($IDTicket,$readTickets) == true) {
           $ArTicket['isRead'] = 1;
@@ -165,7 +165,6 @@ abstract class TemplateHandler {
           $ArTicket['isRead'] = 0;
         }
       }
-
   	return $openTickets;
 
   }
@@ -530,6 +529,18 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  $ArPublic = $TicketHandler->getPublicDepartments($BoPublic);
 	  return $ArPublic;
+	}
+	
+	/**
+	 * get the preview of a wrote answer
+	 *
+	 * @param integer $IDUser
+	 * @param text $TxMessage
+	 * @return text
+	 */
+	public static function getPreviewAnswer($IDUser, $TxMessage) {
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getPreviewAnswer($IDUser, $TxMessage);
 	}
 }
 
