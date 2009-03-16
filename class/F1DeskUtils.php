@@ -464,21 +464,7 @@ OR
 
  		return $DBHandler->deleteFromTable($StTableName,$StCondition);
   }
-
-  public static function getResponseByAlias($StAlias) {
-    $StSQL = '
-SELECT
-  TxMessage
-FROM
-  ' . DBPREFIX . "CannedResponse
-WHERE
-  StAlias = '".addslashes($StAlias)."'";
-    $DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('num');
-    return $ArResult[0][0];
-  }
-
+  
   public static function listNotes( $IDSupporter ){
   	$StSQL = "
 SELECT N.*

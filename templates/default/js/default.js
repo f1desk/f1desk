@@ -602,7 +602,7 @@ function submitTicketForm(IDTicket) {
 function addCannedResponse(IDDepartment,IDSupporter) {
   var Responses = gID('cannedAnswers');
   var StAlias = Responses[Responses.selectedIndex].value
-  gID('TxMessage').value += StAlias + '\n';
+  gID('TxMessage').value += unescape(StAlias) + '\n';
   return false;
 }
 
@@ -793,7 +793,9 @@ var previewInFlow = {
     xhr.makeRequest('Bookmark Ticket','ticketDetails.php',tParams);
   },
   
-  'Answer': function(TxMessage){
+  'Answer': function(TxMessage) {
+    TxMessage = TxMessage.replace(/^\s+|\s+$/g,"");
+    if(TxMessage == ""){ alert('Resposta vazia'); return false; }
     var  tParams = {
       'method':'post',
       'content':{
@@ -819,10 +821,6 @@ var previewInFlow = {
 /**
  * END PREVIEWS
  */
-
-function submitCreateTicket() {
-
-}
 
 function checkAdd(Type) {
   var combo = gID("supporters"); IDSupporter = []; StName = []; max = combo.options.length; exit = false;

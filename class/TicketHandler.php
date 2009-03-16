@@ -546,7 +546,9 @@ GROUP BY
       if (!empty($ArHeaderSign['TxSign'])) {
         $ArHeaderSign['TxSign'] = "\n\n" . $ArHeaderSign['TxSign'];
       }
-      $StMessage = f1desk_escape_string($ArHeaderSign['TxHeader']) . $StMessage . f1desk_escape_string($ArHeaderSign['TxSign']);
+      $StMessage = f1desk_escape_string($ArHeaderSign['TxHeader']) . f1desk_escape_string($StMessage) . f1desk_escape_string($ArHeaderSign['TxSign']);
+    } else {
+      $StMessage = f1desk_escape_string($StMessage);
     }
     # preparing to insert on Message table
     $StTableName = DBPREFIX . 'Message';
@@ -931,7 +933,7 @@ WHERE
     #Get table's User ID
     $IDUser = array_shift(F1DeskUtils::getUserData($IDWriter));
 
-    $TxMessage = $this->replaceAlias($TxMessage,$IDWriter);
+    $TxMessage = $this->replaceAlias(stripslashes($TxMessage),$IDWriter);
 
     #Add the reply
     $this->addMessage($IDUser, $IDTicket, $TxMessage, $BoReleased, $StMsgType);
@@ -1055,9 +1057,9 @@ WHERE
 	public function replaceAlias($TxMessage,$IDSupporter) {
 	  $ArAlias = array();
     $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter);
-    if (!empty($ArResponses['StAlias'])) {
+    if (count($ArResponses)!=0) {
       foreach ($ArResponses as $Response) {
-        $ArReplace[$Response['StAlias']] = F1DeskUtils::getResponseByAlias($Response['StAlias']);
+        $ArReplace[$Response['StAlias']] = $Response['TxMessage'];
       }
       $TxMessage = strtr($TxMessage,$ArReplace);
     }
@@ -1203,8 +1205,22 @@ GROUP BY
    * @param integer $IDUser
    * @param text $TxMessage
    */
-  public function getPreviewAnswer($IDUser, $TxMessage) {
-    $TxMessage = $this->replaceAlias($TxMessage,$IDUser);
+  public function getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter=false) {
+    if ( $BoIsSupporter ) {
+    	$StSQL = '
+SELECT
+  S.IDSupporter
+FROM
+  '.DBPREFIX.'Supporter S
+  LEFT JOIN 
+    '.DBPREFIX.'User U ON (U.IDUser = S.IDUser)
+WHERE
+  U.IDUser = ' . $IDUser ;
+    	$this->execSQL($StSQL);
+      $ArResult = $this->getResult('string');
+      $IDSupporter = (isset($ArResult[0]))?$ArResult[0]['IDSupporter']:'';
+      $TxMessage = $this->replaceAlias($TxMessage,$IDSupporter);
+    }
     $ArData = F1DeskUtils::getUserHeaderSign($IDUser);
     return $ArData['TxHeader'] . "\n\n" . $TxMessage . "\n\n" . $ArData['TxSign'];
   }

@@ -5,7 +5,7 @@
   $IDSupporter = getSessionProp('IDSupporter');
   $IDUser = getSessionProp('IDUser');
 
-  if (getSessionProp( 'isSupporter' ) == 'true') {
+  if (TemplateHandler::IsSupporter()) {
   	$ArDepartments = TemplateHandler::getDepartments( $IDSupporter, true );
   	$ArNotRead = TemplateHandler::notReadCount( $IDSupporter );
   } else {

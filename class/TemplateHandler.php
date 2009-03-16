@@ -538,9 +538,9 @@ abstract class TemplateHandler {
 	 * @param text $TxMessage
 	 * @return text
 	 */
-	public static function getPreviewAnswer($IDUser, $TxMessage) {
+	public static function getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter = false) {
 	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getPreviewAnswer($IDUser, $TxMessage);
+	  return $TicketHandler->getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter);
 	}
 }
 

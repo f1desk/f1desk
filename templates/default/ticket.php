@@ -34,15 +34,25 @@
           <td><?= $DtOpened ?></td>
           <td><?= $StSituation ?></td>
           <td>
-          	<select id='StSupporter' onchange='setTicketOwner(<?= $IDTicket ?>, this.value)' class='inputCombo'>
-          	  <? foreach ( $ArSupporters as $IDSupporter => $StSupporter ) : ?>
-            	  <? if ($ArHeaders['IDSupporter'] != $IDSupporter) : ?>
-            	  <option value=<?=$IDSupporter?>><?=$StSupporter?></option>
-            		<? else : ?>
-            		<option selected='selected' value=<?=$IDSupporter?>><?=$StSupporter?></option>
-            		<? endif; ?>
-          		<? endforeach; ?>
-          	</select>
+            <?php if (TemplateHandler::IsSupporter()): ?>
+            	<select id='StSupporter' onchange='setTicketOwner(<?= $IDTicket ?>, this.value)' class='inputCombo'>
+            	  <? foreach ( $ArSupporters as $IDSupporter => $StSupporter ) : ?>
+              	  <? if ($ArHeaders['IDSupporter'] != $IDSupporter) : ?>
+              	  <option value=<?=$IDSupporter?>><?=$StSupporter?></option>
+              		<? else : ?>
+              		<option selected='selected' value=<?=$IDSupporter?>><?=$StSupporter?></option>
+              		<? endif; ?>
+            		<? endforeach; ?>
+            	</select>
+            <?php else:
+              foreach ( $ArSupporters as $IDSupporter => $StSupporter ){
+                if ($ArHeaders['IDSupporter'] == $IDSupporter) {
+                  ?>
+                  <span id="StSupporter"><?=$StSupporter?></span>
+                  <?
+                }
+              }
+            endif; ?>
           </td>
           <?php if (TemplateHandler::IsSupporter()): ?>
           <td>
@@ -95,6 +105,7 @@
   <div id="historyContent<?=$uid?>" >
 
     <? foreach ($ArMessages as $ArMessage) : ?>
+      <? if (!TemplateHandler::IsSupporter() && $ArMessage['EnMessageType'] == 'INTERNAL') continue; ?>
       <? $DtSended = F1DeskUtils::formatDate('datetime_format',$ArMessage['DtSended']); ?>
       <div class='<?= $ArMessage['StClass'] ?>'>
         <?= MSG_HEAD1 . $DtSended . MSG_HEAD2 . $ArMessage['SentBy'] . MSG_HEAD3 ?>
@@ -120,7 +131,7 @@
 	  </div>
 
 	  <div id="answerContent<?=$uid?>" >
-	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data">
+	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data" onsubmit='var TxMessage = gID("TxMessage").value.replace(/^\s+|\s+$/g,"");if(TxMessage == ""){ alert("Resposta vazia"); return false; }'>
 	      <div id='messageType' class='Right'>
 	    	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
 	    				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
@@ -148,7 +159,7 @@
 	      		    <select class='inputCombo' id='cannedAnswers'>
 	              <? if ($ArResponses[0]['IDCannedResponse'] != ''): ?>
 	                  <? foreach ($ArResponses as $Response): ?>
-	                    <option value="<?=$Response['StAlias'];?>"><?=$Response['StTitle']?></option>
+	                    <option value="<?=f1desk_escape_string($Response['StAlias'],false,true);?>"><?=$Response['StTitle']?></option>
 	                  <?endforeach; ?>
 	              <? else: ?>
 	                   <option value='null'><?=NO_ANSWER?></option>
