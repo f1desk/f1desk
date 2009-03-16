@@ -23,6 +23,7 @@ class TicketHandler extends DBHandler {
    * @return boolean
    */
   public function attachFile( $Files, $IDMessage ) {
+    
     if (count($Files) == 1) {
       $StField = key($Files);
 
@@ -69,7 +70,6 @@ SET
         if (! move_uploaded_file($StTmp,$StUploadedFile) ) {
           throw new ErrorHandler(EXC_CALL_NOTUPLOADFILE);
         }
-
         $StSQL = "
 INSERT INTO
   " . DBPREFIX . "Attachment
@@ -1119,7 +1119,7 @@ IF(EXISTS(
 AS
   BoPermission
 FROM
-  Attachment A
+  ". DBPREFIX ."Attachment A
 WHERE
   A.IDAttachment = $IDAttachment";
     $this->execSQL($StSQL);
@@ -1223,6 +1223,27 @@ WHERE
     }
     $ArData = F1DeskUtils::getUserHeaderSign($IDUser);
     return $ArData['TxHeader'] . "\n\n" . $TxMessage . "\n\n" . $ArData['TxSign'];
+  }
+  
+  /**
+   * get all attacheds tickets from a ID given
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getAttachedTickets($IDTicket){
+    $StSQL = '
+SELECT
+  AT.IDAttachedTicket
+FROM
+  '.DBPREFIX.'AttachedTicket AT
+  LEFT JOIN 
+    '.DBPREFIX.'Ticket T ON (T.IDTicket = AT.IDTicket)
+WHERE
+  AT.IDTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
   }
 
 }

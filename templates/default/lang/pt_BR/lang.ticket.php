@@ -9,6 +9,15 @@
   define('TICKET_HEADER_ACTIONS','A&ccedil;&otilde;es');
   
   #
+  # Ticket Informations
+  #
+  define('INFORMATIONS','Informa&ccedil;&otilde;es');
+  define('INFO_FILES','Arquivos Anexados');
+  define('INFO_NOFILES','N&atilde;o h&aacute; arquivos anexados');
+  define('INFO_TICKETS','Chamados Anexados');
+  define('INFO_NOTICKETS','N&atilde;o h&aacute; chamados anexados');
+  
+  #
   # Ticket History
   #
   define('TICKET_HISTORY', 'Hist&oacute;rico');
@@ -32,5 +41,5 @@
   define('ADD','Incluir');
   define('PREVIEW','Visualizar');
 
-  define('INFORMATIONS','Informa&ccedil;&otilde;es');
+  
 ?>

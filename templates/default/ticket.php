@@ -89,8 +89,31 @@
     <img alt="Informations"  id='arrowInformations<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "informationsContent<?=$uid?>")' class="menuArrow"/>
     <span><?=INFORMATIONS?></span>
   </div>
-  <div id='informationsContent<?=$uid?>'>
-
+  <div id='informationsContent<?=$uid?>' class="informationsBox">
+    <!--[ATTACHMENT FILES]-->
+    <span><?=INFO_FILES?></span>
+    <? if (count($ArAttachments)==0): ?>
+      <p><?=INFO_NOFILES?></p>
+    <? else: ?>
+    <ul>
+      <? foreach ($ArAttachments as $Attachment): $Attachment = $Attachment[0]; ?>
+        <li><a href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></li>
+      <? endforeach; ?>
+    </ul>
+    <? endif; ?>
+    <!--[/ATTACHMENT FILES]-->
+    <!--[ATTACHMENT TICKETS]-->
+    <span><?=INFO_TICKETS?></span>
+    <? if (count($ArAttachedTickets)==0): ?>
+      <p><?=INFO_NOTICKETS?></p>
+    <? else: ?>
+    <ul>
+      <? foreach ($ArAttachedTickets as $AttachedTicket): ?>
+        <li><a href='javascript:void(0);' onclick='previewInFlow.Ticket(<?=$AttachedTicket['IDAttachedTicket']?>)'>#<?=$AttachedTicket['IDAttachedTicket']?></a></li>
+      <? endforeach; ?>
+    </ul>
+    <? endif; ?>
+    <!--[/ATTACHMENT TICKETS]-->
   </div>
 </div>
 <!--[/TICKET INFORMATIONS]-->
@@ -103,7 +126,6 @@
   </div>
 
   <div id="historyContent<?=$uid?>" >
-
     <? foreach ($ArMessages as $ArMessage) : ?>
       <? if (!TemplateHandler::IsSupporter() && $ArMessage['EnMessageType'] == 'INTERNAL') continue; ?>
       <? $DtSended = F1DeskUtils::formatDate('datetime_format',$ArMessage['DtSended']); ?>

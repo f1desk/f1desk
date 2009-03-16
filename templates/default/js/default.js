@@ -676,37 +676,37 @@ function bookmarkTicket(IDSupporter, IDTicket) {
 
 
 function attachTicket(IDTicket) {
-  with(windowParams) {
-    TBStyle.Caption = 'Attach Ticket';
-    Window = 'prompt';
-    innerHTML = '#';
-    WindowStyle.Caption = 'Digite o número do Chamado à ser incluido:';
-    height = 175;
-    width = 350;
-    x = screen.availWidth / 2.67;
-    y = screen.availHeight / 2.67;
-    EventFuncs.Prompt = function(IDAttached) {
-      IDAttached = IDAttached.replace(/[#]|[^0-9]/g,'');
-      var tParams = {
-       'method':'post',
-        'content': {
-        'IDTicket':IDTicket,
-        'IDAttached':IDAttached,
-        'StAction':'attach',
+  var localWindowParams = {
+     'y':Positions.getScrollOffSet(gTN('body')[0]).y + 200,
+     'x':Positions.getScrollOffSet(gTN('body')[0]).x + 350,
+     'width':350, 'height':175, 'definition': 'response',
+     'innerHTML': '#',  'TB': true, 'Window': 'prompt',
+     'TBStyle':{'BackgroundColor': '#4F6C9C','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'Attach Ticket'},
+     'WindowStyle':{'BackgroundColor':'#ECEDEF','BackgroundImage':'','Caption':'Digite o número do Chamado à ser incluido:'},
+     'EventFuncs':{
+     		'Prompt': function(IDAttached) {
+          IDAttached = IDAttached.replace(/[#]|[^0-9]/g,'');
+          var tParams = {
+           'method':'post',
+            'content': {
+            'IDTicket':IDTicket,
+            'IDAttached':IDAttached,
+            'StAction':'attach',
+            },
+            'okCallBack':function(response) {
+              if(response == 'ok') {
+                refreshCall(IDTicket);
+              } else {
+                alert(response);
+              }
+            }
+          };
+          xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
         },
-        'okCallBack':function(response) {
-          if(response == 'ok') {
-            refreshCall(IDTicket);
-          } else {
-            alert(response);
-          }
-        }
-      };
-      xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
-    };
-  }
-
-  var ID = Flow.open(windowParams);
+   			'Close':"",	'Max':"",	'Min':"",	'Rest':""
+     }
+  };
+  var ID = Flow.open(localWindowParams);
 }
 /**
  * Templates->Ticket END
