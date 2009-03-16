@@ -1,24 +1,24 @@
-<? require_once('header.php'); require_once('createTicket.php');?>
+<? require_once('header.php'); require_once('createTicket.php'); handleLanguage(__FILE__);?>
 
 <div id='contentDisplay' class='Right'></div>
 
 <div id='createWrapper'>
-  <form method='POST' enctype='multipart/form-data' action='createTicket.submit.php' target='ajaxSubmit'>
+  <form id='formCreate' method='POST' enctype='multipart/form-data' action='createTicket.submit.php' onsubmit='return createTicketSubmit();'>
     <h3>Anexar Chamados</h3>
     <p>Clique <a href='' class='Link'>aqui</a> para anexar chamados</p>
 
     <h3>Informa&ccedil;&otilde;es do chamado</h3>
     <p>
-    <label for='StPriority'>Prioridade:</label>
-      <select id='StPriority' name='StPriority' class='inputCombo'>
+    <label for='StCategory'>Categoria:</label>
+      <select id='StCategory' name='StCategory' class='inputCombo'>
         <?php foreach ($ArCategories as $Key => $Category):?>
         <option value='<?=$Key?>'><?=$Category?></option>
         <?php endforeach; ?>
       </select>
     </p>
     <p>
-      <label for='StCategory'>Categoria:</label>
-      <select id='StCategory' name='StCategory' class='inputCombo'>
+      <label for='StPriority'>Prioridade:</label>
+      <select id='StPriority' name='StPriority' class='inputCombo'>
         <?php foreach ($ArPriorities as $Key => $Priority):?>
         <option value='<?=$Key?>'><?=$Priority?></option>
         <?php endforeach; ?>
@@ -26,7 +26,8 @@
     </p>
     <div id='sendTo'>
       <h3>Enviar Para</h3>
-      <select name='StDepartment' class='inputCombo'>
+      <select id='IDRecipient' name='IDRecipient' class='inputCombo'>
+      <option value='null'><?=DEFAULT_OPTION?></option>
       <?php foreach ($ArDepartments as $ArDepartment): ?>
         <?php if(isset($ArDepartment['SubDepartments'])): ?>
           <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
@@ -40,15 +41,16 @@
         <?php endif; ?>
       <?php endforeach; ?>
       </select>
-      <p>Clique <a href='javascript:void(0);' class='Link' onclick='listSupporters("Responsers")'>aqui</a> para adicionar atendentes</p>
-      <div id='addedResponsers' class='Invisible'>
+      <p>Clique <a href='javascript:void(0);' class='Link' onclick='listSupporters("Recipients")'>aqui</a> para adicionar atendentes</p>
+      <div id='addedRecipients' class='Invisible'>
         <h4>Usu&aacute;rios Adicionados</h4>
       </div>
     </div>
 
     <div id='respondTo'>
       <h3>Responder Para</h3>
-      <select size='1' name='StDepartment' class='inputCombo'>
+      <select name='IDReader' class='inputCombo'>
+      <option value='null'><?=DEFAULT_OPTION?></option>
       <?php foreach ($ArDepartments as $ArDepartment): ?>
         <?php if(isset($ArDepartment['SubDepartments'])): ?>
           <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
@@ -78,7 +80,6 @@
     </p>
     <p class='Right'>
       <input type='file' id='Attachment' name='Attachment' />
-      <iframe id='ajaxSubmit' name='ajaxSubmit' src='createTicket.submit.php'></iframe>
     </p>
     <p class='Left'>
       <button class='button'>Enviar</button>
@@ -86,5 +87,7 @@
     </p>
   </form>
 </div>
-
 <? require_once('footer.php'); ?>
+<?php if (isset($_GET['IDTicket'])):?>
+  <script>javascript:void(previewInFlow.Ticket('<?=$_GET['IDTicket'];?>'))</script>
+<?php endif; ?>

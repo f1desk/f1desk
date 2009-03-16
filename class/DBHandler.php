@@ -49,7 +49,7 @@ class DBHandler {
    public function setQuery($StQuery) {
       $setQuery = $this->ObjConnection->query($StQuery);
       if( $setQuery === false ) {
-         throw new ErrorHandler(EXC_DB_QUERY . ' Detalhes:' . $this->ObjConnection->error);
+         throw new ErrorHandler(EXC_DB_QUERY . ' Detalhes:' . $this->ObjConnection->error . '<br>' . $StQuery);
       }
    }
 

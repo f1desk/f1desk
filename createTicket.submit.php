@@ -1,5 +1,6 @@
 <?php
 require_once('main.php');
+require_once(TEMPLATEDIR . 'header.php');
 if (!empty($_POST)) {
   $TicketHandler = new TicketHandler();
   foreach ($_POST as &$StArg) {
@@ -10,23 +11,25 @@ if (!empty($_POST)) {
   $IDPriority = $_POST['StPriority'];
   $StTitle = $_POST['StTitle'];
   $TxMessage = $_POST['TxMessage'];
-  $IDDepartment = 6;//(isset($_POST['IDDepartment'])) ? $_POST['IDDepartment'] : '';
-  $ArUsers = (isset($_POST['ArUsers'])) ? $_POST['ArUsers'] : array();
-  $ArReaders = (isset($_POST['ArUsers'])) ? $_POST['ArUsers'] : array();
+  $IDDepartment = ($_POST['IDRecipient'] != 'null') ? $_POST['IDSender'] : '';
+  $IDDepartmentReader = ($_POST['IDReader'] != 'null') ? $_POST['IDReader'] : '';
+  $ArUsers = (isset($_POST['ArRecipients'])) ? explode(',',$_POST['ArRecipients']) : array();
+  $ArReaders = (isset($_POST['ArReaders'])) ? explode(',',$_POST['ArReaders']) : array();
 
   if (TemplateHandler::IsSupporter()) {
     if (!empty($_FILES['Attachment']['name'])) {
-      $TicketHandler->createSupporterTicket(getSessionProp('IDSupporter'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment,$ArUsers,$ArReaders,true,$_FILES);
+      $IDTicket = $TicketHandler->createSupporterTicket(getSessionProp('IDSupporter'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment, $IDDepartmentReader,$ArUsers,$ArReaders,true,$_FILES);
     } else {
-      $TicketHandler->createSupporterTicket(getSessionProp('IDSupporter'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment,$ArUsers,true);
+      $IDTicket = $TicketHandler->createSupporterTicket(getSessionProp('IDSupporter'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment, $IDDepartmentReader,$ArUsers,$ArReaders,true);
     }
   } else {
     if (!empty($_FILES['Attachment']['name'])) {
-      $TicketHandler->createUserTicket(getSessionProp('IDUser'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment,$_FILES);
+      $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDUser'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment,$_FILES);
     } else {
-      $TicketHandler->createUserTicket(getSessionProp('IDUser'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment);
+      $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDUser'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment);
     }
   }
-  //die("<script>location.href = ?page=listar</script>");
+  header('Location: index?page=escrever&IDTicket=' . $IDTicket);
 }
+require_once(TEMPLATEDIR . 'footer.php');
 ?>

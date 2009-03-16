@@ -792,9 +792,9 @@ var previewInFlow = {
     };
     xhr.makeRequest('Bookmark Ticket','ticketDetails.php',tParams);
   },
-  
+
   'Answer': function(TxMessage) {
-    TxMessage = TxMessage.replace(/^\s+|\s+$/g,"");
+    TxMessage = TxMessage.replace(/\s+|\s+/g,"");
     if(TxMessage == ""){ alert('Resposta vazia'); return false; }
     var  tParams = {
       'method':'post',
@@ -826,7 +826,7 @@ function checkAdd(Type) {
   var combo = gID("supporters"); IDSupporter = []; StName = []; max = combo.options.length; exit = false;
   for(var i=0;i<max;i++) {
     if(combo[i].selected == true) {
-      if(!gID('p'+combo[i].value) && Type == 'Responsers') {
+      if(!gID('p'+combo[i].value) && Type == 'Recipients') {
           IDSupporter.push(combo[i].value);
           StName.push(combo[i].textContent);
       } else if(!gID('pR'+combo[i].value) && Type == 'Readers') {
@@ -840,8 +840,8 @@ function checkAdd(Type) {
   }
   if(exit == false) {
     if(combo.selectedIndex > -1) {
-      if(Type == 'Responsers') {
-        addResponser(IDSupporter,StName);
+      if(Type == 'Recipients') {
+        addRecipient(IDSupporter,StName);
       } else {
         addReader(IDSupporter,StName);
       }
@@ -855,19 +855,11 @@ function addReader() {
   var hidden;
 
   if(! gID('ArReaders')) {
-    hidden = createElement('input',{'type':'hidden','name':'ArReaders','id':'ArReaders','value':'['+IDSupporter+']'});
-    document.body.appendChild(hidden);
+    hidden = createElement('input',{'type':'hidden','name':'ArReaders','id':'ArReaders','value':IDSupporter});
+    gID('formCreate').appendChild(hidden);
   } else {
     hidden = gID('ArReaders');
-    var value = hidden.value;
-    var arraySup = value.split("]");
-    if(arraySup[0] == '[') {
-      arraySup[0] += IDSupporter + ']';
-    } else {
-      arraySup[0] += ',' + IDSupporter + ']';
-    }
-    value = arraySup.shift();
-    hidden.value = value;
+    hidden.value = hidden.value + ',' + IDSupporter;
   }
   for(i in IDSupporter) {
     p = createElement('p',{'id':'pR'+IDSupporter[i],'style':'margin:0;padding:0;padding-bottom:5px;'});
@@ -884,36 +876,28 @@ function addReader() {
   }
 }
 
-function addResponser(IDSupporter,StName) {
+function addRecipient(IDSupporter,StName) {
   var hidden;
 
-  if(! gID('ArResponsers')) {
-    hidden = createElement('input',{'type':'hidden','name':'ArResponsers','id':'ArResponsers','value':'['+IDSupporter+']'});
-    document.body.appendChild(hidden);
+  if(! gID('ArRecipients')) {
+    hidden = createElement('input',{'type':'hidden','name':'ArRecipients','id':'ArRecipients','value':IDSupporter});
+    gID('formCreate').appendChild(hidden);
   } else {
-    hidden = gID('ArResponsers');
-    var value = hidden.value;
-    var arraySup = value.split("]");
-    if(arraySup[0] == '[') {
-      arraySup[0] += IDSupporter + ']';
-    } else {
-      arraySup[0] += ',' + IDSupporter + ']';
-    }
-    value = arraySup.shift();
-    hidden.value = value;
+    hidden = gID('ArRecipients');
+    hidden.value = hidden.value + ',' + IDSupporter;
   }
   for(i in IDSupporter) {
     p = createElement('p',{'id':'p'+IDSupporter[i],'style':'margin:0;padding:0;padding-bottom:5px;'});
-    gID('addedResponsers').appendChild(p);
+    gID('addedRecipients').appendChild(p);
     img = createElement('img',{'src':'templates/default/images/button_cancel.png','style':'vertical-align:middle;padding-right:5px;'});
-    a = createElement('a',{'href':'javascript:void(0);','onclick':"removeSupporter('Responsers',"+"'p"+IDSupporter[i]+"');"})
+    a = createElement('a',{'href':'javascript:void(0);','onclick':"removeSupporter('Recipients',"+"'p"+IDSupporter[i]+"');"})
     a.appendChild(img);
     span = createElement('span',{'id':'respondto'+IDSupporter[i],'class':'supporterName'})
     textNode = createTextNode(StName[i]);
     span.appendChild(textNode);
     gID('p'+IDSupporter[i]).appendChild(a);
     gID('p'+IDSupporter[i]).appendChild(span);
-    gID('addedResponsers').className = '';
+    gID('addedRecipients').className = '';
   }
 }
 
@@ -939,19 +923,19 @@ function listSupporters(Type) {
 function removeSupporter(Type,ID) {
   var ID2 ='',p = false, value = '', pattern = '';
   var hidden = gID('Ar'+Type);
-  ID2 = (Type == 'Responsers') ? ID.replace(/p/,'') : ID.replace(/pR/,'');
+  ID2 = (Type == 'Recipients') ? ID.replace(/p/,'') : ID.replace(/pR/,'');
   value = gID('Ar'+Type).value
   pattern = new RegExp('('+ID2+',?)|(,?'+ID2+')');
   hidden.value = value.replace(pattern,'');
   removeElements(gID(ID));
-  if(Type == 'Responsers') {
-    for(i in gID('addedResponsers').childNodes) {
-      if(gID('addedResponsers').childNodes[i] == '[object HTMLParagraphElement]') {
+  if(Type == 'Recipients') {
+    for(i in gID('addedRecipients').childNodes) {
+      if(gID('addedRecipients').childNodes[i] == '[object HTMLParagraphElement]') {
         var p = true;
       }
     }
     if(p == false) {
-      gID('addedResponsers').className = 'Invisible';
+      gID('addedRecipients').className = 'Invisible';
       removeElements(hidden);
     }
   } else {
@@ -964,5 +948,16 @@ function removeSupporter(Type,ID) {
       gID('addedReaders').className = 'Invisible';
       removeElements(hidden);
     }
+  }
+}
+
+function createTicketSubmit() {
+
+  if(gID('IDRecipient')[gID('IDRecipient').selectedIndex].value == 'null' && (! gID('ArRecipients') || gID('ArRecipients').value == '')) {
+    var p = createElement('p',{'id':'Error','style':'color: red'});
+    var textError = createTextNode('É necessário escolher um destinatário');
+    p.appendChild(textError);
+    gID('sendTo').appendChild(p);
+    return false;
   }
 }

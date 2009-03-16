@@ -164,15 +164,15 @@ SELECT
 	T.IDTicket
 FROM
 	". DBPREFIX ."Ticket T
-	LEFT JOIN 
+	LEFT JOIN
     ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
-	LEFT JOIN 
+	LEFT JOIN
     ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
- 	LEFT JOIN 
+ 	LEFT JOIN
  	  ". DBPREFIX ."Supporter S ON (S.IDUSer = U.IDUSer)
- 	LEFT JOIN 
+ 	LEFT JOIN
  	  ". DBPREFIX ."DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
- 	LEFT JOIN 
+ 	LEFT JOIN
  	  ". DBPREFIX ."Department D ON (D.IDDepartment = DS.IDDepartment)
 WHERE
   D.IDDepartment = $IDDepartment
@@ -188,9 +188,9 @@ SELECT
 	T.IDTicket
 FROM
 	". DBPREFIX ."Ticket T
-	LEFT JOIN 
+	LEFT JOIN
     ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
-	LEFT JOIN 
+	LEFT JOIN
     ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
 WHERE
   T.IDTicket IN ($Tickets)
@@ -224,9 +224,9 @@ SELECT
 	T.IDTicket
 FROM
 	". DBPREFIX ."Ticket T
-	LEFT JOIN 
+	LEFT JOIN
 	 ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
-	LEFT JOIN 
+	LEFT JOIN
 	 ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
 WHERE
   U.IDUser = $IDUser
@@ -307,7 +307,7 @@ SELECT
 	COUNT( T.IDTicket ) AS totalOpened
 FROM
 	". DBPREFIX ."User U
-  LEFT JOIN 
+  LEFT JOIN
   ". DBPREFIX ."Ticket T ON (T.IDUser = U.IDUser)
 WHERE
 	U.IDUser = $IDUser
@@ -319,9 +319,9 @@ SELECT
 	COUNT( T.IDTicket ) AS totalRead
 FROM
 	". DBPREFIX ."Ticket T
-	LEFT JOIN 
+	LEFT JOIN
 	 ". DBPREFIX ."isRead R ON (R.IDTicket = T.IDTicket)
-	LEFT JOIN 
+	LEFT JOIN
 	 ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
 WHERE
 	U.IDUser = $IDUser
@@ -554,10 +554,10 @@ GROUP BY
     $StTableName = DBPREFIX . 'Message';
     $ArFields = array( 'TxMessage' , 'DtSended' , 'BoAvailable' , 'EnMessageType' , 'IDTicket' , 'IDUser' );
     $ArValues = array( $StMessage , date('Y-m-d H:i:s',time()) , $BoAvailable, $StMsgType, $IDTicket, $IDUser );
-    
+
     $this->insertIntoTable($StTableName,$ArFields,$ArValues);
     $IDMessage = $this->getID();
-    
+
     return $IDMessage;
   }
 
@@ -578,9 +578,11 @@ GROUP BY
    *
    * @author Matheus Ashton <matheus[at]digirati.com.br>
    */
-  public function createSupporterTicket ($IDSupporter, $IDCategory, $IDPriority, $StTitle, $StMessage, $IDDepartment = '', $ArUsers = array(), $ArReaders = array(), $BoInternal = false, $ArFiles = array()) {
+  public function createSupporterTicket ($IDSupporter, $IDCategory, $IDPriority, $StTitle, $StMessage, $IDDepartment = '', $IDReader = '', $ArUsers = array(), $ArReaders = array(), $BoInternal = false, $ArFiles = array()) {
 
-    if (!empty($ArUser) && $IDDpt == '') {
+    //ErrorHandler::Debug((empty($ArUsers) && $IDDepartment == '') . '<<');
+
+    if (empty($ArUsers) && $IDDepartment == '') {
       throw new ErrorHandler(EXC_GLOBAL_EXPPARAM);
     }
 
@@ -624,7 +626,7 @@ GROUP BY
       $this->insertIntoTable($StTableName,$ArFields,$ArValue);
     }
 
-    if (!empty($ArUsers)) {
+    if (!empty($ArReaders)) {
       $StTableName = DBPREFIX . 'TicketSupporter';
       $ArFields = array('IDTicket','IDSupporter','BoReader');
       foreach ($ArUsers as $IDUser) {
@@ -640,17 +642,23 @@ GROUP BY
                               array($IDTicket, $IDDepartment));
     }
 
+    if ($IDReader != '') {
+      $this->insertIntoTable( DBPREFIX . 'TicketDepartment',
+                              array('IDTicket','IDDepartment','BoReader'),
+                              array($IDTicket, $IDDepartment,1));
+    }
+
     $StMsgType = ($BoInternal == true) ? 1 : 0;
-    
+
     $IDUser = array_shift(F1DeskUtils::getUserData($IDSupporter));
-    
+
     $IDMessage = $this->addMessage($IDUser, $IDTicket, $StMessage,$StMsgType);
 
     if (! empty($ArFiles)) {
       $this->attachFile($ArFiles,$IDMessage);
     }
 
-    return true;
+    return $IDTicket;
   }
 
   /**
@@ -698,7 +706,7 @@ GROUP BY
     $IDTicket = $this->getID();
 
     $IDUser = array_shift(F1DeskUtils::getUserData($IDClient));
-    
+
     $IDMessage = $this->addMessage($IDUser, $IDTicket, $StMessage,0);
     if (!empty($ArFiles)) {
       $this->attachFile($ArFiles,$IDMessage);
@@ -709,7 +717,7 @@ GROUP BY
     $ArValues = array($IDTicket,$IDDepartment);
     $itReturn = $this->insertIntoTable($StTableName, $ArFields, $ArValues);
 
-    return ($itReturn === false) ? false : true;
+    return $IDTicket;
   }
 
   /**
@@ -1198,7 +1206,7 @@ GROUP BY
 
     return $ArDepartments;
   }
-  
+
   /**
    * Return a preview anser for the user
    *
@@ -1212,7 +1220,7 @@ SELECT
   S.IDSupporter
 FROM
   '.DBPREFIX.'Supporter S
-  LEFT JOIN 
+  LEFT JOIN
     '.DBPREFIX.'User U ON (U.IDUser = S.IDUser)
 WHERE
   U.IDUser = ' . $IDUser ;
