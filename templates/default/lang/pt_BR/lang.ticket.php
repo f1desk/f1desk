@@ -13,13 +13,11 @@
   #
   define('INFORMATIONS','Informa&ccedil;&otilde;es');
   define('INFO_FILES','Arquivos Anexados');
-  define('INFO_NOFILES','N&atilde;o h&aacute; arquivos anexados');
   define('INFO_TICKETS','Chamados Anexados');
-  define('INFO_NOTICKETS','N&atilde;o h&aacute; chamados anexados');
-  define('INFO_DEPARTMENT_SENTTO', 'Enviado para departamento');
-  define('INFO_DEPARTMENT_NOSENTTO', 'N&atilde;o h&aacute; departamentos para este chamado');
-  define('INFO_SUPPORTER_SENTTO','Enviado para atendente');
-  define('INFO_SUPPORTER_NOSENTTO', 'Este chamado n&atilde;o foi aberto para atendentes');
+  define('INFO_DEPARTMENT_SENTTO', 'Enviado para o(s) departamento(s)');
+  define('INFO_SUPPORTER_SENTTO','Enviado para o(s) atendente(s)');
+  define('INFO_DEPARTMENTS_READER', 'Visualizado pelo(s) departamento(s)');
+  define('INFO_SUPPORTER_READER', 'Visualizado pelo(s) atendente(s)');
   
   #
   # Ticket History

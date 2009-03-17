@@ -18,7 +18,7 @@
         <?else:?>
           <?foreach ($ArNotes as $ArNoteSettings):?>
             <tr id="noteTR<?=$ArNoteSettings['IDNote']?>">
-              <td>
+              <td class="TicketNumber">
                 <?=$ArNoteSettings['StTitle']?>
                 <input type="hidden" id="StNoteTitle<?=$ArNoteSettings['IDNote']?>" value=<?=f1desk_escape_string($ArNoteSettings['StTitle'],false,true)?> >
               </td>
