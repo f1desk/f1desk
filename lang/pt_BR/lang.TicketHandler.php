@@ -13,4 +13,5 @@
   define('EXC_CALL_INVALIDLISTOFCALLS', 'Erro ao listar chamado. Usu&aacute;rio inv&aacute;lido.');
   define('NO_ANSWER','N&atilde;o h&aacute; respostas cadastradas');
   define('MSG_OWNED',' assumiu a responsabilidade por este chamado.');
+  define('CHANGE_DEPARTMENT','Chamado movido para o departamento ');
 ?>

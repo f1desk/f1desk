@@ -1334,5 +1334,30 @@ WHERE
     return  $ArResult;
   }
 
+  /**
+   * change the department in which the ticket is allocated
+   *
+   * @param unknown_type $IDTicket
+   * @param unknown_type $IDDepartment
+   */
+  public function changeDepartment($IDTicket, $IDDepartment) {
+    $StTableName = DBPREFIX.'TicketDepartment';
+    $ArData = array('IDDepartment' => $IDDepartment);
+    $ItAffected = $this->updateTable($StTableName,$ArData,"IDTicket = $IDTicket",1);
+    $StSQL = '
+SELECT
+  StDepartment
+FROM
+'.DBPREFIX."Department
+WHERE
+IDDepartment = $IDDepartment";
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('num');
+    $StDepartment = $ArResult[0][0];
+    $StSysMessage = CHANGE_DEPARTMENT . $StDepartment;
+    $this->addMessage(getSessionProp('IDUser'),$IDTicket,$StSysMessage,1,2);
+    return ($ItAffected < 0) ? false : true;
+  }
+
 }
 ?>

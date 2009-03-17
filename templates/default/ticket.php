@@ -23,6 +23,7 @@
           <th><?=TICKET_HEADER_DATE?></th>
           <th><?=TICKET_HEADER_STATUS?></th>
           <th><?=TICKET_HEADER_SUPPORTER?></th>
+          <th><?=TICKET_HEADER_DEPARTMENT?></th>
           <?php if (TemplateHandler::IsSupporter()): ?>
           <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
           <?php endif; ?>
@@ -53,6 +54,38 @@
                 }
               }
             endif; ?>
+          </td>
+          <td>
+            <?php if (TemplateHandler::IsSupporter()):?>
+            <select id='Department' class='inputCombo' onchange='changeDepartment("<?=$IDTicket?>",this.value)'>
+            <?php foreach ($ArDepartments as $ArDepartment): ?>
+              <?php if(isset($ArDepartment['SubDepartments'])): ?>
+                <?php if ($ArDepartment['IDDepartment'] == $IDDepartment):?>
+                <option value='<?=$ArDepartment['IDDepartment']?>' selected><?=$ArDepartment['StDepartment']?></option>
+                <?php else: ?>
+                <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
+                <?endif;?>
+                <optgroup>
+                  <?php foreach ($ArDepartment['SubDepartments'] as $SubDepartments):?>
+                    <?php if ($SubDepartments['IDSub'] == $IDDepartment):?>
+                    <option value='<?=$SubDepartments['IDSub']?>' selected><?=$SubDepartments['StSub']?></option>
+                    <?php else: ?>
+                    <option value='<?=$SubDepartments['IDSub']?>'><?=$SubDepartments['StSub']?></option>
+                    <?php endif; ?>
+                  <?php endforeach;?>
+                </optgroup>
+              <?php else: ?>
+                <?php if ($ArDepartment['IDDepartment'] == $IDDepartment):?>
+                <option value='<?=$ArDepartment['IDDepartment']?>' selected><?=$ArDepartment['StDepartment']?></option>
+                <?php else:?>
+                <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
+                <?php endif;?>
+              <?php endif; ?>
+            <?php endforeach; ?>
+            </select>
+            <?php else:?>
+              <?=$ArDepartment['StDepartment']?>
+            <?php endif;?>
           </td>
           <?php if (TemplateHandler::IsSupporter()): ?>
           <td>
@@ -102,7 +135,7 @@
     </ul>
     <? endif; ?>
     <!--[/ATTACHMENT FILES]-->
-    
+
     <!--[ATTACHMENT TICKETS]-->
     <? if (count($ArAttachedTickets)!=0): ?>
     <span><?=INFO_TICKETS?></span>
@@ -115,7 +148,7 @@
     </ul>
     <? endif; ?>
     <!--[/ATTACHMENT TICKETS]-->
-    
+
     <!--[TICKET DEPARTMENTS]-->
     <? if (count($ArTicketDepartments)!=0): ?>
     <span><?=INFO_DEPARTMENT_SENTTO?></span>
@@ -128,7 +161,7 @@
     </ul>
     <? endif; ?>
     <!--[/TICKET DEPARTMENTS]-->
-    
+
     <!--[TICKET SUPPORTERS]-->
     <? if (count($ArTicketDestinations)!=0): ?>
     <span><?=INFO_SUPPORTER_SENTTO?></span>
