@@ -13,7 +13,5 @@
   <menu_tabs id="escrever">Escrever</menu_tabs>
   <menu_tabs id="listar">Listar</menu_tabs>
   <menu_tabs id="busca">Busca Avançada</menu_tabs>
-  <menu_tabs id="configuracoes">Configurações</menu_tabs>
-  <menu_tabs id="preferencias">Preferências</menu_tabs>
-  <menu_tabs id="admin">Administração(ADMIN)</menu_tabs>
+  <menu_tabs id="admin">Administração</menu_tabs>
 </options>
