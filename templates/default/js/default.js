@@ -24,6 +24,53 @@ function _resetFlow() {
   };
 }
 
+function flowAlert(StArg) {
+  with(windowParams) {
+    width = 350;
+    height = 175;
+    TBStyle.Caption = default_ptBR.flowAlertTitle;
+    WindowStyle.Caption = '<br>';
+    innerHTML = StArg + '<br><br>';
+    Window = 'alert';
+  }
+  var ID = Flow.open(windowParams);
+  _resetFlow();
+  return ID;
+}
+
+function flowConfirm(StArg,tFunction) {
+  var option = '';
+  with(windowParams) {
+    width = 350;
+    height = 175;
+    TBStyle.Caption = default_ptBR.flowConfirmTitle;
+    WindowStyle.Caption = '<br>';
+    innerHTML = StArg + '<br><br>';
+    Window = 'confirm';
+    if(typeof(tFunction) == 'function') {
+      EventFuncs.Confirm = tFunction;
+    }
+  }
+  var ID = Flow.open(windowParams);
+  _resetFlow();
+  return ID;
+}
+
+function flowPrompt(StArg, tFunction) {
+  with(windowParams) {
+    width = 350;
+    height = 175;
+    innerHTML = '';
+    Window = 'prompt';
+    if(typeof(tFunction) == 'function') {
+      EventFuncs.Prompt = tFunction;
+    }
+  }
+  var ID = Flow.open(windowParams);
+  _resetFlow();
+  return ID;
+}
+
 /**
  * change the visibility and the arrow image
  *
@@ -241,7 +288,6 @@ function setTicketOwner(IDTicket, IDSupporter) {
     'okCallBack': function(returnedValue){
       var IDDepartment = gID('IDDepartment').value;
       refreshCall( IDTicket );
-      reloadTicketList(IDDepartment);
     }
   };
   var tUrl = 'setTicketOwner.php';
@@ -434,35 +480,38 @@ function removeCannedResponse (IDCannedResponse) {
 	if(!IDCannedResponse){
 		flowAlert(default_ptBR.noCannedID);
 	}
-	if (confirm(default_ptBR.deleteCanned)) {
-		_doLoading( 'canned','show' );
-		var tParams = {
-	    'enqueue':1,
-	    'method':'post',
-	    'content':{
-	    	'action':'remove',
-	    	'IDCannedResponse': IDCannedResponse,
-	    },
-	    'okCallBack': function(returnedValue){
-	    	if(returnedValue == 'error'){
-	    		flowAlert(default_ptBR.wrongCannedID+IDCannedResponse);
-	    	} else {
-	    		removeElements( gID('cannedTR'+IDCannedResponse) );
-	    		if( gID('cannedTable').getElementsByTagName('TR').length == 0){
-	    			gID('cannedTable').appendChild( createElement('TR',{'id':'noCanned'},
-	    				createElement('TD',{
-	    					'colspan':'3',	'align':'center'
-	    				},default_ptBR.noCanned)
-	    			) );
-	    		}
-	    		_doLoading( 'canned','hide' );
-	    		toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide');
-	    	}
-	    }
-	  };
-	  var tUrl = 'cannedResponsesAction.php';
-	  xhr.makeRequest('removeCannedResponse',tUrl,tParams);
-	}
+	var tFunction = function(opt) {
+  	if (opt == 1) {
+  		_doLoading( 'canned','show' );
+  		var tParams = {
+  	    'enqueue':1,
+  	    'method':'post',
+  	    'content':{
+  	    	'action':'remove',
+  	    	'IDCannedResponse': IDCannedResponse,
+  	    },
+  	    'okCallBack': function(returnedValue){
+  	    	if(returnedValue == 'error'){
+  	    		flowAlert(default_ptBR.wrongCannedID+IDCannedResponse);
+  	    	} else {
+  	    		removeElements( gID('cannedTR'+IDCannedResponse) );
+  	    		if( gID('cannedTable').getElementsByTagName('TR').length == 0){
+  	    			gID('cannedTable').appendChild( createElement('TR',{'id':'noCanned'},
+  	    				createElement('TD',{
+  	    					'colspan':'3',	'align':'center'
+  	    				},default_ptBR.noCanned)
+  	    			) );
+  	    		}
+  	    		_doLoading( 'canned','hide' );
+  	    		toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide');
+  	    	}
+  	    }
+  	  };
+  	  var tUrl = 'cannedResponsesAction.php';
+  	  xhr.makeRequest('removeCannedResponse',tUrl,tParams);
+  	}
+  }
+  flowConfirm(default_ptBR.deleteCanned,tFunction);
 }
 
 
@@ -470,35 +519,38 @@ function removeNote (IDNote) {
 	if(!IDNote){
 		flowAlert(default_ptBR.noNoteID);
 	}
-	if (confirm(default_ptBR.deleteNote)) {
-		_doLoading( 'note','show' );
-		var tParams = {
-	    'enqueue':1,
-	    'method':'post',
-	    'content':{
-	    	'action':'remove',
-	    	'IDNote': IDNote,
-	    },
-	    'okCallBack': function(returnedValue){
-	    	if(returnedValue == 'error'){
-	    		flowAlert(default_ptBR.wrongNoteID+IDNote);
-	    	} else {
-	    		removeElements( gID('noteTR'+IDNote) );
-	    		if( gID('noteTable').getElementsByTagName('TR').length == 0){
-	    			gID('noteTable').appendChild( createElement('TR',{'id':'noNote'},
-	    				createElement('TD',{
-	    					'colspan':'3',	'align':'center'
-	    				},default_ptBR.noNote)
-	    			) );
-	    		}
-	    		_doLoading( 'note','hide' );
-	    		toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide');
-	    	}
-	    }
-	  };
-	  var tUrl = 'notesAction.php';
-	  xhr.makeRequest('removeNote',tUrl,tParams);
-	}
+	tFunction = function(opt) {
+  	if (opt == 1) {
+  		_doLoading( 'note','show' );
+  		var tParams = {
+  	    'enqueue':1,
+  	    'method':'post',
+  	    'content':{
+  	    	'action':'remove',
+  	    	'IDNote': IDNote,
+  	    },
+  	    'okCallBack': function(returnedValue){
+  	    	if(returnedValue == 'error'){
+  	    		flowAlert(default_ptBR.wrongNoteID+IDNote);
+  	    	} else {
+  	    		removeElements( gID('noteTR'+IDNote) );
+  	    		if( gID('noteTable').getElementsByTagName('TR').length == 0){
+  	    			gID('noteTable').appendChild( createElement('TR',{'id':'noNote'},
+  	    				createElement('TD',{
+  	    					'colspan':'3',	'align':'center'
+  	    				},default_ptBR.noNote)
+  	    			) );
+  	    		}
+  	    		_doLoading( 'note','hide' );
+  	    		toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide');
+  	    	}
+  	    }
+  	  };
+  	  var tUrl = 'notesAction.php';
+  	  xhr.makeRequest('removeNote',tUrl,tParams);
+  	}
+  };
+  flowConfirm(default_ptBR.deleteNote,tFunction);
 }
 
 
@@ -556,34 +608,37 @@ function removeBookmark (IDTicket) {
 	if(!IDTicket){
 		flowAlert(default_ptBR.noBookmarkID);
 	}
-	if (confirm(default_ptBR.deleteBookmark)) {
-		_doLoading( 'bookmark','show' );
-		var tParams = {
-	    'enqueue':1,
-	    'method':'post',
-	    'content':{
-	    	'action':'remove',
-	    	'IDTicket': IDTicket,
-	    },
-	    'okCallBack': function(returnedValue){
-	    	if(returnedValue == 'error'){
-	    		flowAlert(default_ptBR.wrongBookmarkID+IDTicket);
-	    	} else {
-	    		removeElements( gID('bookmarkTR'+IDTicket) );
-	    		if( gID('bookmarkTable').getElementsByTagName('TR').length == 0){
-	    			gID('bookmarkTable').appendChild( createElement('TR',{'id':'noBookmark'},
-	    				createElement('TD',{
-	    					'colspan':'3',	'align':'center'
-	    				},default_ptBR.noBookmark)
-	    			) );
-	    		}
-	    		_doLoading( 'bookmark','hide' );
-	    	}
-	    }
-	  };
-	  var tUrl = 'bookmarkAction.php';
-	  xhr.makeRequest('removeBookmark',tUrl,tParams);
-	}
+	tFunction = function(opt) {
+  	if (opt == 1) {
+  		_doLoading( 'bookmark','show' );
+  		var tParams = {
+  	    'enqueue':1,
+  	    'method':'post',
+  	    'content':{
+  	    	'action':'remove',
+  	    	'IDTicket': IDTicket,
+  	    },
+  	    'okCallBack': function(returnedValue){
+  	    	if(returnedValue == 'error'){
+  	    		flowAlert(default_ptBR.wrongBookmarkID+IDTicket);
+  	    	} else {
+  	    		removeElements( gID('bookmarkTR'+IDTicket) );
+  	    		if( gID('bookmarkTable').getElementsByTagName('TR').length == 0){
+  	    			gID('bookmarkTable').appendChild( createElement('TR',{'id':'noBookmark'},
+  	    				createElement('TD',{
+  	    					'colspan':'3',	'align':'center'
+  	    				},default_ptBR.noBookmark)
+  	    			) );
+  	    		}
+  	    		_doLoading( 'bookmark','hide' );
+  	    	}
+  	    }
+  	  };
+  	  var tUrl = 'bookmarkAction.php';
+  	  xhr.makeRequest('removeBookmark',tUrl,tParams);
+  	}
+  };
+	flowConfirm(default_ptBR.deleteBookmark,tFunction);
 }
 /**
  * Templates->HOME END
@@ -629,9 +684,12 @@ function ignoreTicket(IDSupporter,IDTicket) {
       }
     }
   };
-  if(confirm(default_ptBR.ignoreCall)) {
-    xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+  tFunction = function(opt) {
+    if(opt == 1) {
+      xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+    }
   }
+  flowConfirm(default_ptBR.ignoreCall,tFunction);
 }
 
 
@@ -707,6 +765,26 @@ function attachTicket(IDTicket) {
   }
   var ID = Flow.open(windowParams);
   _resetFlow();
+}
+
+function changeDepartment(IDTicket, IDDepartment) {
+  tParams = {
+    'method':'post',
+    'content': {
+      'IDDepartment':IDDepartment,
+      'IDTicket':IDTicket,
+      'StAction':'change'
+    },
+    'okCallBack':function(response) {
+      if(response == 'ok') {
+        refreshCall(IDTicket);
+        reloadTicketList(IDDepartment,true);
+      } else {
+        flowAlert(response);
+      }
+    }
+  };
+  xhr.makeRequest('Change Department','ticketActions.php',tParams);
 }
 /**
  * Templates->Ticket END
@@ -958,51 +1036,4 @@ function createTicketSubmit() {
     gID('sendTo').appendChild(p);
     return false;
   }
-}
-
-function flowAlert(StArg) {
-  with(windowParams) {
-    width = 350;
-    height = 175;
-    TBStyle.Caption = default_ptBR.flowAlertTitle;
-    WindowStyle.Caption = '<br>';
-    innerHTML = StArg + '<br><br>';
-    Window = 'alert';
-  }
-  var ID = Flow.open(windowParams);
-  _resetFlow();
-  return ID;
-}
-
-function flowConfirm(StArg,tFunction) {
-  var option = '';
-  with(windowParams) {
-    width = 350;
-    height = 175;
-    TBStyle.Caption = default_ptBR.flowConfirmTitle;
-    WindowStyle.Caption = '<br>';
-    innerHTML = StArg + '<br><br>';
-    Window = 'confirm';
-    if(typeof(tFunction) == 'function') {
-      EventFuncs.Confirm = tFunction;
-    }
-  }
-  var ID = Flow.open(windowParams);
-  _resetFlow();
-  return ID;
-}
-
-function flowPrompt(StArg, tFunction) {
-  with(windowParams) {
-    width = 350;
-    height = 175;
-    innerHTML = '';
-    Window = 'prompt';
-    if(typeof(tFunction) == 'function') {
-      EventFuncs.Prompt = tFunction;
-    }
-  }
-  var ID = Flow.open(windowParams);
-  _resetFlow();
-  return ID;
 }

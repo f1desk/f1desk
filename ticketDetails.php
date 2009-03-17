@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . '/main.php');
+require_once('main.php');
 
 /*default*/
 handleLanguage(__FILE__);
@@ -16,10 +16,22 @@ $ArSupporters = TemplateHandler::listSupporters($IDTicket);
 $ArMessages = TemplateHandler::getHistory($IDTicket);
 $ArAttachments = TemplateHandler::getAttachments($IDTicket);
 
+if (getSessionProp('isSupporter') == 'true') {
+  $BoCreate = F1DeskUtils::getPermission('BoCreateCall',getSessionProp('IDSupporter'));
+  if ($BoCreate) {
+    $ArDepartments = TemplateHandler::getPublicDepartments(false);
+  } else {
+    $ArDepartments = TemplateHandler::getDepartments(getSessionProp('IDSupporter'));
+  }
+} else {
+  $ArDepartments = TemplateHandler::getPublicDepartments();
+}
+
 $StTitle = $ArHeaders['StTitle'];
 $IDTicket = $ArHeaders['IDTicket'];
 $ArAttachedTickets = TemplateHandler::getAttachedTickets($IDTicket);
 $ArTicketDepartments = TemplateHandler::getTicketDepartments($IDTicket);
+$ArDepartment = array_shift($ArTicketDepartments);
 $ArTicketDestinations = TemplateHandler::getTicketDestination($IDTicket); // who this ticket was sent to
 $IDDepartment = $ArHeaders['IDDepartment'];
 $StSituation = constant($ArHeaders['StSituation']);
@@ -30,6 +42,4 @@ if (getSessionProp('isSupporter') == 'true') {
 }
 
 require_once(TEMPLATEDIR . '/ticket.php');
-
-
 ?>
