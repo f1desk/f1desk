@@ -475,6 +475,7 @@ html>body #main{
   border-bottom: 1px solid #ABABAB;
   width:98%;
   margin-bottom:20px;
+  margin-top:25px;
 }
 
 #createWrapper input {
