@@ -24,6 +24,29 @@ function _resetFlow() {
   };
 }
 
+/* auxFunctions */
+function _doLoading( formName, action ){
+	setStyle(	gID(formName+'Loading'),	{
+		'visibility': ( action=='hide' )?'hidden':'visible'
+	});
+}
+
+function _isEmpty(Text){
+  var TxEmpty; TxEmpty = Text.replace(/\s+|\s+/g,"");
+  if(TxEmpty == ""){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function _br2nl(Text){
+  Text = Text.split('<br />').join('\n');
+  Text = Text.split('<br/>').join('\n');
+  return Text.split('<br>').join('\n');
+}
+/* auxFunctions end*/
+
 function flowAlert(StArg) {
   with(windowParams) {
     width = 350;
@@ -70,6 +93,7 @@ function flowPrompt(StArg, tFunction) {
   _resetFlow();
   return ID;
 }
+
 
 /**
  * change the visibility and the arrow image
@@ -301,15 +325,6 @@ function setTicketOwner(IDTicket, IDSupporter) {
 /**
  * Templates->HOME
  */
-
-	/* auxFunctions */
-	function _doLoading( formName, action ){
-		setStyle(	gID(formName+'Loading'),	{
-			'visibility': ( action=='hide' )?'hidden':'visible'
-		});
-	}
-	/* auxFunctions end*/
-
 function startCreatingElement ( StElement ) {
 	var editForm = gID(StElement + "Form");
 	for (var aux = 0; aux < editForm.elements.length; aux++) {
@@ -382,7 +397,6 @@ function newCannedResponse(){
 	var content = {
 		'action':'insert',
 		'IDCannedResponse': 'autoincrement',
-		'StAlias': editForm.elements['StAlias'].value,
 		'StTitle': editForm.elements['StTitle'].value,
 		'TxMessage': editForm.elements['TxCannedResponse'].value
   };
@@ -409,7 +423,6 @@ function startEditElement ( formName, IDMessage ){
 	var editForm = gID(formName + 'Form');
 	if( formName == 'canned' ){
 		editForm.elements['IDCanned'].value = IDMessage;	/*ID*/
-		editForm.elements['StAlias'].value = unescape(gID('StCannedAlias'+IDMessage).value);	/*StAlias*/
 		editForm.elements['StTitle'].value = unescape(gID('StCannedTitle'+IDMessage).value);	/*StTitle*/
 		editForm.elements['TxCannedResponse'].value = unescape(gID('TxCannedResponse'+IDMessage).value);	/*TxMessage*/
 	} else if( formName == 'note' ){
@@ -430,7 +443,6 @@ function editCannedResponse () {
 	var content = {
   	'action':'edit',
   	'IDCannedResponse': editForm.elements['IDCanned'].value,
-  	'StAlias': editForm.elements['StAlias'].value,
   	'StTitle': editForm.elements['StTitle'].value,
   	'TxMessage': editForm.elements['TxCannedResponse'].value
   };
@@ -659,8 +671,8 @@ function submitTicketForm(IDTicket) {
 
 function addCannedResponse(IDDepartment,IDSupporter) {
   var Responses = gID('cannedAnswers');
-  var StAlias = Responses[Responses.selectedIndex].value
-  gID('TxMessage').value += unescape(StAlias) + '\n';
+  var TxMessage = Responses[Responses.selectedIndex].value
+  gID('TxMessage').value += _br2nl(unescape(TxMessage)) + '\n';
   return false;
 }
 
@@ -872,8 +884,7 @@ var previewInFlow = {
   },
 
   'Answer': function(TxMessage) {
-    TxMessage = TxMessage.replace(/\s+|\s+/g,"");
-    if(TxMessage == ""){ flowAlert(default_ptBR.answerPreviewNoAnswer); return false; }
+    if(_isEmpty(TxMessage)){ flowAlert(default_ptBR.answerPreviewNoAnswer); return false; }
     var  tParams = {
       'method':'post',
       'content':{

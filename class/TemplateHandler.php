@@ -564,6 +564,17 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getTicketDepartments($IDTicket);
 	}
+		
+	/**
+	 * get all departments Reader of a ticket given
+	 *
+	 * @param integer $IDTicket
+	 * @return array
+	 */
+	public static function getTicketDepartmentsReader($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getTicketDepartmentsReader($IDTicket);
+	}
 	
 	/**
    * get who users a ticket was sent to
@@ -574,6 +585,17 @@ abstract class TemplateHandler {
 	public static function getTicketDestination($IDTicket){
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getTicketDestination($IDTicket);
+	}
+	
+	/**
+   * get who users can see a ticket
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+	public static function getTicketDestinationReader($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getTicketDestinationReader($IDTicket);
 	}
 }
 

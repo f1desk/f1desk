@@ -940,8 +940,6 @@ WHERE
     #Get table's User ID
     $IDUser = array_shift(F1DeskUtils::getUserData($IDWriter));
 
-    $TxMessage = $this->replaceAlias(stripslashes($TxMessage),$IDWriter);
-
     #Add the reply
     $this->addMessage($IDUser, $IDTicket, $TxMessage, $BoReleased, $StMsgType);
     $IDMessage = $this->getID();
@@ -983,10 +981,10 @@ WHERE
       $this->attachFile($ArFiles,$IDMessage);
     }
 
-      #Changing Tickets's situation
-      $StTableName = DBPREFIX . 'Ticket';
-      $ArFields = array('StSituation' => 'WAITING_SUP');
-      $this->updateTable($StTableName,$ArFields,"IDTicket = $IDTicket");
+    #Changing Tickets's situation
+    $StTableName = DBPREFIX . 'Ticket';
+    $ArFields = array('StSituation' => 'WAITING_SUP');
+    $this->updateTable($StTableName,$ArFields,"IDTicket = $IDTicket");
 
     return true;
   }
@@ -1051,26 +1049,6 @@ WHERE
     $ArFields = array('IDSupporter' => $IDSupporter);
     $NumRows = $this->updateTable($StTableName, $ArFields, "IDTicket = $IDTicket", 1);
     return $NumRows;
-  }
-
-  /**
-	 * Catch the alias in the message given replacing them with the corresponded answers
-	 *
-	 * @param str $TxMessage
-	 * @return str $TxReturn
-	 *
-	 * @author Matheus Ashton <matheus@digirati.com.br>
-	 */
-	public function replaceAlias($TxMessage,$IDSupporter) {
-	  $ArAlias = array();
-    $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter);
-    if (count($ArResponses)!=0) {
-      foreach ($ArResponses as $Response) {
-        $ArReplace[$Response['StAlias']] = $Response['TxMessage'];
-      }
-      $TxMessage = strtr($TxMessage,$ArReplace);
-    }
-    return $TxMessage;
   }
 
   /**
@@ -1226,7 +1204,6 @@ WHERE
     	$this->execSQL($StSQL);
       $ArResult = $this->getResult('string');
       $IDSupporter = (isset($ArResult[0]))?$ArResult[0]['IDSupporter']:'';
-      $TxMessage = $this->replaceAlias($TxMessage,$IDSupporter);
     }
     $ArData = F1DeskUtils::getUserHeaderSign($IDUser);
     return $ArData['TxHeader'] . "\n\n" . $TxMessage . "\n\n" . $ArData['TxSign'];

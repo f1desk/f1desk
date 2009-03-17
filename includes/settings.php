@@ -110,7 +110,7 @@ function f1desk_escape_string($toEscape, $nl2br = false, $BoEncode = false) {
 		return $toEscape;
 	} else {
 	  if ($nl2br)
-			$toEscape = (str_replace("\n", "<br>",$toEscape));
+			$toEscape = (str_replace("\n", "<br />",$toEscape));
 		if ($BoEncode) {
   		$toEscape = (str_replace("'", "%27", $toEscape));
       $toEscape = (str_replace('"', "%22", $toEscape));

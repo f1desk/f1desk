@@ -124,56 +124,83 @@
   </div>
   <div id='informationsContent<?=$uid?>' class="informationsBox" style="display:none">
     <!--[ATTACHMENT FILES]-->
+    <? if (count($ArAttachments)!=0): ?>
     <span><?=INFO_FILES?></span>
-    <? if (count($ArAttachments)==0): ?>
-      <p><?=INFO_NOFILES?></p>
-    <? else: ?>
     <ul>
-      <? foreach ($ArAttachments as $Attachment): $Attachment = $Attachment[0]; ?>
-        <li><a class="Link" href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></li>
-      <? endforeach; ?>
+      <li>
+      <? $i=0; foreach ($ArAttachments as $Attachment): $Attachment = $Attachment[0]; if($i!=0) print ', '; ?>
+        <a class="Link" href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a>
+      <? $i++; endforeach; ?>
+      </li>
     </ul>
     <? endif; ?>
     <!--[/ATTACHMENT FILES]-->
 
     <!--[ATTACHMENT TICKETS]-->
+    <? if (count($ArAttachedTickets)!=0): ?>
     <span><?=INFO_TICKETS?></span>
-    <? if (count($ArAttachedTickets)==0): ?>
-      <p><?=INFO_NOTICKETS?></p>
-    <? else: ?>
     <ul>
-      <? foreach ($ArAttachedTickets as $AttachedTicket): ?>
-        <li><a class="Link" href='javascript:void(0);' onclick='previewInFlow.Ticket(<?=$AttachedTicket['IDAttachedTicket']?>)'>#<?=$AttachedTicket['IDAttachedTicket']?></a></li>
-      <? endforeach; ?>
+      <li>
+      <? $i=0; foreach ($ArAttachedTickets as $AttachedTicket): if($i!=0) print ', '; ?>
+        <a class="Link" href='javascript:void(0);' onclick='previewInFlow.Ticket(<?=$AttachedTicket['IDAttachedTicket']?>)'>#<?=$AttachedTicket['IDAttachedTicket']?></a>
+      <? $i++; endforeach; ?>
+      </li>
     </ul>
     <? endif; ?>
     <!--[/ATTACHMENT TICKETS]-->
 
     <!--[TICKET DEPARTMENTS]-->
+    <? if (count($ArTicketDepartments)!=0): ?>
     <span><?=INFO_DEPARTMENT_SENTTO?></span>
-    <? if (count($ArTicketDepartments)==0): ?>
-      <p><?=INFO_DEPARTMENT_NOSENTTO?></p>
-    <? else: ?>
     <ul>
-      <? foreach ($ArTicketDepartments as $TicketDepartments): ?>
-        <li class="Link"><?=$TicketDepartments['StDepartment']?></li>
-      <? endforeach; ?>
+      <li class="Link">
+      <? $i=0; foreach ($ArTicketDepartments as $TicketDepartments): if($i!=0) print ', '; ?>
+        <?=$TicketDepartments['StDepartment']?>
+      <? $i++; endforeach; ?>
+      </li>
     </ul>
     <? endif; ?>
     <!--[/TICKET DEPARTMENTS]-->
 
     <!--[TICKET SUPPORTERS]-->
+    <? if (count($ArTicketDestinations)!=0): ?>
     <span><?=INFO_SUPPORTER_SENTTO?></span>
-    <? if (count($ArTicketDestinations)==0): ?>
-      <p><?=INFO_SUPPORTER_NOSENTTO?></p>
-    <? else: ?>
     <ul>
-      <? foreach ($ArTicketDestinations as $TicketDestination): ?>
-        <li><?=$TicketDestination['StName']?></li>
-      <? endforeach; ?>
+      <li class="Link">
+      <? $i=0; foreach ($ArTicketDestinations as $TicketDestination): if($i!=0) print ', '; ?>
+        <?=$TicketDestination['StName']?>
+      <? $i++; endforeach; ?>
+      </li>
     </ul>
     <? endif; ?>
     <!--[/TICKET SUPPORTERS]-->
+    
+    <!--[TICKET DEPARTMENTS]-->
+    <? if (count($ArTicketDepartmentsReader)!=0): ?>
+    <span><?=INFO_DEPARTMENTS_READER?></span>
+    <ul>
+      <li class="Link">
+      <? $i=0; foreach ($ArTicketDepartmentsReader as $TicketDepartmentsReader): if($i!=0) print ', '; ?>
+        <?=$TicketDepartmentsReader['StDepartment']?>
+      <? $i++; endforeach; ?>
+      </li>
+    </ul>
+    <? endif; ?>
+    <!--[/TICKET DEPARTMENTS]-->
+    
+    <!--[TICKET SUPPORTERS]-->
+    <? if (count($ArTicketDestinationsReader)!=0): ?>
+    <span><?=INFO_SUPPORTER_READER?></span>
+    <ul>
+      <li class="Link">
+      <? $i=0; foreach ($ArTicketDestinationsReader as $TicketDestinationReader): if($i!=0) print ', '; ?>
+        <?=$TicketDestinationReader['StName']?>
+      <? $i++; endforeach; ?>
+      </li>
+    </ul>
+    <? endif; ?>
+    <!--[/TICKET SUPPORTERS]-->
+    
   </div>
 </div>
 <!--[/TICKET INFORMATIONS]-->
@@ -213,7 +240,7 @@
 	  </div>
 
 	  <div id="answerContent<?=$uid?>" >
-	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data" onsubmit='var TxMessage = gID("TxMessage").value.replace(/^\s+|\s+$/g,"");if(TxMessage == ""){ alert("Resposta vazia"); return false; }'>
+	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data" onsubmit='if(_isEmpty(gID("TxMessage").value)){ flowAlert(default_ptBR.answerPreviewNoAnswer); return false; }'>
 	      <div id='messageType' class='Right'>
 	    	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
 	    				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
@@ -241,7 +268,7 @@
 	      		    <select class='inputCombo' id='cannedAnswers'>
 	              <? if ($ArResponses[0]['IDCannedResponse'] != ''): ?>
 	                  <? foreach ($ArResponses as $Response): ?>
-	                    <option value="<?=f1desk_escape_string($Response['StAlias'],false,true);?>"><?=$Response['StTitle']?></option>
+	                    <option value="<?=f1desk_escape_string($Response['TxMessage'],true,true);?>"><?=$Response['StTitle']?></option>
 	                  <?endforeach; ?>
 	              <? else: ?>
 	                   <option value='null'><?=NO_ANSWER?></option>

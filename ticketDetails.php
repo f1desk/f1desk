@@ -31,13 +31,15 @@ $StTitle = $ArHeaders['StTitle'];
 $IDTicket = $ArHeaders['IDTicket'];
 $ArAttachedTickets = TemplateHandler::getAttachedTickets($IDTicket);
 $ArTicketDepartments = TemplateHandler::getTicketDepartments($IDTicket);
+$ArTicketDepartmentsReader = TemplateHandler::getTicketDepartmentsReader($IDTicket);
 $ArDepartment = array_shift($ArTicketDepartments);
 $ArTicketDestinations = TemplateHandler::getTicketDestination($IDTicket); // who this ticket was sent to
+$ArTicketDestinationsReader = TemplateHandler::getTicketDestinationReader($IDTicket);
 $IDDepartment = $ArHeaders['IDDepartment'];
 $StSituation = constant($ArHeaders['StSituation']);
 $DtOpened = F1DeskUtils::formatDate('datetime_format',$ArHeaders['DtOpened']);
 
-if (getSessionProp('isSupporter') == 'true') {
+if (TemplateHandler::IsSupporter()) {
   $ArResponses = TemplateHandler::getCannedResponses(getSessionProp('IDSupporter'),$IDDepartment);
 }
 
