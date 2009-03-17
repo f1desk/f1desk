@@ -28,6 +28,13 @@ if ( getSessionProp('isSupporter') == "true" ){
 					</td>
 				</tr>
 				<tr>
+					<td class="TicketNumber"><?=NOTIFY?>:</td>
+					<td id="StDataNotifyTD">
+					 <pre><?=($ArUser['BoNotify'])?DO_NOTIFY:DONT_NOTIFY?></pre>
+					 <input type="hidden" id="StDataNotify" value="<?=$ArUser['BoNotify']?>">
+					</td>
+				</tr>
+				<tr>
 					<td class="TicketNumber"><?=HEADER?>:</td>
 					<td id="TxDataHeaderTD" style="border:solid 1px #ccc;">
 					 <pre><?=($ArUser['TxHeader'])?$ArUser['TxHeader']:'<i>'. EMPTY_TEXT .'</i>'?></pre>
@@ -54,7 +61,10 @@ if ( getSessionProp('isSupporter') == "true" ){
 					<input type="text" class="inputCombo" name="StDataName">	<br />
 					<?=EMAIL?>:	<br />
 					<input type="text" class="inputCombo" name="StDataEmail">	<br />
-					<?=HEADER?>:	<br />
+          <?=NOTIFY?>:	<br />
+          <input type="radio" class="inputCombo" name="StDataNotify" value="<?=DONT_NOTIFY?>"><?=DONT_NOTIFY?>
+          <input type="radio" class="inputCombo" name="StDataNotify" value="<?=DO_NOTIFY?>"><?=DO_NOTIFY?><br />
+          <?=HEADER?>:  <br />
 					<textarea class="answerArea" name="TxDataHeader" ></textarea>
 					<?=SIGN?>:	<br />
 					<textarea class="answerArea" name="TxDataSign" ></textarea>

@@ -627,3 +627,5 @@ ORDER BY S.IDSupporter';
     return $ArResult;
   }
 }
+
+?>
