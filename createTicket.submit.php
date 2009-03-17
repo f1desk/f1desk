@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require_once('main.php');
 require_once(TEMPLATEDIR . 'header.php');
 if (!empty($_POST)) {
@@ -11,7 +12,7 @@ if (!empty($_POST)) {
   $IDPriority = $_POST['StPriority'];
   $StTitle = $_POST['StTitle'];
   $TxMessage = $_POST['TxMessage'];
-  $IDDepartment = ($_POST['IDRecipient'] != 'null') ? $_POST['IDSender'] : '';
+  $IDDepartment = ($_POST['IDRecipient'] != 'null') ? $_POST['IDRecipient'] : '';
   $IDDepartmentReader = ($_POST['IDReader'] != 'null') ? $_POST['IDReader'] : '';
   $ArUsers = (isset($_POST['ArRecipients'])) ? explode(',',$_POST['ArRecipients']) : array();
   $ArReaders = (isset($_POST['ArReaders'])) ? explode(',',$_POST['ArReaders']) : array();
@@ -32,4 +33,5 @@ if (!empty($_POST)) {
   header('Location: index?page=escrever&IDTicket=' . $IDTicket);
 }
 require_once(TEMPLATEDIR . 'footer.php');
+ob_end_flush();
 ?>

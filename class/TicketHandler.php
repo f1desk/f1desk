@@ -23,7 +23,7 @@ class TicketHandler extends DBHandler {
    * @return boolean
    */
   public function attachFile( $Files, $IDMessage ) {
-    
+
     if (count($Files) == 1) {
       $StField = key($Files);
 
@@ -583,7 +583,7 @@ GROUP BY
     //ErrorHandler::Debug((empty($ArUsers) && $IDDepartment == '') . '<<');
 
     if (empty($ArUsers) && $IDDepartment == '') {
-      throw new ErrorHandler(EXC_GLOBAL_EXPPARAM);
+      throw new ErrorHandler(EXC_GLOBAL_EXPPARAM . 'aaaaa');
     }
 
     #
@@ -622,17 +622,16 @@ GROUP BY
       foreach ($ArUsers as $IDUser) {
         $ArValue[] = array($IDTicket,$IDUser);
       }
-
       $this->insertIntoTable($StTableName,$ArFields,$ArValue);
     }
 
     if (!empty($ArReaders)) {
+      $ArValue = array();
       $StTableName = DBPREFIX . 'TicketSupporter';
       $ArFields = array('IDTicket','IDSupporter','BoReader');
-      foreach ($ArUsers as $IDUser) {
-        $ArValue[] = array($IDTicket,$IDUser,1);
+      foreach ($ArReaders as $IDUser) {
+        $ArValue[] = array($IDTicket,$IDUser,'1');
       }
-
       $this->insertIntoTable($StTableName,$ArFields,$ArValue);
     }
 
@@ -645,7 +644,7 @@ GROUP BY
     if ($IDReader != '') {
       $this->insertIntoTable( DBPREFIX . 'TicketDepartment',
                               array('IDTicket','IDDepartment','BoReader'),
-                              array($IDTicket, $IDDepartment,1));
+                              array($IDTicket, $IDReader,'1'));
     }
 
     $StMsgType = ($BoInternal == true) ? 1 : 0;
@@ -1232,7 +1231,7 @@ WHERE
     $ArData = F1DeskUtils::getUserHeaderSign($IDUser);
     return $ArData['TxHeader'] . "\n\n" . $TxMessage . "\n\n" . $ArData['TxSign'];
   }
-  
+
   /**
    * get all attacheds tickets from a ID given
    *
@@ -1245,7 +1244,7 @@ SELECT
   AT.IDAttachedTicket
 FROM
   '.DBPREFIX.'AttachedTicket AT
-  LEFT JOIN 
+  LEFT JOIN
     '.DBPREFIX.'Ticket T ON (T.IDTicket = AT.IDTicket)
 WHERE
   AT.IDTicket = ' . $IDTicket ;
@@ -1253,7 +1252,7 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult;
   }
-  
+
   /**
    * get all departments of a ticket
    *
@@ -1266,9 +1265,9 @@ SELECT
   D.*
 FROM
   '.DBPREFIX.'Ticket T
-  LEFT JOIN 
+  LEFT JOIN
     '.DBPREFIX.'TicketDepartment TD ON (T.IDTicket = TD.IDTicket)
-  LEFT JOIN 
+  LEFT JOIN
     '.DBPREFIX.'Department D ON (D.IDDepartment = TD.IDDepartment)
 WHERE
   T.IDTicket = ' . $IDTicket ;
@@ -1276,7 +1275,7 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult;
   }
-  
+
   /**
    * get who users a ticket was sent to
    *
@@ -1289,11 +1288,11 @@ SELECT
   U.*
 FROM
   '.DBPREFIX.'User U
-  LEFT JOIN 
+  LEFT JOIN
     '.DBPREFIX.'Supporter S ON (U.IDUser = S.IDUser)
-  LEFT JOIN 
+  LEFT JOIN
     '.DBPREFIX.'TicketSupporter TS ON (S.IDSupporter = TS.IDSupporter)
-  LEFT JOIN 
+  LEFT JOIN
     '.DBPREFIX.'Ticket T ON (T.IDTicket = TS.IDTicket)
 WHERE
   T.IDTicket = ' . $IDTicket ;
@@ -1301,6 +1300,6 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult;
   }
-  
+
 }
 ?>
