@@ -9,9 +9,9 @@ if ( !$IDCannedResponse ) die(NOT_ID);
 switch ( $_POST['action'] ) {
   case 'edit':
     $ArData = array(
-    "StTitle" => f1desk_real_escape_string($_POST['StTitle']),
-    "StAlias" => f1desk_real_escape_string($_POST['StAlias']),
-    "TxMessage" => f1desk_real_escape_string($_POST['TxMessage'])
+    "StTitle" => f1desk_escape_string($_POST['StTitle']),
+    "StAlias" => f1desk_escape_string($_POST['StAlias']),
+    "TxMessage" => f1desk_escape_string($_POST['TxMessage'])
     );
     $ItAffedcted = TemplateHandler::editCannedResponse( $IDCannedResponse, $ArData );
     if ( !$ItAffedcted ) {
@@ -20,17 +20,17 @@ switch ( $_POST['action'] ) {
       die("
             <td class='TicketNumber'>
               ".$_POST['StAlias']."
-              <input id='StCannedAlias$IDCannedResponse' type='hidden' value='".f1desk_escape_string($_POST['StAlias'])."'/>
+              <input id='StCannedAlias$IDCannedResponse' type='hidden' value='".f1desk_escape_string($_POST['StAlias'], false, true)."'/>
             </td>
             <td>
               ".$_POST['StTitle']."
-              <input id='StCannedTitle$IDCannedResponse' type='hidden' value='".f1desk_escape_string($_POST['StTitle'])."'/>
+              <input id='StCannedTitle$IDCannedResponse' type='hidden' value='".f1desk_escape_string($_POST['StTitle'], false, true)."'/>
             </td>
             <td>
-              <input id='TxCannedResponse$IDCannedResponse' type='hidden' value='". f1desk_escape_string($_POST['TxMessage'], false) ."'/>
+              <input id='TxCannedResponse$IDCannedResponse' type='hidden' value='". f1desk_escape_string($_POST['TxMessage'], false, true) ."'/>
               <img class='cannedAction' onclick='startEditElement(\"canned\", $IDCannedResponse);' alt='Editar' src='templates/default/images/button_edit.png'/>
               <img class='cannedAction' onclick='removeCannedResponse($IDCannedResponse)' alt='Remover' src='templates/default/images/button_cancel.png'/>
-              <img id='previemCanned$IDCannedResponse' class='cannedAction' onclick='previewInFlow.CannedResponse(\"". f1desk_escape_string($_POST['StAlias']) ."\", \"". f1desk_escape_string($_POST['StTitle']) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true) ."\")' src='templates/default/images/visualizar.png'/>
+              <img id='previemCanned$IDCannedResponse' class='cannedAction' onclick='previewInFlow.CannedResponse(\"". f1desk_escape_string($_POST['StAlias'], false, true) ."\", \"". f1desk_escape_string($_POST['StTitle'], false, true) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true, true) ."\")' src='templates/default/images/visualizar.png'/>
             </td>
         ");
     }
@@ -43,28 +43,28 @@ switch ( $_POST['action'] ) {
     break;
 
   case 'insert':
-    $ItAffedcted = TemplateHandler::createCannedResponse( f1desk_real_escape_string($_POST['StAlias']), f1desk_real_escape_string($_POST['StTitle']), f1desk_real_escape_string($_POST['TxMessage']), getSessionProp('IDSupporter') );
+    $ItAffedcted = TemplateHandler::createCannedResponse( f1desk_escape_string($_POST['StAlias']), f1desk_escape_string($_POST['StTitle']), f1desk_escape_string($_POST['TxMessage']), getSessionProp('IDSupporter') );
     if ( !$ItAffedcted ) {
       die(ERROR_RESP);
     } else {
       die("
-              <tr id=\"cannedTR$ItAffedcted\">
-                <td class='TicketNumber'>
-                  ".$_POST['StAlias']."
-                  <input id='StCannedAlias$ItAffedcted' type='hidden' value='".f1desk_escape_string($_POST['StAlias'])."'/>
-                </td>
-                <td>
-                  ".$_POST['StTitle']."
-                  <input id='StCannedTitle$ItAffedcted' type='hidden' value='".f1desk_escape_string($_POST['StTitle'])."'/>
-                </td>
-                <td>
-                  <input id='TxCannedResponse$ItAffedcted' type='hidden' value='". f1desk_escape_string($_POST['TxMessage']) ."'/>
-                  <img class='cannedAction' onclick='startEditElement(\"canned\", $ItAffedcted);' alt='Editar' src='templates/default/images/button_edit.png'/>
-                  <img class='cannedAction' onclick='removeCannedResponse($ItAffedcted)' alt='Remover' src='templates/default/images/button_cancel.png'/>
-                  <img id='previemCanned$ItAffedcted' class='cannedAction' onclick='previewInFlow.CannedResponse(\"". f1desk_escape_string($_POST['StAlias']) ."\", \"". f1desk_escape_string($_POST['StTitle']) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true) ."\")' src='templates/default/images/visualizar.png'/>
-                </td>
-              </tr>
-             ");
+            <tr id=\"cannedTR$ItAffedcted\">
+              <td class='TicketNumber'>
+                ".$_POST['StAlias']."
+                <input id='StCannedAlias$ItAffedcted' type='hidden' value='".f1desk_escape_string($_POST['StAlias'], false, true)."'/>
+              </td>
+              <td>
+                ".$_POST['StTitle']."
+                <input id='StCannedTitle$ItAffedcted' type='hidden' value='".f1desk_escape_string($_POST['StTitle'], false, true)."'/>
+              </td>
+              <td>
+                <input id='TxCannedResponse$ItAffedcted' type='hidden' value='". f1desk_escape_string($_POST['TxMessage'], false, true) ."'/>
+                <img class='cannedAction' onclick='startEditElement(\"canned\", $ItAffedcted);' alt='Editar' src='templates/default/images/button_edit.png'/>
+                <img class='cannedAction' onclick='removeCannedResponse($ItAffedcted)' alt='Remover' src='templates/default/images/button_cancel.png'/>
+                <img id='previemCanned$ItAffedcted' class='cannedAction' onclick='previewInFlow.CannedResponse(\"". f1desk_escape_string($_POST['StAlias'], false, true) ."\", \"". f1desk_escape_string($_POST['StTitle'], false, true) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true, true) ."\")' src='templates/default/images/visualizar.png'/>
+              </td>
+            </tr>
+          ");
     }
     break;
 
