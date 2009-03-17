@@ -1270,7 +1270,34 @@ FROM
   LEFT JOIN
     '.DBPREFIX.'Department D ON (D.IDDepartment = TD.IDDepartment)
 WHERE
-  T.IDTicket = ' . $IDTicket ;
+    T.IDTicket = ' . $IDTicket . '
+  AND
+    TD.BoReader = 0 ';
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
+  }
+  
+  /**
+   * get all departments who just see a ticket
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getTicketDepartmentsReader($IDTicket){
+    $StSQL = '
+SELECT
+  D.*
+FROM
+  '.DBPREFIX.'Ticket T
+  LEFT JOIN
+    '.DBPREFIX.'TicketDepartment TD ON (T.IDTicket = TD.IDTicket)
+  LEFT JOIN
+    '.DBPREFIX.'Department D ON (D.IDDepartment = TD.IDDepartment)
+WHERE
+    T.IDTicket = ' . $IDTicket . '
+  AND
+    TD.BoReader = 1 ';
     $this->execSQL($StSQL);
     $ArResult = $this->getResult('string');
     return  $ArResult;
@@ -1295,7 +1322,36 @@ FROM
   LEFT JOIN
     '.DBPREFIX.'Ticket T ON (T.IDTicket = TS.IDTicket)
 WHERE
-  T.IDTicket = ' . $IDTicket ;
+    T.IDTicket = ' . $IDTicket . '
+  AND
+    TS.BoReader = 0 ';
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
+  }
+  
+  /**
+   * get who users can see a ticket
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getTicketDestinationReader($IDTicket){
+    $StSQL = '
+SELECT
+  U.*
+FROM
+  '.DBPREFIX.'User U
+  LEFT JOIN
+    '.DBPREFIX.'Supporter S ON (U.IDUser = S.IDUser)
+  LEFT JOIN
+    '.DBPREFIX.'TicketSupporter TS ON (S.IDSupporter = TS.IDSupporter)
+  LEFT JOIN
+    '.DBPREFIX.'Ticket T ON (T.IDTicket = TS.IDTicket)
+WHERE
+    T.IDTicket = ' . $IDTicket . '
+  AND
+    TS.BoReader = 1 ';
     $this->execSQL($StSQL);
     $ArResult = $this->getResult('string');
     return  $ArResult;
