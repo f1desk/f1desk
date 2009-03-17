@@ -1,10 +1,10 @@
 var initialized = [];
 var windowParams;
-resetFlow();
-function resetFlow() {
+_resetFlow();
+function _resetFlow() {
   windowParams = {
-    'x':100,
-    'y':100,
+    'y':Positions.getScrollOffSet(gTN('body')[0]).y + 200,
+    'x':Positions.getScrollOffSet(gTN('body')[0]).x + 350,
     'width':350,
     'height':250,
     'definition': 'response',
@@ -16,10 +16,10 @@ function resetFlow() {
     'EventFuncs':{
     'Confirm':function(){ },
     'Prompt':function(){ },
-    'Close':"",
-    'Max':"",
-    'Min':"",
-    'Rest':""
+    'Close':'',
+    'Max':'',
+    'Min':'',
+    'Rest':''
     }
   };
 }
@@ -276,7 +276,7 @@ function startCreatingElement ( StElement ) {
 
 function submitForm (formName, action) {
 	if(!action || !formName){
-		alert(default_ptBR.noAction); return false;
+		flowAlert(default_ptBR.noAction); return false;
 	} else {
 		if( formName == 'canned' ){	// if form is cannedForm
 			switch (action){
@@ -378,7 +378,7 @@ function startEditElement ( formName, IDMessage ){
 function editCannedResponse () {
 	var editForm = gID("cannedForm");
 	if(editForm.elements['IDCanned'].value == ""){
-		alert(default_ptBR.noCannedSelected); return false;
+		flowAlert(default_ptBR.noCannedSelected); return false;
 	}
 	_doLoading( 'canned','show' );
 	var content = {
@@ -406,7 +406,7 @@ function editCannedResponse () {
 function editNote () {
 	var editForm = gID("noteForm");
 	if(editForm.elements['IDNote'].value == ""){
-		alert(default_ptBR.noNoteSelected); return false;
+		flowAlert(default_ptBR.noNoteSelected); return false;
 	}
 	_doLoading( 'note','show' );
 	var content = {
@@ -432,7 +432,7 @@ function editNote () {
 
 function removeCannedResponse (IDCannedResponse) {
 	if(!IDCannedResponse){
-		alert(default_ptBR.noCannedID);
+		flowAlert(default_ptBR.noCannedID);
 	}
 	if (confirm(default_ptBR.deleteCanned)) {
 		_doLoading( 'canned','show' );
@@ -445,7 +445,7 @@ function removeCannedResponse (IDCannedResponse) {
 	    },
 	    'okCallBack': function(returnedValue){
 	    	if(returnedValue == 'error'){
-	    		alert(default_ptBR.wrongCannedID+IDCannedResponse);
+	    		flowAlert(default_ptBR.wrongCannedID+IDCannedResponse);
 	    	} else {
 	    		removeElements( gID('cannedTR'+IDCannedResponse) );
 	    		if( gID('cannedTable').getElementsByTagName('TR').length == 0){
@@ -468,7 +468,7 @@ function removeCannedResponse (IDCannedResponse) {
 
 function removeNote (IDNote) {
 	if(!IDNote){
-		alert(default_ptBR.noNoteID);
+		flowAlert(default_ptBR.noNoteID);
 	}
 	if (confirm(default_ptBR.deleteNote)) {
 		_doLoading( 'note','show' );
@@ -481,7 +481,7 @@ function removeNote (IDNote) {
 	    },
 	    'okCallBack': function(returnedValue){
 	    	if(returnedValue == 'error'){
-	    		alert(default_ptBR.wrongNoteID+IDNote);
+	    		flowAlert(default_ptBR.wrongNoteID+IDNote);
 	    	} else {
 	    		removeElements( gID('noteTR'+IDNote) );
 	    		if( gID('noteTable').getElementsByTagName('TR').length == 0){
@@ -543,7 +543,7 @@ function updateInformations(){
 				gID('TxDataSign').value = escape(TxSign);
 				_doLoading('data','hide');
     	} else {
-   			alert(default_ptBR.updateError);
+   			flowAlert(default_ptBR.updateError);
     	}
     }
   };
@@ -554,7 +554,7 @@ function updateInformations(){
 
 function removeBookmark (IDTicket) {
 	if(!IDTicket){
-		alert(default_ptBR.noBookmarkID);
+		flowAlert(default_ptBR.noBookmarkID);
 	}
 	if (confirm(default_ptBR.deleteBookmark)) {
 		_doLoading( 'bookmark','show' );
@@ -567,7 +567,7 @@ function removeBookmark (IDTicket) {
 	    },
 	    'okCallBack': function(returnedValue){
 	    	if(returnedValue == 'error'){
-	    		alert(default_ptBR.wrongBookmarkID+IDTicket);
+	    		flowAlert(default_ptBR.wrongBookmarkID+IDTicket);
 	    	} else {
 	    		removeElements( gID('bookmarkTR'+IDTicket) );
 	    		if( gID('bookmarkTable').getElementsByTagName('TR').length == 0){
@@ -625,7 +625,7 @@ function ignoreTicket(IDSupporter,IDTicket) {
         reloadTicketList(department,false);
         refreshCall(IDTicket);
       } else {
-        alert(response);
+        flowAlert(response);
       }
     }
   };
@@ -650,7 +650,7 @@ function unignoreTicket(IDSupporter,IDTicket) {
         reloadTicketList(department,false);
         refreshCall(IDTicket);
       } else {
-        alert(response);
+        flowAlert(response);
       }
     }
   };
@@ -670,7 +670,7 @@ function bookmarkTicket(IDSupporter, IDTicket) {
       if(response == 'ok') {
         reloadTicketList('bookmark',true, 'show');
       } else {
-        alert(response);
+        flowAlert(response);
       }
     }
   };
@@ -680,8 +680,6 @@ function bookmarkTicket(IDSupporter, IDTicket) {
 
 function attachTicket(IDTicket) {
   with(windowParams) {
-    y = Positions.getScrollOffSet(gTN('body')[0]).y + 200;
-    x = Positions.getScrollOffSet(gTN('body')[0]).x + 350;
     width = 350;
     height = 175;
     innerHTML = '#';
@@ -700,7 +698,7 @@ function attachTicket(IDTicket) {
             if(response == 'ok') {
               refreshCall(IDTicket);
             } else {
-              alert(response);
+              flowAlert(response);
             }
           }
         }
@@ -708,7 +706,7 @@ function attachTicket(IDTicket) {
     };
   }
   var ID = Flow.open(windowParams);
-  resetFlow();
+  _resetFlow();
 }
 /**
  * Templates->Ticket END
@@ -797,7 +795,7 @@ var previewInFlow = {
 
   'Answer': function(TxMessage) {
     TxMessage = TxMessage.replace(/\s+|\s+/g,"");
-    if(TxMessage == ""){ alert(default_ptBR.answerPreviewNoAnswer); return false; }
+    if(TxMessage == ""){ flowAlert(default_ptBR.answerPreviewNoAnswer); return false; }
     var  tParams = {
       'method':'post',
       'content':{
@@ -811,7 +809,7 @@ var previewInFlow = {
           width = 480;
           height = 350;
           innerHTML = response;
-          TBStyle.Caption = deafult_ptBR.answerPreviewTitle;
+          TBStyle.Caption = default_ptBR.answerPreviewTitle;
         }
         Flow.open(windowParams);
       }
@@ -848,7 +846,7 @@ function checkAdd(Type) {
         addReader(IDSupporter,StName);
       }
     } else {
-      alert(default_ptBR.noSupporter);
+      flowAlert(default_ptBR.noSupporter);
     }
   }
 }
@@ -908,8 +906,6 @@ function listSupporters(Type) {
     'method':'get',
     'okCallBack':function(response) {
       with(windowParams) {
-        x = screen.availWidth / 2.67;
-        y = screen.availHeight / 2.67;
         width = 410;
         height = 260;
         innerHTML = response;
@@ -962,4 +958,51 @@ function createTicketSubmit() {
     gID('sendTo').appendChild(p);
     return false;
   }
+}
+
+function flowAlert(StArg) {
+  with(windowParams) {
+    width = 350;
+    height = 175;
+    TBStyle.Caption = default_ptBR.flowAlertTitle;
+    WindowStyle.Caption = '<br>';
+    innerHTML = StArg + '<br><br>';
+    Window = 'alert';
+  }
+  var ID = Flow.open(windowParams);
+  _resetFlow();
+  return ID;
+}
+
+function flowConfirm(StArg,tFunction) {
+  var option = '';
+  with(windowParams) {
+    width = 350;
+    height = 175;
+    TBStyle.Caption = default_ptBR.flowConfirmTitle;
+    WindowStyle.Caption = '<br>';
+    innerHTML = StArg + '<br><br>';
+    Window = 'confirm';
+    if(typeof(tFunction) == 'function') {
+      EventFuncs.Confirm = tFunction;
+    }
+  }
+  var ID = Flow.open(windowParams);
+  _resetFlow();
+  return ID;
+}
+
+function flowPrompt(StArg, tFunction) {
+  with(windowParams) {
+    width = 350;
+    height = 175;
+    innerHTML = '';
+    Window = 'prompt';
+    if(typeof(tFunction) == 'function') {
+      EventFuncs.Prompt = tFunction;
+    }
+  }
+  var ID = Flow.open(windowParams);
+  _resetFlow();
+  return ID;
 }

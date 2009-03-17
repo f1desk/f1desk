@@ -37,5 +37,8 @@ var default_ptBR = {
 
   'noSupporter':'Escolha um atendente!',
   'addSupporter':'Adicione Atendentes',
-  'noRecipient':'É necessário escolher um destinatário'
+  'noRecipient':'É necessário escolher um destinatário',
+
+  'flowAlertTitle':'Atenção',
+  'flowConfirmTitle':'Confime'
 };
