@@ -1,25 +1,28 @@
 var initialized = [];
-var windowParams = {
-   'x':100,
-   'y':100,
-   'width':350,
-   'height':250,
-   'definition': 'response',
-   'innerHTML': 'TEXTO DA PAGINA',
-   'TB': true,
-   'Window': 'default',
-   'TBStyle':{'BackgroundColor': '#4F6C9C','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'TEXTO CAPTION BARRA DE TITULO'},
-   'WindowStyle':{'BackgroundColor':'#ECEDEF','BackgroundImage':'','Caption':'TEXTO TITULO DA JANELA'},
-   'EventFuncs':{
-   		'Confirm':function(){ },
-   		'Prompt':function(){ },
- 			'Close':"",
- 			'Max':"",
- 			'Min':"",
- 			'Rest':""
-   }
-};
-
+var windowParams;
+resetFlow();
+function resetFlow() {
+  windowParams = {
+    'x':100,
+    'y':100,
+    'width':350,
+    'height':250,
+    'definition': 'response',
+    'innerHTML': 'TEXTO DA PAGINA',
+    'TB': true,
+    'Window': 'default',
+    'TBStyle':{'BackgroundColor': '#4F6C9C','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'TEXTO CAPTION BARRA DE TITULO'},
+    'WindowStyle':{'BackgroundColor':'#ECEDEF','BackgroundImage':'','Caption':'TEXTO TITULO DA JANELA'},
+    'EventFuncs':{
+    'Confirm':function(){ },
+    'Prompt':function(){ },
+    'Close':"",
+    'Max':"",
+    'Min':"",
+    'Rest':""
+    }
+  };
+}
 
 /**
  * change the visibility and the arrow image
@@ -273,7 +276,7 @@ function startCreatingElement ( StElement ) {
 
 function submitForm (formName, action) {
 	if(!action || !formName){
-		alert('Sem ações para executar'); return false;
+		alert(default_ptBR.noAction); return false;
 	} else {
 		if( formName == 'canned' ){	// if form is cannedForm
 			switch (action){
@@ -375,7 +378,7 @@ function startEditElement ( formName, IDMessage ){
 function editCannedResponse () {
 	var editForm = gID("cannedForm");
 	if(editForm.elements['IDCanned'].value == ""){
-		alert("Selecione uma resposta para editar."); return false;
+		alert(default_ptBR.noCannedSelected); return false;
 	}
 	_doLoading( 'canned','show' );
 	var content = {
@@ -403,7 +406,7 @@ function editCannedResponse () {
 function editNote () {
 	var editForm = gID("noteForm");
 	if(editForm.elements['IDNote'].value == ""){
-		alert("Selecione uma anotação para editar."); return false;
+		alert(default_ptBR.noNoteSelected); return false;
 	}
 	_doLoading( 'note','show' );
 	var content = {
@@ -429,9 +432,9 @@ function editNote () {
 
 function removeCannedResponse (IDCannedResponse) {
 	if(!IDCannedResponse){
-		alert('Erro: ID da resposta não informado');
+		alert(default_ptBR.noCannedID);
 	}
-	if (confirm("Excluir resposta definitivamente?")) {
+	if (confirm(default_ptBR.deleteCanned)) {
 		_doLoading( 'canned','show' );
 		var tParams = {
 	    'enqueue':1,
@@ -442,14 +445,14 @@ function removeCannedResponse (IDCannedResponse) {
 	    },
 	    'okCallBack': function(returnedValue){
 	    	if(returnedValue == 'error'){
-	    		alert('Erro: Nenhuma resposta removida com o ID '+IDCannedResponse);
+	    		alert(default_ptBR.wrongCannedID+IDCannedResponse);
 	    	} else {
 	    		removeElements( gID('cannedTR'+IDCannedResponse) );
 	    		if( gID('cannedTable').getElementsByTagName('TR').length == 0){
 	    			gID('cannedTable').appendChild( createElement('TR',{'id':'noCanned'},
 	    				createElement('TD',{
 	    					'colspan':'3',	'align':'center'
-	    				},'Não há respostas cadastradas.')
+	    				},default_ptBR.noCanned)
 	    			) );
 	    		}
 	    		_doLoading( 'canned','hide' );
@@ -465,9 +468,9 @@ function removeCannedResponse (IDCannedResponse) {
 
 function removeNote (IDNote) {
 	if(!IDNote){
-		alert('Erro: ID da anotação não informado');
+		alert(default_ptBR.noNoteID);
 	}
-	if (confirm("Excluir anotação definitivamente?")) {
+	if (confirm(default_ptBR.deleteNote)) {
 		_doLoading( 'note','show' );
 		var tParams = {
 	    'enqueue':1,
@@ -478,14 +481,14 @@ function removeNote (IDNote) {
 	    },
 	    'okCallBack': function(returnedValue){
 	    	if(returnedValue == 'error'){
-	    		alert('Erro: Nenhuma anotação removida com o ID '+IDNote);
+	    		alert(default_ptBR.wrongNoteID+IDNote);
 	    	} else {
 	    		removeElements( gID('noteTR'+IDNote) );
 	    		if( gID('noteTable').getElementsByTagName('TR').length == 0){
 	    			gID('noteTable').appendChild( createElement('TR',{'id':'noNote'},
 	    				createElement('TD',{
 	    					'colspan':'3',	'align':'center'
-	    				},'Não há anotações cadastradas.')
+	    				},default_ptBR.noNote)
 	    			) );
 	    		}
 	    		_doLoading( 'note','hide' );
@@ -531,8 +534,8 @@ function updateInformations(){
 				/*Update TD's*/
 				gID('StDataNameTD').getElementsByTagName('pre')[0].textContent = dataForm.elements['StDataName'].value;
 				gID('StDataEmailTD').getElementsByTagName('pre')[0].textContent = dataForm.elements['StDataEmail'].value;
-				gID('TxDataHeaderTD').getElementsByTagName('pre')[0].innerHTML = (!TxHeader)?'<i>vazio</i>':TxHeader;
-				gID('TxDataSignTD').getElementsByTagName('pre')[0].innerHTML = (!TxSign)?'<i>vazio</i>':TxSign;
+				gID('TxDataHeaderTD').getElementsByTagName('pre')[0].innerHTML = (!TxHeader)?'<i>'+default_ptBR.empty+'</i>':TxHeader;
+				gID('TxDataSignTD').getElementsByTagName('pre')[0].innerHTML = (!TxSign)?'<i>'+default_ptBR.empty+'</i>':TxSign;
 				/*Update Hiddens*/
 				gID('StDataName').value = escape(dataForm.elements['StDataName'].value);
 				gID('StDataEmail').value = escape(dataForm.elements['StDataEmail'].value);
@@ -540,7 +543,7 @@ function updateInformations(){
 				gID('TxDataSign').value = escape(TxSign);
 				_doLoading('data','hide');
     	} else {
-   			alert('Ocorreu um erro na atualização de seus dados. Por favor, recarregue a página');
+   			alert(default_ptBR.updateError);
     	}
     }
   };
@@ -551,9 +554,9 @@ function updateInformations(){
 
 function removeBookmark (IDTicket) {
 	if(!IDTicket){
-		alert('Erro: ID do chamado não informado');
+		alert(default_ptBR.noBookmarkID);
 	}
-	if (confirm("Excluir chamado dos favoritos definitivamente?")) {
+	if (confirm(default_ptBR.deleteBookmark)) {
 		_doLoading( 'bookmark','show' );
 		var tParams = {
 	    'enqueue':1,
@@ -564,14 +567,14 @@ function removeBookmark (IDTicket) {
 	    },
 	    'okCallBack': function(returnedValue){
 	    	if(returnedValue == 'error'){
-	    		alert('Erro: Nenhum chamado removido com o ID '+IDTicket);
+	    		alert(default_ptBR.wrongBookmarkID+IDTicket);
 	    	} else {
 	    		removeElements( gID('bookmarkTR'+IDTicket) );
 	    		if( gID('bookmarkTable').getElementsByTagName('TR').length == 0){
 	    			gID('bookmarkTable').appendChild( createElement('TR',{'id':'noBookmark'},
 	    				createElement('TD',{
 	    					'colspan':'3',	'align':'center'
-	    				},'Não há chamados favoritados.')
+	    				},default_ptBR.noBookmark)
 	    			) );
 	    		}
 	    		_doLoading( 'bookmark','hide' );
@@ -626,7 +629,7 @@ function ignoreTicket(IDSupporter,IDTicket) {
       }
     }
   };
-  if(confirm('Deseja realmente ignorar este chamado?')) {
+  if(confirm(default_ptBR.ignoreCall)) {
     xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
   }
 }
@@ -676,37 +679,36 @@ function bookmarkTicket(IDSupporter, IDTicket) {
 
 
 function attachTicket(IDTicket) {
-  var localWindowParams = {
-     'y':Positions.getScrollOffSet(gTN('body')[0]).y + 200,
-     'x':Positions.getScrollOffSet(gTN('body')[0]).x + 350,
-     'width':350, 'height':175, 'definition': 'response',
-     'innerHTML': '#',  'TB': true, 'Window': 'prompt',
-     'TBStyle':{'BackgroundColor': '#4F6C9C','Color':'#fff','Font':'12px verdana, sans-serif', 'Image': '', 'Caption': 'Attach Ticket'},
-     'WindowStyle':{'BackgroundColor':'#ECEDEF','BackgroundImage':'','Caption':'Digite o número do Chamado à ser incluido:'},
-     'EventFuncs':{
-     		'Prompt': function(IDAttached) {
-          IDAttached = IDAttached.replace(/[#]|[^0-9]/g,'');
-          var tParams = {
-           'method':'post',
-            'content': {
+  with(windowParams) {
+    y = Positions.getScrollOffSet(gTN('body')[0]).y + 200;
+    x = Positions.getScrollOffSet(gTN('body')[0]).x + 350;
+    width = 350;
+    height = 175;
+    innerHTML = '#';
+    Window = 'prompt';
+    EventFuncs = {
+      'Prompt': function(IDAttached) {
+        IDAttached = IDAttached.replace(/[#]|[^0-9]/g,'');
+        var tParams = {
+          'method':'post',
+          'content': {
             'IDTicket':IDTicket,
             'IDAttached':IDAttached,
             'StAction':'attach',
-            },
-            'okCallBack':function(response) {
-              if(response == 'ok') {
-                refreshCall(IDTicket);
-              } else {
-                alert(response);
-              }
+          },
+          'okCallBack':function(response) {
+            if(response == 'ok') {
+              refreshCall(IDTicket);
+            } else {
+              alert(response);
             }
-          };
-          xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
-        },
-   			'Close':"",	'Max':"",	'Min':"",	'Rest':""
-     }
-  };
-  var ID = Flow.open(localWindowParams);
+          }
+        }
+      }
+    };
+  }
+  var ID = Flow.open(windowParams);
+  resetFlow();
 }
 /**
  * Templates->Ticket END
@@ -723,8 +725,8 @@ var previewInFlow = {
   	windowParams.innerHTML = ''+
   		'<table class="tableTickets">'+
   			'<thead>'+
-  				'<th>Alias</th>'+
-  				'<th>Título</th>'+
+  				'<th>'+default_ptBR.cannedTableAlias+'</th>'+
+  				'<th>'+default_ptBR.cannedTableTitle+'</th>'+
   			'</thead>'+
   			'<tbody>'+
   				'<td class="TicketNumber">'+ StAlias +'</td>'+
@@ -734,7 +736,7 @@ var previewInFlow = {
   		'<br />'+
   		'<table class="tableTickets">'+
   			'<thead>'+
-  				'<th>Mensagem</th>'+
+  				'<th>'+default_ptBR.cannedTableMessage+'</th>'+
   			'</thead>'+
   			'<tbody>'+
   				'<td>'+ TxMessage +'</td>'+
@@ -752,7 +754,7 @@ var previewInFlow = {
   	windowParams.innerHTML = ''+
   		'<table class="tableTickets">'+
   			'<thead>'+
-  				'<th>Alias</th>'+
+  				'<th>'+default_ptBR.noteTableTitle+'</th>'+
   			'</thead>'+
   			'<tbody>'+
   				'<td class="TicketNumber">'+ StTitle +'</td>'+
@@ -761,7 +763,7 @@ var previewInFlow = {
   		'<br />'+
   		'<table class="tableTickets">'+
   			'<thead>'+
-  				'<th>Anota&ccedil;&atilde;o</th>'+
+  				'<th>'+default_ptBR.noteTableNote+'</th>'+
   			'</thead>'+
   			'<tbody>'+
   				'<td>'+ TxNote +'</td>'+
@@ -783,7 +785,7 @@ var previewInFlow = {
       },
       'okCallBack':function( ticketHTML ) {
         windowParams.innerHTML = '<span style="padding:10px">'+ticketHTML+'</span>';
-        windowParams.TBStyle.Caption = "Visualizando Chamado #" + IDTicket;
+        windowParams.TBStyle.Caption = default_ptBR.ticketPreviewTitle + IDTicket;
         windowParams.y = Positions.getScrollOffSet(gTN('body')[0]).y + 50;
         windowParams.x = Positions.getScrollOffSet(gTN('body')[0]).x + 200;
         windowParams.width = 600; windowParams.height = 450;
@@ -795,7 +797,7 @@ var previewInFlow = {
 
   'Answer': function(TxMessage) {
     TxMessage = TxMessage.replace(/\s+|\s+/g,"");
-    if(TxMessage == ""){ alert('Resposta vazia'); return false; }
+    if(TxMessage == ""){ alert(default_ptBR.answerPreviewNoAnswer); return false; }
     var  tParams = {
       'method':'post',
       'content':{
@@ -809,7 +811,7 @@ var previewInFlow = {
           width = 480;
           height = 350;
           innerHTML = response;
-          TBStyle.Caption = 'Visualizando resposta';
+          TBStyle.Caption = deafult_ptBR.answerPreviewTitle;
         }
         Flow.open(windowParams);
       }
@@ -846,7 +848,7 @@ function checkAdd(Type) {
         addReader(IDSupporter,StName);
       }
     } else {
-      alert("Escolha um atendente!");
+      alert(default_ptBR.noSupporter);
     }
   }
 }
@@ -902,7 +904,7 @@ function addRecipient(IDSupporter,StName) {
 }
 
 function listSupporters(Type) {
-  tParams = {
+  var tParams = {
     'method':'get',
     'okCallBack':function(response) {
       with(windowParams) {
@@ -911,7 +913,7 @@ function listSupporters(Type) {
         width = 410;
         height = 260;
         innerHTML = response;
-        TBStyle.Caption = 'Adicione Atendentes';
+        TBStyle.Caption = default_ptBR.addSupporter;
       }
       Flow.open(windowParams);
     }
@@ -955,7 +957,7 @@ function createTicketSubmit() {
 
   if(gID('IDRecipient')[gID('IDRecipient').selectedIndex].value == 'null' && (! gID('ArRecipients') || gID('ArRecipients').value == '')) {
     var p = createElement('p',{'id':'Error','style':'color: red'});
-    var textError = createTextNode('É necessário escolher um destinatário');
+    var textError = createTextNode(default_ptBR.noRecipient);
     p.appendChild(textError);
     gID('sendTo').appendChild(p);
     return false;
