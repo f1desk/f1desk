@@ -72,7 +72,6 @@ class UserHandler extends DBHandler {
    * @return str $StReturn  Safe string
    */
   public static function SQLInjectionHandle(&$StArgs) {
-    $StArgs = strip_tags($StArgs);
     $StArgs = addslashes($StArgs);
     
     $ArBloq = array("select"=>'',"drop"=>'',"delete"=>'',"insert"=>'',"update"=>'',"where"=>'',"having"=>'',"union"=>'',"'"=>'\'',"="=>'',"<"=>'',">"=>'');

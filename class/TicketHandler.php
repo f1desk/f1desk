@@ -1373,7 +1373,7 @@ IDDepartment = $IDDepartment";
     #
     # Preparing mail header
     #
-    $ArEmails = array();
+    $ArEmails = $ArUsersDepartment = $ArUsersDepartmentReader = array();
     $MailHandler = new MailHandler();
     $MailHandler->setHTMLBody(true);
     $StHeaders = "MIME-Version: 1.0\r\n";
@@ -1421,14 +1421,14 @@ WHERE
     #
     foreach ($ArFinal as $User) {
       if($User['BoNotify']) {
-        $StSubject = str_replace('###TKTNUM###',$IDTicket,NOTIFY_SUBJ);
-        $StMessage = str_replace('###TKTNUM###',$IDTicket,NOTIFY_MESSAGE);
         if (array_search($User['StEmail'],$ArEmails) === false)
           $ArEmails[] = $User['StEmail'];
       }
     }
-    ErrorHandler::Debug($ArEmails);
+    $StSubject = str_replace('###TKTNUM###',$IDTicket,NOTIFY_SUBJ);
+    $StMessage = str_replace('###TKTNUM###',$IDTicket,NOTIFY_MESSAGE);
     $BoResult = $MailHandler->sendMail($ArEmails,$StSubject,$StMessage,$StHeaders);
+    
     return $BoResult;
   }
 

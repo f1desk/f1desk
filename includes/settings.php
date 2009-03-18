@@ -122,4 +122,24 @@ function f1desk_escape_string($toEscape, $nl2br = false, $BoEncode = false) {
 	}
 }
 
+function f1desk_strip_tags($TxMessage, $StHTML) {
+  $ArMessages=explode('<',$TxMessage);  $StResult=$ArMessages[0];
+  for($i=1;$i<count($ArMessages);$i++){
+    if(!strpos($ArMessages[$i],'>'))
+      $StResult = $StResult.'&lt;'.$ArMessages[$i];
+    else
+      $StResult = $StResult.'<'.$ArMessages[$i];
+  }
+  return strip_tags($StResult, $StHTML);
+}
+
+function f1desk_escape_html($toEscape){
+  $StHTML = "";
+	$ObDOM = getOption( "html_permited", "DOM" );
+	foreach ($ObDOM as $item) {
+		$StHTML .= ('<' . $item->nodeValue . '>');
+	}
+	return f1desk_strip_tags($toEscape, $StHTML);
+}
+
 ?>

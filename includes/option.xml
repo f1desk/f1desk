@@ -14,4 +14,7 @@
   <menu_tabs id="listar">Listar</menu_tabs>
   <menu_tabs id="busca">Busca Avançada</menu_tabs>
   <menu_tabs id="admin">Administração</menu_tabs>
+  
+  <html_permited>font</html_permited>
+  <html_permited>a</html_permited>
 </options>
