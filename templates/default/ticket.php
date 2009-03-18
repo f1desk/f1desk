@@ -174,7 +174,7 @@
     </ul>
     <? endif; ?>
     <!--[/TICKET SUPPORTERS]-->
-    
+
     <!--[TICKET DEPARTMENTS]-->
     <? if (count($ArTicketDepartmentsReader)!=0): ?>
     <span><?=INFO_DEPARTMENTS_READER?></span>
@@ -187,20 +187,20 @@
     </ul>
     <? endif; ?>
     <!--[/TICKET DEPARTMENTS]-->
-    
+
     <!--[TICKET SUPPORTERS]-->
-    <? if (count($ArTicketDestinationsReader)!=0): ?>
+    <? if (count($ArTicketReaders)!=0): ?>
     <span><?=INFO_SUPPORTER_READER?></span>
     <ul>
       <li class="Link">
-      <? $i=0; foreach ($ArTicketDestinationsReader as $TicketDestinationReader): if($i!=0) print ', '; ?>
-        <?=$TicketDestinationReader['StName']?>
+      <? $i=0; foreach ($ArTicketReaders as $TicketReaders): if($i!=0) print ', '; ?>
+        <?=$TicketReaders['StName']?>
       <? $i++; endforeach; ?>
       </li>
     </ul>
     <? endif; ?>
     <!--[/TICKET SUPPORTERS]-->
-    
+
   </div>
 </div>
 <!--[/TICKET INFORMATIONS]-->

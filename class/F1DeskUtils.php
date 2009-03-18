@@ -4,6 +4,11 @@ abstract class F1DeskUtils {
 
 	private static $DBHandler;
 
+  /**
+   * Get one DBHandler's class instance
+   *
+   * @return unknown
+   */
 	private static function getDBinstance(){
 		if ( ! self::$DBHandler instanceof DBHandler ) {
 			self::$DBHandler = new DBHandler();
@@ -462,7 +467,7 @@ OR
 
  		return $DBHandler->deleteFromTable($StTableName,$StCondition);
   }
-  
+
   public static function listNotes( $IDSupporter ){
   	$StSQL = "
 SELECT N.*
@@ -626,4 +631,49 @@ ORDER BY S.IDSupporter';
     $ArResult = $DBHandler->getResult('string');
     return $ArResult;
   }
+
+  /**
+   * Check if the system have to notify the users when a new message is sent
+   *
+   * @param int $IDUser
+   * @return boolean
+   */
+  public static function notify($IDUser) {
+    $StSQL = '
+SELECT
+  BoNotify
+FROM
+  '.DBPREFIX."User
+WHERE
+  IDUser = $IDUser";
+    $DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('num');
+    return (boolean)$ArResult[0][0];
+  }
+
+  /**
+   * get all suupporters of a specific department
+   *
+   * @param int $IDDepartment
+   */
+  public static function getDepartmentSupporters($IDDepartment) {
+    $StSQL = '
+SELECT
+  U.*
+FROM
+  '.DBPREFIX.'User U
+LEFT JOIN '.DBPREFIX.'Supporter S ON (U.IDUser = S.IDUser)
+LEFT JOIN '.DBPREFIX.'DepartmentSupporter DS ON (S.IDSupporter = DS.IDSupporter)
+LEFT JOIN '.DBPREFIX."Department D ON (D.IDDepartment = DS.IDDepartment)
+WHERE
+  D.IDDepartment = $IDDepartment";
+    $DBHanlder = self::getDBinstance();
+    $DBHanlder->execSQL($StSQL);
+    $ArResult = $DBHanlder->getResult('string');
+
+    return $ArResult;
+  }
 }
+
+?>

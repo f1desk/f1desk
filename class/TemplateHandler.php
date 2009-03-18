@@ -157,7 +157,7 @@ abstract class TemplateHandler {
   	}
   	$openTickets = $ObTicket->listClientTickets( $IDUser, $BoOpened );
   	$readTickets = $ObTicket->getUserReadTickets($IDUser);
-  	
+
   	foreach ($openTickets as $IDTicket => &$ArTicket) {
         if (array_key_exists($IDTicket,$readTickets) == true) {
           $ArTicket['isRead'] = 1;
@@ -247,7 +247,7 @@ abstract class TemplateHandler {
     foreach ($ArMessages as &$ArMessageSettings) {
       $ArMessageSettings['TxMessage'] = nl2br( $ArMessageSettings['TxMessage'] );
     }
-    
+
     foreach ($ArMessages as &$ArMessage) {
       switch ($ArMessage['EnMessageType']) {
         case 'SYSTEM':
@@ -530,7 +530,7 @@ abstract class TemplateHandler {
 	  $ArPublic = $TicketHandler->getPublicDepartments($BoPublic);
 	  return $ArPublic;
 	}
-	
+
 	/**
 	 * get the preview of a wrote answer
 	 *
@@ -542,7 +542,7 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter);
 	}
-	
+
 	/**
    * get all attacheds tickets from a ID given
    *
@@ -553,7 +553,7 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getAttachedTickets($IDTicket);
 	}
-	
+
 	/**
 	 * get all departments of a ticket given
 	 *
@@ -564,7 +564,7 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getTicketDepartments($IDTicket);
 	}
-		
+
 	/**
 	 * get all departments Reader of a ticket given
 	 *
@@ -575,7 +575,7 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getTicketDepartmentsReader($IDTicket);
 	}
-	
+
 	/**
    * get who users a ticket was sent to
    *
@@ -586,16 +586,16 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getTicketDestination($IDTicket);
 	}
-	
+
 	/**
    * get who users can see a ticket
    *
    * @param integer $IDTicket
    * @return array
    */
-	public static function getTicketDestinationReader($IDTicket){
+	public static function getTicketReaders($IDTicket){
 	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getTicketDestinationReader($IDTicket);
+	  return $TicketHandler->getTicketReaders($IDTicket);
 	}
 }
 

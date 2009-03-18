@@ -14,4 +14,6 @@
   define('NO_ANSWER','N&atilde;o h&aacute; respostas cadastradas');
   define('MSG_OWNED',' assumiu a responsabilidade por este chamado.');
   define('CHANGE_DEPARTMENT','Chamado movido para o departamento ');
+  define('NOTIFY_SUBJ','O Chamado ####TKTNUM### possui uma nova resposta');
+  define('NOTIFY_MESSAGE','O chamado ####TKTNUM### possui uma nova resposta, por favor verifique assim que puder.');
 ?>

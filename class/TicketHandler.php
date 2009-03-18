@@ -536,7 +536,7 @@ GROUP BY
     $StMsgType = ($ItMsgType != 4) ? $ArTypes[$ItMsgType] : $ArTypes[0];
 
     #
-    # Add Headers and sign only to normal replys
+    # Add Headers and sign only to normal replies
     #
     if ($ItMsgType == 0) {
       $ArHeaderSign = F1DeskUtils::getUserHeaderSign($IDUser);
@@ -546,7 +546,8 @@ GROUP BY
       if (!empty($ArHeaderSign['TxSign'])) {
         $ArHeaderSign['TxSign'] = "\n\n" . $ArHeaderSign['TxSign'];
       }
-      $StMessage = f1desk_escape_string($ArHeaderSign['TxHeader']) . f1desk_escape_string($StMessage) . f1desk_escape_string($ArHeaderSign['TxSign']);
+      $StMessage = f1desk_escape_string($ArHeaderSign['TxHeader']) . $StMessage . f1desk_escape_string($ArHeaderSign['TxSign']);
+      $this->_sendNotifyMessage($IDTicket);
     } else {
       $StMessage = f1desk_escape_string($StMessage);
     }
@@ -1254,7 +1255,7 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult;
   }
-  
+
   /**
    * get all departments who just see a ticket
    *
@@ -1306,14 +1307,14 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult;
   }
-  
+
   /**
    * get who users can see a ticket
    *
    * @param integer $IDTicket
    * @return array
    */
-  public function getTicketDestinationReader($IDTicket){
+  public function getTicketReaders($IDTicket){
     $StSQL = '
 SELECT
   U.*
@@ -1357,6 +1358,39 @@ IDDepartment = $IDDepartment";
     $StSysMessage = CHANGE_DEPARTMENT . $StDepartment;
     $this->addMessage(getSessionProp('IDUser'),$IDTicket,$StSysMessage,1,2);
     return ($ItAffected < 0) ? false : true;
+  }
+
+  public function _sendNotifyMessage($IDTicket) {
+    $ArEmails = array();
+    $MailHandler = new MailHandler();
+    $MailHandler->setHTMLBody(true);
+    $StHeaders = "MIME-Version: 1.0\r\n";
+    $StHeaders .= "Content-type: text/html; charset=utf-8\r\n";
+    $ArRecipients = $this->getTicketDestination($IDTicket);
+    $ArReaders = $this->getTicketReaders($IDTicket);
+    $StSQL = '
+SELECT
+  StEmail
+FROM
+  '.DBPREFIX.'User U
+LEFT JOIN '.DBPREFIX."Ticket T ON (T.IDUser = U.IDUser)
+WHERE
+  T.IDTicket = $IDTicket";
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    $ArUsers = array_merge($ArRecipients,$ArReaders);
+    $ArUsers = array_merge($ArUsers,$ArResult);
+
+    //ErrorHandler::Debug($ArUsers);
+    foreach ($ArUsers as $User) {
+      if($User['BoNotify']) {
+        $StSubject = str_replace('###TKTNUM###',$IDTicket,NOTIFY_SUBJ);
+        $StMessage = str_replace('###TKTNUM###',$IDTicket,NOTIFY_MESSAGE);
+        $ArEmails[] = $User['StEmail'];
+      }
+    }
+    $BoResult = $MailHandler->sendMail($ArEmails,$StSubject,$StMessage,$StHeaders);
+    return $BoResult;
   }
 
 }
