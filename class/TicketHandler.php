@@ -1005,7 +1005,9 @@ FROM
   LEFT JOIN " . DBPREFIX . "TicketDepartment TD ON(T.IDTicket = TD.IDTicket)
   LEFT JOIN " . DBPREFIX . "Department D ON(TD.IDDepartment = D.IDDepartment)
 WHERE
-  T.IDTicket = $IDTicket";
+  T.IDTicket = $IDTicket
+AND
+  BoReader = 0";
     $this->execSQL($StSQL);
     $ArHeader = $this->getResult('string');
 

@@ -884,6 +884,6 @@ abstract class TemplateHandler {
     }
     return $StHtml;
 	}
-	
+
 }
 ?>
