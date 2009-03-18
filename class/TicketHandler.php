@@ -551,6 +551,7 @@ GROUP BY
     } else {
       $StMessage = f1desk_escape_string($StMessage);
     }
+
     # preparing to insert on Message table
     $StTableName = DBPREFIX . 'Message';
     $ArFields = array( 'TxMessage' , 'DtSended' , 'BoAvailable' , 'EnMessageType' , 'IDTicket' , 'IDUser' );
@@ -908,7 +909,7 @@ WHERE
    */
   public function answerTicket ($IDWriter, $IDTicket, $TxMessage, $StMsgType, $ArFiles = array()) {
     #check if the answer came from a supporter or a client
-    if (getSessionProp('isSupporter') && getSessionProp('isSupporter') == 'true') {
+    if ( TemplateHandler::IsSupporter() ) {
       $this->_supporterAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);
     } else {
       $this->_clientAnswer($IDWriter,$IDTicket,$TxMessage, $ArFiles);

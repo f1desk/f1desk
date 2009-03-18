@@ -13,6 +13,10 @@
 		$ArData['StEmail'] = f1desk_escape_string($_POST['StEmail']);
 	}
 
+	if ( key_exists( 'BoNotify', $_POST ) ) {
+		$ArData['BoNotify'] = $_POST['BoNotify'];
+	}
+
 	if ( key_exists( 'TxHeader', $_POST ) ) {
 		$ArData['TxHeader'] = f1desk_escape_string($_POST['TxHeader']);
 	}

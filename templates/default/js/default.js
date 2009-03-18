@@ -571,6 +571,7 @@ function startDataEdit(){
 	var dataForm = gID('dataForm');
 	dataForm.elements['StDataName'].value = unescape(gID('StDataName').value);
 	dataForm.elements['StDataEmail'].value = unescape(gID('StDataEmail').value);
+	dataForm.elements['StDataNotify'][gID('StDataNotify').value].checked = 'true';
 	dataForm.elements['TxDataHeader'].value = unescape(gID('TxDataHeader').value);
 	dataForm.elements['TxDataSign'].value = unescape(gID('TxDataSign').value);
 }
@@ -582,6 +583,7 @@ function updateInformations(){
 	var content = {
 		'StName': dataForm.elements['StDataName'].value,
 		'StEmail': dataForm.elements['StDataEmail'].value,
+		'BoNotify': (dataForm.elements['StDataNotify'][0].checked)?0:1,
 		'TxHeader': dataForm.elements['TxDataHeader'].value,
 		'TxSign': dataForm.elements['TxDataSign'].value
   };
@@ -598,11 +600,13 @@ function updateInformations(){
 				/*Update TD's*/
 				gID('StDataNameTD').getElementsByTagName('pre')[0].textContent = dataForm.elements['StDataName'].value;
 				gID('StDataEmailTD').getElementsByTagName('pre')[0].textContent = dataForm.elements['StDataEmail'].value;
+				gID('StDataNotifyTD').getElementsByTagName('pre')[0].textContent = (dataForm.elements['StDataNotify'][0].checked)?'Não':'Sim';
 				gID('TxDataHeaderTD').getElementsByTagName('pre')[0].innerHTML = (!TxHeader)?'<i>'+default_ptBR.empty+'</i>':TxHeader;
 				gID('TxDataSignTD').getElementsByTagName('pre')[0].innerHTML = (!TxSign)?'<i>'+default_ptBR.empty+'</i>':TxSign;
 				/*Update Hiddens*/
 				gID('StDataName').value = escape(dataForm.elements['StDataName'].value);
 				gID('StDataEmail').value = escape(dataForm.elements['StDataEmail'].value);
+				gID('StDataNotify').value = (dataForm.elements['StDataNotify'][0].checked)?'0':'1';
 				gID('TxDataHeader').value = escape(TxHeader);
 				gID('TxDataSign').value = escape(TxSign);
 				_doLoading('data','hide');
@@ -808,17 +812,15 @@ function changeDepartment(IDTicket, IDDepartment) {
  */
 var previewInFlow = {
 
-  'CannedResponse': function(StAlias, StTitle, TxMessage) {
-  	StAlias = unescape( StAlias );	StTitle = unescape( StTitle );	TxMessage = unescape( TxMessage );
+  'CannedResponse': function(StTitle, TxMessage) {
+  	StTitle = unescape( StTitle );	TxMessage = unescape( TxMessage );
   	windowParams.innerHTML = ''+
   		'<table class="tableTickets">'+
   			'<thead>'+
-  				'<th>'+default_ptBR.cannedTableAlias+'</th>'+
   				'<th>'+default_ptBR.cannedTableTitle+'</th>'+
   			'</thead>'+
   			'<tbody>'+
-  				'<td class="TicketNumber">'+ StAlias +'</td>'+
-  				'<td>'+ StTitle +'</td>'+
+  				'<td class="TicketNumber">'+ StTitle +'</td>'+
   			'</tbody>'+
   		'</table>'+
   		'<br />'+

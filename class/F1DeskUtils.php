@@ -632,6 +632,7 @@ ORDER BY S.IDSupporter';
     return $ArResult;
   }
 
+
   /**
    * Check if the system have to notify the users when a new message is sent
    *
