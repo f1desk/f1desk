@@ -1374,7 +1374,7 @@ IDDepartment = $IDDepartment";
     #
     # Preparing mail header
     #
-    $ArEmails = array();
+    $ArEmails = $ArUsersDepartment = $ArUsersDepartmentReader = array();
     $MailHandler = new MailHandler();
     $MailHandler->setHTMLBody(true);
     $StHeaders = "MIME-Version: 1.0\r\n";
@@ -1428,8 +1428,8 @@ WHERE
     }
     $StSubject = str_replace('###TKTNUM###',$IDTicket,NOTIFY_SUBJ);
     $StMessage = str_replace('###TKTNUM###',$IDTicket,NOTIFY_MESSAGE);
-
     $BoResult = $MailHandler->sendMail($ArEmails,$StSubject,$StMessage,$StHeaders);
+
     return $BoResult;
   }
 

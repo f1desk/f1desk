@@ -6,13 +6,14 @@ if (!empty($_POST)) {
       foreach ($_POST as &$Post) {
         UserHandler::SQLInjectionHandle($Post);
       }
+      $TxMessage = f1desk_escape_html($_POST['TxMessage']);
       $TicketHandler = new TicketHandler();
       $IDWriter = (getSessionProp('IDClient')) ? getSessionProp('IDClient') : getSessionProp('IDSupporter');
       $ArMessageType = array('NORMAL' => '0', 'INTERNAL' => '1', 'SYSTEM' => '2', 'SATISFACTION' => '3');
       if (!empty($_FILES['Attachment']['name'])) {
-        $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']],$_FILES);
+        $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$TxMessage,$ArMessageType[$_POST['StMessageType']],$_FILES);
       } else {
-        $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']]);
+        $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$TxMessage,$ArMessageType[$_POST['StMessageType']]);
       }
       die("<script>top.submitTicketForm({$_POST['IDTicket']});</script>");
     break;

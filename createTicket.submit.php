@@ -11,7 +11,7 @@ if (!empty($_POST)) {
   $IDCategory = $_POST['StCategory'];
   $IDPriority = $_POST['StPriority'];
   $StTitle = $_POST['StTitle'];
-  $TxMessage = $_POST['TxMessage'];
+  $TxMessage = f1desk_escape_html($_POST['TxMessage']);
   $IDDepartment = ($_POST['IDRecipient'] != 'null') ? $_POST['IDRecipient'] : '';
   $IDDepartmentReader = ($_POST['IDReader'] != 'null') ? $_POST['IDReader'] : '';
   $ArUsers = (isset($_POST['ArRecipients'])) ? explode(',',$_POST['ArRecipients']) : array();
