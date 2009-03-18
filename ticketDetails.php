@@ -13,7 +13,6 @@ $TicketHandler->setAsRead(getSessionProp('IDUser'),$IDTicket);
 
 $ArHeaders = TemplateHandler::getTicketHeaders($IDTicket);
 $ArSupporters = TemplateHandler::listSupporters($IDTicket);
-$ArMessages = TemplateHandler::getHistory($IDTicket);
 $ArAttachments = TemplateHandler::getAttachments($IDTicket);
 
 if (getSessionProp('isSupporter') == 'true') {
@@ -32,7 +31,7 @@ $IDTicket = $ArHeaders['IDTicket'];
 $ArAttachedTickets = TemplateHandler::getAttachedTickets($IDTicket);
 $ArTicketDepartments = TemplateHandler::getTicketDepartments($IDTicket);
 $ArTicketDepartmentsReader = TemplateHandler::getTicketDepartmentsReader($IDTicket);
-$ArDepartment = array_shift($ArTicketDepartments);
+$ArDepartment = reset($ArTicketDepartments);
 $ArTicketDestinations = TemplateHandler::getTicketDestination($IDTicket); // who this ticket was sent to
 $ArTicketReaders = TemplateHandler::getTicketReaders($IDTicket);
 $IDDepartment = $ArHeaders['IDDepartment'];

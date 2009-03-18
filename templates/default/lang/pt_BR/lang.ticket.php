@@ -13,20 +13,11 @@
   # Ticket Informations
   #
   define('INFORMATIONS','Informa&ccedil;&otilde;es');
-  define('INFO_FILES','Arquivos Anexados');
-  define('INFO_TICKETS','Chamados Anexados');
-  define('INFO_DEPARTMENT_SENTTO', 'Enviado para o(s) departamento(s)');
-  define('INFO_SUPPORTER_SENTTO','Enviado para o(s) atendente(s)');
-  define('INFO_DEPARTMENTS_READER', 'Visualizado pelo(s) departamento(s)');
-  define('INFO_SUPPORTER_READER', 'Visualizado pelo(s) atendente(s)');  
 
   #
   # Ticket History
   #
   define('TICKET_HISTORY', 'Hist&oacute;rico');
-  define('MSG_HEAD1','<b>Mensagem enviada em ');
-  define('MSG_HEAD2',' por <span class=\'TxAtendente\'>');
-  define('MSG_HEAD3','</span></b> <br /><br />');
   define('ATTACHMENT', 'Anexo');
 
   #

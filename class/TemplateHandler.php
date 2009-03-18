@@ -237,18 +237,16 @@ abstract class TemplateHandler {
    *
    * @param integer $IDTicket
    */
-  public static function getHistory($IDTicket) {
+  public static function showHistory($IDTicket, $ArAttachments) {
     $i = 0;
     $ObjTicket = self::getInstance('TicketHandler');
     $ArMessages = $ObjTicket->listTicketMessages($IDTicket);
     #
     # for exibition, replaces "\n" for "<br>"
     #
-    foreach ($ArMessages as &$ArMessageSettings) {
-      $ArMessageSettings['TxMessage'] = nl2br( $ArMessageSettings['TxMessage'] );
-    }
-
     foreach ($ArMessages as &$ArMessage) {
+      $ArMessage['TxMessage'] = nl2br( $ArMessage['TxMessage'] );
+
       switch ($ArMessage['EnMessageType']) {
         case 'SYSTEM':
           $StClass = 'messageSystem';
@@ -263,9 +261,19 @@ abstract class TemplateHandler {
       }
 
       $ArMessage['StClass'] = $StClass;
+      if (!TemplateHandler::IsSupporter() && $ArMessage['EnMessageType'] == 'INTERNAL')
+        continue;
+      $DtSended = F1DeskUtils::formatDate('datetime_format',$ArMessage['DtSended']);
+      $StHtml = "<div class='{$ArMessage['StClass']}'>";
+      $StHtml .= '<b>'.DATE_MSG_SENT.$DtSended.BY.'<span class="TxAtendente">'.$ArMessage['SentBy'].'</span></b><br /><br />';
+      if (array_key_exists($ArMessage['IDMessage'],$ArAttachments)) {
+        foreach ($ArAttachments[$ArMessage['IDMessage']] as $Attachment) {
+          $StHtml .= "<p><b>".ATTACHMENT."</b>: <a class='Link' href='download.php?IDAttach={$Attachment['IDAttachment']}'>{$Attachment['StFile']}</a></p>";
+        }
+      }
+      $StHtml .= $ArMessage['TxMessage'];
     }
-
-    return $ArMessages;
+    return $StHtml;
   }
 
   /**
@@ -597,6 +605,285 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getTicketReaders($IDTicket);
 	}
-}
 
+	/**
+	 * Create the departments combobox in the ticket creation page
+	 *
+	 * @param array $ArDepartments
+	 */
+	public static function createFormattedCombo($ArDepartments, $StID = 'IDRecipient', $StName = 'IDRecipient', $StClass = 'inputCombo') {
+	  $StHtml = "<select id='$StID' name='$StName' class='$StClass'>";
+    $StHtml .= "<option value='null'>".DEFAULT_OPTION."</option>";
+	  foreach ($ArDepartments as $ArDepartment) {
+	    if(isset($ArDepartment['SubDepartments'])) {
+	      $StHtml .= "<option value='{$ArDepartment['IDDepartment']}'>{$ArDepartment['StDepartment']}</option>";
+	      $StHtml .= "<optgroup>";
+	      foreach ($ArDepartment['SubDepartments'] as $SubDepartments) {
+	        $StHtml .= "<option value='{$SubDepartments['IDSub']}'>{$SubDepartments['StSub']}</option>";
+	      }
+	      $StHtml .= "</optgroup>";
+	    } else {
+	      $StHtml .= "<option value='{$ArDepartment['IDDepartment']}'>{$ArDepartment['StDepartment']}</option>";
+	    }
+	  }
+	  $StHtml .= "</select>";
+	  return $StHtml;
+	}
+
+	/**
+	 * Create the comboboxes of categories and priorities in the create ticket page
+	 *
+	 * @param array $Array
+	 * @param string $StID
+	 * @param string $StName
+	 * @param string $StClass
+	 * @return string
+	 */
+	public static function createCategory_PriorityCombobox($Array, $StID, $StName, $StClass = 'inputCombo') {
+	  $StHtml = "<select id='$StID' name='$StName' class='$StClass'>";
+	  foreach ($Array as $Key => $Value) {
+      $StHtml .= "<option value='$Key'>$Value</option>";
+    }
+    $StHtml .= "</select>";
+    return $StHtml;
+	}
+
+	/**
+	 * Create the supporters combobox in ticket headers
+	 *
+	 * @param int $IDTicket
+	 * @param array $ArSupporters
+	 * @param array $ArHeaders
+	 * @param string $StID
+	 * @param string $StClass
+	 * @return string
+	 */
+	public static function createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, $StID, $StClass) {
+	  if (self::IsSupporter()) {
+	    $StHtml = "<select id='$StID' onchange='setTicketOwner(\"$IDTicket\", this.value)' class='$StClass'>";
+	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {
+	      if ($ArHeaders['IDSupporter'] != $IDSupporter) {
+	        $StHtml .= "<option value='$IDSupporter'>$StSupporter</option>";
+	      } else {
+	        $StHtml .= "<option selected='selected' value='$IDSupporter'>$StSupporter</option>";
+	      }
+	    }
+	    $StHtml .= "</select>";
+	  } else {
+	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {
+	      if ($ArHeaders['IDSupporter'] == $IDSupporter) {
+	        $StHtml = "<span id='$StID'>$StSupporter</span>";
+	      }
+	    }
+	  }
+	  return $StHtml;
+	}
+
+	/**
+	 * create de Departments combobox in ticket header
+	 *
+	 * @param unknown_type $ArDepartments
+	 * @param unknown_type $IDDepartment
+	 * @param unknown_type $IDTicket
+	 * @param unknown_type $StID
+	 * @param unknown_type $StClass
+	 * @return unknown
+	 */
+	public static function createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket, $StID, $StClass = 'inputCombo') {
+    if (self::IsSupporter()) {
+      $StHtml = "<select id='$StID' class='$StClass' onchange='changeDepartment(\"$IDTicket\",this.value)'>";
+      foreach ($ArDepartments as $ArDepartment) {
+        if(isset($ArDepartment['SubDepartments'])) {
+          if ($ArDepartment['IDDepartment'] == $IDDepartment) {
+            $StHtml .= "<option value='{$ArDepartment['IDDepartment']}' selected>{$ArDepartment['StDepartment']}</option>";
+          } else {
+            $StHtml .= "<option value='{$ArDepartment['IDDepartment']}'>{$ArDepartment['StDepartment']}</option>";
+          }
+          $StHtml .= "<optgroup>";
+          foreach ($ArDepartment['SubDepartments'] as $SubDepartments) {
+            if ($SubDepartments['IDSub'] == $IDDepartment) {
+              $StHtml .= "<option value='{$SubDepartments['IDSub']}' selected>{$SubDepartments['StSub']}</option>";
+            } else {
+              $StHtml .= "<option value='{$SubDepartments['IDSub']}'>{$SubDepartments['StSub']}</option>";
+            }
+          }
+          $StHtml .= "</optgroup>";
+        } else {
+          if ($ArDepartment['IDDepartment'] == $IDDepartment) {
+            $StHtml .= "<option value='{$ArDepartment['IDDepartment']}' selected>{$ArDepartment['StDepartment']}</option>";
+          } else {
+            $StHtml .= "<option value='{$ArDepartment['IDDepartment']}'>{$ArDepartment['StDepartment']}</option>";
+          }
+        }
+      }
+      $StHtml .= "</select>";
+    } else {
+      $StHtml = $ArDepartment['StDepartment'];
+    }
+    return $StHtml;
+	}
+
+	/**
+	 * show all attached files
+	 *
+	 * @param array $ArAttachments
+	 * @return unknown
+	 */
+	public static function showAttachments($ArAttachments) {
+	  $StHtml = '';
+	  if (count($ArAttachments)!=0) {
+      $StHtml = "<span>".INFO_FILES."</span>";
+      $StHtml .= "<ul> <li>";
+      $i=0;
+      foreach ($ArAttachments as $Attachment) {
+        $Attachment = $Attachment[0];
+        if($i!=0)
+          $StHtml .= ', ';
+        $StHtml .= "<a class='Link' href='download.php?IDAttach={$Attachment['IDAttachment']}'>{$Attachment['StFile']}</a>";
+        $i++;
+      }
+      $StHtml .= "</li> </ul>";
+	  }
+	  return $StHtml;
+	}
+
+	/**
+	 * show all attached tickets
+	 *
+	 * @param unknown_type $ArAttachedTickets
+	 * @return unknown
+	 */
+	public static function showAttachedTickets($ArAttachedTickets) {
+	  $StHtml = '';
+	  if (count($ArAttachedTickets)!=0) {
+      $StHtml = "<span>".INFO_TICKETS."</span>";
+      $StHtml .= "<ul> <li>";
+      $i=0;
+      foreach ($ArAttachedTickets as $AttachedTicket) {
+        if($i!=0)
+          $StHtml .= ', ';
+        $StHtml .= "<a class='ink' href='javascript:void(0);' onclick='previewInFlow.Ticket(\"{$AttachedTicket['IDAttachedTicket']}\")'>#{$AttachedTicket['IDAttachedTicket']}</a>";
+        $i++;
+      }
+      $StHtml .= "</li> </ul>";
+    }
+    return $StHtml;
+	}
+
+	/**
+	 * show all recipient departments
+	 *
+	 * @param unknown_type $ArTicketDepartments
+	 * @return unknown
+	 */
+	public static function showTicketDepartments($ArTicketDepartments) {
+	  $StHtml = '';
+	  if (count($ArTicketDepartments)!=0) {
+      $StHtml = "<span>".INFO_DEPARTMENT_SENTTO."</span>";
+      $StHtml .= "<ul> <li class='Link'>";
+      $i=0;
+      foreach ($ArTicketDepartments as $TicketDepartments) {
+        if($i!=0)
+          $StHtml .= ', ';
+        $StHtml .= $TicketDepartments['StDepartment'];
+        $i++;
+      }
+      $StHtml .= "</li> </ul>";
+    }
+    return $StHtml;
+	}
+
+	/**
+	 * show all recipient supporters
+	 *
+	 * @param unknown_type $ArTicketDestinations
+	 * @return unknown
+	 */
+	public static function showTicketSupporters($ArTicketDestinations) {
+	  $StHtml = '';
+	  if (count($ArTicketDestinations)!=0) {
+      $StHtml = '<span>'.INFO_SUPPORTER_SENTTO.'</span>';
+      $StHtml .= '<ul> <li class="Link">';
+      $i=0;
+      foreach ($ArTicketDestinations as $TicketDestination) {
+        if($i!=0)
+          $StHtml .= ', ';
+        $StHtml .= $TicketDestination['StName'];
+        $i++;
+      }
+      $StHtml .= '</li> </ul>';
+    }
+    return $StHtml;
+	}
+
+	/**
+	 * show all department readers
+	 *
+	 * @param unknown_type $ArTicketDepartmentsReader
+	 * @return unknown
+	 */
+	public static function showDepartmentReaders($ArTicketDepartmentsReader) {
+	  $StHtml = '';
+	  if (count($ArTicketDepartmentsReader)!=0) {
+      $StHtml = '<span>'.INFO_DEPARTMENTS_READER.'</span>';
+      $StHtml .= '<ul> <li class="Link">';
+      $i=0;
+      foreach ($ArTicketDepartmentsReader as $TicketDepartmentsReader) {
+        if($i!=0)
+          $StHtml .= ', ';
+        $StHtml .= $TicketDepartmentsReader['StDepartment'];
+        $i++;
+      }
+      $StHtml .= '</li> </ul>';
+    }
+    return $StHtml;
+	}
+
+	/**
+	 * show all supporter readers
+	 *
+	 * @param unknown_type $ArTicketReaders
+	 * @return unknown
+	 */
+	public static function showSupporterReaders($ArTicketReaders) {
+	  $StHtml = '';
+	  if (count($ArTicketReaders)!=0) {
+      $StHtml = '<span>'.INFO_SUPPORTER_READER.'</span>';
+      $StHtml .= '<ul> <li class="Link">';
+      $i=0;
+      foreach ($ArTicketReaders as $TicketReaders) {
+        if($i!=0)
+          $StHtml .= ', ';
+        $StHtml .= $TicketReaders['StName'];
+        $i++;
+      }
+    $StHtml .= '</li> </ul>';
+	  }
+	  return $StHtml;
+	}
+
+	/**
+	 * Create the combobox with the Canned Answers
+	 *
+	 * @param unknown_type $ArResponses
+	 * @return unknown
+	 */
+	public static function createCannedCombo($ArResponses) {
+	  $StHtml = '';
+	  if (self::IsSupporter()) {
+	    $StHtml = "<select class='inputCombo' id='cannedAnswers'>";
+	    if ($ArResponses[0]['IDCannedResponse'] != '') {
+	      foreach ($ArResponses as $Response) {
+	        //die('<textarea>'.addslashes(f1desk_escape_string($Response['TxMessage'])).'</textarea>');
+	        $StHtml .= "<option value=".addslashes(f1desk_escape_string($Response['TxMessage'])).">".f1desk_escape_string($Response['StTitle'],true,false)."</option>";
+        }
+	    } else {
+	      $StHtml .= "<option value='null'>".NO_ANSWER."</option>";
+      }
+      $StHtml .= '</select>';
+      $StHtml .= "<button class='button' onclick='addCannedResponse(); return false;'>".ADD."</button>";
+    }
+    return $StHtml;
+	}
+}
 ?>

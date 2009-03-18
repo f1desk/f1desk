@@ -1368,7 +1368,8 @@ IDDepartment = $IDDepartment";
    * @return Boolean
    */
   public function _sendNotifyMessage($IDTicket) {
-
+    $ArUsersDepartment = array();
+    $ArUsersDepartmentReader = array();
 
     #
     # Preparing mail header
@@ -1421,13 +1422,13 @@ WHERE
     #
     foreach ($ArFinal as $User) {
       if($User['BoNotify']) {
-        $StSubject = str_replace('###TKTNUM###',$IDTicket,NOTIFY_SUBJ);
-        $StMessage = str_replace('###TKTNUM###',$IDTicket,NOTIFY_MESSAGE);
         if (array_search($User['StEmail'],$ArEmails) === false)
           $ArEmails[] = $User['StEmail'];
       }
     }
-    ErrorHandler::Debug($ArEmails);
+    $StSubject = str_replace('###TKTNUM###',$IDTicket,NOTIFY_SUBJ);
+    $StMessage = str_replace('###TKTNUM###',$IDTicket,NOTIFY_MESSAGE);
+
     $BoResult = $MailHandler->sendMail($ArEmails,$StSubject,$StMessage,$StHeaders);
     return $BoResult;
   }

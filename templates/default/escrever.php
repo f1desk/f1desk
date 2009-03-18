@@ -8,38 +8,16 @@
     <p>Clique <a href='' class='Link'>aqui</a> para anexar chamados</p>
     <h3>Informa&ccedil;&otilde;es do chamado</h3>
     <p>
-    <label for='StCategory'>Categoria:</label>
-      <select id='StCategory' name='StCategory' class='inputCombo'>
-        <?php foreach ($ArCategories as $Key => $Category):?>
-        <option value='<?=$Key?>'><?=$Category?></option>
-        <?php endforeach; ?>
-      </select>
+      <label for='StCategory'>Categoria:</label>
+      <?=TemplateHandler::createCategory_PriorityCombobox($ArCategories,'StCategory','StCategory','inputCombo');?>
     </p>
     <p>
       <label for='StPriority'>Prioridade:</label>
-      <select id='StPriority' name='StPriority' class='inputCombo'>
-        <?php foreach ($ArPriorities as $Key => $Priority):?>
-        <option value='<?=$Key?>'><?=$Priority?></option>
-        <?php endforeach; ?>
-      </select>
+      <?=TemplateHandler::createCategory_PriorityCombobox($ArPriorities,'StPriority','StPriority','inputCombo');?>
     </p>
     <div id='sendTo'>
       <h3>Enviar Para</h3>
-      <select id='IDRecipient' name='IDRecipient' class='inputCombo'>
-      <option value='null'><?=DEFAULT_OPTION?></option>
-      <?php foreach ($ArDepartments as $ArDepartment): ?>
-        <?php if(isset($ArDepartment['SubDepartments'])): ?>
-          <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-          <optgroup>
-          <?php foreach ($ArDepartment['SubDepartments'] as $SubDepartments):?>
-            <option value='<?=$SubDepartments['IDSub']?>'><?=$SubDepartments['StSub']?></option>
-          <?php endforeach;?>
-          </optgroup>
-        <?php else: ?>
-          <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-        <?php endif; ?>
-      <?php endforeach; ?>
-      </select>
+      <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDRecipient','IDRecipient','inputCombo');?>
       <p>Clique <a href='javascript:void(0);' class='Link' onclick='listSupporters("Recipients")'>aqui</a> para adicionar atendentes</p>
       <div id='addedRecipients' class='Invisible'>
         <h4>Usu&aacute;rios Adicionados</h4>
@@ -48,21 +26,7 @@
 
     <div id='respondTo'>
       <h3>Responder Para</h3>
-      <select name='IDReader' class='inputCombo'>
-      <option value='null'><?=DEFAULT_OPTION?></option>
-      <?php foreach ($ArDepartments as $ArDepartment): ?>
-        <?php if(isset($ArDepartment['SubDepartments'])): ?>
-          <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-          <optgroup>
-          <?php foreach ($ArDepartment['SubDepartments'] as $SubDepartments):?>
-            <option value='<?=$SubDepartments['IDSub']?>'><?=$SubDepartments['StSub']?></option>
-          <?php endforeach;?>
-          </optgroup>
-        <?php else: ?>
-          <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-        <?php endif; ?>
-      <?php endforeach; ?>
-      </select>
+      <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDReader','IDReader','inputCombo');?>
       <p>Clique <a href='javascript:void(0);' class='Link' onclick='listSupporters("Readers")'>aqui</a> para adicionar atendentes</p>
       <div id='addedReaders' class='Invisible'>
         <h4>Usu&aacute;rios Adicionados</h4>

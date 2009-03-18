@@ -2,14 +2,16 @@
   /*default language*/
   handleLanguage(__FILE__);
   #
-  # concatenate arrow's ID and Content's ID with this UID
+  # join arrow's ID and Content's ID with this UID
   #
   $uid = uniqid();
 ?>
 <!--[TICKET HEADER]-->
 <div id='ticketHeader'>
   <div id="ticketTitle">
-    <img id='reloadHeader' class='menuRefresh Right' onclick='refreshCall( <?= $IDTicket ?> )' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
+  <?if(!$preview):?>
+    <img id='reloadHeader' class='menuRefresh Right' onclick='refreshCall("<?= $IDTicket ?>")' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
+  <?endif;?>
   	<img alt="Ticket" id='arrowHeader<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "ticketContent<?=$uid?>")' class='menuArrow'/>
   	<span><?= $StTitle ?></span>
   </div>
@@ -35,57 +37,10 @@
           <td><?= $DtOpened ?></td>
           <td><?= $StSituation ?></td>
           <td>
-            <?php if (TemplateHandler::IsSupporter()): ?>
-            	<select id='StSupporter' onchange='setTicketOwner(<?= $IDTicket ?>, this.value)' class='inputCombo'>
-            	  <? foreach ( $ArSupporters as $IDSupporter => $StSupporter ) : ?>
-              	  <? if ($ArHeaders['IDSupporter'] != $IDSupporter) : ?>
-              	  <option value=<?=$IDSupporter?>><?=$StSupporter?></option>
-              		<? else : ?>
-              		<option selected='selected' value=<?=$IDSupporter?>><?=$StSupporter?></option>
-              		<? endif; ?>
-            		<? endforeach; ?>
-            	</select>
-            <?php else:
-              foreach ( $ArSupporters as $IDSupporter => $StSupporter ){
-                if ($ArHeaders['IDSupporter'] == $IDSupporter) {
-                  ?>
-                  <span id="StSupporter"><?=$StSupporter?></span>
-                  <?
-                }
-              }
-            endif; ?>
+            <?=TemplateHandler::createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, 'StSupporter','inputCombo');?>
           </td>
           <td>
-            <?php if (TemplateHandler::IsSupporter()):?>
-            <select id='Department' class='inputCombo' onchange='changeDepartment("<?=$IDTicket?>",this.value)'>
-            <?php foreach ($ArDepartments as $ArDepartment): ?>
-              <?php if(isset($ArDepartment['SubDepartments'])): ?>
-                <?php if ($ArDepartment['IDDepartment'] == $IDDepartment):?>
-                <option value='<?=$ArDepartment['IDDepartment']?>' selected><?=$ArDepartment['StDepartment']?></option>
-                <?php else: ?>
-                <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-                <?endif;?>
-                <optgroup>
-                  <?php foreach ($ArDepartment['SubDepartments'] as $SubDepartments):?>
-                    <?php if ($SubDepartments['IDSub'] == $IDDepartment):?>
-                    <option value='<?=$SubDepartments['IDSub']?>' selected><?=$SubDepartments['StSub']?></option>
-                    <?php else: ?>
-                    <option value='<?=$SubDepartments['IDSub']?>'><?=$SubDepartments['StSub']?></option>
-                    <?php endif; ?>
-                  <?php endforeach;?>
-                </optgroup>
-              <?php else: ?>
-                <?php if ($ArDepartment['IDDepartment'] == $IDDepartment):?>
-                <option value='<?=$ArDepartment['IDDepartment']?>' selected><?=$ArDepartment['StDepartment']?></option>
-                <?php else:?>
-                <option value='<?=$ArDepartment['IDDepartment']?>'><?=$ArDepartment['StDepartment']?></option>
-                <?php endif;?>
-              <?php endif; ?>
-            <?php endforeach; ?>
-            </select>
-            <?php else:?>
-              <?=$ArDepartment['StDepartment']?>
-            <?php endif;?>
+            <?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments');?>
           </td>
           <?php if (TemplateHandler::IsSupporter()): ?>
           <td>
@@ -124,81 +79,27 @@
   </div>
   <div id='informationsContent<?=$uid?>' class="informationsBox" style="display:none">
     <!--[ATTACHMENT FILES]-->
-    <? if (count($ArAttachments)!=0): ?>
-    <span><?=INFO_FILES?></span>
-    <ul>
-      <li>
-      <? $i=0; foreach ($ArAttachments as $Attachment): $Attachment = $Attachment[0]; if($i!=0) print ', '; ?>
-        <a class="Link" href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a>
-      <? $i++; endforeach; ?>
-      </li>
-    </ul>
-    <? endif; ?>
+    <?=TemplateHandler::showAttachments($ArAttachments);?>
     <!--[/ATTACHMENT FILES]-->
 
     <!--[ATTACHMENT TICKETS]-->
-    <? if (count($ArAttachedTickets)!=0): ?>
-    <span><?=INFO_TICKETS?></span>
-    <ul>
-      <li>
-      <? $i=0; foreach ($ArAttachedTickets as $AttachedTicket): if($i!=0) print ', '; ?>
-        <a class="Link" href='javascript:void(0);' onclick='previewInFlow.Ticket(<?=$AttachedTicket['IDAttachedTicket']?>)'>#<?=$AttachedTicket['IDAttachedTicket']?></a>
-      <? $i++; endforeach; ?>
-      </li>
-    </ul>
-    <? endif; ?>
+    <?=TemplateHandler::showAttachedTickets($ArAttachedTickets);?>
     <!--[/ATTACHMENT TICKETS]-->
 
     <!--[TICKET DEPARTMENTS]-->
-    <? if (count($ArTicketDepartments)!=0): ?>
-    <span><?=INFO_DEPARTMENT_SENTTO?></span>
-    <ul>
-      <li class="Link">
-      <? $i=0; foreach ($ArTicketDepartments as $TicketDepartments): if($i!=0) print ', '; ?>
-        <?=$TicketDepartments['StDepartment']?>
-      <? $i++; endforeach; ?>
-      </li>
-    </ul>
-    <? endif; ?>
+    <?=TemplateHandler::showTicketDepartments($ArTicketDepartments);?>
     <!--[/TICKET DEPARTMENTS]-->
 
     <!--[TICKET SUPPORTERS]-->
-    <? if (count($ArTicketDestinations)!=0): ?>
-    <span><?=INFO_SUPPORTER_SENTTO?></span>
-    <ul>
-      <li class="Link">
-      <? $i=0; foreach ($ArTicketDestinations as $TicketDestination): if($i!=0) print ', '; ?>
-        <?=$TicketDestination['StName']?>
-      <? $i++; endforeach; ?>
-      </li>
-    </ul>
-    <? endif; ?>
+    <?=TemplateHandler::showTicketSupporters($ArTicketDestinations);?>
     <!--[/TICKET SUPPORTERS]-->
 
     <!--[TICKET DEPARTMENTS]-->
-    <? if (count($ArTicketDepartmentsReader)!=0): ?>
-    <span><?=INFO_DEPARTMENTS_READER?></span>
-    <ul>
-      <li class="Link">
-      <? $i=0; foreach ($ArTicketDepartmentsReader as $TicketDepartmentsReader): if($i!=0) print ', '; ?>
-        <?=$TicketDepartmentsReader['StDepartment']?>
-      <? $i++; endforeach; ?>
-      </li>
-    </ul>
-    <? endif; ?>
+    <?=TemplateHandler::showDepartmentReaders($ArTicketDepartmentsReader);?>
     <!--[/TICKET DEPARTMENTS]-->
 
     <!--[TICKET SUPPORTERS]-->
-    <? if (count($ArTicketReaders)!=0): ?>
-    <span><?=INFO_SUPPORTER_READER?></span>
-    <ul>
-      <li class="Link">
-      <? $i=0; foreach ($ArTicketReaders as $TicketReaders): if($i!=0) print ', '; ?>
-        <?=$TicketReaders['StName']?>
-      <? $i++; endforeach; ?>
-      </li>
-    </ul>
-    <? endif; ?>
+    <?=TemplateHandler::showSupporterReaders($ArTicketReaders)?>
     <!--[/TICKET SUPPORTERS]-->
 
   </div>
@@ -213,20 +114,7 @@
   </div>
 
   <div id="historyContent<?=$uid?>" >
-    <? foreach ($ArMessages as $ArMessage) : ?>
-      <? if (!TemplateHandler::IsSupporter() && $ArMessage['EnMessageType'] == 'INTERNAL') continue; ?>
-      <? $DtSended = F1DeskUtils::formatDate('datetime_format',$ArMessage['DtSended']); ?>
-      <div class='<?= $ArMessage['StClass'] ?>'>
-        <?= MSG_HEAD1 . $DtSended . MSG_HEAD2 . $ArMessage['SentBy'] . MSG_HEAD3 ?>
-        <? if (array_key_exists($ArMessage['IDMessage'],$ArAttachments)): ?>
-          <?  foreach ($ArAttachments[$ArMessage['IDMessage']] as $Attachment): ?>
-              <p><b><?=ATTACHMENT?></b>: <a class='Link' href='download.php?IDAttach=<?=$Attachment['IDAttachment']?>'><?=$Attachment['StFile']?></a></p>
-          <?  endforeach; ?>
-        <? endif;?>
-        <?= $ArMessage['TxMessage'] ?>
-      </div>
-    <? endforeach ?>
-    <?php ?>
+    <?=TemplateHandler::showHistory($IDTicket, $ArAttachments);?>
   </div>
 </div>
 <!--[/TICKET HISTORY]-->
@@ -264,18 +152,7 @@
 	    		  <div>
 	    		    <input type='hidden' name='IDDepartment' id='IDDepartment' value='<?= $IDDepartment ?>' />
 	    		    <input type='hidden' name='IDTicket' id='IDTicket' value='<?= $IDTicket ?>' />
-	    		    <? if (TemplateHandler::IsSupporter()) : ?>
-	      		    <select class='inputCombo' id='cannedAnswers'>
-	              <? if ($ArResponses[0]['IDCannedResponse'] != ''): ?>
-	                  <? foreach ($ArResponses as $Response): ?>
-	                    <option value="<?=f1desk_escape_string($Response['TxMessage'],true,true);?>"><?=$Response['StTitle']?></option>
-	                  <?endforeach; ?>
-	              <? else: ?>
-	                   <option value='null'><?=NO_ANSWER?></option>
-	              <? endif; ?>
-	      			  </select>
-	      			  <button class='button' onclick='addCannedResponse(); return false;'><?=ADD?></button>
-	    			  <? endif; ?>
+	    		    <?=TemplateHandler::createCannedCombo($ArResponses)?>
 	    		</div>
 	    	</div>
 
