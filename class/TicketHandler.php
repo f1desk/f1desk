@@ -1361,12 +1361,28 @@ IDDepartment = $IDDepartment";
     return ($ItAffected < 0) ? false : true;
   }
 
+  /**
+   * Send an email to all users related to the ticket given for each new message.
+   *
+   * @param int $IDTicket
+   * @return Boolean
+   */
   public function _sendNotifyMessage($IDTicket) {
+
+
+    #
+    # Preparing mail header
+    #
     $ArEmails = array();
     $MailHandler = new MailHandler();
     $MailHandler->setHTMLBody(true);
     $StHeaders = "MIME-Version: 1.0\r\n";
     $StHeaders .= "Content-type: text/html; charset=utf-8\r\n";
+
+
+    #
+    # Get the users related with the ticket
+    #
     $ArRecipients = $this->getTicketDestination($IDTicket);
     $ArReaders = $this->getTicketReaders($IDTicket);
     $StSQL = '
@@ -1379,17 +1395,39 @@ WHERE
   T.IDTicket = $IDTicket";
     $this->execSQL($StSQL);
     $ArResult = $this->getResult('string');
-    $ArUsers = array_merge($ArRecipients,$ArReaders);
-    $ArUsers = array_merge($ArUsers,$ArResult);
 
-    //ErrorHandler::Debug($ArUsers);
-    foreach ($ArUsers as $User) {
+    #
+    # Get the department related with the ticket and his supporters
+    #
+    $ArDepartment = array_shift($this->getTicketDepartments($IDTicket));
+    $ArDepartmentReaders = array_shift($this->getTicketDepartmentsReader($IDTicket));
+    if (isset($ArDepartment['IDDepartment']) && isset($ArDepartmentReaders['IDDepartment'])) {
+      $ArUsersDepartment = F1DeskUtils::getDepartmentSupporters($ArDepartment['IDDepartment']);
+      $ArUsersDepartmentReader = F1DeskUtils::getDepartmentSupporters($ArDepartmentReaders['IDDepartment']);
+    }
+
+
+    #
+    # Merging all users in one array
+    #
+    $ArUsers = array_merge($ArRecipients,$ArReaders);
+    $ArUsersDepart = array_merge($ArUsersDepartment,$ArUsersDepartmentReader);
+    $ArFinal = array_merge($ArUsers,$ArUsersDepart);
+    $ArFinal = array_merge($ArFinal,$ArResult);
+
+
+    #
+    # Insert Message and Subject and strip the emails that already are in array
+    #
+    foreach ($ArFinal as $User) {
       if($User['BoNotify']) {
         $StSubject = str_replace('###TKTNUM###',$IDTicket,NOTIFY_SUBJ);
         $StMessage = str_replace('###TKTNUM###',$IDTicket,NOTIFY_MESSAGE);
-        $ArEmails[] = $User['StEmail'];
+        if (array_search($User['StEmail'],$ArEmails) === false)
+          $ArEmails[] = $User['StEmail'];
       }
     }
+    ErrorHandler::Debug($ArEmails);
     $BoResult = $MailHandler->sendMail($ArEmails,$StSubject,$StMessage,$StHeaders);
     return $BoResult;
   }
