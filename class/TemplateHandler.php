@@ -874,8 +874,7 @@ abstract class TemplateHandler {
 	    $StHtml = "<select class='inputCombo' id='cannedAnswers'>";
 	    if ($ArResponses[0]['IDCannedResponse'] != '') {
 	      foreach ($ArResponses as $Response) {
-	        //die('<textarea>'.addslashes(f1desk_escape_string($Response['TxMessage'])).'</textarea>');
-	        $StHtml .= "<option value=".addslashes(f1desk_escape_string($Response['TxMessage'])).">".f1desk_escape_string($Response['StTitle'],true,false)."</option>";
+	        $StHtml .= "<option value='".(f1desk_escape_string($Response['TxMessage'],true,true))."' >".$Response['StTitle']."</option>";
         }
 	    } else {
 	      $StHtml .= "<option value='null'>".NO_ANSWER."</option>";
@@ -885,5 +884,6 @@ abstract class TemplateHandler {
     }
     return $StHtml;
 	}
+	
 }
 ?>
