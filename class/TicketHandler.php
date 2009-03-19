@@ -548,8 +548,6 @@ GROUP BY
       }
       $StMessage = f1desk_escape_string($ArHeaderSign['TxHeader']) . $StMessage . f1desk_escape_string($ArHeaderSign['TxSign']);
       $this->_sendNotifyMessage($IDTicket);
-    } else {
-      $StMessage = f1desk_escape_string($StMessage);
     }
 
     # preparing to insert on Message table

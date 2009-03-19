@@ -381,9 +381,8 @@ abstract class TemplateHandler {
 	 *
 	 * @return integer $ItAffected
 	 */
-	public static function createCannedResponse ( $StAlias, $StTitle, $TxMessage, $ItIDSupporter ){
+	public static function createCannedResponse ( $StTitle, $TxMessage, $ItIDSupporter ){
 		$ArData = array(
-			"StAlias" => $StAlias,
 			"StTitle" => $StTitle,
 			"TxMessage" => $TxMessage,
 			"BoPersonal" => "1",
@@ -670,8 +669,8 @@ abstract class TemplateHandler {
 	 * @param string $StClass
 	 * @return string
 	 */
-	public static function createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, $StID, $StClass) {
-	  if (self::IsSupporter()) {
+	public static function createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, $StID, $StClass, $preview) {
+	  if (self::IsSupporter() && !$preview) {
 	    $StHtml = "<select id='$StID' onchange='setTicketOwner(\"$IDTicket\", this.value)' class='$StClass'>";
 	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {
 	      if ($ArHeaders['IDSupporter'] != $IDSupporter) {
@@ -701,8 +700,8 @@ abstract class TemplateHandler {
 	 * @param unknown_type $StClass
 	 * @return unknown
 	 */
-	public static function createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket, $StID, $StClass = 'inputCombo') {
-    if (self::IsSupporter()) {
+	public static function createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket, $StID, $StClass = 'inputCombo', $preview) {
+    if (self::IsSupporter() && !$preview) {
       $StHtml = "<select id='$StID' class='$StClass' onchange='changeDepartment(\"$IDTicket\",this.value)'>";
       foreach ($ArDepartments as $ArDepartment) {
         if(isset($ArDepartment['SubDepartments'])) {
@@ -730,7 +729,18 @@ abstract class TemplateHandler {
       }
       $StHtml .= "</select>";
     } else {
-      $StHtml = $ArDepartment['StDepartment'];
+      foreach ($ArDepartments as $ArDepartment) {
+      	if ($ArDepartment['IDDepartment'] == $IDDepartment) {
+          $StHtml = "<span id='{$StID}'>{$ArDepartment['StDepartment']}</span>";
+      	}
+      	if(isset($ArDepartment['SubDepartments'])) {
+      		foreach ($ArDepartment['SubDepartments'] as $ArSubDepartment) {
+      			if ($ArSubDepartment['IDSub'] == $IDDepartment) {
+      				$StHtml = "<span id='{$StID}'>{$ArSubDepartment['StSub']}</span>";
+      			}
+      		}
+      	}
+      }
     }
     return $StHtml;
 	}
