@@ -21,6 +21,60 @@ function getOption($StSetting, $StReturnType = "string") {
 }
 
 /**
+ * create a XMLtag in option file
+ *
+ * @param string $StSetting
+ * @param string $StValue
+ * @return boolean
+ */
+function createOption($StParentName, $StSetting, $StValue, $ArAttributes = array() ) {
+  $Dom = new DOMDocument();
+  $Dom->load(dirname(__FILE__) . '/option.xml');
+
+  $StSetting = strtolower($StSetting);
+  $StValue = htmlspecialchars($StValue);
+  $ObParent = $Dom->getElementsByTagName($StParentName)->item(0);
+  
+  #
+  # Looking if this entry already exists
+  #
+  $BoExists = false;
+  $tagCount = $ObParent->getElementsByTagName($StSetting)->length;
+  for ($i=0; $i < $tagCount; $i++) {
+    if ( $ObParent->getElementsByTagName($StSetting)->item($i)->nodeValue == $StValue ){
+      $BoExists = true;
+      break;
+    }
+  }
+  
+  if ( !$BoExists ) { ## Do not exists
+  	$Element = $Dom->createElement($StSetting);
+    $ObParent->appendChild($Element);
+    
+    $ElementText = $Dom->createTextNode($StValue);
+    $Element->appendChild($ElementText);
+    
+    #
+    # Setting Attributes given
+    #
+    if (is_array($ArAttributes) && count($ArAttributes)!=0){
+      foreach ($ArAttributes as $StAttributeName => $StAttributeValue) {
+      	$Element->setAttribute($StAttributeName, $StAttributeValue);
+      }
+    }
+    
+    if ( $Dom->save(dirname(__FILE__) . '/option.xml') ) {
+      return true;
+    } else {
+      return false;
+    }
+  } else { ## Already exists
+    return false;
+  }
+  
+}
+
+/**
  * set options
  *
  * @param string $StSetting
@@ -30,14 +84,14 @@ function getOption($StSetting, $StReturnType = "string") {
  */
 function setOption($StSetting, $StValue) {
   $Dom = new DOMDocument();
-  $Dom->load(dirname(__FILE__) . 'option.xml');
+  $Dom->load(dirname(__FILE__) . '/option.xml');
 
   $StSetting = strtolower($StSetting);
   $StValue = htmlspecialchars($StValue);
 
   $Dom->getElementsByTagName($StSetting)->item(0)->nodeValue = $StValue;
 
-  if ( $Dom->save('option.xml') ) {
+  if ( $Dom->save(dirname(__FILE__) . '/option.xml') ) {
     return true;
   } else {
     return false;
@@ -135,7 +189,7 @@ function f1desk_strip_tags($TxMessage, $StHTML) {
 
 function f1desk_escape_html($toEscape){
   $StHTML = "";
-	$ObDOM = getOption( "html_permited", "DOM" );
+	$ObDOM = getOption( "tag", "DOM" );
 	foreach ($ObDOM as $item) {
 		$StHTML .= ('<' . $item->nodeValue . '>');
 	}
