@@ -355,8 +355,13 @@ var Flow={
 },
 
 'MakeID':function(){
-  Flow.newID = Flow.newID + 2;
-	return Flow.newID;
+  var newID = 1;
+  for(var aux in this.Objects.WindigBase) {
+    if(this.Objects.WindigBase[aux].style.zIndex > newID){
+      newID = this.Objects.WindigBase[aux].style.zIndex;
+    }
+  }
+	return newID;
 },
 
 'doIframe':function(url, Window, NewID){
