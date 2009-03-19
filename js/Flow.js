@@ -137,7 +137,8 @@ var Flow={
 		break;
 	}
 	
-	var inner =  "<span class='img'>"+IMG+"</span><span id='cap"+ NewID +"' class='cap'>" + tParams['TBStyle'].Caption + "</span>";
+	var inner =  "<span class='img'>"+IMG+"</span>";
+	inner += "<span id='cap"+ NewID +"' class='cap' onclick=\"if(this.nextSibling.className=='minres'){Flow.Minimize("+NewID+")}\">" + tParams['TBStyle'].Caption + "</span>";
 	inner += "<span id='min"+ NewID +"' class='min' onclick=Flow.Minimize(" + NewID + ")></span>";
 	inner += "<span id='max"+ NewID +"' class='max' onclick=Flow.Maximize(" + NewID + ")></span>";
 	inner += "<span id='fec"+ NewID +"' class='fec' onclick=Flow.Close(" + NewID + ")></span>";
@@ -354,7 +355,8 @@ var Flow={
 },
 
 'MakeID':function(){
-	return ++this.newID;
+  Flow.newID = Flow.newID + 2;
+	return Flow.newID;
 },
 
 'doIframe':function(url, Window, NewID){

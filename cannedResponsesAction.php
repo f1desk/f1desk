@@ -38,7 +38,7 @@ switch ( $_POST['action'] ) {
     break;
 
   case 'insert':
-    $ItAffedcted = TemplateHandler::createCannedResponse( f1desk_escape_string($_POST['StAlias']), f1desk_escape_string($_POST['StTitle']), f1desk_escape_string($_POST['TxMessage']), getSessionProp('IDSupporter') );
+    $ItAffedcted = TemplateHandler::createCannedResponse( f1desk_escape_string($_POST['StTitle']), f1desk_escape_string($_POST['TxMessage']), getSessionProp('IDSupporter') );
     if ( !$ItAffedcted ) {
       die(ERROR_RESP);
     } else {

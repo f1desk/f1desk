@@ -38,10 +38,10 @@
           <td><?= $DtOpened ?></td>
           <td><?= $StSituation ?></td>
           <td>
-            <?=TemplateHandler::createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, 'StSupporter','inputCombo');?>
+            <?=TemplateHandler::createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, 'StSupporter','inputCombo', $preview);?>
           </td>
           <td>
-            <?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments');?>
+            <?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments', 'inputCombo',$preview);?>
           </td>
           <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <td>
