@@ -892,6 +892,35 @@ WHERE
 		return $ArTickets;
   }
 
+    /**
+   * list the Single tickets
+   *
+   * @param int $IDSupporter
+   * @return array
+   *
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+  public function listSingleTickets($IDSupporter) {
+    $StSQL = "
+SELECT
+  T.*,  U.StName as StSupporter
+FROM
+  " . DBPREFIX . "User U
+  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDSupporter = S2.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "TicketSupporter TS ON (TS.IDTicket = T.IDTicket)
+  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = TS.IDSupporter)
+WHERE
+  S.IDSupporter = $IDSupporter";
+
+    $this->execSQL($StSQL);
+		$ArTickets = $this->getResult("string");
+
+		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
+
+		return $ArTickets;
+  }
+
   /**
    * Creates a reply to Ticket given
    *

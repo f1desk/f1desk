@@ -99,7 +99,7 @@ abstract class TemplateHandler {
   public static function listTickets( $IDDepartment, $IDSupporter, $IDUser ){
 
   	$ObTicket = self::getInstance( "TicketHandler" );
-  	if ($IDDepartment != 'ignored' && $IDDepartment != 'bookmark') {
+  	if ($IDDepartment != 'ignored' && $IDDepartment != 'bookmark' && $IDDepartment != 'single') {
     	$openTickets = $ObTicket->listTickets( $IDDepartment );
     	$ignoredTickets = $ObTicket->listIgnoredTickets($IDSupporter);
     	$readTickets = $ObTicket->getReadTickets($IDDepartment, $IDUser);
@@ -122,7 +122,19 @@ abstract class TemplateHandler {
   	  foreach ($openTickets as $IDTicket => &$ArTicket) {
         $ArTicket['isRead'] = 1;
   	  }
-  	} else {
+  	} elseif ($IDDepartment == 'single') {
+  	  $TicketList = array();
+  	  $openTickets = $ObTicket->listSingleTickets($IDSupporter);
+  	  $TicketList = array_keys($openTickets);
+  	  $readTickets = $ObTicket->getReadTickets($IDDepartment, $IDUser, $TicketList);
+  	  foreach ($openTickets as $IDTicket => &$ArTicket) {
+  	    if (array_key_exists($IDTicket,$readTickets) == true) {
+          $ArTicket['isRead'] = 1;
+        } else {
+          $ArTicket['isRead'] = 0;
+        }
+  	  }
+    } else {
   	  $TicketList = array();
   	  $openTickets = $ObTicket->listBookmarkTickets($IDSupporter);
   	  $TicketList = array_keys($openTickets);
