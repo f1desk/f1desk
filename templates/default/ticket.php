@@ -25,8 +25,8 @@
           <th><?=TICKET_HEADER_ID?></th>
           <th><?=TICKET_HEADER_DATE?></th>
           <th><?=TICKET_HEADER_STATUS?></th>
-          <th><?=TICKET_HEADER_SUPPORTER?></th>
           <th><?=TICKET_HEADER_DEPARTMENT?></th>
+          <th><?=TICKET_HEADER_SUPPORTER?></th>
           <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
           <? endif; ?>
@@ -38,10 +38,10 @@
           <td><?= $DtOpened ?></td>
           <td><?= $StSituation ?></td>
           <td>
-            <?=TemplateHandler::createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, 'StSupporter','inputCombo', $preview);?>
+            <?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments', 'inputCombo',$preview);?>
           </td>
           <td>
-            <?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments', 'inputCombo',$preview);?>
+            <?=TemplateHandler::createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, 'StSupporter','inputCombo', $preview);?>
           </td>
           <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <td>
@@ -175,14 +175,16 @@
 	    		  <div>
 	    		    <input type='hidden' name='IDDepartment' id='IDDepartment' value='<?= $IDDepartment ?>' />
 	    		    <input type='hidden' name='IDTicket' id='IDTicket' value='<?= $IDTicket ?>' />
-	    		    <?=TemplateHandler::createCannedCombo($ArResponses)?>
+	    		    <? if (TemplateHandler::IsSupporter()) : ?>
+	    		     <?=TemplateHandler::createCannedCombo($ArResponses)?>
+	    		    <? endif; ?>
 	    		</div>
 	    	</div>
 
 	    	<div>
-	    	    <button type="button" class='button' onclick='previewInFlow.Answer(gID("TxMessage").value);'><?=PREVIEW?></button>
     	      <input type="hidden" name="action" value="answer">
-	    			<input type='submit' class='button' value='<?=ANSWER?>' name='Responder'>
+    	      <input type='submit' class='button' value='<?=ANSWER?>' name='Responder'>
+    	      <button type="button" class='button' onclick='previewInFlow.Answer(gID("TxMessage").value);'><?=PREVIEW?></button>
 	    	</div>
 	    </div>
 	    </form>
