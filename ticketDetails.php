@@ -54,7 +54,7 @@ $StTicketType = TemplateHandler::getTicketType($IDTicket);
 
 if (TemplateHandler::IsSupporter()) {
   $ArResponses = TemplateHandler::getCannedResponses(getSessionProp('IDSupporter'),$IDDepartment);
-  $ArTypes = TemplateHandler::getTicketTypes;
+  //$ArTypes = TemplateHandler::getTicketTypes;
 }
 
 require_once(TEMPLATEDIR . '/ticket.php');

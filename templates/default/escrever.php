@@ -4,50 +4,54 @@
 
 <div id='createWrapper'>
   <form id='formCreate' method='POST' enctype='multipart/form-data' action='createTicket.submit.php' onsubmit='return createTicketSubmit();'>
-    <?=TemplateHandler::showTicketTypes($ArTypes)?>
-    <h3>Anexar Chamados</h3>
-    <p>Clique <a href='' class='Link'>aqui</a> para anexar chamados</p>
-    <h3>Informa&ccedil;&otilde;es do chamado</h3>
+    <h3><?=TICKET_TYPE?></h3>
+    <?=TemplateHandler::showTicketTypes();?>
+
+    <div id='AttachedTickets'>
+      <h3><?=ATTACH_TICKET?></h3>
+      <p><?=CLICK?><a href='javascript:void(0)' class='Link' onclick='attachTicket()'><?=HERE?></a><?=TO_ATTACH?></p>
+    </div>
+
+    <h3><?=TICKET_INFO?></h3>
     <p>
-      <label for='StCategory'>Categoria:</label>
+      <label for='StCategory'><?=CATEGORY?></label>
       <?=TemplateHandler::createCategory_PriorityCombobox($ArCategories,'StCategory','StCategory','inputCombo');?>
     </p>
     <p>
-      <label for='StPriority'>Prioridade:</label>
+      <label for='StPriority'><?=PRIORITY?></label>
       <?=TemplateHandler::createCategory_PriorityCombobox($ArPriorities,'StPriority','StPriority','inputCombo');?>
     </p>
     <div id='sendTo'>
-      <h3>Enviar Para</h3>
+      <h3><?=SEND_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDRecipient','IDRecipient','inputCombo');?>
-      <p>Clique <a href='javascript:void(0);' class='Link' onclick='listSupporters("Recipients")'>aqui</a> para adicionar atendentes</p>
+      <p><?=CLICK?> <a href='javascript:void(0);' class='Link' onclick='listSupporters("Recipients")'><?=HERE?></a><?=ADD_SUPPORTER?></p>
       <div id='addedRecipients' class='Invisible'>
-        <h4>Usu&aacute;rios Adicionados</h4>
+        <h4><?=ADDED_SUP?></h4>
       </div>
     </div>
 
     <div id='respondTo'>
-      <h3>Responder Para</h3>
+      <h3><?=REPLY_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDReader','IDReader','inputCombo');?>
-      <p>Clique <a href='javascript:void(0);' class='Link' onclick='listSupporters("Readers")'>aqui</a> para adicionar atendentes</p>
-      <div id='addedReaders' class='Invisible'>
-        <h4>Usu&aacute;rios Adicionados</h4>
+      <p><?=CLICK?><a href='javascript:void(0);' class='Link' onclick='listSupporters("Readers")'><?=HERE?></a><?=ADD_SUPPORTER?>     <div id='addedReaders' class='Invisible'>
+        <h4><?=ADDED_SUP?></h4>
       </div>
     </div>
-    <h3>Mensagem</h3>
+    <h3><?=MESSAGE?></h3>
     <p>
-      <label for='StTitle'>T&iacute;tulo:</label>
+      <label for='StTitle'><?=TITLE?></label>
       <input type='text' id='StTitle' name='StTitle' class='inputFile'>
     </p>
     <p>
-      <label for='TxMessage'>Mensagem:</label>
+      <label for='TxMessage'><?=MESSAGE?>:</label>
       <textarea id='TxMessage' name='TxMessage' class='answerArea'></textarea>
     </p>
     <p class='Right'>
       <input type='file' id='Attachment' name='Attachment' />
     </p>
     <p class='Left'>
-      <button class='button'>Enviar</button>
-      <button class='button'>Limpar</button>
+      <button class='button'><?=CREATE?></button>
+      <button class='button'><?=RESET?></button>
     </p>
   </form>
 </div>

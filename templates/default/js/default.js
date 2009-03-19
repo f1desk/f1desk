@@ -761,22 +761,26 @@ function attachTicket(IDTicket) {
     EventFuncs = {
       'Prompt': function(IDAttached) {
         IDAttached = IDAttached.replace(/[#]|[^0-9]/g,'');
-        var tParams = {
-          'method':'post',
-          'content': {
-            'IDTicket':IDTicket,
-            'IDAttached':IDAttached,
-            'StAction':'attach',
-          },
-          'okCallBack':function(response) {
-            if(response == 'ok') {
-              refreshCall(IDTicket);
-            } else {
-              flowAlert(response);
+        if(typeof(IDTicket) == undefined) {
+
+        } else {
+          var tParams = {
+            'method':'post',
+            'content': {
+              'IDTicket':IDTicket,
+              'IDAttached':IDAttached,
+              'StAction':'attach',
+            },
+            'okCallBack':function(response) {
+              if(response == 'ok') {
+                refreshCall(IDTicket);
+              } else {
+                flowAlert(response);
+              }
             }
-          }
-        };
-        xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
+          };
+          xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
+        }
       }
     };
   }

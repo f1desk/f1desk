@@ -561,7 +561,7 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getTicketsAttached($IDTicket);
 	}
-	
+
 	/**
    * get all attacheds tickets from a ID given
    *
@@ -782,7 +782,7 @@ abstract class TemplateHandler {
     }
     return $StHtml;
 	}
-	
+
 	/**
 	 * show all tickets attached
 	 *
@@ -925,7 +925,7 @@ abstract class TemplateHandler {
     }
     return $StHtml;
 	}
-	
+
 	/**
 	 * return the category of a ticket
 	 *
@@ -936,7 +936,7 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getTicketCategory($IDTicket);
 	}
-	
+
 	/**
 	 * return the priority of a ticket
 	 *
@@ -947,7 +947,7 @@ abstract class TemplateHandler {
 	  $TicketHandler = self::getInstance('TicketHandler');
 	  return $TicketHandler->getTicketPriority($IDTicket);
 	}
-	
+
 	/**
 	 * return the type of a ticket
 	 *
@@ -959,5 +959,18 @@ abstract class TemplateHandler {
 	  return $TicketHandler->getTicketType($IDTicket);
 	}
 
+	public static function showTicketTypes($StClass = 'inputCombo') {
+	  $ArTypes = self::getTicketTypes();
+	  if (!empty($ArTypes)) {
+	    $StHtml = "<select id='IDType' name='IDType' class='$StClass'>";
+	    foreach ($ArTypes as $Key => $Type) {
+	      $StHtml .= "<option value='$Key'>$Type</option>";
+	    }
+	    $StHtml .= '</select>';
+	  } else {
+	    $StHtml = '<span>'.NOTYPE.'</span>';
+	  }
+    return $StHtml;
+	}
 }
 ?>
