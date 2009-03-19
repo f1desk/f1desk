@@ -73,7 +73,7 @@ class UserHandler extends DBHandler {
    */
   public static function SQLInjectionHandle(&$StArgs) {
     $StArgs = addslashes($StArgs);
-    
+
     $ArBloq = array("select"=>'',"drop"=>'',"delete"=>'',"insert"=>'',"update"=>'',"where"=>'',"having"=>'',"union"=>'',"'"=>'\'',"="=>'',"<"=>'',">"=>'');
     $StReturn = strstr(strtolower($StArgs),$ArBloq);
 
@@ -143,7 +143,7 @@ WHERE
    * Destroy the session to logout
    *
    */
-  public function logginOut() {
+  public static function logginOut() {
     session_destroy();
     unset($_SESSION);
   }
