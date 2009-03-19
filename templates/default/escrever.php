@@ -4,6 +4,7 @@
 
 <div id='createWrapper'>
   <form id='formCreate' method='POST' enctype='multipart/form-data' action='createTicket.submit.php' onsubmit='return createTicketSubmit();'>
+    <?=TemplateHandler::showTicketTypes($ArTypes)?>
     <h3>Anexar Chamados</h3>
     <p>Clique <a href='' class='Link'>aqui</a> para anexar chamados</p>
     <h3>Informa&ccedil;&otilde;es do chamado</h3>

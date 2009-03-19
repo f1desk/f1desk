@@ -26,20 +26,31 @@ if (getSessionProp('isSupporter') == 'true') {
   $ArDepartments = TemplateHandler::getPublicDepartments();
 }
 
+#
+# Ticket Header
+#
+
 $StTitle = $ArHeaders['StTitle'];
 $IDTicket = $ArHeaders['IDTicket'];
+$IDDepartment = $ArHeaders['IDDepartment'];
+$StSituation = constant($ArHeaders['StSituation']);
+
+#
+# Ticket Info
+#
 $ArAttachedTickets = TemplateHandler::getAttachedTickets($IDTicket);
 $ArTicketDepartments = TemplateHandler::getTicketDepartments($IDTicket);
 $ArTicketDepartmentsReader = TemplateHandler::getTicketDepartmentsReader($IDTicket);
-$ArDepartment = reset($ArTicketDepartments);
-$ArTicketDestinations = TemplateHandler::getTicketDestination($IDTicket); // who this ticket was sent to
+$ArTicketDestinations = TemplateHandler::getTicketDestination($IDTicket);
 $ArTicketReaders = TemplateHandler::getTicketReaders($IDTicket);
-$IDDepartment = $ArHeaders['IDDepartment'];
-$StSituation = constant($ArHeaders['StSituation']);
+
+$ArDepartment = reset($ArTicketDepartments);
+
 $DtOpened = F1DeskUtils::formatDate('datetime_format',$ArHeaders['DtOpened']);
 
 if (TemplateHandler::IsSupporter()) {
   $ArResponses = TemplateHandler::getCannedResponses(getSessionProp('IDSupporter'),$IDDepartment);
+  $ArTypes = TemplateHandler::getTicketTypes;
 }
 
 require_once(TEMPLATEDIR . '/ticket.php');
