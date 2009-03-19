@@ -26,7 +26,7 @@
           <th><?=TICKET_HEADER_STATUS?></th>
           <th><?=TICKET_HEADER_SUPPORTER?></th>
           <th><?=TICKET_HEADER_DEPARTMENT?></th>
-          <?php if (TemplateHandler::IsSupporter()): ?>
+          <?php if (TemplateHandler::IsSupporter() && !$preview): ?>
           <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
           <?php endif; ?>
         </tr>
@@ -42,7 +42,7 @@
           <td>
             <?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments');?>
           </td>
-          <?php if (TemplateHandler::IsSupporter()): ?>
+          <?php if (TemplateHandler::IsSupporter() && !$preview): ?>
           <td>
             <a href='javascript:void(0);' onclick='attachTicket(<?=$IDTicket?>);'>
               <img src='<?= TEMPLATEDIR ?>images/attach.png' alt='Attach Call' title='Attach Call'>

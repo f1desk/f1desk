@@ -1214,6 +1214,27 @@ WHERE
   }
 
   /**
+   * get all tickets that attached this ticket
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getTicketsAttached($IDTicket){
+    $StSQL = '
+SELECT
+  AT.IDTicket
+FROM
+  '.DBPREFIX.'AttachedTicket AT
+  LEFT JOIN
+    '.DBPREFIX.'Ticket T ON (T.IDTicket = AT.IDTicket)
+WHERE
+  AT.IDAttachedTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
+  }
+  
+  /**
    * get all attacheds tickets from a ID given
    *
    * @param integer $IDTicket

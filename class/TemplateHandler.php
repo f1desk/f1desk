@@ -552,6 +552,17 @@ abstract class TemplateHandler {
 	}
 
 	/**
+   * get all tickets that attached this ticket
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+	public static function getTicketsAttached($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getTicketsAttached($IDTicket);
+	}
+	
+	/**
    * get all attacheds tickets from a ID given
    *
    * @param integer $IDTicket

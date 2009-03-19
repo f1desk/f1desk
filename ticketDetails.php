@@ -29,6 +29,7 @@ if (getSessionProp('isSupporter') == 'true') {
 $StTitle = $ArHeaders['StTitle'];
 $IDTicket = $ArHeaders['IDTicket'];
 $ArAttachedTickets = TemplateHandler::getAttachedTickets($IDTicket);
+$ArTicketsAttached = TemplateHandler::getTicketsAttached($IDTicket);
 $ArTicketDepartments = TemplateHandler::getTicketDepartments($IDTicket);
 $ArTicketDepartmentsReader = TemplateHandler::getTicketDepartmentsReader($IDTicket);
 $ArDepartment = reset($ArTicketDepartments);

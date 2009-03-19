@@ -775,7 +775,8 @@ function attachTicket(IDTicket) {
               flowAlert(response);
             }
           }
-        }
+        };
+        xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
       }
     };
   }
