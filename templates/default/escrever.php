@@ -4,6 +4,7 @@
 
 <div id='createWrapper'>
   <form id='formCreate' method='POST' enctype='multipart/form-data' action='createTicket.submit.php' onsubmit='return createTicketSubmit();'>
+  <?php if (TemplateHandler::IsSupporter()):?>
     <h3><?=TICKET_TYPE?></h3>
     <?=TemplateHandler::showTicketTypes();?>
 
@@ -14,7 +15,7 @@
         <h4><?=ATTACHED_TIC?></h4>
       </div>
     </div>
-
+    <?php endif; ?>
     <h3><?=TICKET_INFO?></h3>
     <p>
       <label for='StCategory'><?=CATEGORY?></label>
@@ -27,12 +28,15 @@
     <div id='sendTo'>
       <h3><?=SEND_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDRecipient','IDRecipient','inputCombo');?>
+      <?php if (TemplateHandler::IsSupporter()):?>
       <p><?=CLICK?> <a href='javascript:void(0);' class='Link' onclick='listSupporters("Recipients")'><?=HERE?></a><?=ADD_SUPPORTER?></p>
       <div id='addedRecipients' class='Invisible'>
         <h4><?=ADDED_SUP?></h4>
       </div>
+      <?php endif; ?>
     </div>
 
+    <?php if (TemplateHandler::IsSupporter()):?>
     <div id='respondTo'>
       <h3><?=REPLY_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDReader','IDReader','inputCombo');?>
@@ -41,6 +45,7 @@
         <h4><?=ADDED_SUP?></h4>
       </div>
     </div>
+    <?php endif; ?>
     <h3><?=MESSAGE?></h3>
     <p>
       <label for='StTitle'><?=TITLE?></label>

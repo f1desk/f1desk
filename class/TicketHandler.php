@@ -677,6 +677,7 @@ GROUP BY
    */
   public function createUserTicket ($IDClient, $IDCategory, $IDPriority, $StTitle, $StMessage, $IDDepartment,$ArFiles = array()) {
 
+    $IDUser = array_shift(F1DeskUtils::getUserData($IDClient,1));
     $StTableName = DBPREFIX . 'Ticket';
     $ArFields = array(
                       'StTitle',
@@ -697,14 +698,12 @@ GROUP BY
                       date('Y-m-d',time()),
                       'NOT_READ',
                       '1',
-                      $IDClient,
+                      $IDUser,
                       $IDCategory,
                       $IDPriority
                      );
     $itReturn = $this->insertIntoTable($StTableName, $ArFields, $ArValues);
     $IDTicket = $this->getID();
-
-    $IDUser = array_shift(F1DeskUtils::getUserData($IDClient));
 
     $IDMessage = $this->addMessage($IDUser, $IDTicket, $StMessage,0);
     if (!empty($ArFiles)) {
@@ -1231,7 +1230,7 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult;
   }
-  
+
   /**
    * get all attacheds tickets from a ID given
    *
@@ -1409,7 +1408,7 @@ IDDepartment = $IDDepartment";
     $ArReaders = $this->getTicketReaders($IDTicket);
     $StSQL = '
 SELECT
-  StEmail
+  StEmail, BoNotify
 FROM
   '.DBPREFIX.'User U
 LEFT JOIN '.DBPREFIX."Ticket T ON (T.IDUser = U.IDUser)
@@ -1453,7 +1452,7 @@ WHERE
 
     return $BoResult;
   }
-  
+
   /**
    * gets the category of a ticket
    *
@@ -1474,7 +1473,7 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult[0]['StCategory'];
   }
-  
+
   /**
    * gets the priority of a ticket
    *
@@ -1495,7 +1494,7 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult[0]['StPriority'];
   }
-  
+
   /**
    * gets the type of a ticket
    *

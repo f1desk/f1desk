@@ -13,7 +13,7 @@ if (!empty($_POST)) {
   $StTitle = $_POST['StTitle'];
   $TxMessage = f1desk_escape_html($_POST['TxMessage']);
   $IDDepartment = ($_POST['IDRecipient'] != 'null') ? $_POST['IDRecipient'] : '';
-  $IDDepartmentReader = ($_POST['IDReader'] != 'null') ? $_POST['IDReader'] : '';
+  $IDDepartmentReader = (isset($_POST['IDReader']) && $_POST['IDReader'] != 'null') ? $_POST['IDReader'] : '';
   $ArUsers = (isset($_POST['ArRecipients'])) ? explode(',',$_POST['ArRecipients']) : array();
   $ArReaders = (isset($_POST['ArReaders'])) ? explode(',',$_POST['ArReaders']) : array();
   $ArAttached = (isset($_POST['ArAttached'])) ? explode(',',$_POST['ArAttached']) : array();
@@ -26,9 +26,9 @@ if (!empty($_POST)) {
     }
   } else {
     if (!empty($_FILES['Attachment']['name'])) {
-      $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDUser'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment,$_FILES);
+      $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDClient'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment,$_FILES);
     } else {
-      $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDUser'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment);
+      $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDClient'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment);
     }
   }
   if (!empty($ArAttached)) {
