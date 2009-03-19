@@ -7,9 +7,12 @@
     <h3><?=TICKET_TYPE?></h3>
     <?=TemplateHandler::showTicketTypes();?>
 
-    <div id='AttachedTickets'>
+    <div id='AttachTickets'>
       <h3><?=ATTACH_TICKET?></h3>
       <p><?=CLICK?><a href='javascript:void(0)' class='Link' onclick='attachTicket()'><?=HERE?></a><?=TO_ATTACH?></p>
+      <div id='AttachedTickets' class='Invisible'>
+        <h4><?=ATTACHED_TIC?></h4>
+      </div>
     </div>
 
     <h3><?=TICKET_INFO?></h3>
@@ -33,7 +36,8 @@
     <div id='respondTo'>
       <h3><?=REPLY_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDReader','IDReader','inputCombo');?>
-      <p><?=CLICK?><a href='javascript:void(0);' class='Link' onclick='listSupporters("Readers")'><?=HERE?></a><?=ADD_SUPPORTER?>     <div id='addedReaders' class='Invisible'>
+      <p><?=CLICK?><a href='javascript:void(0);' class='Link' onclick='listSupporters("Readers")'><?=HERE?></a><?=ADD_SUPPORTER?>
+      <div id='addedReaders' class='Invisible'>
         <h4><?=ADDED_SUP?></h4>
       </div>
     </div>

@@ -16,6 +16,7 @@ if (!empty($_POST)) {
   $IDDepartmentReader = ($_POST['IDReader'] != 'null') ? $_POST['IDReader'] : '';
   $ArUsers = (isset($_POST['ArRecipients'])) ? explode(',',$_POST['ArRecipients']) : array();
   $ArReaders = (isset($_POST['ArReaders'])) ? explode(',',$_POST['ArReaders']) : array();
+  $ArAttached = (isset($_POST['ArAttached'])) ? explode(',',$_POST['ArAttached']) : array();
 
   if (TemplateHandler::IsSupporter()) {
     if (!empty($_FILES['Attachment']['name'])) {
@@ -28,6 +29,12 @@ if (!empty($_POST)) {
       $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDUser'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment,$_FILES);
     } else {
       $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDUser'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment);
+    }
+  }
+  if (!empty($ArAttached)) {
+    foreach ($ArAttached as $IDAttach) {
+      if (! F1DeskUtils::isAttached($IDTicket,$IDAttach))
+      $TicketHandler->attachTicket($IDTicket,$IDAttach);
     }
   }
   header('Location: index?page=escrever&IDTicket=' . $IDTicket);
