@@ -1033,10 +1033,30 @@ FROM
 WHERE
   T.IDTicket = $IDTicket
 AND
-  BoReader = 0";
+  TD.IDTicket = $IDTicket
+AND
+  TD.BoReader = 0";
     $this->execSQL($StSQL);
     $ArHeader = $this->getResult('string');
 
+    ###    FIX ME FIX ME FIX ME FIX ME    ###
+    # CUIDADOOOOOO!!! GAMBIARRA ABAIXOOO!!! #
+    ###    FIX ME FIX ME FIX ME FIX ME    ###
+
+    if (empty($ArHeader)) {
+      $StSQL = '
+SELECT
+  T.IDTicket, T.StTitle, T.DtOpened, T.StSituation, T.IDSupporter, U.StName
+FROM
+'.DBPREFIX.'Ticket T
+  LEFT JOIN '.DBPREFIX.'TicketSupporter TS ON (TS.IDTicket = T.IDTicket)
+  LEFT JOIN '.DBPREFIX.'Supporter S ON (TS.IDSupporter = S.IDSupporter)
+  LEFT JOIN '.DBPREFIX."User U ON (S.IDUser = U.IDUser)
+WHERE
+  T.IDTicket = $IDTicket";
+      $this->execSQL($StSQL);
+      $ArHeader = $this->getResult('string');
+    }
     return $ArHeader;
   }
 

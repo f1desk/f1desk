@@ -682,6 +682,7 @@ abstract class TemplateHandler {
 	 * @return string
 	 */
 	public static function createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, $StID, $StClass, $preview) {
+	  $StHtml = $ArHeaders['StName'];
 	  if (self::IsSupporter() && !$preview) {
 	    $StHtml = "<select id='$StID' onchange='setTicketOwner(\"$IDTicket\", this.value)' class='$StClass'>";
 	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {
@@ -713,6 +714,7 @@ abstract class TemplateHandler {
 	 * @return unknown
 	 */
 	public static function createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket, $StID, $StClass = 'inputCombo', $preview) {
+	  $StHtml = SINGLE;
     if (self::IsSupporter() && !$preview) {
       $StHtml = "<select id='$StID' class='$StClass' onchange='changeDepartment(\"$IDTicket\",this.value)'>";
       foreach ($ArDepartments as $ArDepartment) {

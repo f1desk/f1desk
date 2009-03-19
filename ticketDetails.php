@@ -29,10 +29,10 @@ if (getSessionProp('isSupporter') == 'true') {
 #
 # Ticket Header
 #
-
 $StTitle = $ArHeaders['StTitle'];
 $IDTicket = $ArHeaders['IDTicket'];
-$IDDepartment = $ArHeaders['IDDepartment'];
+$IDDepartment = (!empty($ArHeaders['IDDepartment'])) ? $ArHeaders['IDDepartment'] : '';
+$StSupporter = (!empty($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 $StSituation = constant($ArHeaders['StSituation']);
 
 #
@@ -54,7 +54,6 @@ $StTicketType = TemplateHandler::getTicketType($IDTicket);
 
 if (TemplateHandler::IsSupporter()) {
   $ArResponses = TemplateHandler::getCannedResponses(getSessionProp('IDSupporter'),$IDDepartment);
-  //$ArTypes = TemplateHandler::getTicketTypes;
 }
 
 require_once(TEMPLATEDIR . '/ticket.php');
