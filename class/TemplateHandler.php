@@ -682,7 +682,7 @@ abstract class TemplateHandler {
 	 * @return string
 	 */
 	public static function createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, $StID, $StClass, $preview) {
-	  $StHtml = $ArHeaders['StName'];
+	  $StHtml = (isset($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 	  if (self::IsSupporter() && !$preview) {
 	    $StHtml = "<select id='$StID' onchange='setTicketOwner(\"$IDTicket\", this.value)' class='$StClass'>";
 	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {
