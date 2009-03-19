@@ -341,9 +341,6 @@ abstract class TemplateHandler {
 	  $ArTypes = F1DeskUtils::listTicketTypes();
 	  for($i=0; $i < count($ArTypes); $i++ ) {
       $ArReturn [ $ArTypes[$i]['IDType'] ] = $ArTypes[$i]['StType'];
-      if (count($ArReturn <= 0)) {
-        $ArReturn[0] = EXC_NOTTYPE;
-      }
       return $ArReturn;
     }
 	}
