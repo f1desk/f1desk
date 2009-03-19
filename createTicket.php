@@ -12,5 +12,7 @@ if (getSessionProp('isSupporter') == 'true') {
 
 $ArPriorities = F1DeskUtils::listPriorities();
 $ArCategories = F1DeskUtils::listCategories();
-$ArSub = F1DeskUtils::getSubDepartments(getSessionProp('IDSupporter'));
+if (TemplateHandler::IsSupporter()) {
+  $ArSub = F1DeskUtils::getSubDepartments(getSessionProp('IDSupporter'));
+}
 ?>
