@@ -99,7 +99,7 @@ abstract class TemplateHandler {
   public static function listTickets( $IDDepartment, $IDSupporter, $IDUser ){
 
   	$ObTicket = self::getInstance( "TicketHandler" );
-  	if ($IDDepartment != 'ignored' && $IDDepartment != 'bookmark') {
+  	if ($IDDepartment != 'ignored' && $IDDepartment != 'bookmark' && $IDDepartment != 'single') {
     	$openTickets = $ObTicket->listTickets( $IDDepartment );
     	$ignoredTickets = $ObTicket->listIgnoredTickets($IDSupporter);
     	$readTickets = $ObTicket->getReadTickets($IDDepartment, $IDUser);
@@ -122,7 +122,19 @@ abstract class TemplateHandler {
   	  foreach ($openTickets as $IDTicket => &$ArTicket) {
         $ArTicket['isRead'] = 1;
   	  }
-  	} else {
+  	} elseif ($IDDepartment == 'single') {
+  	  $TicketList = array();
+  	  $openTickets = $ObTicket->listSingleTickets($IDSupporter);
+  	  $TicketList = array_keys($openTickets);
+  	  $readTickets = $ObTicket->getReadTickets($IDDepartment, $IDUser, $TicketList);
+  	  foreach ($openTickets as $IDTicket => &$ArTicket) {
+  	    if (array_key_exists($IDTicket,$readTickets) == true) {
+          $ArTicket['isRead'] = 1;
+        } else {
+          $ArTicket['isRead'] = 0;
+        }
+  	  }
+    } else {
   	  $TicketList = array();
   	  $openTickets = $ObTicket->listBookmarkTickets($IDSupporter);
   	  $TicketList = array_keys($openTickets);
@@ -670,6 +682,7 @@ abstract class TemplateHandler {
 	 * @return string
 	 */
 	public static function createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, $StID, $StClass, $preview) {
+	  $StHtml = (isset($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 	  if (self::IsSupporter() && !$preview) {
 	    $StHtml = "<select id='$StID' onchange='setTicketOwner(\"$IDTicket\", this.value)' class='$StClass'>";
 	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {
@@ -701,6 +714,7 @@ abstract class TemplateHandler {
 	 * @return unknown
 	 */
 	public static function createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket, $StID, $StClass = 'inputCombo', $preview) {
+	  $StHtml = SINGLE;
     if (self::IsSupporter() && !$preview) {
       $StHtml = "<select id='$StID' class='$StClass' onchange='changeDepartment(\"$IDTicket\",this.value)'>";
       foreach ($ArDepartments as $ArDepartment) {

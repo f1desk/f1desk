@@ -154,6 +154,7 @@ ORDER BY
     	$ArDepartments[$ArQuery['IDDepartment']] = $ArQuery['StDepartment'];
     }
 
+    $ArDepartments['single'] = DEPT_SINGLE;
     $ArDepartments['bookmark'] = DEPT_BOOKMARK;
     $ArDepartments['ignored'] = DEPT_IGNORED;
 
