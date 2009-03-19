@@ -36,6 +36,4 @@
   #
   define('ADD','Incluir');
   define('PREVIEW','Visualizar');
-
-
 ?>
