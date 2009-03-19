@@ -1214,6 +1214,27 @@ WHERE
   }
 
   /**
+   * get all tickets that attached this ticket
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+  public function getTicketsAttached($IDTicket){
+    $StSQL = '
+SELECT
+  AT.IDTicket
+FROM
+  '.DBPREFIX.'AttachedTicket AT
+  LEFT JOIN
+    '.DBPREFIX.'Ticket T ON (T.IDTicket = AT.IDTicket)
+WHERE
+  AT.IDAttachedTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult;
+  }
+  
+  /**
    * get all attacheds tickets from a ID given
    *
    * @param integer $IDTicket
@@ -1433,6 +1454,69 @@ WHERE
     $BoResult = $MailHandler->sendMail($ArEmails,$StSubject,$StMessage,$StHeaders);
 
     return $BoResult;
+  }
+  
+  /**
+   * gets the category of a ticket
+   *
+   * @param integer $IDTicket
+   * @return string
+   */
+  public function getTicketCategory($IDTicket){
+    $StSQL = '
+SELECT
+  C.StCategory
+FROM
+  '.DBPREFIX.'Ticket T
+  LEFT JOIN
+    '.DBPREFIX.'Category C ON (C.IDCategory = T.IDCategory)
+WHERE
+    T.IDTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult[0]['StCategory'];
+  }
+  
+  /**
+   * gets the priority of a ticket
+   *
+   * @param integer $IDTicket
+   * @return string
+   */
+  public function getTicketPriority($IDTicket){
+    $StSQL = '
+SELECT
+  P.StPriority
+FROM
+  '.DBPREFIX.'Ticket T
+  LEFT JOIN
+    '.DBPREFIX.'Priority P ON (P.IDPriority = T.IDPriority)
+WHERE
+    T.IDTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult[0]['StPriority'];
+  }
+  
+  /**
+   * gets the type of a ticket
+   *
+   * @param integer $IDTicket
+   * @return string
+   */
+  public function getTicketType($IDTicket){
+    $StSQL = '
+SELECT
+  Ty.StType
+FROM
+  '.DBPREFIX.'Ticket T
+  LEFT JOIN
+    '.DBPREFIX.'Type Ty ON (Ty.IDType = T.IDType)
+WHERE
+    T.IDTicket = ' . $IDTicket ;
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    return  $ArResult[0]['StType'];
   }
 
 }

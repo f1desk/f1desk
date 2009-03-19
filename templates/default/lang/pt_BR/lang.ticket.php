@@ -13,6 +13,8 @@
   # Ticket Informations
   #
   define('INFORMATIONS','Informa&ccedil;&otilde;es');
+  define('INFO_CATEGORY', 'Categoria');
+  define('INFO_PRIORITY', 'Prioridade');
 
   #
   # Ticket History

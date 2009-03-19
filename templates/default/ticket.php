@@ -1,10 +1,11 @@
-<?
+<?php
   /*default language*/
   handleLanguage(__FILE__);
   #
   # join arrow's ID and Content's ID with this UID
   #
   $uid = uniqid();
+  $IDSupporter = getSessionProp('IDSupporter');
 ?>
 <!--[TICKET HEADER]-->
 <div id='ticketHeader'>
@@ -26,9 +27,9 @@
           <th><?=TICKET_HEADER_STATUS?></th>
           <th><?=TICKET_HEADER_SUPPORTER?></th>
           <th><?=TICKET_HEADER_DEPARTMENT?></th>
-          <?php if (TemplateHandler::IsSupporter()): ?>
+          <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
-          <?php endif; ?>
+          <? endif; ?>
         </tr>
       </thead>
       <tbody>
@@ -42,28 +43,28 @@
           <td>
             <?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments');?>
           </td>
-          <?php if (TemplateHandler::IsSupporter()): ?>
+          <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <td>
             <a href='javascript:void(0);' onclick='attachTicket(<?=$IDTicket?>);'>
               <img src='<?= TEMPLATEDIR ?>images/attach.png' alt='Attach Call' title='Attach Call'>
             </a>
           </td>
           <td>
-              <?php if (F1DeskUtils::isIgnored(getSessionProp('IDSupporter'),$IDTicket)): ?>
-            <a href='javascript:void(0);' onclick='unignoreTicket(<?=getSessionProp('IDSupporter')?>,<?=$IDTicket?>)'>
+              <? if (F1DeskUtils::isIgnored($IDSupporter,$IDTicket)): ?>
+            <a href='javascript:void(0);' onclick='unignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
               <img src='<?= TEMPLATEDIR ?>images/unignore.png' alt='Ignore Call' title='Ignore Call'>
-              <?php else: ?>
-            <a href='javascript:void(0);' onclick='ignoreTicket(<?=getSessionProp('IDSupporter')?>,<?=$IDTicket?>)'>
+              <? else: ?>
+            <a href='javascript:void(0);' onclick='ignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
               <img src='<?= TEMPLATEDIR ?>images/ignore.png' alt='Ignore Call' title='Ignore Call'>
-              <?php endif;?>
+              <? endif;?>
             </a>
           </td>
           <td>
-            <a href='javascript:void(0);' onclick='bookmarkTicket(<?=getSessionProp('IDSupporter')?>,<?=$IDTicket?>)'>
+            <a href='javascript:void(0);' onclick='bookmarkTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
               <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Call' title='Bookmark Call'>
             </a>
           </td>
-          <?php endif; ?>
+          <? endif; ?>
         </tr>
       </tbody>
     </table>
@@ -78,13 +79,35 @@
     <span><?=INFORMATIONS?></span>
   </div>
   <div id='informationsContent<?=$uid?>' class="informationsBox" style="display:none">
+    
+    <table class="tableTickets">
+      <thead>
+        <th><?=INFO_CATEGORY?></th>
+        <th><?=INFO_PRIORITY?></th>
+        <? if ($StTicketType != ""): ?>
+          <th><?=INFO_TYPE?></th>
+        <? endif; ?>
+      </thead>
+      <tbody>
+        <td><?=$StTicketCategory?></td>
+        <td><?=$StTicketPriority?></td>
+        <? if ($StTicketType != ""): ?>
+          <td><?=$StTicketType?></td>
+        <? endif; ?>
+      </tbody>
+    </table>
+  
     <!--[ATTACHMENT FILES]-->
     <?=TemplateHandler::showAttachments($ArAttachments);?>
     <!--[/ATTACHMENT FILES]-->
 
-    <!--[ATTACHMENT TICKETS]-->
+    <!--[ATTACHED TICKETS]-->
     <?=TemplateHandler::showAttachedTickets($ArAttachedTickets);?>
-    <!--[/ATTACHMENT TICKETS]-->
+    <!--[/ATTACHED TICKETS]-->
+    
+    <!--[TICKETS ATTACHED]-->
+    <?=TemplateHandler::showTicketsAttached($ArTicketsAttached);?>
+    <!--[/TICKETS ATTACHED]-->
 
     <!--[TICKET DEPARTMENTS]-->
     <?=TemplateHandler::showTicketDepartments($ArTicketDepartments);?>
@@ -132,10 +155,10 @@
 	      <div id='messageType' class='Right'>
 	    	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
 	    				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
-	    				<?php if (TemplateHandler::IsSupporter()): ?>
+	    				<? if (TemplateHandler::IsSupporter()): ?>
 	    				<option value="INTERNAL"><?=MSGTYPE_INTERNAL?></option>
 	    				<option value="SATISFACTION"><?=MSGTYPE_SATISFACTION?></option>
-	    				<?php endif; ?>
+	    				<? endif; ?>
 	    		</select>
 	      </div>
 

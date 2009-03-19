@@ -552,6 +552,17 @@ abstract class TemplateHandler {
 	}
 
 	/**
+   * get all tickets that attached this ticket
+   *
+   * @param integer $IDTicket
+   * @return array
+   */
+	public static function getTicketsAttached($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getTicketsAttached($IDTicket);
+	}
+	
+	/**
    * get all attacheds tickets from a ID given
    *
    * @param integer $IDTicket
@@ -732,8 +743,9 @@ abstract class TemplateHandler {
 	public static function showAttachments($ArAttachments) {
 	  $StHtml = '';
 	  if (count($ArAttachments)!=0) {
-      $StHtml = "<span>".INFO_FILES."</span>";
-      $StHtml .= "<ul> <li>";
+	    $StHtml = '<table class="tableTickets">
+	                 <thead><th>'. INFO_FILES .'</th></thead>';
+      $StHtml .= "<tbody><td>";
       $i=0;
       foreach ($ArAttachments as $Attachment) {
         $Attachment = $Attachment[0];
@@ -742,7 +754,7 @@ abstract class TemplateHandler {
         $StHtml .= "<a class='Link' href='download.php?IDAttach={$Attachment['IDAttachment']}'>{$Attachment['StFile']}</a>";
         $i++;
       }
-      $StHtml .= "</li> </ul>";
+      $StHtml .= "</td> </tbody> </table>";
 	  }
 	  return $StHtml;
 	}
@@ -756,16 +768,41 @@ abstract class TemplateHandler {
 	public static function showAttachedTickets($ArAttachedTickets) {
 	  $StHtml = '';
 	  if (count($ArAttachedTickets)!=0) {
-      $StHtml = "<span>".INFO_TICKETS."</span>";
-      $StHtml .= "<ul> <li>";
+	    $StHtml = '<table class="tableTickets">
+	                 <thead><th>'. INFO_ATTACHED_TICKETS .'</th></thead>';
+      $StHtml .= "<tbody><td>";
       $i=0;
       foreach ($ArAttachedTickets as $AttachedTicket) {
         if($i!=0)
           $StHtml .= ', ';
-        $StHtml .= "<a class='ink' href='javascript:void(0);' onclick='previewInFlow.Ticket(\"{$AttachedTicket['IDAttachedTicket']}\")'>#{$AttachedTicket['IDAttachedTicket']}</a>";
+        $StHtml .= "<a class='Link' href='javascript:void(0);' onclick='previewInFlow.Ticket(\"{$AttachedTicket['IDAttachedTicket']}\")'>#{$AttachedTicket['IDAttachedTicket']}</a>";
         $i++;
       }
-      $StHtml .= "</li> </ul>";
+      $StHtml .= "</td> </tbody> </table>";
+    }
+    return $StHtml;
+	}
+	
+	/**
+	 * show all tickets attached
+	 *
+	 * @param array $ArAttachedTickets
+	 * @return string HTML
+	 */
+	public static function showTicketsAttached($ArTicketsAttached) {
+	  $StHtml = '';
+	  if (count($ArTicketsAttached)!=0) {
+	    $StHtml = '<table class="tableTickets">
+	                 <thead><th>'. INFO_TICKETS_ATTACHED .'</th></thead>';
+      $StHtml .= "<tbody><td>";
+      $i=0;
+      foreach ($ArTicketsAttached as $TicketAttached) {
+        if($i!=0)
+          $StHtml .= ', ';
+        $StHtml .= "<a class='Link' href='javascript:void(0);' onclick='previewInFlow.Ticket(\"{$TicketAttached['IDTicket']}\")'>#{$TicketAttached['IDTicket']}</a>";
+        $i++;
+      }
+      $StHtml .= "</td> </tbody> </table>";
     }
     return $StHtml;
 	}
@@ -779,8 +816,9 @@ abstract class TemplateHandler {
 	public static function showTicketDepartments($ArTicketDepartments) {
 	  $StHtml = '';
 	  if (count($ArTicketDepartments)!=0) {
-      $StHtml = "<span>".INFO_DEPARTMENT_SENTTO."</span>";
-      $StHtml .= "<ul> <li class='Link'>";
+	    $StHtml = '<table class="tableTickets">
+	                 <thead><th>'. INFO_DEPARTMENT_SENTTO .'</th></thead>';
+      $StHtml .= "<tbody><td>";
       $i=0;
       foreach ($ArTicketDepartments as $TicketDepartments) {
         if($i!=0)
@@ -788,7 +826,7 @@ abstract class TemplateHandler {
         $StHtml .= $TicketDepartments['StDepartment'];
         $i++;
       }
-      $StHtml .= "</li> </ul>";
+      $StHtml .= "</td> </tbody> </table>";
     }
     return $StHtml;
 	}
@@ -802,8 +840,9 @@ abstract class TemplateHandler {
 	public static function showTicketSupporters($ArTicketDestinations) {
 	  $StHtml = '';
 	  if (count($ArTicketDestinations)!=0) {
-      $StHtml = '<span>'.INFO_SUPPORTER_SENTTO.'</span>';
-      $StHtml .= '<ul> <li class="Link">';
+	    $StHtml = '<table class="tableTickets">
+	                 <thead><th>'. INFO_SUPPORTER_SENTTO .'</th></thead>';
+      $StHtml .= "<tbody><td>";
       $i=0;
       foreach ($ArTicketDestinations as $TicketDestination) {
         if($i!=0)
@@ -811,7 +850,7 @@ abstract class TemplateHandler {
         $StHtml .= $TicketDestination['StName'];
         $i++;
       }
-      $StHtml .= '</li> </ul>';
+      $StHtml .= "</td> </tbody> </table>";
     }
     return $StHtml;
 	}
@@ -825,8 +864,9 @@ abstract class TemplateHandler {
 	public static function showDepartmentReaders($ArTicketDepartmentsReader) {
 	  $StHtml = '';
 	  if (count($ArTicketDepartmentsReader)!=0) {
-      $StHtml = '<span>'.INFO_DEPARTMENTS_READER.'</span>';
-      $StHtml .= '<ul> <li class="Link">';
+	    $StHtml = '<table class="tableTickets">
+	                 <thead><th>'. INFO_DEPARTMENTS_READER .'</th></thead>';
+      $StHtml .= "<tbody><td>";
       $i=0;
       foreach ($ArTicketDepartmentsReader as $TicketDepartmentsReader) {
         if($i!=0)
@@ -834,7 +874,7 @@ abstract class TemplateHandler {
         $StHtml .= $TicketDepartmentsReader['StDepartment'];
         $i++;
       }
-      $StHtml .= '</li> </ul>';
+      $StHtml .= "</td> </tbody> </table>";
     }
     return $StHtml;
 	}
@@ -848,8 +888,9 @@ abstract class TemplateHandler {
 	public static function showSupporterReaders($ArTicketReaders) {
 	  $StHtml = '';
 	  if (count($ArTicketReaders)!=0) {
-      $StHtml = '<span>'.INFO_SUPPORTER_READER.'</span>';
-      $StHtml .= '<ul> <li class="Link">';
+	    $StHtml = '<table class="tableTickets">
+	                 <thead><th>'. INFO_SUPPORTER_READER .'</th></thead>';
+      $StHtml .= "<tbody><td>";
       $i=0;
       foreach ($ArTicketReaders as $TicketReaders) {
         if($i!=0)
@@ -857,7 +898,7 @@ abstract class TemplateHandler {
         $StHtml .= $TicketReaders['StName'];
         $i++;
       }
-    $StHtml .= '</li> </ul>';
+      $StHtml .= "</td> </tbody> </table>";
 	  }
 	  return $StHtml;
 	}
@@ -883,6 +924,39 @@ abstract class TemplateHandler {
       $StHtml .= "<button class='button' onclick='addCannedResponse(); return false;'>".ADD."</button>";
     }
     return $StHtml;
+	}
+	
+	/**
+	 * return the category of a ticket
+	 *
+	 * @param integer $IDTicket
+	 * @return string
+	 */
+	public static function getTicketCategory($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getTicketCategory($IDTicket);
+	}
+	
+	/**
+	 * return the priority of a ticket
+	 *
+	 * @param integer $IDTicket
+	 * @return string
+	 */
+	public static function getTicketPriority($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getTicketPriority($IDTicket);
+	}
+	
+	/**
+	 * return the type of a ticket
+	 *
+	 * @param integer $IDTicket
+	 * @return string
+	 */
+	public static function getTicketType($IDTicket){
+	  $TicketHandler = self::getInstance('TicketHandler');
+	  return $TicketHandler->getTicketType($IDTicket);
 	}
 
 }
