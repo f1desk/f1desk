@@ -38,6 +38,9 @@ $ArTicketReaders = TemplateHandler::getTicketReaders($IDTicket);
 $IDDepartment = $ArHeaders['IDDepartment'];
 $StSituation = constant($ArHeaders['StSituation']);
 $DtOpened = F1DeskUtils::formatDate('datetime_format',$ArHeaders['DtOpened']);
+$StTicketCategory = TemplateHandler::getTicketCategory($IDTicket);
+$StTicketPriority = TemplateHandler::getTicketPriority($IDTicket);
+$StTicketType = TemplateHandler::getTicketType($IDTicket);
 
 if (TemplateHandler::IsSupporter()) {
   $ArResponses = TemplateHandler::getCannedResponses(getSessionProp('IDSupporter'),$IDDepartment);

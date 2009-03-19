@@ -79,13 +79,35 @@
     <span><?=INFORMATIONS?></span>
   </div>
   <div id='informationsContent<?=$uid?>' class="informationsBox" style="display:none">
+    
+    <table class="tableTickets">
+      <thead>
+        <th><?=INFO_CATEGORY?></th>
+        <th><?=INFO_PRIORITY?></th>
+        <? if ($StTicketType != ""): ?>
+          <th><?=INFO_TYPE?></th>
+        <? endif; ?>
+      </thead>
+      <tbody>
+        <td><?=$StTicketCategory?></td>
+        <td><?=$StTicketPriority?></td>
+        <? if ($StTicketType != ""): ?>
+          <td><?=$StTicketType?></td>
+        <? endif; ?>
+      </tbody>
+    </table>
+  
     <!--[ATTACHMENT FILES]-->
     <?=TemplateHandler::showAttachments($ArAttachments);?>
     <!--[/ATTACHMENT FILES]-->
 
-    <!--[ATTACHMENT TICKETS]-->
+    <!--[ATTACHED TICKETS]-->
     <?=TemplateHandler::showAttachedTickets($ArAttachedTickets);?>
-    <!--[/ATTACHMENT TICKETS]-->
+    <!--[/ATTACHED TICKETS]-->
+    
+    <!--[TICKETS ATTACHED]-->
+    <?=TemplateHandler::showTicketsAttached($ArTicketsAttached);?>
+    <!--[/TICKETS ATTACHED]-->
 
     <!--[TICKET DEPARTMENTS]-->
     <?=TemplateHandler::showTicketDepartments($ArTicketDepartments);?>
