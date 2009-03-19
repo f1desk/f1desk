@@ -13,4 +13,5 @@ define('INFO_DEPARTMENTS_READER', 'Visualizado pelo(s) departamento(s)');
 define('INFO_SUPPORTER_READER', 'Visualizado pelo(s) atendente(s)');
 define('DATE_MSG_SENT','Mensagem enviada em ');
 define('BY',' por ');
+define('NOTYPE','N&atilde;o h&aacute; tipos de chamados cadastrados');
 ?>

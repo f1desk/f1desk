@@ -761,22 +761,40 @@ function attachTicket(IDTicket) {
     EventFuncs = {
       'Prompt': function(IDAttached) {
         IDAttached = IDAttached.replace(/[#]|[^0-9]/g,'');
-        var tParams = {
-          'method':'post',
-          'content': {
-            'IDTicket':IDTicket,
-            'IDAttached':IDAttached,
-            'StAction':'attach',
-          },
-          'okCallBack':function(response) {
-            if(response == 'ok') {
-              refreshCall(IDTicket);
-            } else {
-              flowAlert(response);
-            }
+        if(IDAttached == '') { return false; }
+        if(typeof(IDTicket) == 'undefined') {
+          if(!gID('ArAttached')) {
+            var hidden = createElement('input',{'type':'hidden','id':'ArAttached','name':'ArAttached','value':IDAttached});
+            gID('formCreate').appendChild(hidden);
+          } else {
+            var hidden = gID('ArAttached');
+            hidden.value += ',' + IDAttached;
           }
-        };
-        xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
+          var p = createElement('p',{'id':'attachedTickets','style':'margin:0;padding:0;padding-bottom:5px;'});
+          gID('AttachedTickets').appendChild(p);
+          var span = createElement('span',{'id':'ticket','class':'supporterName'});
+          var textNode = createTextNode('#'+IDAttached);
+          span.appendChild(textNode);
+          p.appendChild(span);
+          gID('AttachedTickets').className = '';
+        } else {
+          var tParams = {
+            'method':'post',
+            'content': {
+              'IDTicket':IDTicket,
+              'IDAttached':IDAttached,
+              'StAction':'attach',
+            },
+            'okCallBack':function(response) {
+              if(response == 'ok') {
+                refreshCall(IDTicket);
+              } else {
+                flowAlert(response);
+              }
+            }
+          };
+          xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
+        }
       }
     };
   }

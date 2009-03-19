@@ -522,9 +522,10 @@ html>body #main{
   font-size:14px;
 }
 
-#sendTo h4, #respondTo h4{
+#sendTo h4, #respondTo h4, #AttachedTickets h4{
   color: #003C25;
   border-bottom: 1px solid #ABABAB;
+  width:98%;
 }
 
 #addedResponders {
