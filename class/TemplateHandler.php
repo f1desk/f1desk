@@ -241,6 +241,7 @@ abstract class TemplateHandler {
     $i = 0;
     $ObjTicket = self::getInstance('TicketHandler');
     $ArMessages = $ObjTicket->listTicketMessages($IDTicket);
+    $StHtml = "";
     #
     # for exibition, replaces "\n" for "<br>"
     #
@@ -264,14 +265,14 @@ abstract class TemplateHandler {
       if (!TemplateHandler::IsSupporter() && $ArMessage['EnMessageType'] == 'INTERNAL')
         continue;
       $DtSended = F1DeskUtils::formatDate('datetime_format',$ArMessage['DtSended']);
-      $StHtml = "<div class='{$ArMessage['StClass']}'>";
-      $StHtml .= '<b>'.DATE_MSG_SENT.$DtSended.BY.'<span class="TxAtendente">'.$ArMessage['SentBy'].'</span></b><br /><br />';
+      $StHtml .= "<div class='{$ArMessage['StClass']}'>";
+      $StHtml .= '<b>'.DATE_MSG_SENT.$DtSended.BY.'<span class="TxAtendente">'.$ArMessage['SentBy'].'</span></b>';
       if (array_key_exists($ArMessage['IDMessage'],$ArAttachments)) {
         foreach ($ArAttachments[$ArMessage['IDMessage']] as $Attachment) {
           $StHtml .= "<p><b>".ATTACHMENT."</b>: <a class='Link' href='download.php?IDAttach={$Attachment['IDAttachment']}'>{$Attachment['StFile']}</a></p>";
         }
       }
-      $StHtml .= $ArMessage['TxMessage'];
+      $StHtml .= '<p>'.$ArMessage['TxMessage'] . '</p></div>';
     }
     return $StHtml;
   }
