@@ -1,4 +1,4 @@
-var default_ptBR = {
+var i18n = {
   'noAction':'Sem ações para executar',
   'noCannedSelected':'Selecione uma resposta para editar',
   'noNoteSelected':'Selecione uma anotação para editar',
