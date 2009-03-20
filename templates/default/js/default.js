@@ -1060,12 +1060,29 @@ function removeSupporter(Type,ID) {
 }
 
 function createTicketSubmit() {
-
   if(gID('IDRecipient')[gID('IDRecipient').selectedIndex].value == 'null' && (! gID('ArRecipients') || gID('ArRecipients').value == '')) {
     var p = createElement('p',{'id':'Error','style':'color: red'});
     var textError = createTextNode(i18n.noRecipient);
     p.appendChild(textError);
     gID('sendTo').appendChild(p);
     return false;
+  }
+}
+
+function orderTicketList(ItTD, tableID) {
+  var tBody = gID(tableID).getElementsByTagName('TBODY')[0];
+  var toIterate = tBody.getElementsByTagName('TR');
+  var tdsValues = new Array();
+  for (var aux = 0; aux < toIterate.length; aux++){
+    tdsValues[aux] = new Array();
+    tdsValues[aux][0] = toIterate[aux].getElementsByTagName('TD')[ItTD].innerHTML.toLowerCase();
+    tdsValues[aux][1] = toIterate[aux];
+  }
+  while (toIterate.length != 0){
+    removeElements(toIterate[0]);
+  }
+  tdsValues = tdsValues.sort();
+  for (var aux =0; aux < tdsValues.length; aux++){
+    tBody.appendChild(tdsValues[aux][1]);
   }
 }
