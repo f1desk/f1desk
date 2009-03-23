@@ -1,4 +1,3 @@
-var initialized = [];
 var windowParams;
 _resetFlow();
 function _resetFlow() {
@@ -188,7 +187,7 @@ function insertTickets(IDDepartment, HTMLTickets) {
 * @param string StUser
 * @param bool First
 */
-function reloadTicketList( IDDepartment, First, Force ){
+function reloadTicketList( IDDepartment, Toogle, Force ){
 	var tParams = {
     'enqueue':1,
     'returnType':'txt',
@@ -201,24 +200,19 @@ function reloadTicketList( IDDepartment, First, Force ){
       animateReload( IDDepartment, 'stop' );
       insertTickets(IDDepartment, HTMLTickets);
       refreshNotReadCount( IDDepartment );
-      if (First === true) { toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, Force); }
+      if (Toogle === true) { toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, Force); }
     },
     'errCallBack':function(Return) {
       toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, 'hide');
       animateReload( IDDepartment, 'stop' );
     }
   };
-  var tUrl = 'listTickets.php';
+  var tUrl = 'templates/default/ticketList.php';
   xhr.makeRequest('showTickets',tUrl,tParams);
 }
 
 function showDepartmentTickets( IDDepartment, StUser ) {
-  if (!initialized[IDDepartment] || initialized[IDDepartment] === undefined) {
-    initialized[IDDepartment] = true;
-    reloadTicketList( IDDepartment, true );
-  } else {
-    toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment);
-  }
+  toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment);
 }
 
 function selectTicket(Clicked) {

@@ -1,19 +1,7 @@
 <?php
-  /*default*/
   handleLanguage(__FILE__);
-  
-  $IDSupporter = getSessionProp('IDSupporter');
-  $IDUser = getSessionProp('IDUser');
-
-  if (TemplateHandler::IsSupporter()) {
-  	$ArDepartments = TemplateHandler::getDepartments( $IDSupporter, true );
-  	$ArNotRead = TemplateHandler::notReadCount( $IDSupporter );
-  } else {
-    $ArDepartments = TemplateHandler::getUserDepartments();
-    $ArNotRead = TemplateHandler::notReadCount( $IDUser, false );
-  }
+  require_once('departmentTicketData.php');
 ?>
-
 <? foreach ($ArDepartments as $ID => $ArDepartment) : ?>
   <div id="departmentWrapper<?=$ID?>">
     <div id='menuTitle<?=$ID?>' class='departmentRows'>
@@ -24,12 +12,14 @@
     	  <span> - </span>
   	    <span class='TxDestaque'>
     		  <span id="notReadCount<?=$ID?>">
-  			    <?= $ArNotRead[$ID]['notRead'] ?>
+  			    <?= $ArTickets[$ID]['notReadCount'] ?>
     		  </span>
     		  <?=TO_READ?>
   		  </span>
   		<? endif; ?>
     </div>
-    <div style='display:none;' id="departmentContent<?=$ID?>"></div>
+    <div style='display:none;' id="departmentContent<?=$ID?>">
+      <? require('ticketList.php'); ?>
+    </div>
   </div>
 <? endforeach; ?>

@@ -23,7 +23,7 @@ abstract class TemplateHandler {
     return $ArInstances[$StClassName];
   }
 
-  /**
+    /**
    * list the departments with their subdepartments
    *
    * @return array
@@ -91,94 +91,56 @@ abstract class TemplateHandler {
   }
 
   /**
-   * List all tickets with the opened situation by a department given
+   * get the tickets of all departments
    *
-   * @param integer $IDDepartment
+   * @param array $ArIDDepartment
+   * @param int $IDSupporter
    * @return array
    */
-  public static function listTickets( $IDDepartment, $IDSupporter, $IDUser ){
+  public static function getTickets($ArIDDepartment,$IDSupporter) {
+    $ArTickets = array();
 
-  	$ObTicket = self::getInstance( "TicketHandler" );
-  	if ($IDDepartment != 'ignored' && $IDDepartment != 'bookmark' && $IDDepartment != 'single') {
-    	$openTickets = $ObTicket->listTickets( $IDDepartment );
-    	$ignoredTickets = $ObTicket->listIgnoredTickets($IDSupporter);
-    	$readTickets = $ObTicket->getReadTickets($IDDepartment, $IDUser);
+    $ObjTicket = self::getInstance('TicketHandler');
+    $ArDepartmentTickets['open'] = $ObjTicket->listTickets($ArIDDepartment);
+    $ArDepartmentTickets['ignored'] = $ObjTicket->listIgnoredTickets($IDSupporter);
+    $ArDepartmentTickets['bookmark'] = $ObjTicket->listBookmarkTickets($IDSupporter);
+    $ArDepartmentTickets['single'] = $ObjTicket->listSingleTickets($IDSupporter);
+    $ArDepartmentTickets['byme'] = $ObjTicket->listByMeTickets($IDSupporter);
 
-
-      foreach ($openTickets as $IDTicket => &$ArTicket) {
-        if (array_key_exists($IDTicket,$ignoredTickets) == true) {
-          unset($openTickets[$IDTicket]);
-          continue;
-        }
-
-        if (array_key_exists($IDTicket,$readTickets) == true) {
-          $ArTicket['isRead'] = 1;
+    foreach ($ArIDDepartment as $IDDepartment) {
+      if (array_key_exists($IDDepartment,$ArDepartmentTickets)) {
+        $ArCurrentTickets = $ArDepartmentTickets[$IDDepartment];
+      } else {
+        if (array_key_exists($IDDepartment,$ArDepartmentTickets['open'])) {
+          $ArCurrentTickets = $ArDepartmentTickets['open'][$IDDepartment];
         } else {
-          $ArTicket['isRead'] = 0;
+          $ArCurrentTickets = array();
         }
       }
-  	} elseif ($IDDepartment == 'ignored') {
-  	  $openTickets = $ObTicket->listIgnoredTickets($IDSupporter);
-  	  foreach ($openTickets as $IDTicket => &$ArTicket) {
-        $ArTicket['isRead'] = 1;
-  	  }
-  	} elseif ($IDDepartment == 'single') {
-  	  $TicketList = array();
-  	  $openTickets = $ObTicket->listSingleTickets($IDSupporter);
-  	  $TicketList = array_keys($openTickets);
-  	  $readTickets = $ObTicket->getReadTickets($IDDepartment, $IDUser, $TicketList);
-  	  foreach ($openTickets as $IDTicket => &$ArTicket) {
-  	    if (array_key_exists($IDTicket,$readTickets) == true) {
+
+      $TicketList = array();
+      foreach ($ArCurrentTickets as $ArCurrentTicket) {
+        $TicketList[] = $ArCurrentTicket['IDTicket'];
+      }
+
+      $ArReadTickets = $ObjTicket->getReadTickets($IDSupporter, $TicketList);
+
+      $ItnotReadCount = 0;
+
+      foreach ($ArCurrentTickets as &$ArTicket) {
+        if (array_key_exists($ArTicket['IDTicket'],$ArReadTickets)) {
           $ArTicket['isRead'] = 1;
         } else {
           $ArTicket['isRead'] = 0;
-        }
-  	  }
-    } else {
-  	  $TicketList = array();
-  	  $openTickets = $ObTicket->listBookmarkTickets($IDSupporter);
-  	  $TicketList = array_keys($openTickets);
-  	  $readTickets = $ObTicket->getReadTickets($IDDepartment, $IDUser, $TicketList);
-  	  foreach ($openTickets as $IDTicket => &$ArTicket) {
-  	    if (array_key_exists($IDTicket,$readTickets) == true) {
-          $ArTicket['isRead'] = 1;
-        } else {
-          $ArTicket['isRead'] = 0;
-        }
-  	  }
-
-  	}
-
-  	return $openTickets;
-  }
-
-  /**
-   *
-   *
-   * @param unknown_type $IDUser
-   * @param unknown_type $BoOpened
-   * @return unknown
-   */
-  public static function listClientTickets( $IDUser, $BoOpened = true ) {
-
-  	$ObTicket = self::getInstance( "TicketHandler" );
-  	if ($BoOpened == true) {
-  	  $IDDepartment = 'opened';
-  	} else {
-  	  $IDDepartment = 'closed';
-  	}
-  	$openTickets = $ObTicket->listClientTickets( $IDUser, $BoOpened );
-  	$readTickets = $ObTicket->getUserReadTickets($IDUser);
-
-  	foreach ($openTickets as $IDTicket => &$ArTicket) {
-        if (array_key_exists($IDTicket,$readTickets) == true) {
-          $ArTicket['isRead'] = 1;
-        } else {
-          $ArTicket['isRead'] = 0;
+          ++$ItnotReadCount;
         }
       }
-  	return $openTickets;
 
+      $ArTickets[$IDDepartment]['Tickets'] = $ArCurrentTickets;
+      $ArTickets[$IDDepartment]['notReadCount'] = $ItnotReadCount;
+    }
+
+    return $ArTickets;
   }
 
   /**
@@ -201,34 +163,6 @@ abstract class TemplateHandler {
   	}
 
     return $ArSupporters;
-  }
-
-  /**
-   * count how many ticket were not read by a supporter in a department
-   *
-   * @param int  $IDDepartment
-   * @param bool $isSupporter
-   *
-   * @return int
-   *
-   * @author Dimitri Lameri <dimitri@digirati.com.br>
-   */
-  public static function notReadCount( $IDUser, $isSupporter = true ) {
-  	$ObTicket = self::getInstance( "TicketHandler" );
-
-  	if ($isSupporter) {
-  	 $notRead = $ObTicket->notReadCount( $IDUser );
-  	 $ArDepartments = F1DeskUtils::getDepartments( $IDUser );
-  	 foreach ($ArDepartments as $Key=>$Department) {
-  	   if (array_key_exists($Key,$notRead) == false) {
-  	     $notRead[$Key]['notRead'] = 0;
-  	   }
-  	 }
-  	} else {
-  	 $notRead = $ObTicket->UserNotReadCount( $IDUser );
-  	}
-
-  	return $notRead;
   }
 
   /**

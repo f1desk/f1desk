@@ -1,4 +1,10 @@
-<? require_once('header.php'); require_once('createTicket.php'); handleLanguage(__FILE__);?>
+<?
+
+require_once('header.php');
+require_once('createTicket.php');
+handleLanguage(__FILE__);
+
+?>
 
 <div id='contentDisplay' class='Right'></div>
 
