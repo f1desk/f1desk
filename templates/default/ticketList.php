@@ -8,9 +8,9 @@
 <table id='ticketTable<?=$ID?>' class='tableTickets'>
   <thead>
     <tr>
-      <th style="cursor:pointer;" onclick="orderTicketList(0, 'ticketTable<?=$IDDepartment?>')">N&uacute;mero</th>
-      <th style="cursor:pointer;" onclick="orderTicketList(1, 'ticketTable<?=$IDDepartment?>')">Nome</th>
-      <th style="cursor:pointer;" onclick="orderTicketList(2, 'ticketTable<?=$IDDepartment?>')">Atendente</th>
+      <th style="cursor:pointer;" onclick="orderTicketList(0, 'ticketTable<?=$ID?>')">N&uacute;mero</th>
+      <th style="cursor:pointer;" onclick="orderTicketList(1, 'ticketTable<?=$ID?>')">Nome</th>
+      <th style="cursor:pointer;" onclick="orderTicketList(2, 'ticketTable<?=$ID?>')">Atendente</th>
       <th>Abrir</th>
     </tr>
   </thead>
