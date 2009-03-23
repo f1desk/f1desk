@@ -275,9 +275,6 @@ abstract class TemplateHandler {
 	  $ArTypes = F1DeskUtils::listTicketTypes();
 	  for($i=0; $i < count($ArTypes); $i++ ) {
       $ArReturn [ $ArTypes[$i]['IDType'] ] = $ArTypes[$i]['StType'];
-      if (count($ArReturn <= 0)) {
-        $ArReturn[0] = EXC_NOTTYPE;
-      }
       return $ArReturn;
     }
 	}
@@ -616,7 +613,7 @@ abstract class TemplateHandler {
 	 * @return string
 	 */
 	public static function createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, $StID, $StClass, $preview) {
-	  $StHtml = $ArHeaders['StName'];
+	  $StHtml = (isset($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 	  if (self::IsSupporter() && !$preview) {
 	    $StHtml = "<select id='$StID' onchange='setTicketOwner(\"$IDTicket\", this.value)' class='$StClass'>";
 	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {

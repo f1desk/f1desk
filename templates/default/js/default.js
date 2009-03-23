@@ -50,7 +50,7 @@ function flowAlert(StArg) {
   with(windowParams) {
     width = 350;
     height = 175;
-    TBStyle.Caption = default_ptBR.flowAlertTitle;
+    TBStyle.Caption = i18n.flowAlertTitle;
     WindowStyle.Caption = '<br>';
     innerHTML = StArg + '<br><br>';
     Window = 'alert';
@@ -65,7 +65,7 @@ function flowConfirm(StArg,tFunction) {
   with(windowParams) {
     width = 350;
     height = 175;
-    TBStyle.Caption = default_ptBR.flowConfirmTitle;
+    TBStyle.Caption = i18n.flowConfirmTitle;
     WindowStyle.Caption = '<br>';
     innerHTML = StArg + '<br><br>';
     Window = 'confirm';
@@ -331,7 +331,7 @@ function startCreatingElement ( StElement ) {
 
 function submitForm (formName, action) {
 	if(!action || !formName){
-		flowAlert(default_ptBR.noAction); return false;
+		flowAlert(i18n.noAction); return false;
 	} else {
 		if( formName == 'canned' ){	// if form is cannedForm
 			switch (action){
@@ -431,7 +431,7 @@ function startEditElement ( formName, IDMessage ){
 function editCannedResponse () {
 	var editForm = gID("cannedForm");
 	if(editForm.elements['IDCanned'].value == ""){
-		flowAlert(default_ptBR.noCannedSelected); return false;
+		flowAlert(i18n.noCannedSelected); return false;
 	}
 	_doLoading( 'canned','show' );
 	var content = {
@@ -458,7 +458,7 @@ function editCannedResponse () {
 function editNote () {
 	var editForm = gID("noteForm");
 	if(editForm.elements['IDNote'].value == ""){
-		flowAlert(default_ptBR.noNoteSelected); return false;
+		flowAlert(i18n.noNoteSelected); return false;
 	}
 	_doLoading( 'note','show' );
 	var content = {
@@ -484,7 +484,7 @@ function editNote () {
 
 function removeCannedResponse (IDCannedResponse) {
 	if(!IDCannedResponse){
-		flowAlert(default_ptBR.noCannedID);
+		flowAlert(i18n.noCannedID);
 	}
 	var tFunction = function(opt) {
   	if (opt == 1) {
@@ -498,14 +498,14 @@ function removeCannedResponse (IDCannedResponse) {
   	    },
   	    'okCallBack': function(returnedValue){
   	    	if(returnedValue == 'error'){
-  	    		flowAlert(default_ptBR.wrongCannedID+IDCannedResponse);
+  	    		flowAlert(i18n.wrongCannedID+IDCannedResponse);
   	    	} else {
   	    		removeElements( gID('cannedTR'+IDCannedResponse) );
   	    		if( gID('cannedTable').getElementsByTagName('TR').length == 0){
   	    			gID('cannedTable').appendChild( createElement('TR',{'id':'noCanned'},
   	    				createElement('TD',{
   	    					'colspan':'3',	'align':'center'
-  	    				},default_ptBR.noCanned)
+  	    				},i18n.noCanned)
   	    			) );
   	    		}
   	    		_doLoading( 'canned','hide' );
@@ -517,13 +517,13 @@ function removeCannedResponse (IDCannedResponse) {
   	  xhr.makeRequest('removeCannedResponse',tUrl,tParams);
   	}
   }
-  flowConfirm(default_ptBR.deleteCanned,tFunction);
+  flowConfirm(i18n.deleteCanned,tFunction);
 }
 
 
 function removeNote (IDNote) {
 	if(!IDNote){
-		flowAlert(default_ptBR.noNoteID);
+		flowAlert(i18n.noNoteID);
 	}
 	tFunction = function(opt) {
   	if (opt == 1) {
@@ -537,14 +537,14 @@ function removeNote (IDNote) {
   	    },
   	    'okCallBack': function(returnedValue){
   	    	if(returnedValue == 'error'){
-  	    		flowAlert(default_ptBR.wrongNoteID+IDNote);
+  	    		flowAlert(i18n.wrongNoteID+IDNote);
   	    	} else {
   	    		removeElements( gID('noteTR'+IDNote) );
   	    		if( gID('noteTable').getElementsByTagName('TR').length == 0){
   	    			gID('noteTable').appendChild( createElement('TR',{'id':'noNote'},
   	    				createElement('TD',{
   	    					'colspan':'3',	'align':'center'
-  	    				},default_ptBR.noNote)
+  	    				},i18n.noNote)
   	    			) );
   	    		}
   	    		_doLoading( 'note','hide' );
@@ -556,7 +556,7 @@ function removeNote (IDNote) {
   	  xhr.makeRequest('removeNote',tUrl,tParams);
   	}
   };
-  flowConfirm(default_ptBR.deleteNote,tFunction);
+  flowConfirm(i18n.deleteNote,tFunction);
 }
 
 
@@ -595,8 +595,8 @@ function updateInformations(){
 				gID('StDataNameTD').getElementsByTagName('pre')[0].textContent = dataForm.elements['StDataName'].value;
 				gID('StDataEmailTD').getElementsByTagName('pre')[0].textContent = dataForm.elements['StDataEmail'].value;
 				gID('StDataNotifyTD').getElementsByTagName('pre')[0].textContent = (dataForm.elements['StDataNotify'][0].checked)?'Não':'Sim';
-				gID('TxDataHeaderTD').getElementsByTagName('pre')[0].innerHTML = (!TxHeader)?'<i>'+default_ptBR.empty+'</i>':TxHeader;
-				gID('TxDataSignTD').getElementsByTagName('pre')[0].innerHTML = (!TxSign)?'<i>'+default_ptBR.empty+'</i>':TxSign;
+				gID('TxDataHeaderTD').getElementsByTagName('pre')[0].innerHTML = (!TxHeader)?'<i>'+i18n.empty+'</i>':TxHeader;
+				gID('TxDataSignTD').getElementsByTagName('pre')[0].innerHTML = (!TxSign)?'<i>'+i18n.empty+'</i>':TxSign;
 				/*Update Hiddens*/
 				gID('StDataName').value = escape(dataForm.elements['StDataName'].value);
 				gID('StDataEmail').value = escape(dataForm.elements['StDataEmail'].value);
@@ -605,7 +605,7 @@ function updateInformations(){
 				gID('TxDataSign').value = escape(TxSign);
 				_doLoading('data','hide');
     	} else {
-   			flowAlert(default_ptBR.updateError);
+   			flowAlert(i18n.updateError);
     	}
     }
   };
@@ -616,7 +616,7 @@ function updateInformations(){
 
 function removeBookmark (IDTicket) {
 	if(!IDTicket){
-		flowAlert(default_ptBR.noBookmarkID);
+		flowAlert(i18n.noBookmarkID);
 	}
 	tFunction = function(opt) {
   	if (opt == 1) {
@@ -630,14 +630,14 @@ function removeBookmark (IDTicket) {
   	    },
   	    'okCallBack': function(returnedValue){
   	    	if(returnedValue == 'error'){
-  	    		flowAlert(default_ptBR.wrongBookmarkID+IDTicket);
+  	    		flowAlert(i18n.wrongBookmarkID+IDTicket);
   	    	} else {
   	    		removeElements( gID('bookmarkTR'+IDTicket) );
   	    		if( gID('bookmarkTable').getElementsByTagName('TR').length == 0){
   	    			gID('bookmarkTable').appendChild( createElement('TR',{'id':'noBookmark'},
   	    				createElement('TD',{
   	    					'colspan':'3',	'align':'center'
-  	    				},default_ptBR.noBookmark)
+  	    				},i18n.noBookmark)
   	    			) );
   	    		}
   	    		_doLoading( 'bookmark','hide' );
@@ -648,7 +648,7 @@ function removeBookmark (IDTicket) {
   	  xhr.makeRequest('removeBookmark',tUrl,tParams);
   	}
   };
-	flowConfirm(default_ptBR.deleteBookmark,tFunction);
+	flowConfirm(i18n.deleteBookmark,tFunction);
 }
 /**
  * Templates->HOME END
@@ -699,7 +699,7 @@ function ignoreTicket(IDSupporter,IDTicket) {
       xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
     }
   }
-  flowConfirm(default_ptBR.ignoreCall,tFunction);
+  flowConfirm(i18n.ignoreCall,tFunction);
 }
 
 
@@ -830,7 +830,7 @@ var previewInFlow = {
   	windowParams.innerHTML = ''+
   		'<table class="tableTickets">'+
   			'<thead>'+
-  				'<th>'+default_ptBR.cannedTableTitle+'</th>'+
+  				'<th>'+i18n.cannedTableTitle+'</th>'+
   			'</thead>'+
   			'<tbody>'+
   				'<td class="TicketNumber">'+ StTitle +'</td>'+
@@ -839,7 +839,7 @@ var previewInFlow = {
   		'<br />'+
   		'<table class="tableTickets">'+
   			'<thead>'+
-  				'<th>'+default_ptBR.cannedTableMessage+'</th>'+
+  				'<th>'+i18n.cannedTableMessage+'</th>'+
   			'</thead>'+
   			'<tbody>'+
   				'<td>'+ TxMessage +'</td>'+
@@ -857,7 +857,7 @@ var previewInFlow = {
   	windowParams.innerHTML = ''+
   		'<table class="tableTickets">'+
   			'<thead>'+
-  				'<th>'+default_ptBR.noteTableTitle+'</th>'+
+  				'<th>'+i18n.noteTableTitle+'</th>'+
   			'</thead>'+
   			'<tbody>'+
   				'<td class="TicketNumber">'+ StTitle +'</td>'+
@@ -866,7 +866,7 @@ var previewInFlow = {
   		'<br />'+
   		'<table class="tableTickets">'+
   			'<thead>'+
-  				'<th>'+default_ptBR.noteTableNote+'</th>'+
+  				'<th>'+i18n.noteTableNote+'</th>'+
   			'</thead>'+
   			'<tbody>'+
   				'<td>'+ TxNote +'</td>'+
@@ -888,7 +888,7 @@ var previewInFlow = {
       },
       'okCallBack':function( ticketHTML ) {
         windowParams.innerHTML = '<span style="padding:10px">'+ticketHTML+'</span>';
-        windowParams.TBStyle.Caption = default_ptBR.ticketPreviewTitle + IDTicket;
+        windowParams.TBStyle.Caption = i18n.ticketPreviewTitle + IDTicket;
         windowParams.y = Positions.getScrollOffSet(gTN('body')[0]).y + 50;
         windowParams.x = Positions.getScrollOffSet(gTN('body')[0]).x + 200;
         windowParams.width = 600; windowParams.height = 450;
@@ -899,7 +899,7 @@ var previewInFlow = {
   },
 
   'Answer': function(TxMessage) {
-    if(_isEmpty(TxMessage)){ flowAlert(default_ptBR.answerPreviewNoAnswer); return false; }
+    if(_isEmpty(TxMessage)){ flowAlert(i18n.answerPreviewNoAnswer); return false; }
     var  tParams = {
       'method':'post',
       'content':{
@@ -913,7 +913,7 @@ var previewInFlow = {
           width = 480;
           height = 350;
           innerHTML = response;
-          TBStyle.Caption = default_ptBR.answerPreviewTitle;
+          TBStyle.Caption = i18n.answerPreviewTitle;
         }
         Flow.open(windowParams);
       }
@@ -950,7 +950,7 @@ function checkAdd(Type) {
         addReader(IDSupporter,StName);
       }
     } else {
-      flowAlert(default_ptBR.noSupporter);
+      flowAlert(i18n.noSupporter);
     }
   }
 }
@@ -1013,7 +1013,7 @@ function listSupporters(Type) {
         width = 410;
         height = 260;
         innerHTML = response;
-        TBStyle.Caption = default_ptBR.addSupporter;
+        TBStyle.Caption = i18n.addSupporter;
       }
       Flow.open(windowParams);
     }
@@ -1054,12 +1054,29 @@ function removeSupporter(Type,ID) {
 }
 
 function createTicketSubmit() {
-
   if(gID('IDRecipient')[gID('IDRecipient').selectedIndex].value == 'null' && (! gID('ArRecipients') || gID('ArRecipients').value == '')) {
     var p = createElement('p',{'id':'Error','style':'color: red'});
-    var textError = createTextNode(default_ptBR.noRecipient);
+    var textError = createTextNode(i18n.noRecipient);
     p.appendChild(textError);
     gID('sendTo').appendChild(p);
     return false;
+  }
+}
+
+function orderTicketList(ItTD, tableID) {
+  var tBody = gID(tableID).getElementsByTagName('TBODY')[0];
+  var toIterate = tBody.getElementsByTagName('TR');
+  var tdsValues = new Array();
+  for (var aux = 0; aux < toIterate.length; aux++){
+    tdsValues[aux] = new Array();
+    tdsValues[aux][0] = toIterate[aux].getElementsByTagName('TD')[ItTD].innerHTML.toLowerCase();
+    tdsValues[aux][1] = toIterate[aux];
+  }
+  while (toIterate.length != 0){
+    removeElements(toIterate[0]);
+  }
+  tdsValues = tdsValues.sort();
+  for (var aux =0; aux < tdsValues.length; aux++){
+    tBody.appendChild(tdsValues[aux][1]);
   }
 }
