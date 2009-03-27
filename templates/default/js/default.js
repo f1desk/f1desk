@@ -1,3 +1,5 @@
+var templateDir = 'templates/default/';
+
 /**
  *  OBJECT CONTAIN GLOBALS OBJECTS AND METHODS FROM THE DEFAULT TEMPLATE
  */
@@ -720,7 +722,7 @@ var TICKET = {
         baseActions.animateReload( IDDepartment, 'stop' );
       }
     };
-    var tUrl = 'listTickets.php';
+    var tUrl = templateDir + 'ticketList.php';
     xhr.makeRequest('showTickets',tUrl,tParams);
   },
   
@@ -756,13 +758,8 @@ var TICKET = {
     return true;
   },
   
-  'showDepartmentTickets': function(IDDepartment, StUser) {
-    if (!this.initialized[IDDepartment] || this.initialized[IDDepartment] === undefined) {
-      this.initialized[IDDepartment] = true;
-      TICKET.reloadTicketList( IDDepartment, true );
-    } else {
+  'showDepartmentTickets': function(IDDepartment) {    
       baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment);
-    }
   },
   
   'showTicket': function(IDTicket, IDDepartment, Clicked) {
