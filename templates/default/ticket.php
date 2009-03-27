@@ -11,9 +11,9 @@
 <div id='ticketHeader'>
   <div id="ticketTitle">
   <?if(!$preview):?>
-    <img id='reloadHeader' class='menuRefresh Right' onclick='refreshCall("<?= $IDTicket ?>")' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
+    <img id='reloadHeader' class='menuRefresh Right' onclick='TICKET.refreshTicket("<?= $IDTicket ?>")' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
   <?endif;?>
-  	<img alt="Ticket" id='arrowHeader<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "ticketContent<?=$uid?>")' class='menuArrow'/>
+  	<img alt="Ticket" id='arrowHeader<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='baseActions.toogleArrow( this.id, "ticketContent<?=$uid?>")' class='menuArrow'/>
   	<span><?= $StTitle ?></span>
   </div>
 
@@ -45,22 +45,22 @@
           </td>
           <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <td>
-            <a href='javascript:void(0);' onclick='attachTicket(<?=$IDTicket?>);'>
-              <img src='<?= TEMPLATEDIR ?>images/attach.png' alt='Attach Call' title='Attach Call'>
+            <a href='javascript:void(0);' onclick='TICKET.attachTicket(<?=$IDTicket?>);'>
+              <img src='<?= TEMPLATEDIR ?>images/attach.png' alt='Attach Ticket' title='Attach Ticket'>
             </a>
           </td>
           <td>
               <? if (F1DeskUtils::isIgnored($IDSupporter,$IDTicket)): ?>
-            <a href='javascript:void(0);' onclick='unignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
+            <a href='javascript:void(0);' onclick='TICKET.unignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
               <img src='<?= TEMPLATEDIR ?>images/unignore.png' alt='Ignore Call' title='Ignore Call'>
               <? else: ?>
-            <a href='javascript:void(0);' onclick='ignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
+            <a href='javascript:void(0);' onclick='TICKET.ignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
               <img src='<?= TEMPLATEDIR ?>images/ignore.png' alt='Ignore Call' title='Ignore Call'>
               <? endif;?>
             </a>
           </td>
           <td>
-            <a href='javascript:void(0);' onclick='bookmarkTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
+            <a href='javascript:void(0);' onclick='TICKET.bookmarkTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
               <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Call' title='Bookmark Call'>
             </a>
           </td>
@@ -75,7 +75,7 @@
 <!--[TICKET INFORMATIONS]-->
 <div id='ticketInformations' class='defaultBody'>
   <div id='informationsCaption' class='defaultCaption'>
-    <img alt="Informations"  id='arrowInformations<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_show.gif"  onclick='toogleArrow( this.id, "informationsContent<?=$uid?>")' class="menuArrow"/>
+    <img alt="Informations"  id='arrowInformations<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_show.gif"  onclick='baseActions.toogleArrow( this.id, "informationsContent<?=$uid?>")' class="menuArrow"/>
     <span><?=INFORMATIONS?></span>
   </div>
   <div id='informationsContent<?=$uid?>' class="informationsBox" style="display:none">
@@ -132,7 +132,7 @@
 <!--[TICKET HISTORY]-->
 <div id='ticketHistory' class='defaultBody'>
   <div id="historyCaption" class='defaultCaption'>
-  	<img alt="Ticket"  id='arrowHistory<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='toogleArrow( this.id, "historyContent<?=$uid?>")' class="menuArrow"/>
+  	<img alt="Ticket"  id='arrowHistory<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif"  onclick='baseActions.toogleArrow( this.id, "historyContent<?=$uid?>")' class="menuArrow"/>
   	<span><?=TICKET_HISTORY?></span>
   </div>
 
@@ -146,12 +146,12 @@
 <?if(!$preview):?>
 	<div id='ticketAnswer' class='defaultBody'>
 	  <div id='answerCaption' class='defaultCaption'>
-	  	<img alt="Ticket" id='arrowAnswer<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='toogleArrow( this.id, "answerContent<?=$uid?>")' class="menuArrow"/>
+	  	<img alt="Ticket" id='arrowAnswer<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='baseActions.toogleArrow( this.id, "answerContent<?=$uid?>")' class="menuArrow"/>
 	  	<span><?=ANSWER?></span>
 	  </div>
 
 	  <div id="answerContent<?=$uid?>" >
-	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data" onsubmit='if(_isEmpty(gID("TxMessage").value)){ flowAlert(default_ptBR.answerPreviewNoAnswer); return false; }'>
+	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data" onsubmit='if(isEmpty(gID("TxMessage").value)){ flowWindow.alert(i18n.answerPreviewNoAnswer); return false; }'>
 	      <div id='messageType' class='Right'>
 	    	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
 	    				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
@@ -184,7 +184,7 @@
 	    	<div>
     	      <input type="hidden" name="action" value="answer">
     	      <input type='submit' class='button' value='<?=ANSWER?>' name='Responder'>
-    	      <button type="button" class='button' onclick='previewInFlow.Answer(gID("TxMessage").value);'><?=PREVIEW?></button>
+    	      <button type="button" class='button' onclick='flowWindow.previewAnswer(gID("TxMessage").value);'><?=PREVIEW?></button>
 	    	</div>
 	    </div>
 	    </form>

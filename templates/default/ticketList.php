@@ -1,9 +1,9 @@
 <table id='ticketTable<?=$IDDepartment?>' class='tableTickets'>
   <thead>
     <tr>
-      <th style="cursor:pointer;" onclick="orderTicketList(0, 'ticketTable<?=$IDDepartment?>')">N&uacute;mero</th>
-      <th style="cursor:pointer;" onclick="orderTicketList(1, 'ticketTable<?=$IDDepartment?>')">Nome</th>
-      <th style="cursor:pointer;" onclick="orderTicketList(2, 'ticketTable<?=$IDDepartment?>')">Atendente</th>
+      <th style="cursor:pointer;" onclick="TICKET.orderTicketList(0, 'ticketTable<?=$IDDepartment?>')">N&uacute;mero</th>
+      <th style="cursor:pointer;" onclick="TICKET.orderTicketList(1, 'ticketTable<?=$IDDepartment?>')">Nome</th>
+      <th style="cursor:pointer;" onclick="TICKET.orderTicketList(2, 'ticketTable<?=$IDDepartment?>')">Atendente</th>
       <th>Abrir</th>
     </tr>
   </thead>
@@ -19,16 +19,16 @@
         }
       ?>
       <tr style='cursor:pointer;' class='<?= $StClass ?>'>
-        <td onclick='showCall( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this.parentNode )' id='<?= $ID ?>' class='TicketNumber'>
+        <td onclick='TICKET.showTicket( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this.parentNode )' id='<?= $ID ?>' class='TicketNumber'>
           #<?= $Ticket['IDTicket']?>
         </td>
-        <td onclick='showCall( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this.parentNode )'>
+        <td onclick='TICKET.showTicket( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this.parentNode )'>
           <?= $Ticket['StTitle']?>
         </td>
-        <td onclick='showCall( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this.parentNode )' id='TicketSupporter<?= $Ticket['IDTicket']?>'>
+        <td onclick='TICKET.showTicket( <?=$Ticket['IDTicket']?>, "<?=$IDDepartment?>", this.parentNode )' id='TicketSupporter<?= $Ticket['IDTicket']?>'>
           <?= $Ticket['StSupporter']?>
         </td>
-        <td onclick="previewInFlow.Ticket(<?=$Ticket['IDTicket']?>);" style='text-align:center;'>
+        <td onclick="flowWindow.previewTicket(<?=$Ticket['IDTicket']?>);" style='text-align:center;'>
           <img src="<?=TEMPLATEDIR?>images/visualizar.png">
         </td>
       </tr>

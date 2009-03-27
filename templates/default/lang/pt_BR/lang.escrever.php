@@ -15,5 +15,4 @@ define('REPLY_TO','Responder Para');
 define('MESSAGE','Mensagem');
 define('TITLE','T&iacute;tulo:');
 define('CREATE','Enviar');
-define('RESET','Limpar');
 ?>

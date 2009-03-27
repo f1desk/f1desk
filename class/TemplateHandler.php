@@ -681,7 +681,7 @@ abstract class TemplateHandler {
 	public static function createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, $StID, $StClass, $preview) {
 	  $StHtml = (isset($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 	  if (self::IsSupporter() && !$preview) {
-	    $StHtml = "<select id='$StID' onchange='setTicketOwner(\"$IDTicket\", this.value)' class='$StClass'>";
+	    $StHtml = "<select id='$StID' onchange='TICKET.setTicketOwner(\"$IDTicket\", this.value)' class='$StClass'>";
 	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {
 	      if ($ArHeaders['IDSupporter'] != $IDSupporter) {
 	        $StHtml .= "<option value='$IDSupporter'>$StSupporter</option>";
@@ -713,7 +713,7 @@ abstract class TemplateHandler {
 	public static function createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket, $StID, $StClass = 'inputCombo', $preview) {
 	  $StHtml = SINGLE;
     if (self::IsSupporter() && !$preview) {
-      $StHtml = "<select id='$StID' class='$StClass' onchange='changeDepartment(\"$IDTicket\",this.value)'>";
+      $StHtml = "<select id='$StID' class='$StClass' onchange='TICKET.changeDepartment(\"$IDTicket\",this.value)'>";
       foreach ($ArDepartments as $ArDepartment) {
         if(isset($ArDepartment['SubDepartments'])) {
           if ($ArDepartment['IDDepartment'] == $IDDepartment) {
@@ -797,7 +797,7 @@ abstract class TemplateHandler {
       foreach ($ArAttachedTickets as $AttachedTicket) {
         if($i!=0)
           $StHtml .= ', ';
-        $StHtml .= "<a class='Link' href='javascript:void(0);' onclick='previewInFlow.Ticket(\"{$AttachedTicket['IDAttachedTicket']}\")'>#{$AttachedTicket['IDAttachedTicket']}</a>";
+        $StHtml .= "<a class='Link' href='javascript:void(0);' onclick='flowWindow.previewTicket(\"{$AttachedTicket['IDAttachedTicket']}\")'>#{$AttachedTicket['IDAttachedTicket']}</a>";
         $i++;
       }
       $StHtml .= "</td> </tbody> </table>";
@@ -821,7 +821,7 @@ abstract class TemplateHandler {
       foreach ($ArTicketsAttached as $TicketAttached) {
         if($i!=0)
           $StHtml .= ', ';
-        $StHtml .= "<a class='Link' href='javascript:void(0);' onclick='previewInFlow.Ticket(\"{$TicketAttached['IDTicket']}\")'>#{$TicketAttached['IDTicket']}</a>";
+        $StHtml .= "<a class='Link' href='javascript:void(0);' onclick='flowWindow.previewTicket(\"{$TicketAttached['IDTicket']}\")'>#{$TicketAttached['IDTicket']}</a>";
         $i++;
       }
       $StHtml .= "</td> </tbody> </table>";
@@ -943,7 +943,7 @@ abstract class TemplateHandler {
 	      $StHtml .= "<option value='null'>".NO_ANSWER."</option>";
       }
       $StHtml .= '</select>';
-      $StHtml .= "<button class='button' onclick='addCannedResponse(); return false;'>".ADD."</button>";
+      $StHtml .= "<button class='button' onclick='TICKET.addCannedResponse(); return false;'>".ADD."</button>";
     }
     return $StHtml;
 	}
