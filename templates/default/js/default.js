@@ -36,8 +36,6 @@ var baseActions = {
     }
   }
   
-  
-  
 };
 
 /**

@@ -147,58 +147,260 @@ SET
   }
 
   /**
-   * get the tickets read by a supporter, from a specific department
+   * list the calls related to an especific department
    *
-   * @param integer $IDDepartment
-   * @param integer $IDUser
-   * @param array   $$TicketList
+   * @param array $ArIDDepartment
+   *
+   * @return array
+   *
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+  public function listTickets($ArIDDepartment){
+
+  	if ( is_null( $ArIDDepartment ) ) {
+  		throw new ErrorHandler(EXC_CALL_INVALIDLISTOFCALLS);
+  	}
+
+  	$ArNotAllowed = array('single','bookmark','ignored','byme');
+  	if (is_array($ArIDDepartment)) {
+  	  foreach ($ArIDDepartment as $Key => $IDDepartment) {
+  	    if (in_array($IDDepartment,$ArNotAllowed) ) {
+  	      unset($ArIDDepartment[$Key]);
+  	    }
+  	  }
+  	  $IDDepartment = implode(', ', $ArIDDepartment);
+  	} else {
+  	  $IDDepartment = $ArIDDepartment;
+  	}
+
+  	$IDDepartment = empty($IDDepartment) ? "''" : $IDDepartment;
+
+
+		$StSQL = "
+SELECT
+  T.*,
+  D.*,
+  U.Stname as StSupporter
+FROM
+  " . DBPREFIX . "User U
+  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T ON(T.IDSupporter = S.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "TicketDepartment TD ON(TD.IDTicket = T.IDTicket)
+  LEFT JOIN " . DBPREFIX . "Department D ON(D.IDDepartment = TD.IDDepartment)
+WHERE
+  D.IDDepartment IN ($IDDepartment)
+AND
+  T.StSituation IN ('NOT_READ','WAITING_SUP')";
+
+		$this->execSQL($StSQL);
+		$ArTickets = $this->getResult("string");
+
+		$ArResult = array();
+		foreach ($ArTickets as $ArTicket) {
+		  $ArResult[$ArTicket['IDDepartment']][] = $ArTicket;
+		}
+
+		return $ArResult;
+  }
+
+  /**
+   * list the tickets of a client
+   *
+   * @param int $IDUser
+   * @param bool $BoOpened
+   *
+   * @return array
+   *
+   * @author Mario Vitor <mario@digirati.com.br>
+   */
+  public function listClientTickets($IDUser, $BoOpened = true){
+
+  	if ( is_null( $IDUser ) ) {
+  		throw new ErrorHandler(EXC_CALL_INVALIDLISTOFCALLS);
+  	}
+
+  	if ($BoOpened) {
+      $StConditionStatus = "'NOT_READ','WAITING_SUP','WAITING_USER'";
+  	} else {
+  	  $StConditionStatus = "'CLOSED'";
+  	}
+
+  	$StSQL = "
+SELECT
+  T.*, U2.StName as StSupporter
+FROM
+  " . DBPREFIX . "Client C
+  LEFT JOIN " . DBPREFIX . "User U on (C.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T on (T.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Supporter S on (S.IDSupporter = T.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "User U2 on (U2.IDUser = S.IDUser)
+WHERE
+  T.StSituation IN ($StConditionStatus)
+AND
+  U.IDUser = $IDUser
+  	";
+  	$this->execSQL($StSQL);
+		$ArTickets = $this->getResult("string");
+
+		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
+
+		return $ArTickets;
+
+  }
+
+  /**
+   * list the ignored tickets
+   *
+   * @param int $IDSupporter
+   * @return array
+   *
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+  public function listIgnoredTickets($IDSupporter) {
+    $StSQL = "
+SELECT
+  T.*, U.StName as StSupporter
+FROM
+  " . DBPREFIX . "User U
+  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDSupporter = S2.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "Ignored I ON (I.IDTicket = T.IDTicket)
+  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = I.IDSupporter)
+WHERE
+  I.IDSupporter = $IDSupporter
+AND
+  T.StSituation IN ('NOT_READ','WAITING_SUP')";
+
+    $this->execSQL($StSQL);
+		$ArTickets = $this->getResult("string");
+
+		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
+
+		return $ArTickets;
+  }
+
+  /**
+   * list the bookmarked tickets
+   *
+   * @param int $IDSupporter
+   * @return array
+   *
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+  public function listBookmarkTickets($IDSupporter) {
+    $StSQL = "
+SELECT
+  T.*,  U.StName as StSupporter
+FROM
+  " . DBPREFIX . "User U
+  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDSupporter = S2.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "Bookmark B ON (B.IDTicket = T.IDTicket)
+  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = B.IDSupporter)
+WHERE
+  S.IDSupporter = $IDSupporter";
+
+    $this->execSQL($StSQL);
+		$ArTickets = $this->getResult("string");
+
+		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
+
+		return $ArTickets;
+  }
+
+  /**
+   * list the Single tickets
+   *
+   * @param int $IDSupporter
+   * @return array
+   *
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+  public function listSingleTickets($IDSupporter) {
+    $StSQL = "
+SELECT
+  T.*,  U.StName as StSupporter
+FROM
+  " . DBPREFIX . "User U
+  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDSupporter = S2.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "TicketSupporter TS ON (TS.IDTicket = T.IDTicket)
+  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = TS.IDSupporter)
+WHERE
+  S.IDSupporter = $IDSupporter";
+
+    $this->execSQL($StSQL);
+		$ArTickets = $this->getResult("string");
+
+		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
+
+		return $ArTickets;
+  }
+
+  /**
+   * list the byme tickets
+   *
+   * @param int $IDSupporter
+   * @return array
+   *
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+  public function listByMeTickets($IDSupporter) {
+    $StSQL = "
+SELECT
+  T.*,  U2.StName as StSupporter
+FROM
+  " . DBPREFIX . "Supporter S
+  LEFT JOIN " . DBPREFIX . "User U ON (U.IDUser = S.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDSupporter = T.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "User U2 ON (U2.IDUser = S2.IDUser)
+WHERE
+  S.IDSupporter = $IDSupporter
+AND
+  NOT ISNULL(T.IDTicket)";
+
+    $this->execSQL($StSQL);
+		$ArTickets = $this->getResult("string");
+		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
+
+		return $ArTickets;
+  }
+
+  /**
+   * get the tickets read by a supporter
+   *
+   * @param integer $IDSupporter
+   * @param array   $TicketList
    *
    * @return array
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public function getReadTickets($IDDepartment, $IDUser, $TicketList = '') {
+  public function getReadTickets($IDSupporter, $TicketList) {
 
-    if ($TicketList === '') {
-    	$StSQL = "
-SELECT
-	T.IDTicket
-FROM
-	". DBPREFIX ."Ticket T
-	LEFT JOIN
-    ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
-	LEFT JOIN
-    ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
- 	LEFT JOIN
- 	  ". DBPREFIX ."Supporter S ON (S.IDUSer = U.IDUSer)
- 	LEFT JOIN
- 	  ". DBPREFIX ."DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
- 	LEFT JOIN
- 	  ". DBPREFIX ."Department D ON (D.IDDepartment = DS.IDDepartment)
-WHERE
-  D.IDDepartment = $IDDepartment
-AND
-  U.IDUser = $IDUser
-AND
-  T.StSituation IN ('NOT_READ','WAITING_SUP')";
-    } else {
+    if (is_array($TicketList)) {
       $Tickets = implode(', ',$TicketList);
       $Tickets = empty($Tickets) ? "''" : $Tickets;
-      $StSQL = "
+    } else {
+      $Tickets = $TicketList;
+    }
+
+    $StSQL = "
 SELECT
 	T.IDTicket
 FROM
 	". DBPREFIX ."Ticket T
-	LEFT JOIN
-    ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
-	LEFT JOIN
-    ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
+	LEFT JOIN ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
+	LEFT JOIN ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
+	LEFT JOIN ". DBPREFIX ."Supporter S ON (S.IDUSer = U.IDUSer)
 WHERE
   T.IDTicket IN ($Tickets)
 AND
-  U.IDUser = $IDUser
-AND
-  T.StSituation IN ('NOT_READ','WAITING_SUP')";
-    }
+  S.IDSupporter = $IDSupporter";
+
+    /*if (in_array('64',$TicketList))
+    ErrorHandler::Debug($StSQL);*/
+
   	$this->execSQL($StSQL);
   	$ArResult = $this->getResult("string");
 
@@ -224,10 +426,8 @@ SELECT
 	T.IDTicket
 FROM
 	". DBPREFIX ."Ticket T
-	LEFT JOIN
-	 ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
-	LEFT JOIN
-	 ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
+	LEFT JOIN ". DBPREFIX ."isRead R ON (T.IDTicket = R.IDTicket)
+	LEFT JOIN ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
 WHERE
   U.IDUser = $IDUser
 AND
@@ -290,123 +490,6 @@ AND
   	}
 
     return false;
-
-  }
-
-  /**
-   * get the not read quantity, for users
-   *
-   * @param int $IDUser
-   * @return array
-   *
-   * @author Dimitri Lameri <dimitri@digirati.com.br>
-   */
-  public function UserNotReadCount($IDUser) {
-    $StSQLOpened = "
-SELECT
-	COUNT( T.IDTicket ) AS totalOpened
-FROM
-	". DBPREFIX ."User U
-  LEFT JOIN
-  ". DBPREFIX ."Ticket T ON (T.IDUser = U.IDUser)
-WHERE
-	U.IDUser = $IDUser
-AND
-  T.StSituation = 'WAITING_USER'";
-
-  	  $StSQLRead = "
-SELECT
-	COUNT( T.IDTicket ) AS totalRead
-FROM
-	". DBPREFIX ."Ticket T
-	LEFT JOIN
-	 ". DBPREFIX ."isRead R ON (R.IDTicket = T.IDTicket)
-	LEFT JOIN
-	 ". DBPREFIX ."User U ON (U.IDUser = R.IDUser)
-WHERE
-	U.IDUser = $IDUser
-AND
-  T.StSituation = 'WAITING_USER'";
-
-  	$this->execSQL($StSQLOpened);
-  	$ArResult = $this->getResult("string");
-  	$Opened = $ArResult[0]["totalOpened"];
-
-  	$this->execSQL($StSQLRead);
-  	$ArResult = $this->getResult("string");
-  	$Read = $ArResult[0]["totalRead"];
-
-  	$notRead = $Opened - $Read;
-  	return array('opened' => array('notRead'  => $notRead), 'closed' => array('notRead'  => $notRead));
-  }
-
-  /**
-   * get the not read quantity, for supporters
-   *
-   * @param int $IDUser
-   * @return array
-   *
-   * @author Dimitri Lameri <dimitri@digirati.com.br>
-   */
-  public function notReadCount($IDUser){
-    $ArNotRead = $ArRead = array();
-
-		$StSQL = "
-SELECT
-  D.IDDepartment, COUNT( T.IDTicket ) AS notRead
-FROM
-  ". DBPREFIX ."User U
-  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
-  LEFT JOIN " . DBPREFIX . "Department D ON (D.IDDepartment = DS.IDDepartment)
-  LEFT JOIN " . DBPREFIX . "TicketDepartment TD ON (D.IDDepartment = TD.IDDepartment)
-  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDTicket = TD.IDTicket)
-WHERE
-  U.IDUser = $IDUser
-AND
-  NOT EXISTS(SELECT I.IDTicket FROM " . DBPREFIX . "Ignored I WHERE I.IDTicket = T.IDTicket AND I.IDSupporter = S.IDSupporter)
-AND
-  NOT EXISTS(SELECT IR.IDTicket FROM " . DBPREFIX . "isRead IR WHERE IR.IDTicket = T.IDTicket AND IR.IDUser = U.IDUser)
-AND
-  T.StSituation IN ('NOT_READ','WAITING_SUP')
-GROUP BY
-  D.IDDepartment";
-
-  	$this->execSQL($StSQL);
-  	$ArNotRead1 = $this->getResult("string");
-
-		$StSQL = "
-SELECT
-  D.IDDepartment, COUNT( T.IDTicket ) AS notRead
-FROM
-  ". DBPREFIX ."User U
-  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "DepartmentSupporter DS ON (DS.IDSupporter = S.IDSupporter)
-  LEFT JOIN " . DBPREFIX . "Department D ON (D.IDDepartment = DS.IDDepartment)
-  LEFT JOIN " . DBPREFIX . "TicketDepartment TD ON (D.IDDepartment = TD.IDDepartment)
-  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDTicket = TD.IDTicket)
-WHERE
-  U.IDUser = $IDUser
-AND
-  EXISTS(SELECT B.IDTicket FROM " . DBPREFIX . "Bookmark B WHERE B.IDTicket = T.IDTicket AND B.IDSupporter = S.IDSupporter)
-AND
-  NOT EXISTS(SELECT IR.IDTicket FROM " . DBPREFIX . "isRead IR WHERE IR.IDTicket = T.IDTicket AND IR.IDUser = U.IDUser)
-AND
-  T.StSituation IN ('NOT_READ','WAITING_SUP')
-GROUP BY
-  D.IDDepartment";
-
-		$this->execSQL($StSQL);
-  	$ArNotRead2 = $this->getResult("string");
-
-  	foreach ($ArNotRead2 as &$ArRow) {
-  	  $ArRow['IDDepartment'] = 'bookmark';
-  	}
-
-  	$ArNotRead = array_merge($ArNotRead1,$ArNotRead2);
-		$ArNotRead = F1DeskUtils::sortByID($ArNotRead, 'IDDepartment');
-
-  	return $ArNotRead;
 
   }
 
@@ -580,8 +663,6 @@ GROUP BY
    */
   public function createSupporterTicket ($IDSupporter, $IDCategory, $IDPriority, $StTitle, $StMessage, $IDDepartment = '', $IDReader = '', $ArUsers = array(), $ArReaders = array(), $BoInternal = false, $ArFiles = array()) {
 
-    //ErrorHandler::Debug((empty($ArUsers) && $IDDepartment == '') . '<<');
-
     if (empty($ArUsers) && $IDDepartment == '') {
       throw new ErrorHandler(EXC_GLOBAL_EXPPARAM . 'aaaaa');
     }
@@ -747,181 +828,6 @@ GROUP BY
   }
 
   /**
-   * list the calls related to an especific department
-   *
-   * @param int $IDDepartment
-   * @param int $IDSupporter
-   * @param int $IDUser
-   *
-   * @return array
-   *
-   * @author Dimitri Lameri <dimitri@digirati.com.br>
-   */
-  public function listTickets($IDDepartment){
-
-  	if ( is_null( $IDDepartment ) ) {
-  		throw new ErrorHandler(EXC_CALL_INVALIDLISTOFCALLS);
-  	}
-
-		$StSQL = "
-SELECT
-  T.*,
-  D.StDepartment,
-  U.Stname as StSupporter
-FROM
-  " . DBPREFIX . "User U
-  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "Ticket T ON(T.IDSupporter = S.IDSupporter)
-  LEFT JOIN " . DBPREFIX . "TicketDepartment TD ON(TD.IDTicket = T.IDTicket)
-  LEFT JOIN " . DBPREFIX . "Department D ON(D.IDDepartment = TD.IDDepartment)
-WHERE
-  D.IDDepartment = $IDDepartment
-AND
-  T.StSituation IN ('NOT_READ','WAITING_SUP')";
-
-		$this->execSQL($StSQL);
-		$ArTickets = $this->getResult("string");
-
-		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
-
-		return $ArTickets;
-  }
-
-  /**
-   * list the tickets of a client
-   *
-   * @param int $IDUser
-   * @param bool $BoOpened
-   *
-   * @return array
-   *
-   * @author Mario Vitor <mario@digirati.com.br>
-   */
-  public function listClientTickets($IDUser, $BoOpened = true){
-
-  	if ( is_null( $IDUser ) ) {
-  		throw new ErrorHandler(EXC_CALL_INVALIDLISTOFCALLS);
-  	}
-
-  	if ($BoOpened) {
-      $StConditionStatus = "'NOT_READ','WAITING_SUP','WAITING_USER'";
-  	} else {
-  	  $StConditionStatus = "'CLOSED'";
-  	}
-
-  	$StSQL = "
-SELECT
-  T.*, U2.StName as StSupporter
-FROM
-  " . DBPREFIX . "Client C
-  LEFT JOIN " . DBPREFIX . "User U on (C.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "Ticket T on (T.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "Supporter S on (S.IDSupporter = T.IDSupporter)
-  LEFT JOIN " . DBPREFIX . "User U2 on (U2.IDUser = S.IDUser)
-WHERE
-  T.StSituation IN ($StConditionStatus)
-AND
-  U.IDUser = $IDUser
-  	";
-  	$this->execSQL($StSQL);
-		$ArTickets = $this->getResult("string");
-
-		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
-
-		return $ArTickets;
-
-  }
-
-  /**
-   * list the ignored tickets
-   *
-   * @param int $IDSupporter
-   * @return array
-   *
-   * @author Dimitri Lameri <dimitri@digirati.com.br>
-   */
-  public function listIgnoredTickets($IDSupporter) {
-    $StSQL = "
-SELECT
-  T.*, U.StName as StSupporter
-FROM
-  " . DBPREFIX . "User U
-  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDSupporter = S2.IDSupporter)
-  LEFT JOIN " . DBPREFIX . "Ignored I ON (I.IDTicket = T.IDTicket)
-  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = I.IDSupporter)
-WHERE
-  I.IDSupporter = $IDSupporter
-AND
-  T.StSituation IN ('NOT_READ','WAITING_SUP')";
-
-    $this->execSQL($StSQL);
-		$ArTickets = $this->getResult("string");
-
-		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
-
-		return $ArTickets;
-  }
-
-  /**
-   * list the bookmarked tickets
-   *
-   * @param int $IDSupporter
-   * @return array
-   *
-   * @author Dimitri Lameri <dimitri@digirati.com.br>
-   */
-  public function listBookmarkTickets($IDSupporter) {
-    $StSQL = "
-SELECT
-  T.*,  U.StName as StSupporter
-FROM
-  " . DBPREFIX . "User U
-  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDSupporter = S2.IDSupporter)
-  LEFT JOIN " . DBPREFIX . "Bookmark B ON (B.IDTicket = T.IDTicket)
-  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = B.IDSupporter)
-WHERE
-  S.IDSupporter = $IDSupporter";
-
-    $this->execSQL($StSQL);
-		$ArTickets = $this->getResult("string");
-
-		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
-
-		return $ArTickets;
-  }
-
-    /**
-   * list the Single tickets
-   *
-   * @param int $IDSupporter
-   * @return array
-   *
-   * @author Dimitri Lameri <dimitri@digirati.com.br>
-   */
-  public function listSingleTickets($IDSupporter) {
-    $StSQL = "
-SELECT
-  T.*,  U.StName as StSupporter
-FROM
-  " . DBPREFIX . "User U
-  LEFT JOIN " . DBPREFIX . "Supporter S2 ON (S2.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "Ticket T ON (T.IDSupporter = S2.IDSupporter)
-  LEFT JOIN " . DBPREFIX . "TicketSupporter TS ON (TS.IDTicket = T.IDTicket)
-  LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = TS.IDSupporter)
-WHERE
-  S.IDSupporter = $IDSupporter";
-
-    $this->execSQL($StSQL);
-		$ArTickets = $this->getResult("string");
-
-		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
-
-		return $ArTickets;
-  }
-
-  /**
    * Creates a reply to Ticket given
    *
    * @param int $IDWriter
@@ -1025,11 +931,14 @@ WHERE
   public function getTicketHeaders($IDTicket) {
     $StSQL = "
 SELECT
-  T.IDTicket, T.StTitle, T.DtOpened, T.StSituation, T.IDSupporter, D.IDDepartment
+  T.*, D.*, U.StName
 FROM
   " . DBPREFIX . "Ticket T
   LEFT JOIN " . DBPREFIX . "TicketDepartment TD ON(T.IDTicket = TD.IDTicket)
   LEFT JOIN " . DBPREFIX . "Department D ON(TD.IDDepartment = D.IDDepartment)
+  LEFT JOIN " . DBPREFIX . "DepartmentSupporter DS ON(DS.IDDepartment = D.IDDepartment)
+  LEFT JOIN " . DBPREFIX . "Supporter S ON(S.IDSupporter = DS.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "User U ON (S.IDUser = U.IDUser)
 WHERE
   T.IDTicket = $IDTicket
 AND
@@ -1046,7 +955,7 @@ AND
     if (empty($ArHeader)) {
       $StSQL = '
 SELECT
-  T.IDTicket, T.StTitle, T.DtOpened, T.StSituation, T.IDSupporter, U.StName
+  T.*, U.StName
 FROM
 '.DBPREFIX.'Ticket T
   LEFT JOIN '.DBPREFIX.'TicketSupporter TS ON (TS.IDTicket = T.IDTicket)
