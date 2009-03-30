@@ -1,14 +1,8 @@
-<?
-if ( getSessionProp('isSupporter') == "true" ){
-	$ArUser = TemplateHandler::getUserData( getSessionProp('IDSupporter'), 0);
-} else {
-	$ArUser = TemplateHandler::getUserData( getSessionProp('IDClient'), 1);
-}
-?>
+<?php handleLanguage(__FILE__); require_once('homeData.php');?>
 <div id="dataBox" class="homeBox">
 	<span class="homeBoxTitle" onclick="toogleArrow('dataArrow', 'dataBoxEditAreaContent', 'hide')"><?=USER_DATA?></span>
-	<span class="homeBoxTitle newElement" onclick="startDataEdit();"><img src="<?= TEMPLATEDIR ?>images/button_edit.png"> Editar</span>
-	<span class="homeBoxTitle loadingRequest" id="dataLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
+	<span class="homeBoxTitle newElement" onclick="startDataEdit();"><img src="<?= TEMPLATEDIR ?>images/button_edit.png"><?=EDIT?></span>
+	<span class="homeBoxTitle loadingRequest" id="dataLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"><?=LOAD?>  </span>
 	<div id="dataBoxContent" class="homeBoxContent">
 		<table>
 			<thead></thead>

@@ -1,9 +1,12 @@
-<?if (TemplateHandler::IsSupporter()) :?>
-<?$ArCannedResponses = TemplateHandler::getCannedResponses( getSessionProp('IDSupporter') );?>
+<?php
+require_once('homeData.php');
+handleLanguage(__FILE__);
+if (TemplateHandler::IsSupporter()):
+?>
   <div id="cannedBox" class="homeBox">
     <span class="homeBoxTitle" onclick="toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide')"><?=CANNED_RESPONSES?></span>
     <span class="homeBoxTitle newElement" onclick="startCreatingElement('canned');"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
-    <span class="homeBoxTitle loadingRequest" id="cannedLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
+    <span class="homeBoxTitle loadingRequest" id="cannedLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"><?=LOAD?></span>
     <div id="cannedBoxContent" class="homeBoxContent">
       <table class="tableTickets" id="cannedTable">
         <thead>
@@ -11,26 +14,7 @@
           <th width="20%"><?=ACTIONS?></th>
         </thead>
         <tbody>
-        <?if ($ArCannedResponses[0]['IDCannedResponse'] == ''):?>
-          <tr id="noCanned">
-            <td colspan="3" align="center"><?=NO_CANNED?></td>
-          </tr>
-        <?else:?>
-          <?foreach ($ArCannedResponses as $ArCannedResponsesSettings):?>
-            <tr id="cannedTR<?=$ArCannedResponsesSettings['IDCannedResponse']?>">
-              <td class="TicketNumber">
-                <?=$ArCannedResponsesSettings['StTitle']?>
-                <input type="hidden" id="StCannedTitle<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value=<?=f1desk_escape_string($ArCannedResponsesSettings['StTitle'],false,true)?> >
-              </td>
-              <td>
-                <input type="hidden" id="TxCannedResponse<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value='<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'],false,true)?>'>
-                <img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" title="Editar" class="cannedAction" onclick="startEditElement('canned', <?=$ArCannedResponsesSettings['IDCannedResponse']?>);">
-                <img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="removeCannedResponse(<?=$ArCannedResponsesSettings['IDCannedResponse']?>)">
-                <img src="<?= TEMPLATEDIR ?>images/visualizar.png" title="Visualizar" id="previemCanned<?=$ArCannedResponsesSettings['IDCannedResponse']?>" alt="Visualizar" class="cannedAction" onclick='previewInFlow.CannedResponse("<?=f1desk_escape_string($ArCannedResponsesSettings['StTitle'],false,true)?>", "<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'], true,true)?>");'>
-              </td>
-            </tr>
-          <?endforeach;?>
-        <?endif;?>
+        <?=TemplateHandler::showCannedAnswers($ArCannedResponses);?>
         </tbody>
       </table>
       <div id="cannedBoxEditArea" class="editArea">

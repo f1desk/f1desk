@@ -981,6 +981,12 @@ abstract class TemplateHandler {
 	  return $TicketHandler->getTicketType($IDTicket);
 	}
 
+	/**
+	 * Create a combobox with all ticket types registered
+	 *
+	 * @param unknown_type $StClass
+	 * @return unknown
+	 */
 	public static function showTicketTypes($StClass = 'inputCombo') {
 	  $ArTypes = self::getTicketTypes();
 	  if (!empty($ArTypes)) {
@@ -992,6 +998,26 @@ abstract class TemplateHandler {
 	  } else {
 	    $StHtml = '<span>'.NOTYPE.'</span>';
 	  }
+    return $StHtml;
+	}
+
+	public static function showCannedAnswers($ArCannedResponses, $StClass = 'inputCombo') {
+	  $StHtml = '<tr id="noCanned">';
+    $StHtml .= '<td colspan="3" align="center">'.NO_CANNED.'</td></tr>';
+	  if (!empty($ArCannedResponses[0]['IDCannedResponse'])) {
+      foreach ($ArCannedResponses as $ArCannedResponse) {
+        $StHtml = "<tr id='cannedTR{$ArCannedResponse['IDCannedResponse']}'>";
+        $StHtml .= '<td class="TicketNumber">';
+        $StHtml .= $ArCannedResponse['StTitle'];
+        $StHtml .= "<input type='hidden' id='StCannedTitle{$ArCannedResponse['IDCannedResponse']}' value='".f1desk_escape_string($ArCannedResponse['StTitle'],false,true)."'>";
+        $StHtml .= '</td><td>';
+        $StHtml .= "<input type='hidden' id='TxCannedResponse{$ArCannedResponse['IDCannedResponse']}' value='".f1desk_escape_string($ArCannedResponse['TxMessage'],false,true)."'>";
+        $StHtml .= "<img src='".TEMPLATEDIR."images/button_edit.png' alt='Editar' title='Editar' class='cannedAction' onclick='startEditElement(\"canned\",\"{$ArCannedResponsesSettings['IDCannedResponse']}\");'>";
+        $StHtml .= "<img src='".TEMPLATEDIR."images/button_cancel.png' alt='Remover' title='Remover' class='cannedAction' onclick='removeCannedResponse(\"{$ArCannedResponsesSettings['IDCannedResponse']}\")'>";
+        $StHtml .= "<img src='".TEMPLATEDIR."images/visualizar.png' title='Visualizar' id='previemCanned{$ArCannedResponsesSettings['IDCannedResponse']}' alt='Visualizar' class='cannedAction' onclick='previewInFlow.CannedResponse(\"".f1desk_escape_string($ArCannedResponsesSettings['StTitle'],false,true)."\",".f1desk_escape_string($ArCannedResponsesSettings['TxMessage'], true,true)."\");'>";
+        $StHtml .= '</td> </tr>';
+      }
+    }
     return $StHtml;
 	}
 }
