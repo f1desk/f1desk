@@ -36,7 +36,6 @@
       </div>
 
       <div class='Left' id='main'>
-        <?= ErrorHandler::getNotice(); ?>
         <div class='Left' id='shadow'>
           <div class='Left' id='content'>
             <div class='Left' id='contentHeader'>

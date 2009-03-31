@@ -155,6 +155,7 @@ ORDER BY
     }
 
     $ArDepartments['single'] = DEPT_SINGLE;
+    $ArDepartments['byme'] = DEPT_BYME;
     $ArDepartments['bookmark'] = DEPT_BOOKMARK;
     $ArDepartments['ignored'] = DEPT_IGNORED;
 

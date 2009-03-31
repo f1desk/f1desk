@@ -254,6 +254,29 @@ function debug(toDebug, recursive){
 }
 
 /**
+ *  isEmpty
+ *  @param Text < text >
+ */
+function isEmpty(Text){
+  var TxEmpty; TxEmpty = Text.replace(/\s+|\s+/g,"");
+  if(TxEmpty == ""){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ *  br2nl
+ *  @param Text < text >
+ */
+function br2nl(Text){
+  Text = Text.split('<br />').join('\n');
+  Text = Text.split('<br/>').join('\n');
+  return Text.split('<br>').join('\n');
+}
+
+/**
  *  merge
  *  @param destination < obj >
  *  @param source < obj >
