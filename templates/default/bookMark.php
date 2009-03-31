@@ -27,7 +27,7 @@
 								<input type="hidden" id="StBookmarkTitle<?=$ArBookMarkSettings['IDTicket']?>" value="<?=$ArBookMarkSettings['StTitle']?>">
 							</td>
 							<td>
-								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="HOME.removeBookmark(<?=$ArBookMarkSettings['IDTicket']?>)">
+								<img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="Home.removeBookmark(<?=$ArBookMarkSettings['IDTicket']?>)">
 								<img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" title="Visualizar" class="cannedAction" onclick="flowWindow.previewTicket(<?=$ArBookMarkSettings['IDTicket']?>)">
 							</td>
 						</tr>

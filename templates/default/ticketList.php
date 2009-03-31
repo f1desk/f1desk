@@ -8,9 +8,9 @@
 <table id='ticketTable<?=$ID?>' class='tableTickets'>
   <thead>
     <tr>
-      <th style="cursor:pointer;" onclick="TICKET.orderTicketList(0, 'ticketTable<?=$ID?>')">N&uacute;mero</th>
-      <th style="cursor:pointer;" onclick="TICKET.orderTicketList(1, 'ticketTable<?=$ID?>')">Nome</th>
-      <th style="cursor:pointer;" onclick="TICKET.orderTicketList(2, 'ticketTable<?=$ID?>')">Atendente</th>
+      <th style="cursor:pointer;" onclick="Ticket.orderTicketList(0, 'ticketTable<?=$ID?>')">N&uacute;mero</th>
+      <th style="cursor:pointer;" onclick="Ticket.orderTicketList(1, 'ticketTable<?=$ID?>')">Nome</th>
+      <th style="cursor:pointer;" onclick="Ticket.orderTicketList(2, 'ticketTable<?=$ID?>')">Atendente</th>
       <th>Abrir</th>
     </tr>
   </thead>
@@ -26,13 +26,13 @@
         }
       ?>
       <tr style='cursor:pointer;' class='<?= $StClass ?>'>
-        <td onclick='TICKET.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )' id='<?= $ID ?>' class='TicketNumber'>
+        <td onclick='Ticket.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )' id='<?= $ID ?>' class='TicketNumber'>
           #<?= $Ticket['IDTicket']?>
         </td>
-        <td onclick='TICKET.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )'>
+        <td onclick='Ticket.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )'>
           <?= $Ticket['StTitle']?>
         </td>
-        <td onclick='TICKET.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )' id='TicketSupporter<?= $Ticket['IDTicket']?>'>
+        <td onclick='Ticket.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )' id='TicketSupporter<?= $Ticket['IDTicket']?>'>
           <?= $Ticket['StSupporter']?>
         </td>
         <td onclick="flowWindow.previewTicket(<?=$Ticket['IDTicket']?>);" style='text-align:center;'>

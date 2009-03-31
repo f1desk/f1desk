@@ -9,14 +9,14 @@ handleLanguage(__FILE__);
 <div id='contentDisplay' class='Right'></div>
 
 <div id='createWrapper'>
-  <form id='formCreate' method='POST' enctype='multipart/form-data' action='createTicket.submit.php' onsubmit='return WRITING.createTicketSubmit();'>
+  <form id='formCreate' method='POST' enctype='multipart/form-data' action='createTicket.submit.php' onsubmit='return Writing.createTicketSubmit();'>
   <?php if (TemplateHandler::IsSupporter()):?>
     <h3><?=TICKET_TYPE?></h3>
     <?=TemplateHandler::showTicketTypes();?>
 
     <div id='AttachTickets'>
       <h3><?=ATTACH_TICKET?></h3>
-      <p><?=CLICK?><a href='javascript:void(0)' class='Link' onclick='WRITING.attachTicket()'><?=HERE?></a><?=TO_ATTACH?></p>
+      <p><?=CLICK?><a href='javascript:void(0)' class='Link' onclick='Writing.attachTicket()'><?=HERE?></a><?=TO_ATTACH?></p>
       <div id='AttachedTickets' class='Invisible'>
         <h4><?=ATTACHED_TIC?></h4>
       </div>
@@ -35,7 +35,7 @@ handleLanguage(__FILE__);
       <h3><?=SEND_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDRecipient','IDRecipient','inputCombo');?>
       <?php if (TemplateHandler::IsSupporter()):?>
-      <p><?=CLICK?> <a href='javascript:void(0);' class='Link' onclick='WRITING.listSupporters("Recipients")'><?=HERE?></a><?=ADD_SUPPORTER?></p>
+      <p><?=CLICK?> <a href='javascript:void(0);' class='Link' onclick='Writing.listSupporters("Recipients")'><?=HERE?></a><?=ADD_SUPPORTER?></p>
       <div id='addedRecipients' class='Invisible'>
         <h4><?=ADDED_SUP?></h4>
       </div>
@@ -46,7 +46,7 @@ handleLanguage(__FILE__);
     <div id='respondTo'>
       <h3><?=REPLY_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDReader','IDReader','inputCombo');?>
-      <p><?=CLICK?><a href='javascript:void(0);' class='Link' onclick='WRITING.listSupporters("Readers")'><?=HERE?></a><?=ADD_SUPPORTER?>
+      <p><?=CLICK?><a href='javascript:void(0);' class='Link' onclick='Writing.listSupporters("Readers")'><?=HERE?></a><?=ADD_SUPPORTER?>
       <div id='addedReaders' class='Invisible'>
         <h4><?=ADDED_SUP?></h4>
       </div>

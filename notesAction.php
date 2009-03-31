@@ -23,8 +23,8 @@
           </td>
           <td>
             <input type='hidden' id='TxNote$IDNote' value='".f1desk_escape_string($_POST['TxNote'], false, true)."'>
-            <img src='". TEMPLATEDIR ."images/button_edit.png' alt='Editar' class='cannedAction' onclick='HOME.startEditElement(\"note\", $IDNote);'>
-            <img src='". TEMPLATEDIR ."images/button_cancel.png' alt='Remover' class='cannedAction' onclick='HOME.removeNote($IDNote)'>
+            <img src='". TEMPLATEDIR ."images/button_edit.png' alt='Editar' class='cannedAction' onclick='Home.startEditElement(\"note\", $IDNote);'>
+            <img src='". TEMPLATEDIR ."images/button_cancel.png' alt='Remover' class='cannedAction' onclick='Home.removeNote($IDNote)'>
             <img src='". TEMPLATEDIR ."images/visualizar.png' alt='Visualizar' class='cannedAction' onclick='flowWindow.previewNote(\"". f1desk_escape_string($_POST['StTitle'], false, true)."\", \"". f1desk_escape_string($_POST['TxNote'], true, true)."\")' >
           </td>
         ");
@@ -50,8 +50,8 @@
             </td>
             <td>
               <input type='hidden' id='TxNote$ItAffedcted' value='".f1desk_escape_string($_POST['TxNote'], false, true)."'>
-              <img src='". TEMPLATEDIR ."images/button_edit.png' alt='Editar' class='cannedAction' onclick='HOME.startEditElement(\"note\", $ItAffedcted);'>
-              <img src='". TEMPLATEDIR ."images/button_cancel.png' alt='Remover' class='cannedAction' onclick='HOME.removeNote($ItAffedcted)'>
+              <img src='". TEMPLATEDIR ."images/button_edit.png' alt='Editar' class='cannedAction' onclick='Home.startEditElement(\"note\", $ItAffedcted);'>
+              <img src='". TEMPLATEDIR ."images/button_cancel.png' alt='Remover' class='cannedAction' onclick='Home.removeNote($ItAffedcted)'>
               <img src='". TEMPLATEDIR ."images/visualizar.png' alt='Visualizar' class='cannedAction' onclick='flowWindow.previewNote(\"". f1desk_escape_string($_POST['StTitle'], false, true)."\", \"". f1desk_escape_string($_POST['TxNote'], true, true)."\")' >
             </td>
           </tr>

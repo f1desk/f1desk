@@ -2,7 +2,7 @@
 <?$ArNotes = TemplateHandler::listNotes( getSessionProp('IDSupporter') );?>
   <div id="noteBox" class="homeBox">
     <span class="homeBoxTitle" onclick="baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')"><?=NOTES?></span>
-    <span class="homeBoxTitle newElement" onclick="HOME.startCreatingElement('note')"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
+    <span class="homeBoxTitle newElement" onclick="Home.startCreatingElement('note')"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
     <span class="homeBoxTitle loadingRequest" id="noteLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
     <div id="noteBoxContent" class="homeBoxContent">
       <table class="tableTickets" id="noteTable">
@@ -24,8 +24,8 @@
               </td>
               <td>
                 <input type="hidden" id="TxNote<?=$ArNoteSettings['IDNote']?>" value='<?=f1desk_escape_string($ArNoteSettings['TxNote'],false,true)?>'>
-                <img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" title="Editar" class="cannedAction" onclick="HOME.startEditElement('note', <?=$ArNoteSettings['IDNote']?>);">
-                <img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="HOME.removeNote(<?=$ArNoteSettings['IDNote']?>)">
+                <img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" title="Editar" class="cannedAction" onclick="Home.startEditElement('note', <?=$ArNoteSettings['IDNote']?>);">
+                <img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="Home.removeNote(<?=$ArNoteSettings['IDNote']?>)">
                 <img src="<?= TEMPLATEDIR ?>images/visualizar.png" alt="Visualizar" title="Visualizar" class="cannedAction" onclick='flowWindow.previewNote("<?=f1desk_escape_string($ArNoteSettings['StTitle'],false,true)?>", "<?=f1desk_escape_string($ArNoteSettings['TxNote'], true, true)?>");'>
               </td>
             </tr>
@@ -45,7 +45,7 @@
             <?=RESPONSE?>: <br />
               <textarea name="TxNote" class="answerArea"></textarea> <br>
               <input type="hidden" name="IDNote">
-            <input type="button" value="Editar" id="noteFormButton" class="button" onclick="HOME.submitForm('note', this.value);">
+            <input type="button" value="Editar" id="noteFormButton" class="button" onclick="Home.submitForm('note', this.value);">
             <button class="button" onclick="baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')">Cancelar</button>
           </form>
         </div>

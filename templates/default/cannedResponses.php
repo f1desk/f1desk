@@ -5,7 +5,7 @@ if (TemplateHandler::IsSupporter()):
 ?>
   <div id="cannedBox" class="homeBox">
     <span class="homeBoxTitle" onclick="baseActions.toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide')"><?=CANNED_RESPONSES?></span>
-    <span class="homeBoxTitle newElement" onclick="HOME.startCreatingElement('canned');"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
+    <span class="homeBoxTitle newElement" onclick="Home.startCreatingElement('canned');"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
     <span class="homeBoxTitle loadingRequest" id="cannedLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
     <div id="cannedBoxContent" class="homeBoxContent">
       <table class="tableTickets" id="cannedTable">
@@ -27,8 +27,8 @@ if (TemplateHandler::IsSupporter()):
               </td>
               <td>
                 <input type="hidden" id="TxCannedResponse<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value='<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'],false,true)?>'>
-                <img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" title="Editar" class="cannedAction" onclick="HOME.startEditElement('canned', <?=$ArCannedResponsesSettings['IDCannedResponse']?>);">
-                <img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="HOME.removeCannedResponse(<?=$ArCannedResponsesSettings['IDCannedResponse']?>)">
+                <img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" title="Editar" class="cannedAction" onclick="Home.startEditElement('canned', <?=$ArCannedResponsesSettings['IDCannedResponse']?>);">
+                <img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="Home.removeCannedResponse(<?=$ArCannedResponsesSettings['IDCannedResponse']?>)">
                 <img src="<?= TEMPLATEDIR ?>images/visualizar.png" title="Visualizar" id="previemCanned<?=$ArCannedResponsesSettings['IDCannedResponse']?>" alt="Visualizar" class="cannedAction" onclick='flowWindow.previewCannedResponse("<?=f1desk_escape_string($ArCannedResponsesSettings['StTitle'],false,true)?>", "<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'], true,true)?>");'>
               </td>
             </tr>
@@ -48,7 +48,7 @@ if (TemplateHandler::IsSupporter()):
             <?=RESPONSE?>: <br />
               <textarea name="TxCannedResponse" class="answerArea"></textarea> <br>
               <input type="hidden" name="IDCanned">
-            <input type="button" value="Editar" id="cannedFormButton" class="button" onclick="HOME.submitForm('canned', this.value);">
+            <input type="button" value="Editar" id="cannedFormButton" class="button" onclick="Home.submitForm('canned', this.value);">
             <button class="button" onclick="baseActions.toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide')">Cancelar</button>
           </form>
         </div>

@@ -23,8 +23,8 @@ switch ( $_POST['action'] ) {
             </td>
             <td>
               <input id='TxCannedResponse$IDCannedResponse' type='hidden' value='". f1desk_escape_string($_POST['TxMessage'], false, true) ."'/>
-              <img class='cannedAction' onclick='HOME.startEditElement(\"canned\", $IDCannedResponse);' alt='Editar' src='templates/default/images/button_edit.png'/>
-              <img class='cannedAction' onclick='HOME.removeCannedResponse($IDCannedResponse)' alt='Remover' src='templates/default/images/button_cancel.png'/>
+              <img class='cannedAction' onclick='Home.startEditElement(\"canned\", $IDCannedResponse);' alt='Editar' src='templates/default/images/button_edit.png'/>
+              <img class='cannedAction' onclick='Home.removeCannedResponse($IDCannedResponse)' alt='Remover' src='templates/default/images/button_cancel.png'/>
               <img id='previemCanned$IDCannedResponse' class='cannedAction' onclick='flowWindow.previewCannedResponse( \"". f1desk_escape_string($_POST['StTitle'], false, true) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true, true) ."\")' src='templates/default/images/visualizar.png'/>
             </td>
         ");
@@ -50,8 +50,8 @@ switch ( $_POST['action'] ) {
               </td>
               <td>
                 <input id='TxCannedResponse$ItAffedcted' type='hidden' value='". f1desk_escape_string($_POST['TxMessage'], false, true) ."'/>
-                <img class='cannedAction' onclick='HOME.startEditElement(\"canned\", $ItAffedcted);' alt='Editar' src='templates/default/images/button_edit.png'/>
-                <img class='cannedAction' onclick='HOME.removeCannedResponse($ItAffedcted)' alt='Remover' src='templates/default/images/button_cancel.png'/>
+                <img class='cannedAction' onclick='Home.startEditElement(\"canned\", $ItAffedcted);' alt='Editar' src='templates/default/images/button_edit.png'/>
+                <img class='cannedAction' onclick='Home.removeCannedResponse($ItAffedcted)' alt='Remover' src='templates/default/images/button_cancel.png'/>
                 <img id='previemCanned$ItAffedcted' class='cannedAction' onclick='flowWindow.previewCannedResponse(\"". f1desk_escape_string($_POST['StTitle'], false, true) ."\", \"". f1desk_escape_string($_POST['TxMessage'], true, true) ."\")' src='templates/default/images/visualizar.png'/>
               </td>
             </tr>
