@@ -316,52 +316,6 @@ abstract class TemplateHandler {
 	}
 
 	/**
-	 * Creates a new cannedResponse for a supporter
-	 *
-	 * @param string $StAlias
-	 * @param string $StTitle
-	 * @param text $TxMessage
-	 *
-	 * @return integer $ItAffected
-	 */
-	public static function createCannedResponse ( $StTitle, $TxMessage, $ItIDSupporter ){
-		$ArData = array(
-			"StTitle" => $StTitle,
-			"TxMessage" => $TxMessage,
-			"BoPersonal" => "1",
-			"IDSupporter" => $ItIDSupporter
-		);
-		return F1DeskUtils::createCannedResponse( $ArData );
-	}
-
-	/**
-	 * edits a Canned Response
-	 *
-	 * @param unknown_type $IDCannedResponse
-	 * @param unknown_type $ArData
-	 */
-	public static function editCannedResponse( $IDCannedResponse, $ArData ){
-		$ItAffected = F1DeskUtils::editCannedResponse( $IDCannedResponse, $ArData );
-		if ($ItAffected <= -1) {
-			 return false;
-		}
-		return $ItAffected;
-	}
-
-	/**
-	 * reova a canned response
-	 *
-	 * @param unknown_type $IDCannedResponse
-	 */
-	public static function removeCannedResponse ( $IDCannedResponse ) {
-		$ItAffected = F1DeskUtils::removeCannedResponse( $IDCannedResponse );
-		if ($ItAffected <= 0) {
-			 return false;
-		}
-		return $ItAffected;
-	}
-
-	/**
 	 * lists all Notes of a supporter
 	 *
 	 * @param integer $IDSupporter
@@ -369,50 +323,6 @@ abstract class TemplateHandler {
 	 */
 	public static function listNotes( $IDSupporter ){
 		return F1DeskUtils::listNotes( $IDSupporter );
-	}
-
-	/**
-	 * Creates a new Note for a supporter
-	 *
-	 * @param string $StTitle
-	 * @param text $TxMessage
-	 *
-	 * @return integer $ItAffected
-	 */
-	public static function createNote ( $StTitle, $TxMessage, $ItIDSupporter ){
-		$ArData = array(
-			"StTitle" => $StTitle,
-			"TxNote" => $TxMessage,
-			"IDSupporter" => $ItIDSupporter
-		);
-		return F1DeskUtils::createNote( $ArData );
-	}
-
-	/**
-	 * edits a Note
-	 *
-	 * @param integer $IDCannedResponse
-	 * @param array $ArData
-	 */
-	public static function editNote( $IDNote, $ArData ){
-		$ItAffected = F1DeskUtils::editNote( $IDNote, $ArData );
-		if ($ItAffected <= -1) {
-			 return false;
-		}
-		return $ItAffected;
-	}
-
-	/**
-	 * reova a note
-	 *
-	 * @param integer $IDNote
-	 */
-	public static function removeNote ( $IDNote ) {
-		$ItAffected = F1DeskUtils::removeNote( $IDNote );
-		if ($ItAffected <= 0) {
-			 return false;
-		}
-		return $ItAffected;
 	}
 
 	/**

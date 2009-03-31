@@ -15,7 +15,7 @@ if (!empty($_POST)) {
       } else {
         $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$TxMessage,$ArMessageType[$_POST['StMessageType']]);
       }
-      die("<script>top.submitTicketForm({$_POST['IDTicket']});</script>");
+      die("<script>top.TICKET.submitTicketForm({$_POST['IDTicket']});</script>");
     break;
 
     case 'preview':
