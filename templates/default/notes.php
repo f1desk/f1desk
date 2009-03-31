@@ -1,4 +1,4 @@
-<?if ( getSessionProp('isSupporter')=="true" ):?>
+<? handleLanguage(__FILE__); ?>
 <?$ArNotes = TemplateHandler::listNotes( getSessionProp('IDSupporter') );?>
   <div id="noteBox" class="homeBox">
     <span class="homeBoxTitle" onclick="baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')"><?=NOTES?></span>
@@ -52,4 +52,3 @@
       </div>
     </div>
   </div>
-<?endif;?>

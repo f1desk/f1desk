@@ -196,4 +196,12 @@ function f1desk_escape_html($toEscape){
 	return f1desk_strip_tags($toEscape, $StHTML);
 }
 
+function returnData($StReturnType, $StReturnURL){
+  if ($StReturnType == 'redirect') {
+  	header("Location: ".TEMPLATEDIR."$StReturnURL");
+  } else {
+    include_once(TEMPLATEDIR.$StReturnURL);
+  }
+}
+
 ?>

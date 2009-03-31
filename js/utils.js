@@ -326,11 +326,12 @@ function bindPlus(method,handler) {
 * appends an HTML text to an HTML object
 *
 */
-function appendHTML(HTML, Target) {
+function appendHTML(HTML, Target, Refresh) {
     var tmpDiv = createElement('div');
     tmpDiv.innerHTML = HTML;
     var nodes = tmpDiv.childNodes, element;
 
+    if(Refresh){   Target.innerHTML = "";   }
     for (var i = 0, node = null; node = nodes[i]; i++) {
         element = node.cloneNode(true);
         Target.appendChild(element);

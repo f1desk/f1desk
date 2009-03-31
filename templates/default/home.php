@@ -9,17 +9,25 @@ require_once('header.php');
   <?require_once(TEMPLATEDIR . 'userData.php')?>
   <!-- First Box End -->
 
-  <!-- Third Box: Supporter Canned Responses -->
-  <?require_once(TEMPLATEDIR . 'cannedResponses.php');?>
-  <!-- Third Box End -->
-
-  <!-- Fourth Box: Supporter Notes -->
-  <?require_once(TEMPLATEDIR . 'notes.php')?>
-  <!-- Fourth Box End -->
-
-  <!-- Second Box: Supporter Bookmark -->
-  <?require_once(TEMPLATEDIR . 'bookMark.php');?>
-  <!-- Second Box End -->
+  <?if (TemplateHandler::IsSupporter()) :?>
+  
+    <!-- Second Box: Supporter Canned Responses -->
+    <div id="cannedResponsesBox" class="homeBox">
+      <?require_once(TEMPLATEDIR . 'cannedResponses.php');?>
+    </div>
+    <!-- Second Box End -->
+  
+    <!-- Third Box: Supporter Notes -->
+    <div id="notesBox" class="homeBox">
+      <?require_once(TEMPLATEDIR . 'notes.php')?>
+    </div>
+    <!-- Third Box End -->
+  
+    <!-- Fourth Box: Supporter Bookmark -->
+    <?require_once(TEMPLATEDIR . 'bookMark.php');?>
+    <!-- Fourth Box End -->
+  
+  <?endif;?>
 
 </div>
 <?php
