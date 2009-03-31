@@ -11,7 +11,7 @@
 <div id='ticketHeader'>
   <div id="ticketTitle">
   <?if(!$preview):?>
-    <img id='reloadHeader' class='menuRefresh Right' onclick='TICKET.refreshTicket("<?= $IDTicket ?>")' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
+    <img id='reloadHeader' class='menuRefresh Right' onclick='Ticket.refreshTicket("<?= $IDTicket ?>")' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
   <?endif;?>
   	<img alt="Ticket" id='arrowHeader<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='baseActions.toogleArrow( this.id, "ticketContent<?=$uid?>")' class='menuArrow'/>
   	<span><?= $StTitle ?></span>
@@ -45,22 +45,22 @@
           </td>
           <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <td>
-            <a href='javascript:void(0);' onclick='TICKET.attachTicket(<?=$IDTicket?>);'>
+            <a href='javascript:void(0);' onclick='Ticket.attachTicket(<?=$IDTicket?>);'>
               <img src='<?= TEMPLATEDIR ?>images/attach.png' alt='Attach Ticket' title='Attach Ticket'>
             </a>
           </td>
           <td>
               <? if (F1DeskUtils::isIgnored($IDSupporter,$IDTicket)): ?>
-            <a href='javascript:void(0);' onclick='TICKET.unignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
+            <a href='javascript:void(0);' onclick='Ticket.unignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
               <img src='<?= TEMPLATEDIR ?>images/unignore.png' alt='Ignore Call' title='Ignore Call'>
               <? else: ?>
-            <a href='javascript:void(0);' onclick='TICKET.ignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
+            <a href='javascript:void(0);' onclick='Ticket.ignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
               <img src='<?= TEMPLATEDIR ?>images/ignore.png' alt='Ignore Call' title='Ignore Call'>
               <? endif;?>
             </a>
           </td>
           <td>
-            <a href='javascript:void(0);' onclick='TICKET.bookmarkTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
+            <a href='javascript:void(0);' onclick='Ticket.bookmarkTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
               <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Call' title='Bookmark Call'>
             </a>
           </td>
@@ -79,7 +79,7 @@
     <span><?=INFORMATIONS?></span>
   </div>
   <div id='informationsContent<?=$uid?>' class="informationsBox" style="display:none">
-    
+
     <table class="tableTickets">
       <thead>
         <th><?=INFO_CATEGORY?></th>
@@ -96,7 +96,7 @@
         <? endif; ?>
       </tbody>
     </table>
-  
+
     <!--[ATTACHMENT FILES]-->
     <?=TemplateHandler::showAttachments($ArAttachments);?>
     <!--[/ATTACHMENT FILES]-->
@@ -104,7 +104,7 @@
     <!--[ATTACHED TICKETS]-->
     <?=TemplateHandler::showAttachedTickets($ArAttachedTickets);?>
     <!--[/ATTACHED TICKETS]-->
-    
+
     <!--[TICKETS ATTACHED]-->
     <?=TemplateHandler::showTicketsAttached($ArTicketsAttached);?>
     <!--[/TICKETS ATTACHED]-->

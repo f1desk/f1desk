@@ -1,4 +1,5 @@
 <?php
+	define('LOAD','Carregando...');
 
   define('EDIT_AREA', 'Editar Dados');
 
@@ -15,5 +16,5 @@
 	define("BOOK_MARK", "Chamados Favoritos");
 	define("ID_TICKET", "ID Chamado");
 	define("NO_BOOKMARK", "N&atilde;o h&aacute; chamados favoritados.");
-	
+
 ?>

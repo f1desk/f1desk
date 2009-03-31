@@ -1,13 +1,7 @@
-<?
-if ( getSessionProp('isSupporter') == "true" ){
-	$ArUser = TemplateHandler::getUserData( getSessionProp('IDSupporter'), 0);
-} else {
-	$ArUser = TemplateHandler::getUserData( getSessionProp('IDClient'), 1);
-}
-?>
+<?php handleLanguage(__FILE__); require_once('homeData.php');?>
 <div id="dataBox" class="homeBox">
 	<span class="homeBoxTitle" onclick="baseActions.toogleArrow('dataArrow', 'dataBoxEditAreaContent', 'hide')"><?=USER_DATA?></span>
-	<span class="homeBoxTitle newElement" onclick="HOME.startDataEdit();"><img src="<?= TEMPLATEDIR ?>images/button_edit.png"> Editar</span>
+	<span class="homeBoxTitle newElement" onclick="Home.startDataEdit();"><img src="<?= TEMPLATEDIR ?>images/button_edit.png"> Editar</span>
 	<span class="homeBoxTitle loadingRequest" id="dataLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
 	<div id="dataBoxContent" class="homeBoxContent">
 		<table>
@@ -51,7 +45,7 @@ if ( getSessionProp('isSupporter') == "true" ){
 			</tbody>
 		</table>
 		<div id="dataBoxEditArea" class="editArea">
-			<div class="editAreaTitle"  onclick="HOME.startDataEdit();">
+			<div class="editAreaTitle"  onclick="Home.startDataEdit();">
 				<img id="dataArrow" src="<?= TEMPLATEDIR ?>images/arrow_show.gif">
 				<span><?=EDIT_AREA?></span>
 			</div>
@@ -68,7 +62,7 @@ if ( getSessionProp('isSupporter') == "true" ){
 					<textarea class="answerArea" name="TxDataHeader" ></textarea>
 					<?=SIGN?>:	<br />
 					<textarea class="answerArea" name="TxDataSign" ></textarea>
-					<button class="button" onclick="HOME.updateInformations()">Salvar</button>
+					<button class="button" onclick="Home.updateInformations()">Salvar</button>
 					<button class="button" onclick="baseActions.toogleArrow('dataArrow', 'dataBoxEditAreaContent', 'hide')">Cancelar</button>
 				</form>
 			</div>

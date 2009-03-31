@@ -5,8 +5,8 @@
 <? foreach ($ArDepartments as $ID => $ArDepartment) : ?>
   <div id="departmentWrapper<?=$ID?>">
     <div id='menuTitle<?=$ID?>' class='departmentRows'>
-      <img id='reload<?=$ID?>' class='menuRefresh Right' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' onclick="TICKET.reloadTicketList('<?=$ID?>');" />
-      <img id='arrow<?=$ID?>' class='menuArrow' src='<?= TEMPLATEDIR ?>images/arrow_show.gif' alt='Show' onclick="TICKET.showDepartmentTickets('<?=$ID?>')"/>
+      <img id='reload<?=$ID?>' class='menuRefresh Right' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' onclick="Ticket.reloadTicketList('<?=$ID?>');" />
+      <img id='arrow<?=$ID?>' class='menuArrow' src='<?= TEMPLATEDIR ?>images/arrow_show.gif' alt='Show' onclick="Ticket.showDepartmentTickets('<?=$ID?>')"/>
       <span class='TxPadrao'><?= $ArDepartment['StDepartment'] ?></span>
       <? if ($ID != 'closed' && $ID != 'ignored') :?>
     	  <span> - </span>
