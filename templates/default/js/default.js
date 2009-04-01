@@ -75,7 +75,7 @@ var Home = {
         baseActions.toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide');
       }
     };
-    var tUrl = 'cannedResponsesData.php';
+    var tUrl = 'cannedResponsesAction.php';
     xhr.makeRequest('editCannedResponse',tUrl,tParams);
   },
 
@@ -103,7 +103,7 @@ var Home = {
         baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide');
       }
     };
-    var tUrl = 'notesData.php';
+    var tUrl = 'notesAction.php';
     xhr.makeRequest('editNote',tUrl,tParams);
   },
 
@@ -129,7 +129,7 @@ var Home = {
         Home._doLoading( 'canned','hide' );
       }
     };
-    var tUrl = 'cannedResponsesData.php';
+    var tUrl = 'cannedResponsesAction.php';
     xhr.makeRequest('newCannedResponse',tUrl,tParams);
   },
 
@@ -154,7 +154,7 @@ var Home = {
         Home._doLoading( 'note','hide' );
       }
     };
-    var tUrl = 'notesData.php';
+    var tUrl = 'notesAction.php';
     xhr.makeRequest('newNote',tUrl,tParams);
   },
 
@@ -171,21 +171,12 @@ var Home = {
           'content':{
             'action':'remove',
             'IDTicket': IDTicket,
+            'returnType': 'include',
+            'returnURL': 'bookMark.php'
           },
           'okCallBack': function(returnedValue){
-            if(returnedValue == 'error'){
-              flowWindow.alert(i18n.wrongBookmarkID+IDTicket);
-            } else {
-              removeElements( gID('bookmarkTR'+IDTicket) );
-              if( gID('bookmarkTable').getElementsByTagName('TR').length == 0){
-                gID('bookmarkTable').appendChild( createElement('TR',{'id':'noBookmark'},
-                  createElement('TD',{
-                    'colspan':'3',  'align':'center'
-                  },i18n.noBookmark)
-                ) );
-              }
-              Home._doLoading( 'bookmark','hide' );
-            }
+            appendHTML(returnedValue,gID('bookmarkBox'),true);
+            Home._doLoading( 'bookmark','hide' );
           }
         };
         var tUrl = 'bookmarkAction.php';
@@ -217,7 +208,7 @@ var Home = {
             Home._doLoading( 'canned','hide' );
           }
         };
-        var tUrl = 'cannedResponsesData.php';
+        var tUrl = 'cannedResponsesAction.php';
         xhr.makeRequest('removeCannedResponse',tUrl,tParams);
       }
     }
@@ -246,7 +237,7 @@ var Home = {
             Home._doLoading( 'note','hide' );
           }
         };
-        var tUrl = 'notesData.php';
+        var tUrl = 'notesAction.php';
         xhr.makeRequest('removeNote',tUrl,tParams);
       }
     };
@@ -258,7 +249,7 @@ var Home = {
     for (var aux = 0; aux < editForm.elements.length; aux++) {
       editForm.elements[aux].value = "";
     }
-    gID(StElement+'FormButton').value = "Criar";
+    gID(StElement+'FormButton').textContent = i18n.create;
     baseActions.toogleArrow( StElement + 'Arrow', StElement+'BoxEditAreaContent', 'show');
   },
 
@@ -284,28 +275,28 @@ var Home = {
       editForm.elements['StTitle'].value = unescape(gID('StNoteTitle'+IDMessage).value);  /*StTitle*/
       editForm.elements['TxNote'].value = unescape(gID('TxNote'+IDMessage).value);  /*TxMessage*/
     }
-    gID(formName + 'FormButton').value = "Editar";
+    gID(formName + 'FormButton').textContent = i18n.edit;
   },
 
   'submitForm': function (formName, action) {
     if(!action || !formName){
       flowWindow.alert(i18n.noAction); return false;
     } else {
-      if( formName == 'canned' ){  // if form is cannedForm
+      if( formName == 'canned' ){
         switch (action){
-          case "Editar":  // if action is edit
+          case i18n.edit:
             Home.editCannedResponse();
           break;
-          case "Criar": // if action is create
+          case i18n.create:
             Home.newCannedResponse();
           break;
         }
-      } else if( formName == 'note' ){ // if form is noteForm
+      } else if( formName == 'note' ){
         switch (action){
-          case "Editar": // if action is edit
+          case i18n.edit:
             Home.editNote();
           break;
-          case "Criar": // if action is create
+          case i18n.create:
             Home.newNote();
           break;
         }
@@ -319,39 +310,28 @@ var Home = {
     var content = {
       'StName': dataForm.elements['StDataName'].value,
       'StEmail': dataForm.elements['StDataEmail'].value,
-      'BoNotify': (dataForm.elements['StDataNotify'][0].checked)?0:1,
+      'StPassword':dataForm.elements['StDataPassword'].value,
+      'BoNotify': (dataForm.elements['StDataNotify'][0].checked) ? 0 : 1,
       'TxHeader': dataForm.elements['TxDataHeader'].value,
-      'TxSign': dataForm.elements['TxDataSign'].value
+      'TxSign': dataForm.elements['TxDataSign'].value,
+      'returnType':'include',
+      'returnUrl':'userInfo.php'
     };
     var tParams = {
       'enqueue':1,
       'method':'post',
       'content':content,
-      'okCallBack': function( requestResponse ){
-        if(requestResponse == 'sucess'){
-          var dataForm = gID('dataForm');
-          var TxHeader = dataForm.elements['TxDataHeader'].value;
-          var TxSign = dataForm.elements['TxDataSign'].value;
-          /*Update TD's*/
-          gID('StDataNameTD').getElementsByTagName('pre')[0].innerHTML = dataForm.elements['StDataName'].value;
-          gID('StDataEmailTD').getElementsByTagName('pre')[0].innerHTML = dataForm.elements['StDataEmail'].value;
-          gID('StDataNotifyTD').getElementsByTagName('pre')[0].innerHTML = (dataForm.elements['StDataNotify'][0].checked)?'Não':'Sim';
-          gID('TxDataHeaderTD').getElementsByTagName('pre')[0].innerHTML = (!TxHeader)?'<i>'+i18n.empty+'</i>':TxHeader;
-          gID('TxDataSignTD').getElementsByTagName('pre')[0].innerHTML = (!TxSign)?'<i>'+i18n.empty+'</i>':TxSign;
-          /*Update Hiddens*/
-          gID('StDataName').value = escape(dataForm.elements['StDataName'].value);
-          gID('StDataEmail').value = escape(dataForm.elements['StDataEmail'].value);
-          gID('StDataNotify').value = (dataForm.elements['StDataNotify'][0].checked)?'0':'1';
-          gID('TxDataHeader').value = escape(TxHeader);
-          gID('TxDataSign').value = escape(TxSign);
-          Home._doLoading('data','hide');
-        } else {
-           flowWindow.alert(i18n.updateError);
-        }
+      'okCallBack': function(requestResponse) {
+        appendHTML(requestResponse,gID('dataBox'),true);
+        Home._doLoading('data','hide');
+      },
+      'errCallBack':function(requestResponse) {
+        flowWindow.alert(requestResponse);
+        Home._doLoading('data','hide');
       }
     };
-    var tUrl = 'userData.submit.php';
-    xhr.makeRequest('newCannedResponse',tUrl,tParams);
+    var tUrl = 'userInfoAction.php';
+    xhr.makeRequest('Edit User Data',tUrl,tParams);
   }
 
 };

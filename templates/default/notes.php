@@ -1,14 +1,12 @@
-<? handleLanguage(__FILE__); ?>
-<?$ArNotes = TemplateHandler::listNotes( getSessionProp('IDSupporter') );?>
-  <div id="noteBox" class="homeBox">
+<?php handleLanguage(__FILE__); require_once('homeData.php');?>
     <span class="homeBoxTitle" onclick="baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')"><?=NOTES?></span>
     <span class="homeBoxTitle newElement" onclick="Home.startCreatingElement('note')"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
     <span class="homeBoxTitle loadingRequest" id="noteLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
     <div id="noteBoxContent" class="homeBoxContent">
       <table class="tableTickets" id="noteTable">
         <thead>
-          <th><?=TITLE?></th>
-          <th width="20%"><?=ACTIONS?></th>
+          <th><?=NOTE_TITLE?></th>
+          <th width="20%"><?=NOTE_ACTIONS?></th>
         </thead>
         <tbody>
         <?if (count( $ArNotes ) == 0):?>
@@ -36,16 +34,16 @@
       <div id="noteBoxEditArea" class="editArea">
         <div class="editAreaTitle" onclick="baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')">
           <img id="noteArrow" src="<?= TEMPLATEDIR ?>images/arrow_show.gif">
-          <span><?=EDIT_AREA?></span>
+          <span><?=EDIT_NOTES_AREA?></span>
         </div>
         <div id="noteBoxEditAreaContent" class="editAreaContent" style="display: none">
           <form onsubmit="return false;" id="noteForm">
-            <?=TITLE?>: <br />
+            <?=NOTE_TITLE?>: <br />
               <input type="text" name="StTitle" class="inputCombo"> <br />
             <?=RESPONSE?>: <br />
               <textarea name="TxNote" class="answerArea"></textarea> <br>
               <input type="hidden" name="IDNote">
-            <input type="button" value="Editar" id="noteFormButton" class="button" onclick="Home.submitForm('note', this.value);">
+            <button id="noteFormButton" class="button" onclick="Home.submitForm('note', this.textContent);">Editar</button>
             <button class="button" onclick="baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')">Cancelar</button>
           </form>
         </div>

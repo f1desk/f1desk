@@ -1,14 +1,13 @@
-<?if ( getSessionProp('isSupporter')=="true" ):?>
-<?$ArBookMark = TemplateHandler::listSupporterBookmark( getSessionProp('IDSupporter') );?>
-	<div id="bookmarkBox" class="homeBox">
+<? handleLanguage(__FILE__); require_once('homeData.php');
+  if ( getSessionProp('isSupporter')=="true" ):?>
 		<span class="homeBoxTitle"><?=BOOK_MARK?></span>
 		<span class="homeBoxTitle loadingRequest" id="bookmarkLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
 		<div id="bookmarkBoxContent" class="homeBoxContent">
 			<table class="tableTickets" id="bookmarkTable">
 				<thead>
 					<th><?=ID_TICKET?></th>
-					<th><?=TITLE?></th>
-					<th width="20%"><?=ACTIONS?></th>
+					<th><?=BOOKMARK_TITLE?></th>
+					<th width="20%"><?=BOOKMARK_ACTIONS?></th>
 				</thead>
 				<tbody>
 				<?if ( count( $ArBookMark ) == 0 ):?>
@@ -36,5 +35,4 @@
 				</tbody>
 			</table>
 		</div>
-	</div>
 <?endif;?>

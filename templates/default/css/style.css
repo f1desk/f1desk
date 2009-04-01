@@ -539,3 +539,8 @@ html>body #main{
   margin-bottom:20px;
   width:98%;
 }
+
+#dataBoxEditAreaContent p {
+  margin-bottom:0;
+  padding-bottom:0;
+}

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * get options
  *
@@ -34,7 +33,7 @@ function createOption($StParentName, $StSetting, $StValue, $ArAttributes = array
   $StSetting = strtolower($StSetting);
   $StValue = htmlspecialchars($StValue);
   $ObParent = $Dom->getElementsByTagName($StParentName)->item(0);
-  
+
   #
   # Looking if this entry already exists
   #
@@ -46,14 +45,14 @@ function createOption($StParentName, $StSetting, $StValue, $ArAttributes = array
       break;
     }
   }
-  
+
   if ( !$BoExists ) { ## Do not exists
   	$Element = $Dom->createElement($StSetting);
     $ObParent->appendChild($Element);
-    
+
     $ElementText = $Dom->createTextNode($StValue);
     $Element->appendChild($ElementText);
-    
+
     #
     # Setting Attributes given
     #
@@ -62,7 +61,7 @@ function createOption($StParentName, $StSetting, $StValue, $ArAttributes = array
       	$Element->setAttribute($StAttributeName, $StAttributeValue);
       }
     }
-    
+
     if ( $Dom->save(dirname(__FILE__) . '/option.xml') ) {
       return true;
     } else {
@@ -71,7 +70,7 @@ function createOption($StParentName, $StSetting, $StValue, $ArAttributes = array
   } else { ## Already exists
     return false;
   }
-  
+
 }
 
 /**
@@ -200,7 +199,8 @@ function returnData($StReturnType, $StReturnURL){
   if ($StReturnType == 'redirect') {
   	header("Location: ".TEMPLATEDIR."$StReturnURL");
   } else {
-    include_once(TEMPLATEDIR.$StReturnURL);
+    if (file_exists(TEMPLATEDIR.$StReturnURL))
+      include_once(TEMPLATEDIR.$StReturnURL);
   }
 }
 

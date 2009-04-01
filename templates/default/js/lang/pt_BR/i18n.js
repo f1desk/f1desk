@@ -1,4 +1,10 @@
 var i18n = {
+  'create':'Criar',
+  'edit':'Editar',
+
+  'no':'Não',
+  'yes':'Sim',
+
   'noAction':'Sem ações para executar',
   'noCannedSelected':'Selecione uma resposta para editar',
   'noNoteSelected':'Selecione uma anotação para editar',

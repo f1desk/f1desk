@@ -366,19 +366,19 @@ WHERE
    * Inser a new Supporter on DB
    *
    * @param array $ArInsert
-   * @param array $ItIDDepto
-   * @param array $ItIDUnit
+   * @param array $IDDepto
+   * @param array $IDUnit
    *
    * @return array  $ArInsert  Array with all fileds inserted and its new id
    *
    * @author Mario Vítor <mario[at]digirati.com.br>
    */
-  public function insertSupporter( $ArInsert, $ItIDUnit, $ItIDDepto ) {
+  public function insertSupporter( $ArInsert, $IDUnit, $IDDepto ) {
 
   	#
   	# Just to validate
   	#
-  	if ( is_null($ItIDDepto) || is_null($ItIDUnit) ) {
+  	if ( is_null($IDDepto) || is_null($IDUnit) ) {
   		throw new ErrorHandler (EXC_USER_INSERT);
   	}
     #
@@ -388,7 +388,7 @@ WHERE
 
   	$ArFields = array(	"IDUnit", "IDUser"	);
   	$ArSupporter = array(
-  		"IDUnit" => $ItIDUnit,
+  		"IDUnit" => $IDUnit,
   		"IDUser" => $ArUser['IDUser']
 		);
   	$StTableName = DBPREFIX . 'Supporter';
@@ -403,8 +403,8 @@ WHERE
     #
     # Relating this new supporter in his department
     #
-    $this->insertSupporterInDepartment( $ArUser['IDSupporter'], $ItIDDepto );
-    $ArUser['IDUnit'] = $ItIDUnit;	$ArUser['IDDepartment'] = $ItIDDepto;
+    $this->insertSupporterInDepartment( $ArUser['IDSupporter'], $IDDepto );
+    $ArUser['IDUnit'] = $IDUnit;	$ArUser['IDDepartment'] = $IDDepto;
 
     return $ArUser;
 
@@ -440,42 +440,39 @@ WHERE
    * Update a User on DB
    *
    * @param array    $ArData
-   * @param integer  $ItIDUser
+   * @param integer  $IDUser
    *
    * @return $ArData  Array contains all updated datas
    *
    * @author Mario Vítor <mario[at]digirati.com.br>
    */
-  private function updateUser( $ArData, $ItIDUser){
+  public function updateUser($ArData, $IDUser){
 
-    if ( !is_array($ArData) || !isset($ItIDUser) ){
+    if (!is_array($ArData) || !isset($IDUser)){
     	throw new ErrorHandler (EXC_USER_UPDATE);
     }
 
 		$StTableName = DBPREFIX . 'User';
-  	$StCondition = 'IDUser = "' . $ItIDUser . '"';
+  	$StCondition = 'IDUser = "' . $IDUser . '"';
+
     #
-    # getting new crypted password and hash if needes
+    # Getting a new encrypted password and the hash that encrypted it
     #
-    if ( isset( $ArData['StPassword'] ) ) {
+    if (isset( $ArData['StPassword'])) {
     	$ArDataHashPwd = self::generateHash( $ArData['StPassword'] );
 		  $ArData['StHash'] = $ArDataHashPwd['codHash'];
 		  $ArData['StPassword'] = $ArDataHashPwd['cryptPwd'];
     }
 
-    $ItAffected = $this->updateTable( $StTableName, $ArData , $StCondition );
-    if ( ! $ItAffected ) {
-      throw new ErrorHandler (EXC_USER_UPDATE);
-    }
+    $ItAffected = $this->updateTable($StTableName, $ArData , $StCondition, 1);
 
-    $ArData['IDUser'] = $ItIDUser;
-		return $ArData ;
+		return $ItAffected;
 
   }
 
-  public function updateSupporter( $ArData, $ItIDSupporter, $ItIDUnit, $ItIDDepartment ) {
+  public function updateSupporter( $ArData, $IDSupporter, $IDUnit, $IDDepartment ) {
 
-  	if ( !is_array($ArData) || is_null($ItIDSupporter) || is_null($ItIDDepartment) || is_null($ItIDUnit) ){
+  	if ( !is_array($ArData) || is_null($IDSupporter) || is_null($IDDepartment) || is_null($IDUnit) ){
     	throw new ErrorHandler (EXC_USER_UPDATE);
     }
 
@@ -488,39 +485,39 @@ SELECT
 FROM
 	".DBPREFIX."Supporter S
 WHERE
-	S.IDSupporter = ". $ItIDSupporter ;
-    $this->execSQL($StSQL);		$ItIDUser = $this->getResult("string");
-    $ItIDUser = $ItIDUser[0]['IDUser'];
+	S.IDSupporter = ". $IDSupporter ;
+    $this->execSQL($StSQL);		$IDUser = $this->getResult("string");
+    $IDUser = $IDUser[0]['IDUser'];
 
     #
     # updating as a user on first
     #
-    $ArData = $this->updateUser( $ArData, $ItIDUser );
+    $ArData = $this->updateUser( $ArData, $IDUser );
 
 		#
     # updating as a supporter
     #
     $StTableName = DBPREFIX . 'Supporter';
-  	$StCondition = 'IDSupporter = "' . $ItIDSupporter . '"';
-  	$ArUpdateSupporter = array(	"IDUnit" => $ItIDUnit	);
+  	$StCondition = 'IDSupporter = "' . $IDSupporter . '"';
+  	$ArUpdateSupporter = array(	"IDUnit" => $IDUnit	);
   	$ItAffected = $this->updateTable( $StTableName, $ArUpdateSupporter , $StCondition );
     if ( ! $ItAffected ) {
       throw new ErrorHandler (EXC_USER_UPDATE);
     } else {
-    	$ArData['IDSupporter'] = $ItIDSupporter;
+    	$ArData['IDSupporter'] = $IDSupporter;
     }
 
     #
     # updating the supporter's department
     #
     $StTableName = DBPREFIX . 'DepartmentSupporter';
-  	$StCondition = 'IDSupporter = "' . $ItIDSupporter . '"';
-  	$ArUpdateDepartmentSupporter = array( "IDDepartment" => $ItIDDepartment );
+  	$StCondition = 'IDSupporter = "' . $IDSupporter . '"';
+  	$ArUpdateDepartmentSupporter = array( "IDDepartment" => $IDDepartment );
   	$ItAffected = $this->updateTable( $StTableName, $ArUpdateDepartmentSupporter , $StCondition );
     if ( ! $ItAffected ) {
       throw new ErrorHandler (EXC_USER_UPDATE);
     } else {
-    	$ArData['IDDepartment'] = $ItIDDepartment;
+    	$ArData['IDDepartment'] = $IDDepartment;
     }
 
     return $ArData;
@@ -537,19 +534,19 @@ WHERE
    * @author Mario Vítor <mario[at]digirati.com.br>
    */
   //////////////// FIXME
-  public function deleteClient( $ItIDUser, $StTypeClient = "" ){
+  public function deleteClient( $IDUser, $StTypeClient = "" ){
 
-    if ( !isset( $ItIDUser ) || empty( $StTypeClient ) )
+    if ( !isset( $IDUser ) || empty( $StTypeClient ) )
       throw new ErrorHandler (EXC_USER_DELETE);
 
     switch ($StTypeClient) {
     	case "user":
     		$ArTableName = array( DBPREFIX . 'User' );
-  			$StCondition = 'IDUser = "' . $ItIDUser .'"';
+  			$StCondition = 'IDUser = "' . $IDUser .'"';
   		break;
 
     	case "supporter":
-    		$StCondition = 'IDSupporter = "' . $ItIDUser .'"';
+    		$StCondition = 'IDSupporter = "' . $IDUser .'"';
     		$this->updateTable( DBPREFIX . 'Message', array( "IDSupporter" => 0 ) , $StCondition );
     		$ArTableName = array(
     			DBPREFIX . 'DepartmentSupporter', ### remove it from his department
@@ -569,7 +566,7 @@ WHERE
 		  }
     }
 
-    return $ItIDUser;
+    return $IDUser;
   }
 
   /**

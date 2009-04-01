@@ -292,63 +292,6 @@ abstract class TemplateHandler {
 	}
 
 	/**
-	 * Enter description here...
-	 *
-	 * @param unknown_type $IDUser
-	 * @param unknown_type $ArData
-	 * @return unknown
-	 */
-	public static function updateUserData($IDUser, $ArData){
-		$ItAffected = F1DeskUtils::updateUserData( $IDUser, $ArData );
-		return $ItAffected;
-	}
-
-	/**
-	 * Get All Canned Responses of a supporter and their departments
-	 *
-	 * @return array
-	 *
-	 * @author Matheus Ashton <matheus@digirati.com.br>
-	 */
-	public static function getCannedResponses($IDSupporter, $IDDepartment = false) {
-    $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter, $IDDepartment);
-    return $ArResponses;
-	}
-
-	/**
-	 * lists all Notes of a supporter
-	 *
-	 * @param integer $IDSupporter
-	 * @return array
-	 */
-	public static function listNotes( $IDSupporter ){
-		return F1DeskUtils::listNotes( $IDSupporter );
-	}
-
-	/**
-	 * lists all Bookmark of a supporter
-	 *
-	 * @param integer $IDSupporter
-	 * @return array
-	 */
-	public static function listSupporterBookmark( $IDSupporter ){
-		return F1DeskUtils::listSupporterBookmark( $IDSupporter );
-	}
-
-	/**
-	 * remove a supporter Bookmark
-	 *
-	 * @param integer $IDTicket
-	 */
-	public static function removeBookmark ( $IDTicket, $IDSupporter ) {
-		$ItAffected = F1DeskUtils::removeBookmark( $IDTicket, $IDSupporter );
-		if ($ItAffected <= 0) {
-			 return false;
-		}
-		return $ItAffected;
-	}
-
-	/**
 	 * Checks if the user is a supporter
 	 *
 	 * @return unknown
