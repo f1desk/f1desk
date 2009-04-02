@@ -9,26 +9,7 @@
         <th width="20%"><?=ACTIONS?></th>
       </thead>
       <tbody>
-      <?if ($ArCannedResponses[0]['IDCannedResponse'] == ''):?>
-        <tr id="noCanned">
-          <td colspan="2" align="center"><?=NO_CANNED?></td>
-        </tr>
-      <?else:?>
-        <?foreach ($ArCannedResponses as $ArCannedResponsesSettings):?>
-          <tr id="cannedTR<?=$ArCannedResponsesSettings['IDCannedResponse']?>">
-            <td class="TicketNumber">
-              <?=$ArCannedResponsesSettings['StTitle']?>
-              <input type="hidden" id="StCannedTitle<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value=<?=f1desk_escape_string($ArCannedResponsesSettings['StTitle'],false,true)?> >
-            </td>
-            <td>
-              <input type="hidden" id="TxCannedResponse<?=$ArCannedResponsesSettings['IDCannedResponse']?>" value='<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'],false,true)?>'>
-              <img src="<?= TEMPLATEDIR ?>images/button_edit.png" alt="Editar" title="Editar" class="cannedAction" onclick="Home.startEditElement('canned', <?=$ArCannedResponsesSettings['IDCannedResponse']?>);">
-              <img src="<?= TEMPLATEDIR ?>images/button_cancel.png" alt="Remover" title="Remover" class="cannedAction" onclick="Home.removeCannedResponse(<?=$ArCannedResponsesSettings['IDCannedResponse']?>)">
-              <img src="<?= TEMPLATEDIR ?>images/visualizar.png" title="Visualizar" id="previemCanned<?=$ArCannedResponsesSettings['IDCannedResponse']?>" alt="Visualizar" class="cannedAction" onclick='flowWindow.previewCannedResponse("<?=f1desk_escape_string($ArCannedResponsesSettings['StTitle'],false,true)?>", "<?=f1desk_escape_string($ArCannedResponsesSettings['TxMessage'], true,true)?>");'>
-            </td>
-          </tr>
-        <?endforeach;?>
-      <?endif;?>
+        <?=TemplateHandler::showCannedAnswers($ArCannedResponses);?>
       </tbody>
     </table>
     <div id="cannedBoxEditArea" class="editArea">

@@ -799,9 +799,9 @@ abstract class TemplateHandler {
         $StHtml .= "<input type='hidden' id='StCannedTitle{$ArCannedResponse['IDCannedResponse']}' value='".f1desk_escape_string($ArCannedResponse['StTitle'],false,true)."'>";
         $StHtml .= '</td><td>';
         $StHtml .= "<input type='hidden' id='TxCannedResponse{$ArCannedResponse['IDCannedResponse']}' value='".f1desk_escape_string($ArCannedResponse['TxMessage'],false,true)."'>";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/button_edit.png' alt='Editar' title='Editar' class='cannedAction' onclick='startEditElement(\"canned\",\"{$ArCannedResponsesSettings['IDCannedResponse']}\");'>";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/button_cancel.png' alt='Remover' title='Remover' class='cannedAction' onclick='removeCannedResponse(\"{$ArCannedResponsesSettings['IDCannedResponse']}\")'>";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/visualizar.png' title='Visualizar' id='previemCanned{$ArCannedResponsesSettings['IDCannedResponse']}' alt='Visualizar' class='cannedAction' onclick='previewInFlow.CannedResponse(\"".f1desk_escape_string($ArCannedResponsesSettings['StTitle'],false,true)."\",".f1desk_escape_string($ArCannedResponsesSettings['TxMessage'], true,true)."\");'>";
+        $StHtml .= "<img src='".TEMPLATEDIR."images/button_edit.png' alt='Editar' title='Editar' class='cannedAction' onclick='Home.startEditElement(\"canned\",\"{$ArCannedResponse['IDCannedResponse']}\");'>";
+        $StHtml .= "<img src='".TEMPLATEDIR."images/button_cancel.png' alt='Remover' title='Remover' class='cannedAction' onclick='Home.removeCannedResponse(\"{$ArCannedResponse['IDCannedResponse']}\")'>";
+        $StHtml .= "<img src='".TEMPLATEDIR."images/visualizar.png' title='Visualizar' id='previemCanned{$ArCannedResponse['IDCannedResponse']}' alt='Visualizar' class='cannedAction' onclick='flowWindow.previewCannedResponse(\"".f1desk_escape_string($ArCannedResponse['StTitle'],false,true)."\",".f1desk_escape_string($ArCannedResponse['TxMessage'], true,true)."\");'>";
         $StHtml .= '</td> </tr>';
       }
     }
