@@ -158,9 +158,10 @@ if ($isSupporter) {
   }
 
 } else {
-  /*$ArDepartments = F1DeskUtils::getPublicDepartments();*/
-
-  //VER DEPOIS AQUI
+  /**
+   * NAUM EH UTILIZADO QUANDO PARA CLIENTES !!!
+   */
+  $ArDepartments = F1DeskUtils::getPublicDepartments();
 }
 
 #

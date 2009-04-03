@@ -161,7 +161,7 @@
 <!--[/TICKET HISTORY]-->
 
 <!--[TICKET ANSWER]-->
-<?if(!$preview) :?>
+<? if(!$preview) : ?>
 	<div id='ticketAnswer' class='defaultBody'>
 	  <div id='answerCaption' class='defaultCaption'>
 	  	<img alt="Ticket" id='arrowAnswer<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='baseActions.toogleArrow( this.id, "answerContent<?=$uid?>")' class="menuArrow"/>

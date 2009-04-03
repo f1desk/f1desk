@@ -786,27 +786,77 @@ WHERE
     return $ArFormatted;
   }
 
-  public static function getPublicDepartments($BoPublic = true) {
-    if ($BoPublic) {
-      $StSQL = '
-SELECT
-  *
-FROM
-'.DBPREFIX.'Department
-WHERE
-  BoPublic = 1';
-    } else {
-      $StSQL = '
-SELECT
-  *
-FROM
-  '.DBPREFIX.'Department';
-    }
+    /**
+   * Return the non-internal departments or all departments
+   *
+   * @return Array
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+  public function getPublicDepartments($BoPublic = true) {
+
     self::getDBinstance();
+    $ArDepartments = array();
+
+    if ($BoPublic !== true) {
+      $StSQL = '
+SELECT
+  D.*
+FROM
+  '.DBPREFIX.'Department D
+LEFT JOIN '.DBPREFIX.'SubDepartment SD ON (D.IDDepartment = SD.IDDepartment)
+GROUP BY
+  D.IDDepartment';
+    } else  {
+      $StSQL = '
+SELECT
+  D.*
+FROM
+  '.DBPREFIX.'Department D
+LEFT JOIN '.DBPREFIX.'SubDepartment SD ON (D.IDDepartment = SD.IDDepartment)
+WHERE
+  BoInternal = 0
+GROUP BY
+  D.IDDepartment';
+    }
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult =self::$DBHandler->getResult('string');
+
+    foreach ($ArResult as $ArDepartment) {
+      $ArDepartments[$ArDepartment['IDDepartment']] = $ArDepartment;
+    }
+
+    $StSQL = '
+SELECT
+  D.IDDepartment, GROUP_CONCAT(SD.IDSubDepartment) as IDSubDepartments
+FROM
+	'.DBPREFIX.'SubDepartment SD
+LEFT JOIN '.DBPREFIX.'Department D ON (SD.IDDepartment = D.IDDepartment)
+LEFT JOIN '.DBPREFIX.'DepartmentSupporter DS ON (DS.IDDepartment = D.IDDepartment)
+GROUP BY
+  SD.IDDepartment';
     self::$DBHandler->execSQL($StSQL);
     $ArResult = self::$DBHandler->getResult('string');
 
-    return $ArResult;
+    foreach ( $ArResult as $Department ) {
+      $ArSubSeparation = explode(',', $Department[ 'IDSubDepartments' ]);
+      $ArSubDepartments[$Department['IDDepartment']] = array_unique($ArSubSeparation);
+    }
+
+    foreach ($ArDepartments as $ArDepartment) {
+      if (array_key_exists($ArDepartment['IDDepartment'],$ArSubDepartments)) {
+        foreach ($ArSubDepartments as $Key => $SubDepartments) {
+          if ($Key == $ArDepartment['IDDepartment']) {
+            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['IDSub'] = $IDSub = array_shift($SubDepartments);
+            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['StSub'] = $ArDepartments[$IDSub]['StDepartment'];
+            if (isset($ArDepartments[$IDSub]))
+              unset($ArDepartments[$IDSub]);
+          }
+        }
+      }
+    }
+
+    return $ArDepartments;
   }
 }
 ?>

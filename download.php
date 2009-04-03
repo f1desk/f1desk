@@ -8,7 +8,7 @@ $TicketHandler = new TicketHandler();
 UserHandler::SQLInjectionHandle($IDAttachment);
 $ID = getSessionProp('IDUser');
 $ArResult = $TicketHandler->canDownload($IDAttachment, $ID);
-if (getSessionProp('isSupporter') == 'true') {
+if (F1DeskUtils::isSupporter()) {
   $ArResult['BoPermission'] = 'true';
 }
 if (isset($ArResult['BoPermission']) && $ArResult['BoPermission'] == 'true') {
@@ -26,6 +26,10 @@ if (isset($ArResult['BoPermission']) && $ArResult['BoPermission'] == 'true') {
     $ItFileSize = mb_strlen($ArResult['ByFile'],'latin1');
     $tmpFile = F1DeskUtils::toTMP($ArResult['ByFile'],'file');
   }
+
+  #
+  # Verificar este header pois o mesmo não exibe corretamente o tamanho do arquivo, quando disponiblizado para download
+  #
   header("Pragma: public");
   header("Expires: 0");
   header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
