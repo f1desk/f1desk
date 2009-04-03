@@ -1,7 +1,6 @@
 <?
-
 require_once('header.php');
-require_once('createTicket.php');
+require_once('createData.php');
 handleLanguage(__FILE__);
 
 ?>
@@ -9,7 +8,7 @@ handleLanguage(__FILE__);
 <div id='contentDisplay' class='Right'></div>
 
 <div id='createWrapper'>
-  <form id='formCreate' method='POST' enctype='multipart/form-data' action='createTicket.submit.php' onsubmit='return Writing.createTicketSubmit();'>
+  <form id='formCreate' method='POST' enctype='multipart/form-data' action='<?$PHP_SELF?>' onsubmit='return Writing.createTicketSubmit();'>
   <?php if (TemplateHandler::IsSupporter()):?>
     <h3><?=TICKET_TYPE?></h3>
     <?=TemplateHandler::showTicketTypes();?>
@@ -70,6 +69,6 @@ handleLanguage(__FILE__);
   </form>
 </div>
 <? require_once('footer.php'); ?>
-<?php if (isset($_GET['IDTicket'])):?>
-  <script>javascript:void(flowWindow.previewTicket('<?=$_GET['IDTicket'];?>'))</script>
+<?php if (isset($IDTicket)):?>
+  <script>javascript:void(flowWindow.previewTicket('<?=$IDTicket;?>'))</script>
 <?php endif; ?>

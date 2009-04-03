@@ -1,7 +1,9 @@
 <?php
-ob_start();
+
+/***************************************
+ *           Create Submit             *
+****************************************/
 require_once('main.php');
-require_once(TEMPLATEDIR . 'header.php');
 if (!empty($_POST)) {
   $TicketHandler = new TicketHandler();
   foreach ($_POST as &$StArg) {
@@ -37,8 +39,26 @@ if (!empty($_POST)) {
       $TicketHandler->attachTicket($IDTicket,$IDAttach);
     }
   }
-  header('Location: index?page=escrever&IDTicket=' . $IDTicket);
 }
-require_once(TEMPLATEDIR . 'footer.php');
-ob_end_flush();
+
+/***************************************
+ *           Create Data               *
+****************************************/
+
+if (getSessionProp('isSupporter') == 'true') {
+  $BoCreate = F1DeskUtils::getPermission('BoCreateCall',getSessionProp('IDSupporter'));
+  if ($BoCreate) {
+    $ArDepartments = TemplateHandler::getPublicDepartments(false);
+  } else {
+    $ArDepartments = TemplateHandler::getDepartments(getSessionProp('IDSupporter'));
+  }
+} else {
+  $ArDepartments = TemplateHandler::getPublicDepartments();
+}
+
+$ArPriorities = F1DeskUtils::listPriorities();
+$ArCategories = F1DeskUtils::listCategories();
+if (TemplateHandler::IsSupporter()) {
+  $ArSub = F1DeskUtils::getSubDepartments(getSessionProp('IDSupporter'));
+}
 ?>
