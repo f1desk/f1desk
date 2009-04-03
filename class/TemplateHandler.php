@@ -23,7 +23,7 @@ abstract class TemplateHandler {
     return $ArInstances[$StClassName];
   }
 
-    /**
+  /**
    * list the departments with their subdepartments
    *
    * @return array
@@ -788,12 +788,18 @@ abstract class TemplateHandler {
     return $StHtml;
 	}
 
+	/**
+	 * Return the HTML Table with all Canned Responses
+	 *
+	 * @param unknown_type $ArCannedResponses
+	 * @param unknown_type $StClass
+	 * @return unknown
+	 */
 	public static function showCannedAnswers($ArCannedResponses, $StClass = 'inputCombo') {
-	  $StHtml = '<tr id="noCanned">';
-    $StHtml .= '<td colspan="3" align="center">'.NO_CANNED.'</td></tr>';
+	  $StHtml = '';
 	  if (!empty($ArCannedResponses[0]['IDCannedResponse'])) {
       foreach ($ArCannedResponses as $ArCannedResponse) {
-        $StHtml = "<tr id='cannedTR{$ArCannedResponse['IDCannedResponse']}'>";
+        $StHtml .= "<tr id='cannedTR{$ArCannedResponse['IDCannedResponse']}'>";
         $StHtml .= '<td class="TicketNumber">';
         $StHtml .= $ArCannedResponse['StTitle'];
         $StHtml .= "<input type='hidden' id='StCannedTitle{$ArCannedResponse['IDCannedResponse']}' value='".f1desk_escape_string($ArCannedResponse['StTitle'],false,true)."'>";
@@ -801,9 +807,12 @@ abstract class TemplateHandler {
         $StHtml .= "<input type='hidden' id='TxCannedResponse{$ArCannedResponse['IDCannedResponse']}' value='".f1desk_escape_string($ArCannedResponse['TxMessage'],false,true)."'>";
         $StHtml .= "<img src='".TEMPLATEDIR."images/button_edit.png' alt='Editar' title='Editar' class='cannedAction' onclick='Home.startEditElement(\"canned\",\"{$ArCannedResponse['IDCannedResponse']}\");'>";
         $StHtml .= "<img src='".TEMPLATEDIR."images/button_cancel.png' alt='Remover' title='Remover' class='cannedAction' onclick='Home.removeCannedResponse(\"{$ArCannedResponse['IDCannedResponse']}\")'>";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/visualizar.png' title='Visualizar' id='previemCanned{$ArCannedResponse['IDCannedResponse']}' alt='Visualizar' class='cannedAction' onclick='flowWindow.previewCannedResponse(\"".f1desk_escape_string($ArCannedResponse['StTitle'],false,true)."\",".f1desk_escape_string($ArCannedResponse['TxMessage'], true,true)."\");'>";
+        $StHtml .= "<img src='".TEMPLATEDIR."images/visualizar.png' title='Visualizar' id='previemCanned{$ArCannedResponse['IDCannedResponse']}' alt='Visualizar' class='cannedAction' onclick='flowWindow.previewCannedResponse(\"".f1desk_escape_string($ArCannedResponse['StTitle'],false,true).'","'.f1desk_escape_string($ArCannedResponse['TxMessage'], true,true).'");\'>';
         $StHtml .= '</td> </tr>';
       }
+    } else {
+      $StHtml = '<tr id="noCanned">';
+      $StHtml .= '<td colspan="3" align="center">'.NO_CANNED.'</td></tr>';
     }
     return $StHtml;
 	}

@@ -1,4 +1,4 @@
-<?php handleLanguage(__FILE__); require_once('homeData.php'); ?>
+<?php require_once(dirname(__FILE__).'/../../homeData.php'); handleLanguage(__FILE__);?>
 	<span class='homeBoxTitle' onclick="baseActions.toogleArrow('dataArrow', 'dataBoxEditAreaContent', 'hide')"><?=USER_DATA?></span>
 	<span class='homeBoxTitle newElement' onclick='Home.startDataEdit();'><img src='<?= TEMPLATEDIR ?>images/button_edit.png'> Editar</span>
 	<span class='homeBoxTitle loadingRequest' id='dataLoading'><img src='<?= TEMPLATEDIR ?>images/loading.gif'> Carregando...</span>

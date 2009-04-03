@@ -5,14 +5,15 @@ require_once('header.php');
 ?>
 <div id='homeTemplate'>
 
-<div id='dataBox' class='homeBox'>
-  <!-- First Box: User Data -->
-  <?require_once(TEMPLATEDIR . 'userInfo.php')?>
-  <!-- First Box End -->
-</div>
+  <div id='messageBox' class='Invisible'>
+  </div>
+  <div id='dataBox' class='homeBox'>
+    <!-- First Box: User Data -->
+    <?require_once(TEMPLATEDIR . 'userInfo.php')?>
+    <!-- First Box End -->
+  </div>
 
   <?if (TemplateHandler::IsSupporter()) :?>
-
     <!-- Second Box: Supporter Canned Responses -->
     <div id="cannedResponsesBox" class="homeBox">
       <?require_once(TEMPLATEDIR . 'cannedResponses.php');?>
@@ -27,7 +28,7 @@ require_once('header.php');
 
     <!-- Fourth Box: Supporter Bookmark -->
     <div id="bookmarkBox" class="homeBox">
-    <?require_once(TEMPLATEDIR . 'bookMark.php');?>
+    <?require_once(TEMPLATEDIR . 'bookmark.php');?>
     </div>
     <!-- Fourth Box End -->
 

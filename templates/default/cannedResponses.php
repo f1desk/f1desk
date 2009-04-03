@@ -1,4 +1,4 @@
-<?php handleLanguage(__FILE__); require_once('homeData.php');?>
+<?php require_once(dirname(__FILE__).'/../../homeData.php'); handleLanguage(__FILE__);?>
   <span class="homeBoxTitle" onclick="baseActions.toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide')"><?=CANNED_RESPONSES?></span>
   <span class="homeBoxTitle newElement" onclick="Home.startCreatingElement('canned');"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
   <span class="homeBoxTitle loadingRequest" id="cannedLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>

@@ -1,4 +1,4 @@
-<?php handleLanguage(__FILE__); require_once('homeData.php');?>
+<?php require_once(dirname(__FILE__).'/../../homeData.php'); handleLanguage(__FILE__);?>
     <span class="homeBoxTitle" onclick="baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')"><?=NOTES?></span>
     <span class="homeBoxTitle newElement" onclick="Home.startCreatingElement('note')"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>
     <span class="homeBoxTitle loadingRequest" id="noteLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
@@ -40,7 +40,7 @@
           <form onsubmit="return false;" id="noteForm">
             <?=NOTE_TITLE?>: <br />
               <input type="text" name="StTitle" class="inputCombo"> <br />
-            <?=RESPONSE?>: <br />
+            <?=NOTE?>: <br />
               <textarea name="TxNote" class="answerArea"></textarea> <br>
               <input type="hidden" name="IDNote">
             <button id="noteFormButton" class="button" onclick="Home.submitForm('note', this.textContent);">Editar</button>

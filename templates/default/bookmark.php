@@ -1,4 +1,4 @@
-<? handleLanguage(__FILE__); require_once('homeData.php');
+<? require_once(dirname(__FILE__).'/../../homeData.php'); handleLanguage(__FILE__);
   if ( getSessionProp('isSupporter')=="true" ):?>
 		<span class="homeBoxTitle"><?=BOOK_MARK?></span>
 		<span class="homeBoxTitle loadingRequest" id="bookmarkLoading"><img src="<?= TEMPLATEDIR ?>images/loading.gif"> Carregando...</span>
