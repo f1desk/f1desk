@@ -20,7 +20,7 @@ if (!empty($_POST) && $_POST['StAction'] == 'create') {
   $ArReaders = (isset($_POST['ArReaders'])) ? explode(',',$_POST['ArReaders']) : array();
   $ArAttached = (isset($_POST['ArAttached'])) ? explode(',',$_POST['ArAttached']) : array();
 
-  if (TemplateHandler::IsSupporter()) {
+  if (F1DeskUtils::IsSupporter()) {
     if (!empty($_FILES['Attachment']['name'])) {
       $IDTicket = $TicketHandler->createSupporterTicket(getSessionProp('IDSupporter'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment, $IDDepartmentReader,$ArUsers,$ArReaders,true,$_FILES);
     } else {
@@ -68,7 +68,7 @@ if (getSessionProp('isSupporter') == 'true') {
 
 $ArPriorities = F1DeskUtils::listPriorities();
 $ArCategories = F1DeskUtils::listCategories();
-if (TemplateHandler::IsSupporter()) {
+if (F1DeskUtils::IsSupporter()) {
   $ArSub = F1DeskUtils::getSubDepartments(getSessionProp('IDSupporter'));
 }
 ?>

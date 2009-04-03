@@ -155,7 +155,7 @@ abstract class Validate {
       return $Valid;
     } else if ($Valid === false) {
       session_destroy();
-      TemplateHandler::showPage('login');
+      F1DeskUtils::showPage('login');
     	die();
     }
   }

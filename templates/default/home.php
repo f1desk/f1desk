@@ -11,7 +11,7 @@ require_once('header.php');
     <!-- First Box End -->
   </div>
 
-  <?if (TemplateHandler::IsSupporter()) :?>
+  <?if (F1DeskUtils::IsSupporter()) :?>
     <!-- Second Box: Supporter Canned Responses -->
     <div id="cannedResponsesBox" class="homeBox">
       <?require_once(TEMPLATEDIR . 'cannedResponses.php');?>

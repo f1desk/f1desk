@@ -222,9 +222,9 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
 # User's data
 #
 if ( getSessionProp('isSupporter') == "true" ){
-	$ArUser = TemplateHandler::getUserData( getSessionProp('IDSupporter'), 0);
+	$ArUser = F1DeskUtils::getUserData( getSessionProp('IDSupporter'), 0);
 } else {
-	$ArUser = TemplateHandler::getUserData( getSessionProp('IDClient'), 1);
+	$ArUser = F1DeskUtils::getUserData( getSessionProp('IDClient'), 1);
 }
 
 #

@@ -6,148 +6,17 @@
  */
 abstract class TemplateHandler {
 
-  private static $ArInstances = array();
-  public static $CurrentPage = '';
-
-  /**
-   * get instances of another classes
-   *
-   * @param string $StClassName
-   * @return resource
-   */
-  public static function getInstance($StClassName) {
-    if (! array_key_exists($StClassName, self::$ArInstances)) {
-      $ArInstances[$StClassName] = new $StClassName;
-    }
-
-    return $ArInstances[$StClassName];
-  }
-
-  /**
-   * list the departments of an user
-   *
-   * @return array
-   */
-  public static function getUserDepartments() {
-    $ArDepartment = array();
-
-    $ArDepartment['opened'] = array (
-  		'ID' => 'opened',
-  		'StDepartment' => OPENEDCALLS,
-  		'SubDepartment' => array()
-  	);
-
-  	$ArDepartment['closed'] = array (
-  		'ID' => 'closed',
-  		'StDepartment' => CLOSEDCALLS,
-  		'SubDepartment' => array()
-  	);
-
-  	return $ArDepartment;
-  }
-
-  /**
-   * get the tickets of all departments
-   *
-   * @param array $ArIDDepartment
-   * @param int $IDSupporter
-   * @return array
-   */
-  public static function getTickets($ArIDDepartment,$IDSupporter) {
-    $ArTickets = array();
-
-    $ObjTicket = self::getInstance('TicketHandler');
-    $ArDepartmentTickets['open'] = $ObjTicket->listTickets($ArIDDepartment);
-    $ArDepartmentTickets['ignored'] = $ObjTicket->listIgnoredTickets($IDSupporter);
-    $ArDepartmentTickets['bookmark'] = $ObjTicket->listBookmarkTickets($IDSupporter);
-    $ArDepartmentTickets['single'] = $ObjTicket->listSingleTickets($IDSupporter);
-    $ArDepartmentTickets['byme'] = $ObjTicket->listByMeTickets($IDSupporter);
-    $ArIgnored = array_keys($ArDepartmentTickets['ignored']);
-
-    foreach ($ArIDDepartment as $IDDepartment) {
-      if (array_key_exists($IDDepartment,$ArDepartmentTickets)) {
-        $ArCurrentTickets = $ArDepartmentTickets[$IDDepartment];
-      } else {
-        if (array_key_exists($IDDepartment,$ArDepartmentTickets['open'])) {
-          $ArCurrentTickets = $ArDepartmentTickets['open'][$IDDepartment];
-        } else {
-          $ArCurrentTickets = array();
-        }
-      }
-
-      $TicketList = array();
-      foreach ($ArCurrentTickets as $Key => $ArCurrentTicket) {
-        if ($IDDepartment == 'ignored' || ! in_array($ArCurrentTicket['IDTicket'],$ArIgnored) ) {
-          $TicketList[] = $ArCurrentTicket['IDTicket'];
-        } else {
-          unset($ArCurrentTickets[$Key]);
-        }
-      }
-
-      $ArReadTickets = $ObjTicket->getReadTickets($IDSupporter, $TicketList);
-
-      $ItnotReadCount = 0;
-
-      foreach ($ArCurrentTickets as &$ArTicket) {
-        if (array_key_exists($ArTicket['IDTicket'],$ArReadTickets)) {
-          $ArTicket['isRead'] = 1;
-        } else {
-          $ArTicket['isRead'] = 0;
-          ++$ItnotReadCount;
-        }
-      }
-
-      $ArTickets[$IDDepartment]['Tickets'] = $ArCurrentTickets;
-      $ArTickets[$IDDepartment]['notReadCount'] = $ItnotReadCount;
-    }
-
-    return $ArTickets;
-  }
-
-  /**
-   * Return a list of all supporters by ticket
-   *
-   * @return array
-   */
-  public static function listSupporters($IDTicket) {
-
-    $ArSupporters = array();
-    $ObjUser = self::getInstance('UserHandler');
-  	list($ArSupporters1,$ArSupporters2) = $ObjUser->listSupporters($IDTicket);
-
-  	foreach ($ArSupporters1 as $ArField) {
-  	  $ArSupporters[$ArField['IDSupporter']] = $ArField['StName'];
-  	}
-
-  	foreach ($ArSupporters2 as $ArField) {
-  	  $ArSupporters[$ArField['IDSupporter']] = $ArField['StName'];
-  	}
-
-    return $ArSupporters;
-  }
-
-  /**
-   * Get information about the ticket to make the exibition headers
-   *
-   * @param int $IDTicket
-   * @return Array
-   */
-  public static function getTicketHeaders($IDTicket) {
-    $ObjTicket = self::getInstance('TicketHandler');
-    $ArHeaders = $ObjTicket->getTicketHeaders($IDTicket);
-
-    return array_shift($ArHeaders);
-  }
-
   /**
    * Print's all messages of the ticket given
    *
-   * @param integer $IDTicket
+   * JOHN POR FAVOR, DE UMA OLHADA NESSA FUNCAO E FAZ QUE NEM AS OUTRAS QUE TU FEZ, PRA CUSTOMIZAR =D
+   * EU JA TIREI O "PROCESSAMENTO DELA"
+   *
+   * @param array $ArMessages
+   * @param array $ArAttachments
    */
-  public static function showHistory($IDTicket, $ArAttachments) {
+  public static function showHistory($ArMessages, $ArAttachments) {
     $i = 0;
-    $ObjTicket = self::getInstance('TicketHandler');
-    $ArMessages = $ObjTicket->listTicketMessages($IDTicket);
     $StHtml = "";
     #
     # for exibition, replaces "\n" for "<br>"
@@ -169,7 +38,7 @@ abstract class TemplateHandler {
       }
 
       $ArMessage['StClass'] = $StClass;
-      if (!TemplateHandler::IsSupporter() && $ArMessage['EnMessageType'] == 'INTERNAL')
+      if (!F1DeskUtils::IsSupporter() && $ArMessage['EnMessageType'] == 'INTERNAL')
         continue;
       $DtSended = F1DeskUtils::formatDate('datetime_format',$ArMessage['DtSended']);
       $StHtml .= "<div class='{$ArMessage['StClass']}'>";
@@ -184,182 +53,6 @@ abstract class TemplateHandler {
     return $StHtml;
   }
 
-  /**
-	 * outputs the right page, handling templates
-	 *
-	 * @return bool
-	 */
-	public static function showPage($StPage) {
-	  $StPage = preg_replace('/[^A-Z0-9]*/i','',$StPage);
-	  if (file_exists(ABSTEMPLATEDIR . $StPage . '.php')) {
-	    self::$CurrentPage = $StPage;
-	    require_once(ABSTEMPLATEDIR . $StPage . '.php');
-	  } else {
-	    self::$CurrentPage = 'home';
-	    require_once(ABSTEMPLATEDIR . 'home.php');
-	  }
-
-	  return true;
-	}
-
-	/**
-	 * return all Menu Tabs configured on options.xml
-	 *
-	 * @param string $StPage
-	 *
-	 * @return array
-	 */
-	public static function getMenuTab( $StPage ) {
-		$ArMenu = array();
-		$ObMenu = getOption( "menu_tabs", "DOM" );
-		foreach ( $ObMenu as $Item ){
-			if ( $StPage == $Item->getAttribute('id') ) $StCurrent = "current";
-			else $StCurrent = "";
-			$ArMenu[] = array(
-				"Link" => $Item->getAttribute('id'),
-				"Name" => $Item->nodeValue,
-				"Current" => $StCurrent
-			);
-		}
-
-		return $ArMenu;
-	}
-
-	/**
-	 * Get all ticket types
-	 *
-	 * @return Array
-	 *
-	 * @author Matheus Ashton
-	 */
-	public static function getTicketTypes() {
-	  $ArTypes = F1DeskUtils::listTicketTypes();
-	  for($i=0; $i < count($ArTypes); $i++ ) {
-      $ArReturn [ $ArTypes[$i]['IDType'] ] = $ArTypes[$i]['StType'];
-      return $ArReturn;
-    }
-	}
-
-	/**
-	 * Get's user data from an IDSupporter or an IDClient
-	 *
-	 * @param unknown_type $ID
-	 * @param unknown_type $ItType
-	 * @return unknown
-	 */
-  public static function getUserData( $ID, $ItType ){
-		$ArUserData = F1DeskUtils::getUserData( $ID, $ItType );
-		return $ArUserData;
-	}
-
-	/**
-	 * Checks if the user is a supporter
-	 *
-	 * @return unknown
-	 */
-	public static function IsSupporter() {
-	  return (getSessionProp('isSupporter') && getSessionProp('isSupporter') == 'true');
-	}
-
-	/**
-	 * Get all attachments from all messagens of a call
-	 *
-	 * @param int $IDTicket
-	 * @return array
-	 *
-	 * @author Matheus Ashton <matheus@digirati.com.br>
-	 */
-	public static function getAttachments($IDTicket) {
-	  $ArAttachments = array();
-	  $TicketHandler = self::getInstance('TicketHandler');
-
-	  $ArMessages = $TicketHandler->listTicketMessages($IDTicket);
-
-	  foreach ($ArMessages as $ArMessage) {
-	    $ArAttachment = $TicketHandler->getAttachments($ArMessage['IDMessage']);
-	    if (! empty($ArAttachment))
-	    $ArAttachments[$ArMessage['IDMessage']] = $ArAttachment;
-	  }
-	  return $ArAttachments;
-	}
-
-	/**
-	 * get the preview of a wrote answer
-	 *
-	 * @param integer $IDUser
-	 * @param text $TxMessage
-	 * @return text
-	 */
-	public static function getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter = false) {
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter);
-	}
-
-	/**
-   * get all tickets that attached this ticket
-   *
-   * @param integer $IDTicket
-   * @return array
-   */
-	public static function getTicketsAttached($IDTicket){
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getTicketsAttached($IDTicket);
-	}
-
-	/**
-   * get all attacheds tickets from a ID given
-   *
-   * @param integer $IDTicket
-   * @return array
-   */
-	public static function getAttachedTickets($IDTicket){
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getAttachedTickets($IDTicket);
-	}
-
-	/**
-	 * get all departments of a ticket given
-	 *
-	 * @param integer $IDTicket
-	 * @return array
-	 */
-	public static function getTicketDepartments($IDTicket){
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getTicketDepartments($IDTicket);
-	}
-
-	/**
-	 * get all departments Reader of a ticket given
-	 *
-	 * @param integer $IDTicket
-	 * @return array
-	 */
-	public static function getTicketDepartmentsReader($IDTicket){
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getTicketDepartmentsReader($IDTicket);
-	}
-
-	/**
-   * get who users a ticket was sent to
-   *
-   * @param integer $IDTicket
-   * @return array
-   */
-	public static function getTicketDestination($IDTicket){
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getTicketDestination($IDTicket);
-	}
-
-	/**
-   * get who users can see a ticket
-   *
-   * @param integer $IDTicket
-   * @return array
-   */
-	public static function getTicketReaders($IDTicket){
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getTicketReaders($IDTicket);
-	}
 
 	/**
 	 * Create the departments combobox in the ticket creation page
@@ -415,7 +108,7 @@ abstract class TemplateHandler {
 	 */
 	public static function createSupportersCombo($IDTicket,$IDDepartment, $ArSupporters, $ArHeaders, $StID, $StClass, $preview) {
 	  $StHtml = (isset($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
-	  if (self::IsSupporter() && !$preview) {
+	  if (F1DeskUtils::IsSupporter() && !$preview) {
 	    $StHtml = "<select id='$StID' onchange='Ticket.setTicketOwner(\"$IDTicket\", this.value, \"$IDDepartment\")' class='$StClass'>";
 	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {
 	      if ($ArHeaders['IDSupporter'] != $IDSupporter) {
@@ -447,7 +140,7 @@ abstract class TemplateHandler {
 	 */
 	public static function createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket, $StID, $StClass = 'inputCombo', $preview) {
 	  $StHtml = SINGLE;
-    if (self::IsSupporter() && !$preview) {
+    if (F1DeskUtils::IsSupporter() && !$preview) {
       $StHtml = "<select id='$StID' class='$StClass' onchange='Ticket.changeDepartment(\"$IDTicket\",this.value, \"$IDDepartment\")'>";
       foreach ($ArDepartments as $ArDepartment) {
         if(isset($ArDepartment['SubDepartments'])) {
@@ -668,7 +361,7 @@ abstract class TemplateHandler {
 	 */
 	public static function createCannedCombo($ArResponses) {
 	  $StHtml = '';
-	  if (self::IsSupporter()) {
+	  if (F1DeskUtils::IsSupporter()) {
 	    $StHtml = "<select class='inputCombo' id='cannedAnswers'>";
 	    if ($ArResponses[0]['IDCannedResponse'] != '') {
 	      foreach ($ArResponses as $Response) {
@@ -681,39 +374,6 @@ abstract class TemplateHandler {
       $StHtml .= "<button class='button' onclick='Ticket.addCannedResponse(); return false;'>".ADD."</button>";
     }
     return $StHtml;
-	}
-
-	/**
-	 * return the category of a ticket
-	 *
-	 * @param integer $IDTicket
-	 * @return string
-	 */
-	public static function getTicketCategory($IDTicket){
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getTicketCategory($IDTicket);
-	}
-
-	/**
-	 * return the priority of a ticket
-	 *
-	 * @param integer $IDTicket
-	 * @return string
-	 */
-	public static function getTicketPriority($IDTicket){
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getTicketPriority($IDTicket);
-	}
-
-	/**
-	 * return the type of a ticket
-	 *
-	 * @param integer $IDTicket
-	 * @return string
-	 */
-	public static function getTicketType($IDTicket){
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getTicketType($IDTicket);
 	}
 
 	/**

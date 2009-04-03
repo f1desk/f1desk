@@ -2,10 +2,10 @@
   /*default*/
   handleLanguage(__FILE__);
 
-	$currentPage = TemplateHandler::$CurrentPage;
+	$currentPage = F1DeskUtils::$CurrentPage;
 
 	if ( file_exists(ABSTEMPLATEDIR . $currentPage . '.php') && Validate::Session(true) === true ) {
-		$ArMenu = TemplateHandler::getMenuTab( $currentPage );
+		$ArMenu = F1DeskUtils::getMenuTab( $currentPage );
 	} else {
 		$ArMenu = array();
 	}

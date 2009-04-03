@@ -6,17 +6,20 @@
 require_once('main.php');
 handleLanguage(__FILE__);
 
+$ObjTicket = new TicketHandler();
+$ObjUser = new UserHandler();
+$isSupporter = F1DeskUtils::isSupporter();
+
 /************************** ### Actions ### ***************************/
 
 if (isset($_POST['StAction'])) {
-  
+
 	foreach ($_POST as $Post) {
     UserHandler::SQLInjectionHandle($Post);
   }
 
   $StAction = $_POST['StAction'];
-  $TicketHandler = new TicketHandler();
-  
+
   switch ($StAction) {
     case 'ignore':
       if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
@@ -25,7 +28,7 @@ if (isset($_POST['StAction'])) {
         if (F1DeskUtils::isIgnored($_POST['IDSupporter'], $_POST['IDTicket'])){
           $returnMessage = ALREADY_IGNORED; $returnType = 'error';
         } else {
-          if (!$TicketHandler->ignoreTicket($_POST['IDSupporter'], $_POST['IDTicket'])){
+          if (!$ObjTicket->ignoreTicket($_POST['IDSupporter'], $_POST['IDTicket'])){
             $returnMessage = ERROR_IGNORING; $returnType = 'error';
           } else {
             $BoIgnored = true;
@@ -34,7 +37,7 @@ if (isset($_POST['StAction'])) {
         }
       }
     break;
-  
+
     case 'unignore':
       if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
         $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
@@ -42,13 +45,13 @@ if (isset($_POST['StAction'])) {
         if (!F1DeskUtils::isIgnored($_POST['IDSupporter'], $_POST['IDTicket'])){
           $returnMessage = ALREADY_UNIGNORED; $returnType = 'error';
         } else {
-          $TicketHandler->deleteFromTable(DBPREFIX . 'Ignored', "IDSupporter = ".$_POST['IDSupporter']." AND IDTicket = ".$_POST['IDTicket'],1);
+          $ObjTicket->deleteFromTable(DBPREFIX . 'Ignored', "IDSupporter = ".$_POST['IDSupporter']." AND IDTicket = ".$_POST['IDTicket'],1);
           $returnMessage = SUCESS_UNIGNORED; $returnType = 'ok';
           $BoIgnored = false;
         }
       }
     break;
-  
+
     case 'bookmark':
       if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
         $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
@@ -56,7 +59,7 @@ if (isset($_POST['StAction'])) {
         if (F1DeskUtils::isBookmarked($_POST['IDSupporter'], $_POST['IDTicket'])){
           $returnMessage = ALREADY_BOOKMARKED; $returnType = 'error';
         } else {
-          if (!$TicketHandler->bookmarkTicket($_POST['IDSupporter'], $_POST['IDTicket'])){
+          if (!$ObjTicket->bookmarkTicket($_POST['IDSupporter'], $_POST['IDTicket'])){
             $returnMessage = ERROR_BOOKMARKING; $returnType = 'error';
           } else {
             $returnMessage = SUCESS_BOOKMARK; $returnType = 'ok';
@@ -64,26 +67,26 @@ if (isset($_POST['StAction'])) {
         }
       }
     break;
-  
+
     case 'attach':
       if (!is_numeric($_POST['IDAttached'])){
         $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
       } else {
         $IDAttached = $_POST['IDAttached'];
-        if (F1DeskUtils::isAttached($IDTicket,$IDAttached)){
+        if (F1DeskUtils::isAttached($_POST['IDTicket'],$IDAttached)){
           $returnMessage = ALREADY_ATTACHED; $returnType = 'error';
         } else {
-          $TicketHandler->attachTicket($IDTicket,$IDAttached);
+          $ObjTicket->attachTicket($_POST['IDTicket'],$IDAttached);
           $returnMessage = SUCESS_ATTACHING; $returnType = 'ok';
         }
       }
     break;
-  
+
     case 'changeDepartment':
       if (!is_numeric($_POST['IDTicket']) || !is_numeric($_POST['IDDepartment'])){
         $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
       } else {
-        $BoReturn = $TicketHandler->changeDepartment($_POST['IDTicket'], $_POST['IDDepartment']);
+        $BoReturn = $ObjTicket->changeDepartment($_POST['IDTicket'], $_POST['IDDepartment']);
         if (!$BoReturn){
           $returnMessage = EXC_ERR_CHANGE; $returnType = 'error';
         } else {
@@ -91,7 +94,7 @@ if (isset($_POST['StAction'])) {
         }
       }
     break;
-    
+
     case 'setOwner':
       if (!is_numeric($_POST['IDTicket']) || !is_numeric($_POST['IDSupporter'])){
         $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
@@ -101,33 +104,33 @@ if (isset($_POST['StAction'])) {
         $returnMessage = SUCESS_SETOWNER; $returnType = 'ok';
       }
     break;
-    
+
     case 'answer':
       if (empty($_POST['TxMessage']) || !is_numeric($_POST['IDTicket']) || empty($_POST['StMessageType'])){
         $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
       } else {
         $_POST['TxMessage'] = f1desk_escape_html($_POST['TxMessage']);
-        $TicketHandler = new TicketHandler();
+        $ObjTicket = new TicketHandler();
         $IDWriter = (getSessionProp('IDClient')) ? getSessionProp('IDClient') : getSessionProp('IDSupporter');
         $ArMessageType = array('NORMAL' => '0', 'INTERNAL' => '1', 'SYSTEM' => '2', 'SATISFACTION' => '3');
         if (!empty($_FILES['Attachment']['name'])) {
-          $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']],$_FILES);
+          $ObjTicket->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']],$_FILES);
         } else {
-          $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']]);
+          $ObjTicket->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']]);
         }
         $returnMessage = SUCESS_ANSWERING; $returnType = 'ok';
       }
     break;
-    
+
     case 'previewAnswer':
       if (empty($_POST['TxMessage'])) {
       	$returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
       } else {
-        $TxMessagePreview = TemplateHandler::getPreviewAnswer(getSessionProp('IDUser'), $_POST['TxMessage'], TemplateHandler::IsSupporter());
+        $TxMessagePreview = $ObjTicket->getPreviewAnswer(getSessionProp('IDUser'), $_POST['TxMessage'], $isSupporter);
       }
     break;
   }
-  
+
 }
 
 /************************** ### End - Actions ### ***************************/
@@ -139,22 +142,25 @@ $IDTicket = $_POST['IDTicket'];
 $IDSupporter = getSessionProp('IDSupporter');
 $preview = (isset($_POST['preview']))?true:false;
 
-$TicketHandler = new TicketHandler();
-$TicketHandler->setAsRead(getSessionProp('IDUser'),$IDTicket);
+$ObjTicket = new TicketHandler();
+$ObjTicket->setAsRead(getSessionProp('IDUser'),$IDTicket);
+$ArHeaders = $ObjTicket->getTicketHeaders($IDTicket);
+$ArAttachments = $ObjTicket->getAttachments($IDTicket);
 
-$ArHeaders = TemplateHandler::getTicketHeaders($IDTicket);
-$ArSupporters = TemplateHandler::listSupporters($IDTicket);
-$ArAttachments = TemplateHandler::getAttachments($IDTicket);
-
-if (getSessionProp('isSupporter') == 'true') {
+if ($isSupporter) {
+  $ArSupporters = $ObjUser->listSupporters($IDTicket);
   $BoCreate = F1DeskUtils::getPermission('BoCreateCall', $IDSupporter);
+
   if ($BoCreate) {
     $ArDepartments = F1DeskUtils::getPublicDepartments(false);
   } else {
     $ArDepartments = F1DeskUtils::getDepartmentsFormatted($IDSupporter);
   }
+
 } else {
-  $ArDepartments = F1DeskUtils::getPublicDepartments();
+  /*$ArDepartments = F1DeskUtils::getPublicDepartments();*/
+
+  //VER DEPOIS AQUI
 }
 
 #
@@ -165,26 +171,29 @@ $IDTicket = $ArHeaders['IDTicket'];
 $IDDepartment = $_POST['IDDepartment'];
 $StSupporter = (!empty($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 $StSituation = $ArHeaders['StSituation'];
-$BoIgnored = (isset($BoIgnored))?$BoIgnored:F1DeskUtils::isIgnored($IDSupporter, $IDTicket);
+if ($isSupporter) {
+  $BoIgnored = (isset($BoIgnored)) ? $BoIgnored : F1DeskUtils::isIgnored($IDSupporter, $IDTicket);
+}
 
 #
 # Ticket Info
 #
-$ArAttachedTickets = TemplateHandler::getAttachedTickets($IDTicket);
-$ArTicketsAttached = TemplateHandler::getTicketsAttached($IDTicket);
-$ArTicketDepartments = TemplateHandler::getTicketDepartments($IDTicket);
-$ArTicketDepartmentsReader = TemplateHandler::getTicketDepartmentsReader($IDTicket);
-$ArTicketDestinations = TemplateHandler::getTicketDestination($IDTicket);
-$ArTicketReaders = TemplateHandler::getTicketReaders($IDTicket);
+if ($isSupporter) {
+  $ArAttachedTickets = $ObjTicket->getAttachedTickets($IDTicket);
+  $ArTicketsAttached = $ObjTicket->getTicketsAttached($IDTicket);
+  $ArTicketDepartments = $ObjTicket->getTicketDepartments($IDTicket);
+  $ArTicketDepartmentsReader = $ObjTicket->getTicketDepartmentsReader($IDTicket);
+  $ArTicketDestinations = $ObjTicket->getTicketDestination($IDTicket);
+  $ArTicketReaders = $ObjTicket->getTicketReaders($IDTicket);
+}
 
-$ArDepartment = reset($ArTicketDepartments);
-
+$ArMessages = $ObjTicket->listTicketMessages($IDTicket);
 $DtOpened = F1DeskUtils::formatDate('datetime_format',$ArHeaders['DtOpened']);
-$StTicketCategory = TemplateHandler::getTicketCategory($IDTicket);
-$StTicketPriority = TemplateHandler::getTicketPriority($IDTicket);
-$StTicketType = TemplateHandler::getTicketType($IDTicket);
+$StTicketCategory = $ObjTicket->getTicketCategory($IDTicket);
+$StTicketPriority = $ObjTicket->getTicketPriority($IDTicket);
+$StTicketType = $ObjTicket->getTicketType($IDTicket);
 
-if (TemplateHandler::IsSupporter()) {
+if ($isSupporter) {
   $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter,$IDDepartment);
 }
 
