@@ -707,5 +707,28 @@ WHERE
       }
     return $ArFormatted;
   }
+
+  public static function getPublicDepartments($BoPublic = true) {
+    if ($BoPublic) {
+      $StSQL = '
+SELECT
+  *
+FROM
+'.DBPREFIX.'Department
+WHERE
+  BoPublic = 1';
+    } else {
+      $StSQL = '
+SELECT
+  *
+FROM
+  '.DBPREFIX.'Departments';
+    }
+    $DBHandler = self::getDBinstance();
+    $DBHandler->execSQL($StSQL);
+    $ArResult = $DBHandler->getResult('string');
+
+    return $ArResult;
+  }
 }
 ?>
