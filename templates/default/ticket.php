@@ -39,7 +39,7 @@
           <?endif;?>
           <th><?=TICKET_HEADER_SUPPORTER?></th>
           <? if ($isSupporter && !$preview): ?>
-          <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
+            <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
           <? endif; ?>
         </tr>
       </thead>
@@ -161,7 +161,7 @@
 <!--[/TICKET HISTORY]-->
 
 <!--[TICKET ANSWER]-->
-<?if(!$preview):?>
+<?if(!$preview) :?>
 	<div id='ticketAnswer' class='defaultBody'>
 	  <div id='answerCaption' class='defaultCaption'>
 	  	<img alt="Ticket" id='arrowAnswer<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='baseActions.toogleArrow( this.id, "answerContent<?=$uid?>")' class="menuArrow"/>

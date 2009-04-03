@@ -672,7 +672,7 @@ var Ticket = {
           baseActions.animateReload( IDDepartment, 'stop' );
           Ticket.insertTickets(IDDepartment, HTMLTickets);
           Ticket.refreshNotReadCount( IDDepartment );
-          if (First === true) { baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, Force); }
+          Ticket.showDepartmentTickets(IDDepartment);
         },
         'errCallBack':function(Return) {
           baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, 'hide');
