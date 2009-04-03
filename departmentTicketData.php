@@ -17,6 +17,4 @@
     $ArTickets = TemplateHandler::getUserTickets($ArIDDepartments,$IDUser);
   }
 
-
-
 ?>

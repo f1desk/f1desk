@@ -1,4 +1,5 @@
 <?php
+  require_once( dirname(__FILE__) . '/../../ticketData.php' );
   /*default language*/
   handleLanguage(__FILE__);
   #
@@ -7,16 +8,24 @@
   $uid = uniqid();
   $IDSupporter = getSessionProp('IDSupporter');
 ?>
+
+<!--[ERROR/OK BOX]-->
+<? if(isset($returnMessage) && isset($returnType)): ?>
+  <div class="boxmsg <?=$returnType?>">
+    <?=$returnMessage ?>
+  </div>
+<? endif; ?>
+<!--[ERROR/OK BOX]-->
+
 <!--[TICKET HEADER]-->
 <div id='ticketHeader'>
   <div id="ticketTitle">
   <?if(!$preview):?>
-    <img id='reloadHeader' class='menuRefresh Right' onclick='Ticket.refreshTicket("<?= $IDTicket ?>")' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
+    <img id='reloadHeader' class='menuRefresh Right' onclick='Ticket.refreshTicket("<?=$IDTicket?>", "<?=$IDDepartment?>")' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' />
   <?endif;?>
   	<img alt="Ticket" id='arrowHeader<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='baseActions.toogleArrow( this.id, "ticketContent<?=$uid?>")' class='menuArrow'/>
   	<span><?= $StTitle ?></span>
   </div>
-
 
   <div id="ticketContent<?=$uid?>">
   	<table class='tableTickets'>
@@ -36,31 +45,31 @@
         <tr>
           <td class='TicketNumber'>#<?= $IDTicket ?></td>
           <td><?= $DtOpened ?></td>
-          <td><?= $StSituation ?></td>
+          <td><?= constant($StSituation) ?></td>
           <td>
             <?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments', 'inputCombo',$preview);?>
           </td>
           <td>
-            <?=TemplateHandler::createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, 'StSupporter','inputCombo', $preview);?>
+            <?=TemplateHandler::createSupportersCombo($IDTicket, $IDDepartment, $ArSupporters, $ArHeaders, 'StSupporter','inputCombo', $preview);?>
           </td>
           <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <td>
-            <a href='javascript:void(0);' onclick='Ticket.attachTicket(<?=$IDTicket?>);'>
+            <a href='javascript:void(0);' onclick='Ticket.attachTicket(<?=$IDTicket?>,"<?=$IDDepartment?>");'>
               <img src='<?= TEMPLATEDIR ?>images/attach.png' alt='Attach Ticket' title='Attach Ticket'>
             </a>
           </td>
           <td>
-              <? if (F1DeskUtils::isIgnored($IDSupporter,$IDTicket)): ?>
-            <a href='javascript:void(0);' onclick='Ticket.unignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
+              <? if ($BoIgnored): ?>
+            <a href='javascript:void(0);' onclick='Ticket.unignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'>
               <img src='<?= TEMPLATEDIR ?>images/unignore.png' alt='Ignore Call' title='Ignore Call'>
               <? else: ?>
-            <a href='javascript:void(0);' onclick='Ticket.ignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
+            <a href='javascript:void(0);' onclick='Ticket.ignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'>
               <img src='<?= TEMPLATEDIR ?>images/ignore.png' alt='Ignore Call' title='Ignore Call'>
               <? endif;?>
             </a>
           </td>
           <td>
-            <a href='javascript:void(0);' onclick='Ticket.bookmarkTicket(<?=$IDSupporter?>,<?=$IDTicket?>)'>
+            <a href='javascript:void(0);' onclick='Ticket.bookmarkTicket(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'>
               <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Call' title='Bookmark Call'>
             </a>
           </td>

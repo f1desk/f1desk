@@ -1,9 +1,11 @@
 <?
+  #
+  # if it's a refresh action
+  #
   if (array_key_exists('IDDepartment',$_POST)) {
     require_once(dirname(__FILE__) . '/../../departmentTicketData.php');
     $ID = $_POST['IDDepartment'];
   }
-
 ?>
 <table id='ticketTable<?=$ID?>' class='tableTickets'>
   <thead>
@@ -35,7 +37,7 @@
         <td onclick='Ticket.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )' id='TicketSupporter<?= $Ticket['IDTicket']?>'>
           <?= $Ticket['StSupporter']?>
         </td>
-        <td onclick="flowWindow.previewTicket(<?=$Ticket['IDTicket']?>);" style='text-align:center;'>
+        <td onclick="flowWindow.previewTicket(<?=$Ticket['IDTicket']?>, '<?=$ID?>');" style='text-align:center;'>
           <img src="<?=TEMPLATEDIR?>images/visualizar.png">
         </td>
       </tr>

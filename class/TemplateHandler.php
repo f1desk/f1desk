@@ -465,10 +465,10 @@ abstract class TemplateHandler {
 	 * @param string $StClass
 	 * @return string
 	 */
-	public static function createSupportersCombo($IDTicket,$ArSupporters, $ArHeaders, $StID, $StClass, $preview) {
+	public static function createSupportersCombo($IDTicket,$IDDepartment, $ArSupporters, $ArHeaders, $StID, $StClass, $preview) {
 	  $StHtml = (isset($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 	  if (self::IsSupporter() && !$preview) {
-	    $StHtml = "<select id='$StID' onchange='TICKET.setTicketOwner(\"$IDTicket\", this.value)' class='$StClass'>";
+	    $StHtml = "<select id='$StID' onchange='Ticket.setTicketOwner(\"$IDTicket\", this.value, \"$IDDepartment\")' class='$StClass'>";
 	    foreach ( $ArSupporters as $IDSupporter => $StSupporter ) {
 	      if ($ArHeaders['IDSupporter'] != $IDSupporter) {
 	        $StHtml .= "<option value='$IDSupporter'>$StSupporter</option>";
@@ -500,7 +500,7 @@ abstract class TemplateHandler {
 	public static function createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket, $StID, $StClass = 'inputCombo', $preview) {
 	  $StHtml = SINGLE;
     if (self::IsSupporter() && !$preview) {
-      $StHtml = "<select id='$StID' class='$StClass' onchange='TICKET.changeDepartment(\"$IDTicket\",this.value)'>";
+      $StHtml = "<select id='$StID' class='$StClass' onchange='Ticket.changeDepartment(\"$IDTicket\",this.value, \"$IDDepartment\")'>";
       foreach ($ArDepartments as $ArDepartment) {
         if(isset($ArDepartment['SubDepartments'])) {
           if ($ArDepartment['IDDepartment'] == $IDDepartment) {
@@ -730,7 +730,7 @@ abstract class TemplateHandler {
 	      $StHtml .= "<option value='null'>".NO_ANSWER."</option>";
       }
       $StHtml .= '</select>';
-      $StHtml .= "<button class='button' onclick='TICKET.addCannedResponse(); return false;'>".ADD."</button>";
+      $StHtml .= "<button class='button' onclick='Ticket.addCannedResponse(); return false;'>".ADD."</button>";
     }
     return $StHtml;
 	}

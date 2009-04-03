@@ -541,6 +541,27 @@ html>body #main{
 }
 
 #dataBoxEditAreaContent p {
-  margin-bottom:0;
-  padding-bottom:0;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+.boxmsg { 
+  margin: 5px 5px 5px 0; 
+  padding: 5px; 
+  border: 1px solid #666; 
+  background: #DDD; 
+  font: 10px verdana, arial, sans-serif; 
+  text-align: center; 
+}
+
+.error { 
+  border-color: red; 
+  color: red; 
+  background: #FDD; 
+}
+
+.ok { 
+  border-color: green; 
+  color: green; 
+  background: #DFD; 
 }

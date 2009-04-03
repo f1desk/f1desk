@@ -476,7 +476,7 @@ var Ticket = {
     return false;
   },
 
-  'attachTicket': function(IDTicket) {
+  'attachTicket': function(IDTicket, IDDepartment) {
     var flowParams = new flowWindow.flowParams();
     with(flowParams) {
       width = 350;  height = 175;
@@ -507,17 +507,15 @@ var Ticket = {
               'content': {
                 'IDTicket':IDTicket,
                 'IDAttached':IDAttached,
-                'StAction':'attach',
+                'IDDepartment':IDDepartment,
+                'StAction':'attach'
               },
-              'okCallBack':function(response) {
-                if(response == 'ok') {
-                  Ticket.refreshTicket(IDTicket);
-                } else {
-                  flowWindow.alert(response);
-                }
+              'okCallBack':function(htmlReturn) {
+                var contentDisplay = gID('contentDisplay');
+                appendHTML(htmlReturn, contentDisplay, true);
               }
             };
-            xhr.makeRequest('Attach Ticket','ticketActions.php',tParams);
+            xhr.makeRequest('Attach Ticket', templateDir + 'ticket.php',tParams);
           }
         }
       };
@@ -525,43 +523,41 @@ var Ticket = {
     var ID = Flow.open(flowParams);
   },
 
-  'bookmarkTicket': function(IDSupporter, IDTicket) {
+  'bookmarkTicket': function(IDSupporter, IDTicket, IDDepartment) {
     var tParams = {
       'method':'post',
       'content': {
         'IDSupporter':IDSupporter,
         'IDTicket':IDTicket,
-        'StAction':'bookmark',
+        'IDDepartment':IDDepartment,
+        'StAction':'bookmark'
       },
-      'okCallBack':function(response) {
-        if(response == 'ok') {
-          Ticket.reloadTicketList('bookmark',true, 'show');
-        } else {
-          flowWindow.alert(response);
-        }
+      'okCallBack':function(htmlReturn) {
+        var contentDisplay = gID('contentDisplay');
+        Ticket.reloadTicketList('bookmark', true,'show');
+        Ticket.reloadTicketList(IDDepartment, true, 'show');
+        appendHTML(htmlReturn, contentDisplay, true);
       }
     };
-    xhr.makeRequest('Bookmark Ticket','ticketActions.php',tParams);
+    xhr.makeRequest('Bookmark Ticket', templateDir + 'ticket.php',tParams);
   },
 
-  'changeDepartment': function(IDTicket, IDDepartment) {
+  'changeDepartment': function(IDTicket, IDDepartmentTo, IDDepartmentFrom) {
     var tParams = {
       'method':'post',
       'content': {
-        'IDDepartment':IDDepartment,
+        'IDDepartment':IDDepartmentTo,
         'IDTicket':IDTicket,
-        'StAction':'change'
+        'StAction':'changeDepartment'
       },
-      'okCallBack':function(response) {
-        if(response == 'ok') {
-          Ticket.refreshTicket(IDTicket);
-          Ticket.reloadTicketList(IDDepartment,true, 'show');
-        } else {
-          flowWindow.alert(response);
-        }
+      'okCallBack':function(htmlReturn) {
+        var contentDisplay = gID('contentDisplay');
+        appendHTML(htmlReturn, contentDisplay, true);
+        Ticket.reloadTicketList(IDDepartmentTo, true, 'show');
+        Ticket.reloadTicketList(IDDepartmentFrom, true, 'show');
       }
     };
-    xhr.makeRequest('Change Department','ticketActions.php',tParams);
+    xhr.makeRequest('Change Department', templateDir + 'ticket.php',tParams);
   },
 
   'findTicket': function(IDTicket) {
@@ -573,34 +569,29 @@ var Ticket = {
     }
   },
 
-  'ignoreTicket': function(IDSupporter,IDTicket) {
+  'ignoreTicket': function(IDSupporter,IDTicket, IDDepartment) {
     var tParams = {
       'method':'post',
       'content': {
         'IDSupporter':IDSupporter,
         'IDTicket':IDTicket,
+        'IDDepartment':IDDepartment,
         'StAction':'ignore',
       },
-      'okCallBack':function(response) {
-        if(response == 'ok') {
-          var department = gID('IDDepartment').value;
-          Ticket.reloadTicketList('ignored',true,'show');
-          Ticket.reloadTicketList(department,false, 'show');
-          Ticket.refreshTicket(IDTicket);
-        } else {
-          flowWindow.alert(response);
-        }
+      'okCallBack':function(htmlReturn) {
+        var contentDisplay = gID('contentDisplay');
+        Ticket.reloadTicketList('ignored', true,'show');
+        Ticket.reloadTicketList(IDDepartment, true, 'show');
+        appendHTML(htmlReturn, contentDisplay, true);
       }
     };
     tFunction = function(opt) {
       if(opt == 1) {
-        xhr.makeRequest('Ignore Ticket','ticketActions.php',tParams);
+        xhr.makeRequest('Ignore Ticket', templateDir + 'ticket.php',tParams);
       }
     }
     flowWindow.confirm(i18n.ignoreCall,tFunction);
   },
-
-  'initialized' : [],
 
   'insertTickets': function(IDDepartment, HTMLTickets) {
     var departmentContent = gID( 'departmentContent' + IDDepartment );
@@ -641,11 +632,14 @@ var Ticket = {
     removeChilds(element);  element.appendChild( createTextNode( count ) );
   },
 
-  'refreshTicket': function(IDTicket) {
+  'refreshTicket': function(IDTicket, IDDepartment) {
     var tParams = {
       'enqueue':1,
       'method':'post',
-      'content':{'IDTicket':IDTicket},
+      'content':{
+        'IDTicket':IDTicket,
+        'IDDepartment': IDDepartment
+      },
       'startCallBack':function() {
         baseActions.animateReload( 'Header', 'start' );
       },
@@ -655,7 +649,7 @@ var Ticket = {
         appendHTML(returnedValue, contentDisplay);
       }
     };
-    var tUrl = 'ticketDetails.php';
+    var tUrl = templateDir + 'ticket.php';
     xhr.makeRequest('refreshTicket',tUrl,tParams);
     return true;
   },
@@ -699,19 +693,24 @@ var Ticket = {
     Clicked.className = 'Selected';
   },
 
-  'setTicketOwner': function(IDTicket, IDSupporter) {
+  'setTicketOwner': function(IDTicket, IDSupporter, IDDepartment) {
     var IDDepartment;
     var tParams = {
       'enqueue':1,
       'method':'post',
-      'content':{'IDSupporter':IDSupporter, 'IDTicket':IDTicket},
-      'okCallBack': function(returnedValue){
-        var IDDepartment = gID('IDDepartment').value;
+      'content':{
+        'IDSupporter':IDSupporter, 
+        'IDTicket':IDTicket,
+        'IDDepartment':IDDepartment,
+        'StAction': 'setOwner'
+      },
+      'okCallBack': function(htmlReturn){
         Ticket.reloadTicketList(IDDepartment,true,'show');
-        Ticket.refreshTicket( IDTicket );
+        var contentDisplay = gID('contentDisplay');
+        appendHTML(htmlReturn, contentDisplay, true);
       }
     };
-    var tUrl = 'setTicketOwner.php';
+    var tUrl = templateDir + 'ticket.php';
     xhr.makeRequest('setTicketOwner',tUrl,tParams);
     return true;
   },
@@ -724,7 +723,10 @@ var Ticket = {
     var tParams = {
       'enqueue':1,
       'method':'post',
-      'content':{'IDTicket':IDTicket},
+      'content':{
+        'IDTicket':IDTicket,
+        'IDDepartment': IDDepartment
+      },
       'startCallBack':function() {
         baseActions.animateReload( IDDepartment, 'start' );
       },
@@ -739,8 +741,8 @@ var Ticket = {
         }
       }
     };
-    var tUrl = 'ticketDetails.php';
-    xhr.makeRequest('refreshTicket',tUrl,tParams);
+    var tUrl = templateDir + 'ticket.php';
+    xhr.makeRequest('refreshTicket', tUrl, tParams);
     return true;
   },
 
@@ -750,26 +752,23 @@ var Ticket = {
     Ticket.refreshTicket(IDTicket);
   },
 
-  'unignoreTicket': function(IDSupporter,IDTicket) {
+  'unignoreTicket': function(IDSupporter,IDTicket, IDDepartment) {
     var tParams = {
       'method':'post',
       'content': {
         'IDSupporter':IDSupporter,
         'IDTicket':IDTicket,
-        'StAction':'unignore',
+        'IDDepartment':IDDepartment,
+        'StAction':'unignore'
       },
-      'okCallBack':function(response) {
-        if(response == 'ok') {
-          var department = gID('IDDepartment').value;
-          Ticket.reloadTicketList('ignored',false,'show');
-          Ticket.reloadTicketList(department,false,'show');
-          Ticket.refreshTicket(IDTicket);
-        } else {
-          flowWindow.alert(response);
-        }
+      'okCallBack':function(htmlReturn) {
+        var contentDisplay = gID('contentDisplay');
+        Ticket.reloadTicketList('ignored',true,'show');
+        Ticket.reloadTicketList(IDDepartment,true,'show');
+        appendHTML(htmlReturn, contentDisplay, true);
       }
     };
-    xhr.makeRequest('Unignore Ticket','ticketActions.php',tParams);
+    xhr.makeRequest('Unignore Ticket', templateDir + 'ticket.php',tParams);
   }
 
 };
@@ -914,11 +913,12 @@ var flowWindow = {
     var ID = Flow.open(flowParams);
   },
 
-  'previewTicket': function(IDTicket) {
+  'previewTicket': function(IDTicket, IDDepartment) {
     var tParams = {
       'method':'post',
       'content': {
         'IDTicket':IDTicket,
+        'IDDepartment':IDDepartment,
         'preview':'true'
       },
       'okCallBack':function( ticketHTML ) {
@@ -931,7 +931,7 @@ var flowWindow = {
         var ID = Flow.open(flowParams);
       }
     };
-    xhr.makeRequest('Bookmark Ticket','ticketDetails.php',tParams);
+    xhr.makeRequest('Bookmark Ticket', templateDir + 'ticket.php',tParams);
   },
 
   'prompt': function(StArg, tFunction) {
