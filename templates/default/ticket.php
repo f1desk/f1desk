@@ -160,7 +160,7 @@
 	  </div>
 
 	  <div id="answerContent<?=$uid?>" >
-	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="answerTicket.php" enctype="multipart/form-data" onsubmit='if(isEmpty(gID("TxMessage").value)){ flowWindow.alert(i18n.answerPreviewNoAnswer); return false; }'>
+	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="<?=TEMPLATEDIR?>ticket.php" enctype="multipart/form-data" onsubmit='this.didSubmit.value="true"; if(isEmpty(gID("TxMessage").value)){ flowWindow.alert(i18n.answerPreviewNoAnswer); return false; }'>
 	      <div id='messageType' class='Right'>
 	    	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
 	    				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
@@ -179,7 +179,7 @@
 	      		<div class='Right' id='answerAttach'>
 	      		  <label for='Attachment'><?=ATTACHMENT?>: </label>
 	      			<input id='Attachment' name='Attachment' class='inputFile' type="file" value="Anexo" />
-	      			<iframe id='ajaxSubmit' name='ajaxSubmit' src='answerTicket.php' class="Invisible"></iframe>
+	      			<iframe onLoad="top.Ticket.submitTicketForm();" id='ajaxSubmit' name='ajaxSubmit' src='<?=TEMPLATEDIR?>ticket.php' class="Invisible"></iframe>
 	      		</div>
 	    		  <div>
 	    		    <input type='hidden' name='IDDepartment' id='IDDepartment' value='<?= $IDDepartment ?>' />
@@ -191,7 +191,8 @@
 	    	</div>
 
 	    	<div>
-    	      <input type="hidden" name="action" value="answer">
+	    	    <input type='hidden' name='StAction' value='answer'>
+	    	    <input type="hidden" id='didSubmit' name='didSubmit' value="false">
     	      <input type='submit' class='button' value='<?=ANSWER?>' name='Responder'>
     	      <button type="button" class='button' onclick='flowWindow.previewAnswer(gID("TxMessage").value);'><?=PREVIEW?></button>
 	    	</div>

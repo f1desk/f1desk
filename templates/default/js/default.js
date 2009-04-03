@@ -754,10 +754,9 @@ var Ticket = {
     return true;
   },
 
-  'submitTicketForm': function(IDTicket) {
-    gID('StMessageType').selectedIndex = 0;
-    gID('TxMessage').value = '';  gID('Attachment').value = '';
-    Ticket.refreshTicket(IDTicket);
+  'submitTicketForm': function() {
+    if(gID('didSubmit').value == 'true')
+      gID('contentDisplay').innerHTML = gID('ajaxSubmit').contentWindow.document.getElementsByTagName('body')[0].innerHTML ;
   },
 
   'unignoreTicket': function(IDSupporter,IDTicket, IDDepartment) {

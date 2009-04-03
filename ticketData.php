@@ -101,6 +101,24 @@ if (isset($_POST['StAction'])) {
         $returnMessage = SUCESS_SETOWNER; $returnType = 'ok';
       }
     break;
+    
+    case 'answer':
+      if (empty($_POST['TxMessage']) || !is_numeric($_POST['IDTicket']) || empty($_POST['StMessageType'])){
+        $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+      } else {
+        $_POST['TxMessage'] = f1desk_escape_html($_POST['TxMessage']);
+        $TicketHandler = new TicketHandler();
+        $IDWriter = (getSessionProp('IDClient')) ? getSessionProp('IDClient') : getSessionProp('IDSupporter');
+        $ArMessageType = array('NORMAL' => '0', 'INTERNAL' => '1', 'SYSTEM' => '2', 'SATISFACTION' => '3');
+        if (!empty($_FILES['Attachment']['name'])) {
+          $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']],$_FILES);
+        } else {
+          $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']]);
+        }
+        $returnMessage = SUCESS_ANSWERING; $returnType = 'ok';
+        //die("<script>top.TICKET.submitTicketForm({$_POST['IDTicket']});</script>");
+      }
+    break;
   }
   
 }
