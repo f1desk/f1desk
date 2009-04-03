@@ -690,17 +690,17 @@ WHERE
       }
 
       $ArFormatted[$IDDepartment] = array(
-      'ID' => $IDDepartment,
-      'StDepartment' => $StDepartment,
-      'ArSubDepartments' => $ArSubs
+        'ID' => $IDDepartment,
+        'StDepartment' => $StDepartment,
+        'ArSubDepartments' => $ArSubs
       );
     }
       foreach ($ArSubDepartments as $IDDepartment => $ArSubDepartments) {
         foreach ($ArSubDepartments as $IDSubDepartments) {
           if (array_key_exists($IDSubDepartments,$ArDepartments) === true) {
             $ArFormatted[$IDSubDepartments] = array(
-            'ID' => $IDSubDepartments,
-            'StDepartment' => $ArDepartments[$IDDepartment] . '::' . $ArDepartments[$IDSubDepartments]
+              'ID' => $IDSubDepartments,
+              'StDepartment' => $ArDepartments[$IDDepartment] . '::' . $ArDepartments[$IDSubDepartments]
             );
           }
         }
@@ -722,7 +722,7 @@ WHERE
 SELECT
   *
 FROM
-  '.DBPREFIX.'Departments';
+  '.DBPREFIX.'Department';
     }
     $DBHandler = self::getDBinstance();
     $DBHandler->execSQL($StSQL);

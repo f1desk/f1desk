@@ -844,13 +844,16 @@ var flowWindow = {
     }
   },
 
-  'previewAnswer': function(TxMessage) {
+  'previewAnswer': function(TxMessage, IDTicket, IDDepartment, StMessageType) {
     if(isEmpty(TxMessage)){ flowWindow.alert(i18n.answerPreviewNoAnswer); return false; }
     var  tParams = {
       'method':'post',
       'content':{
-        'StAction':'preview',
-        'TxMessage': TxMessage
+        'StAction':'previewAnswer',
+        'TxMessage': TxMessage,
+        'IDTicket': IDTicket,
+        'IDDepartment': IDDepartment,
+        'StMessageType': StMessageType
       },
       'okCallBack':function(response) {
         var flowParams = new flowWindow.flowParams();

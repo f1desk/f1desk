@@ -194,7 +194,7 @@
 	    	    <input type='hidden' name='StAction' value='answer'>
 	    	    <input type="hidden" id='didSubmit' name='didSubmit' value="false">
     	      <input type='submit' class='button' value='<?=ANSWER?>' name='Responder'>
-    	      <button type="button" class='button' onclick='flowWindow.previewAnswer(gID("TxMessage").value);'><?=PREVIEW?></button>
+    	      <button type="button" class='button' onclick='flowWindow.previewAnswer(gID("TxMessage").value, <?=$IDTicket?>, "<?=$IDDepartment?>", gID("StMessageType").value);'><?=PREVIEW?></button>
 	    	</div>
 	    </div>
 	    </form>

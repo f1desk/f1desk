@@ -151,7 +151,7 @@ if (getSessionProp('isSupporter') == 'true') {
   if ($BoCreate) {
     $ArDepartments = F1DeskUtils::getPublicDepartments(false);
   } else {
-    $ArDepartments = F1DeskUtils::getDepartments($IDSupporter);
+    $ArDepartments = F1DeskUtils::getDepartmentsFormatted($IDSupporter);
   }
 } else {
   $ArDepartments = F1DeskUtils::getPublicDepartments();
@@ -163,7 +163,6 @@ if (getSessionProp('isSupporter') == 'true') {
 $StTitle = $ArHeaders['StTitle'];
 $IDTicket = $ArHeaders['IDTicket'];
 $IDDepartment = $_POST['IDDepartment'];
-//$IDDepartment = (!empty($ArHeaders['IDDepartment'])) ? $ArHeaders['IDDepartment'] : '';
 $StSupporter = (!empty($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 $StSituation = $ArHeaders['StSituation'];
 $BoIgnored = (isset($BoIgnored))?$BoIgnored:F1DeskUtils::isIgnored($IDSupporter, $IDTicket);
