@@ -62,6 +62,7 @@ abstract class TemplateHandler {
     $ArDepartmentTickets['bookmark'] = $ObjTicket->listBookmarkTickets($IDSupporter);
     $ArDepartmentTickets['single'] = $ObjTicket->listSingleTickets($IDSupporter);
     $ArDepartmentTickets['byme'] = $ObjTicket->listByMeTickets($IDSupporter);
+    $ArIgnored = array_keys($ArDepartmentTickets['ignored']);
 
     foreach ($ArIDDepartment as $IDDepartment) {
       if (array_key_exists($IDDepartment,$ArDepartmentTickets)) {
@@ -75,8 +76,12 @@ abstract class TemplateHandler {
       }
 
       $TicketList = array();
-      foreach ($ArCurrentTickets as $ArCurrentTicket) {
-        $TicketList[] = $ArCurrentTicket['IDTicket'];
+      foreach ($ArCurrentTickets as $Key => $ArCurrentTicket) {
+        if ($IDDepartment == 'ignored' || ! in_array($ArCurrentTicket['IDTicket'],$ArIgnored) ) {
+          $TicketList[] = $ArCurrentTicket['IDTicket'];
+        } else {
+          unset($ArCurrentTickets[$Key]);
+        }
       }
 
       $ArReadTickets = $ObjTicket->getReadTickets($IDSupporter, $TicketList);

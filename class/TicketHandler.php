@@ -327,7 +327,9 @@ FROM
   LEFT JOIN " . DBPREFIX . "TicketSupporter TS ON (TS.IDTicket = T.IDTicket)
   LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = TS.IDSupporter)
 WHERE
-  S.IDSupporter = $IDSupporter";
+  S.IDSupporter = $IDSupporter
+AND
+  T.StSituation IN ('NOT_READ','WAITING_SUP')";
 
     $this->execSQL($StSQL);
 		$ArTickets = $this->getResult("string");

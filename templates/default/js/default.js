@@ -557,9 +557,8 @@ var Ticket = {
       'okCallBack':function(htmlReturn) {
         var contentDisplay = gID('contentDisplay');
         appendHTML(htmlReturn, contentDisplay, true);
-        if(gID(IDDepartmentTo))
-          Ticket.reloadTicketList(IDDepartmentTo, true, 'show');
         Ticket.reloadTicketList(IDDepartmentFrom, true, 'show');
+        Ticket.reloadTicketList(IDDepartmentTo, true, 'show');
       }
     };
     xhr.makeRequest('Change Department', templateDir + 'ticket.php',tParams);
@@ -660,27 +659,29 @@ var Ticket = {
   },
 
   'reloadTicketList': function(IDDepartment, First, Force) {
-    var tParams = {
-      'enqueue':1,
-      'returnType':'txt',
-      'method':'post',
-      'content':{'IDDepartment':IDDepartment},
-      'startCallBack' : function() {
-        baseActions.animateReload( IDDepartment, 'start' );
-      },
-      'okCallBack':function(HTMLTickets) {
-        baseActions.animateReload( IDDepartment, 'stop' );
-        Ticket.insertTickets(IDDepartment, HTMLTickets);
-        Ticket.refreshNotReadCount( IDDepartment );
-        if (First === true) { baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, Force); }
-      },
-      'errCallBack':function(Return) {
-        baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, 'hide');
-        baseActions.animateReload( IDDepartment, 'stop' );
-      }
-    };
-    var tUrl = templateDir + 'ticketList.php';
-    xhr.makeRequest('showTickets',tUrl,tParams);
+    if (gID('departmentContent' + IDDepartment)) {
+      var tParams = {
+        'enqueue':1,
+        'returnType':'txt',
+        'method':'post',
+        'content':{'IDDepartment':IDDepartment},
+        'startCallBack' : function() {
+          baseActions.animateReload( IDDepartment, 'start' );
+        },
+        'okCallBack':function(HTMLTickets) {
+          baseActions.animateReload( IDDepartment, 'stop' );
+          Ticket.insertTickets(IDDepartment, HTMLTickets);
+          Ticket.refreshNotReadCount( IDDepartment );
+          if (First === true) { baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, Force); }
+        },
+        'errCallBack':function(Return) {
+          baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, 'hide');
+          baseActions.animateReload( IDDepartment, 'stop' );
+        }
+      };
+      var tUrl = templateDir + 'ticketList.php';
+      xhr.makeRequest('showTickets',tUrl,tParams);
+    }
   },
 
   'selectTicket': function(Clicked) {
