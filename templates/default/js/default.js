@@ -553,7 +553,8 @@ var Ticket = {
       'okCallBack':function(htmlReturn) {
         var contentDisplay = gID('contentDisplay');
         appendHTML(htmlReturn, contentDisplay, true);
-        Ticket.reloadTicketList(IDDepartmentTo, true, 'show');
+        if(gID('IDDepartmentTo'))
+          Ticket.reloadTicketList(IDDepartmentTo, true, 'show');
         Ticket.reloadTicketList(IDDepartmentFrom, true, 'show');
       }
     };
@@ -764,7 +765,8 @@ var Ticket = {
       'okCallBack':function(htmlReturn) {
         var contentDisplay = gID('contentDisplay');
         Ticket.reloadTicketList('ignored',true,'show');
-        Ticket.reloadTicketList(IDDepartment,true,'show');
+        if (gID('IDDepartment'))
+          Ticket.reloadTicketList(IDDepartment,true,'show');
         appendHTML(htmlReturn, contentDisplay, true);
       }
     };
