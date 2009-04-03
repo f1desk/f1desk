@@ -46,14 +46,19 @@ if (!empty($_POST)) {
 ****************************************/
 
 if (getSessionProp('isSupporter') == 'true') {
+  if (! isset($TicketHandler))
+    $TicketHandler = new TicketHandler();
+  else
+    if(! is_a($TicketHandler,'TicketHandler'))
+      $TicketHandler = new TicketHandler();
   $BoCreate = F1DeskUtils::getPermission('BoCreateCall',getSessionProp('IDSupporter'));
   if ($BoCreate) {
-    $ArDepartments = TemplateHandler::getPublicDepartments(false);
+    $ArDepartments = $TicketHandler->getPublicDepartments(false);
   } else {
-    $ArDepartments = TemplateHandler::getDepartments(getSessionProp('IDSupporter'));
+    $ArDepartments = F1DeskUtils::getDepartmentsFormatted(getSessionProp('IDSupporter'));
   }
 } else {
-  $ArDepartments = TemplateHandler::getPublicDepartments();
+  $ArDepartments = $TicketHandler->getPublicDepartments();
 }
 
 $ArPriorities = F1DeskUtils::listPriorities();

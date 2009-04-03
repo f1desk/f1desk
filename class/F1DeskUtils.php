@@ -1,5 +1,4 @@
 <?php
-
 abstract class F1DeskUtils {
 
 	private static $DBHandler;
@@ -634,7 +633,6 @@ ORDER BY S.IDSupporter';
     return $ArResult;
   }
 
-
   /**
    * Check if the system have to notify the users when a new message is sent
    *
@@ -677,6 +675,37 @@ WHERE
 
     return $ArResult;
   }
-}
 
+  public static function getDepartmentsFormatted($IDSupporter) {
+    $ArFormatted = array();
+
+    $ArDepartments = F1DeskUtils::getDepartments($IDSupporter);
+    $ArSubDepartments = F1DeskUtils::getSubDepartments($IDSupporter);
+
+    foreach ($ArDepartments as $IDDepartment => $StDepartment) {
+      if (array_key_exists($IDDepartment,$ArSubDepartments) === true) {
+        $ArSubs = $ArSubDepartments[$IDDepartment];
+      } else {
+        $ArSubs = array();
+      }
+
+      $ArFormatted[$IDDepartment] = array(
+      'ID' => $IDDepartment,
+      'StDepartment' => $StDepartment,
+      'ArSubDepartments' => $ArSubs
+      );
+    }
+      foreach ($ArSubDepartments as $IDDepartment => $ArSubDepartments) {
+        foreach ($ArSubDepartments as $IDSubDepartments) {
+          if (array_key_exists($IDSubDepartments,$ArDepartments) === true) {
+            $ArFormatted[$IDSubDepartments] = array(
+            'ID' => $IDSubDepartments,
+            'StDepartment' => $ArDepartments[$IDDepartment] . '::' . $ArDepartments[$IDSubDepartments]
+            );
+          }
+        }
+      }
+    return $ArFormatted;
+  }
+}
 ?>

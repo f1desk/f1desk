@@ -24,50 +24,6 @@ abstract class TemplateHandler {
   }
 
   /**
-   * list the departments with their subdepartments
-   *
-   * @return array
-   */
-  public static function getDepartments( $IDSupporter, $Format = false ) {
-    $ArFormatted = array();
-
-    $ArDepartments = F1DeskUtils::getDepartments($IDSupporter);
-    $ArSubDepartments = F1DeskUtils::getSubDepartments($IDSupporter);
-
-    foreach ($ArDepartments as $IDDepartment => $StDepartment) {
-      if (array_key_exists($IDDepartment,$ArSubDepartments) === true) {
-        $ArSubs = $ArSubDepartments[$IDDepartment];
-      } else {
-        $ArSubs = array();
-      }
-
-      $ArFormatted[$IDDepartment] = array(
-        'ID' => $IDDepartment,
-        'StDepartment' => $StDepartment,
-        'ArSubDepartments' => $ArSubs
-      );
-    }
-
-    #
-    # formatting
-    #
-    if ($Format == true) {
-      foreach ($ArSubDepartments as $IDDepartment => $ArSubDepartments) {
-        foreach ($ArSubDepartments as $IDSubDepartments) {
-          if (array_key_exists($IDSubDepartments,$ArDepartments) === true) {
-            $ArFormatted[$IDSubDepartments] = array(
-              'ID' => $IDSubDepartments,
-              'StDepartment' => $ArDepartments[$IDDepartment] . '::' . $ArDepartments[$IDSubDepartments]
-            );
-          }
-        }
-      }
-    }
-
-    return $ArFormatted;
-  }
-
-  /**
    * list the departments of an user
    *
    * @return array
@@ -320,19 +276,6 @@ abstract class TemplateHandler {
 	    $ArAttachments[$ArMessage['IDMessage']] = $ArAttachment;
 	  }
 	  return $ArAttachments;
-	}
-
-  /**
-   * Return the non-internal departments or all departments
-   *
-   * @return Array
-   *
-   * @author Matheus Ashton <matheus@digirati.com.br>
-   */
-	public static function getPublicDepartments($BoPublic = true) {
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  $ArPublic = $TicketHandler->getPublicDepartments($BoPublic);
-	  return $ArPublic;
 	}
 
 	/**
