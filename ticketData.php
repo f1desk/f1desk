@@ -118,6 +118,14 @@ if (isset($_POST['StAction'])) {
         $returnMessage = SUCESS_ANSWERING; $returnType = 'ok';
       }
     break;
+    
+    case 'previewAnswer':
+      if (empty($_POST['TxMessage'])) {
+      	$returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+      } else {
+        $TxMessagePreview = TemplateHandler::getPreviewAnswer(getSessionProp('IDUser'), $_POST['TxMessage'], TemplateHandler::IsSupporter());
+      }
+    break;
   }
   
 }

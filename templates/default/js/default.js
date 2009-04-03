@@ -849,7 +849,7 @@ var flowWindow = {
     var  tParams = {
       'method':'post',
       'content':{
-        'action':'preview',
+        'StAction':'preview',
         'TxMessage': TxMessage
       },
       'okCallBack':function(response) {
@@ -861,7 +861,7 @@ var flowWindow = {
         Flow.open(flowParams);
       }
     };
-    xhr.makeRequest('preview Ticket','answerTicket.php',tParams);
+    xhr.makeRequest('preview Ticket', templateDir + 'ticketPreviewAnswer.php', tParams);
   },
 
   'previewCannedResponse': function(StTitle, TxMessage) {
