@@ -553,7 +553,7 @@ var Ticket = {
       'okCallBack':function(htmlReturn) {
         var contentDisplay = gID('contentDisplay');
         appendHTML(htmlReturn, contentDisplay, true);
-        if(gID('IDDepartmentTo'))
+        if(gID(IDDepartmentTo))
           Ticket.reloadTicketList(IDDepartmentTo, true, 'show');
         Ticket.reloadTicketList(IDDepartmentFrom, true, 'show');
       }

@@ -12,5 +12,5 @@ define('SUCESS_BOOKMARK', 'Chamado adicionado aos favoritos com sucesso!');
 define('SUCESS_ATTACHING', 'Chamado anexado com sucesso!');
 define('SUCESS_CHANGEDEPARTMENT', 'Departamento alterado com sucesso!');
 define('SUCESS_SETOWNER', 'Atendente alterado com sucesso!');
-define('SUCESS_ANSWERING', 'Chamado respondido com sucesso!');
+define('SUCESS_ANSWERING', 'Resposta adicionada com sucesso!');
 ?>

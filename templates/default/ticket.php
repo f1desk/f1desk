@@ -34,7 +34,9 @@
           <th><?=TICKET_HEADER_ID?></th>
           <th><?=TICKET_HEADER_DATE?></th>
           <th><?=TICKET_HEADER_STATUS?></th>
-          <th><?=TICKET_HEADER_DEPARTMENT?></th>
+          <?if(is_numeric($IDDepartment)):?>
+            <th><?=TICKET_HEADER_DEPARTMENT?></th>
+          <?endif;?>
           <th><?=TICKET_HEADER_SUPPORTER?></th>
           <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
@@ -46,12 +48,10 @@
           <td class='TicketNumber'>#<?= $IDTicket ?></td>
           <td><?= $DtOpened ?></td>
           <td><?= constant($StSituation) ?></td>
-          <td>
-            <?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments', 'inputCombo',$preview);?>
-          </td>
-          <td>
-            <?=TemplateHandler::createSupportersCombo($IDTicket, $IDDepartment, $ArSupporters, $ArHeaders, 'StSupporter','inputCombo', $preview);?>
-          </td>
+          <?if(is_numeric($IDDepartment)):?>
+            <td><?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments', 'inputCombo',$preview);?></td>
+          <?endif;?>
+          <td><?=TemplateHandler::createSupportersCombo($IDTicket, $IDDepartment, $ArSupporters, $ArHeaders, 'StSupporter','inputCombo', $preview);?></td>
           <? if (TemplateHandler::IsSupporter() && !$preview): ?>
           <td>
             <a href='javascript:void(0);' onclick='Ticket.attachTicket(<?=$IDTicket?>,"<?=$IDDepartment?>");'>

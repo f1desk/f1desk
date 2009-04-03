@@ -116,7 +116,6 @@ if (isset($_POST['StAction'])) {
           $TicketHandler->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']]);
         }
         $returnMessage = SUCESS_ANSWERING; $returnType = 'ok';
-        //die("<script>top.TICKET.submitTicketForm({$_POST['IDTicket']});</script>");
       }
     break;
   }
