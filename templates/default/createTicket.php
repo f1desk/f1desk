@@ -11,7 +11,7 @@ handleLanguage(__FILE__);
   <form id='formCreate' method='POST' enctype='multipart/form-data' action='<?$PHP_SELF?>' onsubmit='return Writing.createTicketSubmit();'>
   <?php if (F1DeskUtils::IsSupporter()):?>
     <h3><?=TICKET_TYPE?></h3>
-    <?=TemplateHandler::showTicketTypes();?>
+    <?=TemplateHandler::showTicketTypes($ArTypes);?>
 
     <div id='AttachTickets'>
       <h3><?=ATTACH_TICKET?></h3>

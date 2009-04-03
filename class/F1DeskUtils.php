@@ -374,6 +374,7 @@ FROM
 
     $ArTypes = self::$DBHandler->getResult('string');
     $ArReturn = array();
+
     for($i=0; $i < count($ArTypes); $i++ ) {
       $ArReturn[ $ArTypes[$i]['IDType'] ] = $ArTypes[$i]['StType'];
     }
@@ -651,7 +652,7 @@ WHERE
 AND
   IDTicket = $IDTicket";
     self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
+    self::$DBHandler->execSQL($StSQL);
     $ArReturn = self::$DBHandler->getResult('num');
 
     return ($ArReturn[0][0] > 0) ? true : false;
@@ -820,7 +821,7 @@ GROUP BY
   D.IDDepartment';
     }
     self::$DBHandler->execSQL($StSQL);
-    $ArResult =self::$DBHandler->getResult('string');
+    $ArResult = self::$DBHandler->getResult('string');
 
     foreach ($ArResult as $ArDepartment) {
       $ArDepartments[$ArDepartment['IDDepartment']] = $ArDepartment;

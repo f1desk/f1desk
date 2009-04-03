@@ -1,5 +1,6 @@
 <?php
 require_once('main.php');
+
 handleLanguage(__FILE__);
 
 /***************************************
@@ -221,24 +222,27 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
 #
 # User's data
 #
-if ( getSessionProp('isSupporter') == "true" ){
+if ( F1DeskUtils::isSupporter() ){
 	$ArUser = F1DeskUtils::getUserData( getSessionProp('IDSupporter'), 0);
+
+	#
+  # Canned response's data
+  #
+  $ArCannedResponses = F1DeskUtils::listCannedResponses(getSessionProp('IDSupporter'));
+
+  #
+  # Note's Data
+  #
+  $ArNotes = F1DeskUtils::listNotes(getSessionProp('IDSupporter'));
+
+  #
+  # Bookmarked Ticket's data
+  #
+  $ArBookmark = F1DeskUtils::listSupporterBookmark(getSessionProp('IDSupporter'));
+
 } else {
 	$ArUser = F1DeskUtils::getUserData( getSessionProp('IDClient'), 1);
 }
 
-#
-# Canned response's data
-#
-$ArCannedResponses = F1DeskUtils::listCannedResponses(getSessionProp('IDSupporter'));
 
-#
-# Note's Data
-#
-$ArNotes = F1DeskUtils::listNotes(getSessionProp('IDSupporter'));
-
-#
-# Bookmarked Ticket's data
-#
-$ArBookmark = F1DeskUtils::listSupporterBookmark(getSessionProp('IDSupporter'));
 ?>

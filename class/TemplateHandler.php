@@ -382,9 +382,10 @@ abstract class TemplateHandler {
 	 * @param unknown_type $StClass
 	 * @return unknown
 	 */
-	public static function showTicketTypes($StClass = 'inputCombo') {
-	  $ArTypes = self::getTicketTypes();
-	  if (!empty($ArTypes)) {
+	public static function showTicketTypes($ArTypes, $StClass = 'inputCombo') {
+	  if (count($ArTypes)) {
+	    $StHtml = '<span>' . reset($ArTypes) . '</span>';
+	  } elseif (!empty($ArTypes)) {
 	    $StHtml = "<select id='IDType' name='IDType' class='$StClass'>";
 	    foreach ($ArTypes as $Key => $Type) {
 	      $StHtml .= "<option value='$Key'>$Type</option>";

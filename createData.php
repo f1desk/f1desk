@@ -76,6 +76,7 @@ if (F1DeskUtils::isSupporter()) {
   $ArDepartments = F1DeskUtils::getPublicDepartments();
 }
 
+$ArTypes = F1DeskUtils::listTicketTypes();
 $ArPriorities = F1DeskUtils::listPriorities();
 $ArCategories = F1DeskUtils::listCategories();
 if (F1DeskUtils::IsSupporter()) {

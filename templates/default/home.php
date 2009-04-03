@@ -1,7 +1,10 @@
 <?php
-/*default language*/
-handleLanguage(__FILE__);
-require_once('header.php');
+
+  /*default language*/
+  handleLanguage(__FILE__);
+  require_once('header.php');
+  require_once('homeData.php');
+
 ?>
 <div id='homeTemplate'>
 

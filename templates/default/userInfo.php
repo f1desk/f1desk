@@ -1,4 +1,4 @@
-<?php require_once(dirname(__FILE__).'/../../homeData.php'); handleLanguage(__FILE__);?>
+<? handleLanguage(__FILE__); ?>
   <!--[ERROR/OK BOX]-->
   <? if(isset($returnMessage) && isset($returnType)): ?>
     <div class="boxmsg <?=$returnType?>">
