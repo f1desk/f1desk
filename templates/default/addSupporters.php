@@ -1,3 +1,4 @@
+<?php require_once(dirname(__FILE__).'/../../createData.php') ?>
 <div id='listSup'>
   <h2>Adicione um atendente:</h2>
   <select multiple='true' size='10' id='supporters' name='supporters'>

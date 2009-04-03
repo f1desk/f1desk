@@ -5,7 +5,7 @@
   $IDUser = getSessionProp('IDUser');
 
   if (TemplateHandler::IsSupporter()) {
-  	$ArDepartments = TemplateHandler::getDepartments( $IDSupporter, true );
+  	$ArDepartments = F1DeskUtils::getDepartments($IDSupporter);
   	$ArIDDepartments = array_keys($ArDepartments);
   	$ArTickets = TemplateHandler::getTickets($ArIDDepartments,$IDSupporter);
   } else {

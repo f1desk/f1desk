@@ -428,35 +428,39 @@ var Writing = {
 
   'listSupporters': function(Type) {
     var tParams = {
-      'method':'get',
+      'method':'post',
+      'content':{ 'StAction':'addSupporters' },
       'okCallBack':function(response) {
         var flowParams = new flowWindow.flowParams();
         with(flowParams) {
-          width = 410;  height = 260;
-          innerHTML = response; TBStyle.Caption = i18n.addSupporter;
+          width = 410;
+          height = 260;
+          innerHTML = response;
+          TBStyle.Caption = i18n.addSupporter;
         }
         Flow.open(flowParams);
       }
     };
-    xhr.makeRequest('Add Supporters','listSupporters.php',tParams);
+    xhr.makeRequest('Add Supporters',templateDir + 'addSupporters.php',tParams);
     top.Type = Type;
   },
 
   'removeSupporter': function(Type,ID) {
-    var creentIDs = gID('Ar'+Type).value.split(','); var newIDs=[];
+    var currentIDs = gID('Ar'+Type).value.split(','); var newIDs=[];
     var deleteID = (Type == 'Recipients') ? ID.replace(/p/,'') : ID.replace(/pR/,'');
-    for(var aux =0; aux<creentIDs.length; aux++)
-      if(creentIDs[aux] != deleteID)  newIDs[newIDs.length] = creentIDs[aux];
+    for(var aux =0; aux<currentIDs.length; aux++)
+      if(currentIDs[aux] != deleteID)
+        newIDs[newIDs.length] = currentIDs[aux];
     gID('Ar'+Type).value = newIDs.join(','); removeElements(gID(ID));
     if(Type == 'Recipients') {
       if(gID('addedRecipients').getElementsByTagName('p').length == 0){
         gID('addedRecipients').className = 'Invisible';
-        removeElements(hidden);
+        removeElements(gID('ArRecipients'));
       }
     } else {
       if(gID('addedReaders').getElementsByTagName('p').length == 0) {
         gID('addedReaders').className = 'Invisible';
-        removeElements(hidden);
+        removeElements(gID('ArReaders'));
       }
     }
   }
@@ -700,7 +704,7 @@ var Ticket = {
       'enqueue':1,
       'method':'post',
       'content':{
-        'IDSupporter':IDSupporter, 
+        'IDSupporter':IDSupporter,
         'IDTicket':IDTicket,
         'IDDepartment':IDDepartment,
         'StAction': 'setOwner'

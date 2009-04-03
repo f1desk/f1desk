@@ -66,6 +66,7 @@ handleLanguage(__FILE__);
     <p class='Left'>
       <button class='button'><?=CREATE?></button>
     </p>
+    <input type='hidden' name='StAction' value='create' />
   </form>
 </div>
 <? require_once('footer.php'); ?>

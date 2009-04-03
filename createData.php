@@ -4,7 +4,7 @@
  *           Create Submit             *
 ****************************************/
 require_once('main.php');
-if (!empty($_POST)) {
+if (!empty($_POST) && $_POST['StAction'] == 'create') {
   $TicketHandler = new TicketHandler();
   foreach ($_POST as &$StArg) {
     UserHandler::SQLInjectionHandle($StArg);
@@ -38,6 +38,11 @@ if (!empty($_POST)) {
       if (! F1DeskUtils::isAttached($IDTicket,$IDAttach))
       $TicketHandler->attachTicket($IDTicket,$IDAttach);
     }
+  }
+} elseif (!empty($_POST) && $_POST['StAction'] == 'addSupporters') {
+  $ArSupporters = F1DeskUtils::getAllSupporters();
+  if ($ArSupporters[0]['IDSupporter'] == 0) {
+    array_shift($ArSupporters);
   }
 }
 
