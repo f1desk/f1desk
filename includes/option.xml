@@ -11,9 +11,9 @@
 
   <menu>
     <menu_tabs id="home">Home</menu_tabs>
-    <menu_tabs id="escrever">Escrever</menu_tabs>
-    <menu_tabs id="listar">Listar</menu_tabs>
-    <menu_tabs id="busca">Busca Avançada</menu_tabs>
+    <menu_tabs id="createTicket">Escrever</menu_tabs>
+    <menu_tabs id="listTickets">Listar</menu_tabs>
+    <menu_tabs id="search">Busca Avançada</menu_tabs>
     <menu_tabs id="admin">Administração</menu_tabs>
     <menu_tabs id="logout">Logout</menu_tabs>
   </menu>
