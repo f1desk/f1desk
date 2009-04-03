@@ -161,7 +161,7 @@ SET
   		throw new ErrorHandler(EXC_CALL_INVALIDLISTOFCALLS);
   	}
 
-  	$ArNotAllowed = array('single','bookmark','ignored','byme');
+  	$ArNotAllowed = array('single','bookmark','ignored','mine');
   	if (is_array($ArIDDepartment)) {
   	  foreach ($ArIDDepartment as $Key => $IDDepartment) {
   	    if (in_array($IDDepartment,$ArNotAllowed) ) {

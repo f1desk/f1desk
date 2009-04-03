@@ -149,12 +149,12 @@ $ArAttachments = TemplateHandler::getAttachments($IDTicket);
 if (getSessionProp('isSupporter') == 'true') {
   $BoCreate = F1DeskUtils::getPermission('BoCreateCall', $IDSupporter);
   if ($BoCreate) {
-    $ArDepartments = TemplateHandler::getPublicDepartments(false);
+    $ArDepartments = F1DeskUtils::getPublicDepartments(false);
   } else {
-    $ArDepartments = TemplateHandler::getDepartments($IDSupporter);
+    $ArDepartments = F1DeskUtils::getDepartments($IDSupporter);
   }
 } else {
-  $ArDepartments = TemplateHandler::getPublicDepartments();
+  $ArDepartments = F1DeskUtils::getPublicDepartments();
 }
 
 #

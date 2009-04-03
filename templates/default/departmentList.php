@@ -2,12 +2,12 @@
   handleLanguage(__FILE__);
   require_once('departmentTicketData.php');
 ?>
-<? foreach ($ArDepartments as $ID => $ArDepartment) : ?>
+<? foreach ($ArDepartments as $ID => $StDepartment) : ?>
   <div id="departmentWrapper<?=$ID?>">
     <div id='menuTitle<?=$ID?>' class='departmentRows'>
       <img id='reload<?=$ID?>' class='menuRefresh Right' src='<?= TEMPLATEDIR ?>images/btn_reload.png' alt='Reload' onclick="Ticket.reloadTicketList('<?=$ID?>');" />
       <img id='arrow<?=$ID?>' class='menuArrow' src='<?= TEMPLATEDIR ?>images/arrow_show.gif' alt='Show' onclick="Ticket.showDepartmentTickets('<?=$ID?>')"/>
-      <span class='TxPadrao'><?= $ArDepartment['StDepartment'] ?></span>
+      <span class='TxPadrao'><?= $StDepartment ?></span>
       <? if ($ID != 'closed' && $ID != 'ignored') :?>
     	  <span> - </span>
   	    <span class='TxDestaque'>
