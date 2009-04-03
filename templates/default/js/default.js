@@ -58,12 +58,11 @@ var Home = {
     }
     this._doLoading( 'canned','show' );
     var content = {
-      'action':'edit',
+      'StArea': 'CannedResponses',
+      'StAction':'edit',
       'IDCannedResponse': editForm.elements['IDCanned'].value,
       'StTitle': editForm.elements['StTitle'].value,
-      'TxMessage': editForm.elements['TxCannedResponse'].value,
-      'returnType': 'include',
-      'returnURL': 'cannedResponses.php'
+      'TxMessage': editForm.elements['TxCannedResponse'].value
     };
     var tParams = {
       'enqueue':1,
@@ -75,7 +74,7 @@ var Home = {
         baseActions.toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide');
       }
     };
-    var tUrl = 'cannedResponsesAction.php';
+    var tUrl = templateDir + 'cannedResponses.php';
     xhr.makeRequest('editCannedResponse',tUrl,tParams);
   },
 
@@ -86,12 +85,11 @@ var Home = {
     }
     this._doLoading( 'note','show' );
     var content = {
-      'action':'edit',
+      'StArea':'Notes',
+      'StAction':'edit',
       'IDNote': editForm.elements['IDNote'].value,
       'StTitle': editForm.elements['StTitle'].value,
-      'TxNote': editForm.elements['TxNote'].value,
-      'returnType': 'include',
-      'returnURL': 'notes.php'
+      'TxNote': editForm.elements['TxNote'].value
     };
     var tParams = {
       'enqueue':1,
@@ -103,7 +101,7 @@ var Home = {
         baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide');
       }
     };
-    var tUrl = 'notesAction.php';
+    var tUrl = templateDir + 'notes.php';
     xhr.makeRequest('editNote',tUrl,tParams);
   },
 
@@ -111,25 +109,24 @@ var Home = {
     this._doLoading( 'canned','show' );
     var editForm = gID("cannedForm");
     var content = {
-      'action':'insert',
+      'StArea':'CannedResponses',
+      'StAction':'insert',
       'IDCannedResponse': 'autoincrement',
       'StTitle': editForm.elements['StTitle'].value,
       'TxMessage': editForm.elements['TxCannedResponse'].value,
-      'BoPersonal': '1',
-      'returnType': 'include',
-      'returnURL': 'cannedResponses.php'
+      'BoPersonal': '1'
     };
     var tParams = {
       'enqueue':1,
       'method':'post',
       'content':content,
-      'okCallBack': function( htmlEdited ){
+      'okCallBack': function(htmlEdited) {
         appendHTML(htmlEdited, gID('cannedResponsesBox'), true);
         baseActions.toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide');
         Home._doLoading( 'canned','hide' );
       }
     };
-    var tUrl = 'cannedResponsesAction.php';
+    var tUrl = templateDir + 'cannedResponses.php';
     xhr.makeRequest('newCannedResponse',tUrl,tParams);
   },
 
@@ -137,12 +134,11 @@ var Home = {
     this._doLoading( 'note', 'show' );
     var editForm = gID("noteForm");
     var content = {
-      'action':'insert',
+      'StArea':'Notes',
+      'StAction':'insert',
       'IDNote': 'autoincrement',
       'StTitle': editForm.elements['StTitle'].value,
-      'TxNote': editForm.elements['TxNote'].value,
-      'returnType': 'include',
-      'returnURL': 'notes.php'
+      'TxNote': editForm.elements['TxNote'].value
     };
     var tParams = {
       'enqueue':1,
@@ -154,7 +150,7 @@ var Home = {
         Home._doLoading( 'note','hide' );
       }
     };
-    var tUrl = 'notesAction.php';
+    var tUrl = templateDir + 'notes.php';
     xhr.makeRequest('newNote',tUrl,tParams);
   },
 
@@ -169,17 +165,16 @@ var Home = {
           'enqueue':1,
           'method':'post',
           'content':{
-            'action':'remove',
-            'IDTicket': IDTicket,
-            'returnType': 'include',
-            'returnURL': 'bookMark.php'
+            'StArea':'Bookmark',
+            'StAction':'remove',
+            'IDTicket': IDTicket
           },
           'okCallBack': function(returnedValue){
             appendHTML(returnedValue,gID('bookmarkBox'),true);
             Home._doLoading( 'bookmark','hide' );
           }
         };
-        var tUrl = 'bookmarkAction.php';
+        var tUrl = templateDir + 'bookmark.php';
         xhr.makeRequest('removeBookmark',tUrl,tParams);
       }
     };
@@ -197,10 +192,9 @@ var Home = {
           'enqueue':1,
           'method':'post',
           'content':{
-            'action':'remove',
-            'IDCannedResponse': IDCannedResponse,
-            'returnType': 'include',
-            'returnURL': 'cannedResponses.php'
+            'StArea':'CannedResponses',
+            'StAction':'remove',
+            'IDCannedResponse': IDCannedResponse
           },
           'okCallBack': function(htmlEdited){
             appendHTML(htmlEdited, gID('cannedResponsesBox'), true);
@@ -208,7 +202,7 @@ var Home = {
             Home._doLoading( 'canned','hide' );
           }
         };
-        var tUrl = 'cannedResponsesAction.php';
+        var tUrl = templateDir + 'cannedResponses.php';
         xhr.makeRequest('removeCannedResponse',tUrl,tParams);
       }
     }
@@ -226,10 +220,9 @@ var Home = {
           'enqueue':1,
           'method':'post',
           'content':{
-            'action':'remove',
-            'IDNote': IDNote,
-            'returnType': 'include',
-            'returnURL': 'notes.php'
+            'StArea':'Notes',
+            'StAction':'remove',
+            'IDNote': IDNote
           },
           'okCallBack': function( htmlEdited ){
             appendHTML(htmlEdited, gID('notesBox'), true);
@@ -237,7 +230,7 @@ var Home = {
             Home._doLoading( 'note','hide' );
           }
         };
-        var tUrl = 'notesAction.php';
+        var tUrl = templateDir + 'notes.php';
         xhr.makeRequest('removeNote',tUrl,tParams);
       }
     };
@@ -314,8 +307,8 @@ var Home = {
       'BoNotify': (dataForm.elements['StDataNotify'][0].checked) ? 0 : 1,
       'TxHeader': dataForm.elements['TxDataHeader'].value,
       'TxSign': dataForm.elements['TxDataSign'].value,
-      'returnType':'include',
-      'returnUrl':'userInfo.php'
+      'StArea':'User',
+      'StAction':'Update'
     };
     var tParams = {
       'enqueue':1,
@@ -330,7 +323,7 @@ var Home = {
         Home._doLoading('data','hide');
       }
     };
-    var tUrl = 'userInfoAction.php';
+    var tUrl = templateDir + 'userInfo.php';
     xhr.makeRequest('Edit User Data',tUrl,tParams);
   }
 

@@ -5,4 +5,5 @@ define("NO_NOTES", "N&atilde;o h&aacute; anota&ccedil;&otilde;es cadastradas.");
 define("NOTE_TITLE","T&iacute;tulo");
 define("NOTE_ACTIONS","A&ccedil;&otilde;es");
 define("NOTE_RESPONSE","Resposta Elaborada");
+define('NOTE','Anota&ccedil;&atilde;');
 ?>
