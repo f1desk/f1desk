@@ -5,8 +5,6 @@ require_once('header.php');
 ?>
 <div id='homeTemplate'>
 
-  <div id='messageBox' class='Invisible'>
-  </div>
   <div id='dataBox' class='homeBox'>
     <!-- First Box: User Data -->
     <?require_once(TEMPLATEDIR . 'userInfo.php')?>

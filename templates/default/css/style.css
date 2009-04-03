@@ -545,23 +545,23 @@ html>body #main{
   padding-bottom: 0px;
 }
 
-.boxmsg { 
-  margin: 5px 5px 5px 0; 
-  padding: 5px; 
-  border: 1px solid #666; 
-  background: #DDD; 
-  font: 10px verdana, arial, sans-serif; 
-  text-align: center; 
+.boxmsg {
+  margin: 5px 5px 5px 0;
+  padding: 5px;
+  border: 1px solid #666;
+  background: #DDD;
+  font: 10px verdana, arial, sans-serif;
+  text-align: center;
 }
 
-.error { 
-  border-color: red; 
-  color: red; 
-  background: #FDD; 
+.error {
+  border-color: red;
+  color: red;
+  background: #FDD;
 }
 
-.ok{ 
-  border-color: green; 
-  color: green; 
-  background: #DFD; 
+.ok {
+  border-color: green;
+  color: green;
+  background: #DFD;
 }

@@ -40,14 +40,23 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
 
     $UserHanlder = new UserHandler();
     $ItAffedcted = $UserHanlder->updateUser($ArData, getSessionProp('IDUser'));
+    if ($ItAffedcted < 0) {
+      $returnMessage = USER_ERROR;
+      $returnType = 'error';
+    } else {
+      $returnMessage = USER_OK;
+      $returnType = 'ok';
+    }
   } elseif ($_POST['StArea'] == 'CannedResponses') {
 
     #
     # Canned Response's Action
     #
     $IDCannedResponse = ($_POST['IDCannedResponse']) ? $_POST['IDCannedResponse'] : '';
-    if ( !$IDCannedResponse )
-      throw new ErrorHandler(NOT_ID);
+    if ( !$IDCannedResponse ) {
+      $returnMessage = NOT_ID;
+      $returnType = 'error';
+    }
 
     switch ( $_POST['StAction'] ) {
       case 'edit':
@@ -57,14 +66,22 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
         );
         $ItAffedcted = F1DeskUtils::editCannedResponse( $IDCannedResponse, $ArData );
         if ( !$ItAffedcted ) {
-          throw new ErrorHandler(ERROR_ID . $IDCannedResponse);
+          $returnMessage = ERROR_ID . $IDCannedResponse;
+          $returnType = 'error';
+        } else {
+          $returnMessage = CANNED_EDIT_OK;
+          $returnType = 'ok';
         }
       break;
 
       case 'remove':
         $ItAffedcted = F1DeskUtils::removeCannedResponse( $IDCannedResponse );
         if ( !$ItAffedcted ) {
-          throw new ErrorHandler(ERROR_DELETE);
+          $returnMessage = ERROR_DELETE;
+          $returnType = 'error';
+        } else {
+          $returnMessage = CANNED_DELETE_OK;
+          $returnType = 'ok';
         }
       break;
 
@@ -86,12 +103,17 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
         }
         $ItAffedcted = F1DeskUtils::createCannedResponse($ArData);
         if ( !$ItAffedcted ) {
-          throw new ErrorHandler(ERROR_INSERT);
+          $returnMessage = ERROR_INSERT;
+          $returnType = 'error';
+        } else {
+          $returnMessage = CANNED_INSERT_OK;
+          $returnType = 'ok';
         }
       break;
 
       default:
-        throw new ErrorHandler(ERROR_NONE_ACTION);
+        $returnMessage = ERROR_NONE_ACTION;
+        $returnType = 'error';
       break;
     }
   } elseif ($_POST['StArea'] == 'Notes') {
@@ -100,8 +122,10 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
     # Note's Action
     #
     $IDNote = ($_POST['IDNote']) ? $_POST['IDNote'] : '';
-    if ( !$IDNote )
-      throw new ErrorHandler(NOT_ID);
+    if ( !$IDNote ) {
+      $returnMessage = NOT_ID;
+      $returnType = 'error';
+    }
 
     switch ( $_POST['StAction'] ) {
       case 'edit':
@@ -111,14 +135,22 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
         );
         $ItAffedcted = F1DeskUtils::editNote( $IDNote, $ArData );
         if ( !$ItAffedcted ) {
-          throw new ErrorHandler(ERROR_NOTES_EDIT . $IDNote);
+          $returnMessage = ERROR_NOTES_EDIT . $IDNote;
+          $returnType = 'error';
+        } else {
+          $returnMessage = NOTE_EDIT_OK;
+          $returnType = 'ok';
         }
       break;
 
       case 'remove':
         $ItAffedcted = F1DeskUtils::removeNote( $IDNote );
         if ( !$ItAffedcted ) {
-          throw new ErrorHandler(ERROR_NOTES_REMOVE . $IDNote);
+          $returnMessage = ERROR_NOTES_REMOVE . $IDNote;
+          $returnType = 'error';
+        } else {
+          $returnMessage = NOTE_REMOVE_OK;
+          $returnType = 'ok';
         }
       break;
 
@@ -139,11 +171,15 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
         $ItAffedcted = F1DeskUtils::createNote( $ArData );
         if ( !$ItAffedcted ) {
           throw new ErrrHandler(ERROR_NOTES_INSERT);
+        } else {
+          $returnMessage = NOTE_INSERT_OK;
+          $returnType = 'ok';
         }
       break;
 
       default:
-        throw new ErrorHandler(ERROR_NONE_ACTION);
+        $returnMessage = ERROR_NONE_ACTION;
+        $returnType = 'error';
       break;
     }
   } elseif ($_POST['StArea'] == 'Bookmark') {
@@ -152,19 +188,27 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
     # Bookmarked Ticket's Actions
     #
     $IDTicket = ($_POST['IDTicket']) ? $_POST['IDTicket'] : '';
-  	if ( !$IDTicket ) throw new ErrorHandler(NO_ID);
+  	if ( !$IDTicket ) {
+  	  $returnMessage = NO_ID;
+  	  $returnType = 'error';
+  	}
 
   	switch ( $_POST['StAction'] ) {
 
   		case 'remove':
   			$ItAffedcted = F1DeskUtils::removeBookmark( $IDTicket, getSessionProp('IDSupporter') );
   			if ( !$ItAffedcted ) {
-  			  throw new ErrorHandler(ERROR);
+  			  $returnMessage = ERROR;
+  			  $returnType = 'error';
+  			} else {
+  			  $returnMessage = BOOKMARK_OK;
+  			  $returnType = 'ok';
   			}
   		break;
 
   		default:
-  			throw new ErrorHandler(NO_ACTION);
+  			$returnMessage = NO_ACTION;
+  			$returnType = 'error';
   		break;
   	}
   }
@@ -196,5 +240,5 @@ $ArNotes = F1DeskUtils::listNotes(getSessionProp('IDSupporter'));
 #
 # Bookmarked Ticket's data
 #
-$ArBookMark = F1DeskUtils::listSupporterBookmark(getSessionProp('IDSupporter'));
+$ArBookmark = F1DeskUtils::listSupporterBookmark(getSessionProp('IDSupporter'));
 ?>
