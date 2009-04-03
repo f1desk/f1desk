@@ -26,7 +26,7 @@
     <body>
       <div id='header'>
         <div class='Left' id='logo'>
-          <img src='images/f1desk_logo.png' alt='F1Desk'/>
+          <img src='images/logotipo.jpg' alt='F1Desk'/>
         </div>
 
         <div class='Right' id="search_box">

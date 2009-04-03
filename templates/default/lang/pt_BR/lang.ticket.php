@@ -8,6 +8,10 @@
   define('TICKET_HEADER_SUPPORTER','Atendente');
   define('TICKET_HEADER_DEPARTMENT','Departamento');
   define('TICKET_HEADER_ACTIONS','A&ccedil;&otilde;es');
+  define('NOT_READ', 'N&aacute;o Lido');
+  define('WAITING_SUP', 'Aguardando Atendente');
+  define('WAITING_USER', 'Aguardando Cliente');
+  define('CLOSED', 'Fechado');
 
   #
   # Ticket Informations
