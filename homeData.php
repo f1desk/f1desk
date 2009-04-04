@@ -42,11 +42,9 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
     $UserHanlder = new UserHandler();
     $ItAffedcted = $UserHanlder->updateUser($ArData, getSessionProp('IDUser'));
     if ($ItAffedcted < 0) {
-      $returnMessage = USER_ERROR;
-      $returnType = 'error';
+      ErrorHandler::setNotice(USER_ERROR, 'error');
     } else {
-      $returnMessage = USER_OK;
-      $returnType = 'ok';
+      ErrorHandler::setNotice(USER_OK, 'ok');
     }
   } elseif ($_POST['StArea'] == 'CannedResponses') {
 
@@ -55,8 +53,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
     #
     $IDCannedResponse = ($_POST['IDCannedResponse']) ? $_POST['IDCannedResponse'] : '';
     if ( !$IDCannedResponse ) {
-      $returnMessage = NOT_ID;
-      $returnType = 'error';
+      ErrorHandler::setNotice(NOT_ID, 'error');
     }
 
     switch ( $_POST['StAction'] ) {
@@ -67,22 +64,18 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
         );
         $ItAffedcted = F1DeskUtils::editCannedResponse( $IDCannedResponse, $ArData );
         if ( !$ItAffedcted ) {
-          $returnMessage = ERROR_ID . $IDCannedResponse;
-          $returnType = 'error';
+          ErrorHandler::setNotice(ERROR_ID . $IDCannedResponse, 'error');
         } else {
-          $returnMessage = CANNED_EDIT_OK;
-          $returnType = 'ok';
+          ErrorHandler::setNotice(CANNED_EDIT_OK, 'ok');
         }
       break;
 
       case 'remove':
         $ItAffedcted = F1DeskUtils::removeCannedResponse( $IDCannedResponse );
         if ( !$ItAffedcted ) {
-          $returnMessage = ERROR_DELETE;
-          $returnType = 'error';
+          ErrorHandler::setNotice(ERROR_DELETE, 'error');
         } else {
-          $returnMessage = CANNED_DELETE_OK;
-          $returnType = 'ok';
+          ErrorHandler::setNotice(CANNED_DELETE_OK, 'ok');
         }
       break;
 
@@ -104,17 +97,14 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
         }
         $ItAffedcted = F1DeskUtils::createCannedResponse($ArData);
         if ( !$ItAffedcted ) {
-          $returnMessage = ERROR_INSERT;
-          $returnType = 'error';
+          ErrorHandler::setNotice(ERROR_INSERT, 'error');
         } else {
-          $returnMessage = CANNED_INSERT_OK;
-          $returnType = 'ok';
+          ErrorHandler::setNotice(CANNED_INSERT_OK, 'ok');
         }
       break;
 
       default:
-        $returnMessage = ERROR_NONE_ACTION;
-        $returnType = 'error';
+        ErrorHandler::setNotice(ERROR_NONE_ACTION, 'error');
       break;
     }
   } elseif ($_POST['StArea'] == 'Notes') {
@@ -124,8 +114,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
     #
     $IDNote = ($_POST['IDNote']) ? $_POST['IDNote'] : '';
     if ( !$IDNote ) {
-      $returnMessage = NOT_ID;
-      $returnType = 'error';
+      ErrorHandler::setNotice(NOT_ID, 'error');
     }
 
     switch ( $_POST['StAction'] ) {
@@ -136,22 +125,18 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
         );
         $ItAffedcted = F1DeskUtils::editNote( $IDNote, $ArData );
         if ( !$ItAffedcted ) {
-          $returnMessage = ERROR_NOTES_EDIT . $IDNote;
-          $returnType = 'error';
+          ErrorHandler::setNotice(ERROR_NOTES_EDIT . $IDNote, 'error');
         } else {
-          $returnMessage = NOTE_EDIT_OK;
-          $returnType = 'ok';
+          ErrorHandler::setNotice(NOTE_EDIT_OK, 'ok');
         }
       break;
 
       case 'remove':
         $ItAffedcted = F1DeskUtils::removeNote( $IDNote );
         if ( !$ItAffedcted ) {
-          $returnMessage = ERROR_NOTES_REMOVE . $IDNote;
-          $returnType = 'error';
+          ErrorHandler::setNotice(ERROR_NOTES_REMOVE . $IDNote, 'error');
         } else {
-          $returnMessage = NOTE_REMOVE_OK;
-          $returnType = 'ok';
+          ErrorHandler::setNotice(NOTE_REMOVE_OK, 'ok');
         }
       break;
 
@@ -171,16 +156,14 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
         }
         $ItAffedcted = F1DeskUtils::createNote( $ArData );
         if ( !$ItAffedcted ) {
-          throw new ErrrHandler(ERROR_NOTES_INSERT);
+          ErrorHandler::setNotice(ERROR_NOTES_INSERT, 'error');
         } else {
-          $returnMessage = NOTE_INSERT_OK;
-          $returnType = 'ok';
+          ErrorHandler::setNotice(NOTE_INSERT_OK, 'ok');
         }
       break;
 
       default:
-        $returnMessage = ERROR_NONE_ACTION;
-        $returnType = 'error';
+        ErrorHandler::setNotice(ERROR_NONE_ACTION, 'error');
       break;
     }
   } elseif ($_POST['StArea'] == 'Bookmark') {
@@ -190,8 +173,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
     #
     $IDTicket = ($_POST['IDTicket']) ? $_POST['IDTicket'] : '';
   	if ( !$IDTicket ) {
-  	  $returnMessage = NO_ID;
-  	  $returnType = 'error';
+  	  ErrorHandler::setNotice(NO_ID, 'error');
   	}
 
   	switch ( $_POST['StAction'] ) {
@@ -199,17 +181,14 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
   		case 'remove':
   			$ItAffedcted = F1DeskUtils::removeBookmark( $IDTicket, getSessionProp('IDSupporter') );
   			if ( !$ItAffedcted ) {
-  			  $returnMessage = ERROR;
-  			  $returnType = 'error';
+  			  ErrorHandler::setNotice(ERROR, 'error');
   			} else {
-  			  $returnMessage = BOOKMARK_OK;
-  			  $returnType = 'ok';
+  			  ErrorHandler::setNotice(BOOKMARK_OK, 'ok');
   			}
   		break;
 
   		default:
-  			$returnMessage = NO_ACTION;
-  			$returnType = 'error';
+  		  ErrorHandler::setNotice(NO_ACTION, 'error');
   		break;
   	}
   }

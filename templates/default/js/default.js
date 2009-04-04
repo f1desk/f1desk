@@ -672,7 +672,7 @@ var Ticket = {
           baseActions.animateReload( IDDepartment, 'stop' );
           Ticket.insertTickets(IDDepartment, HTMLTickets);
           Ticket.refreshNotReadCount( IDDepartment );
-          Ticket.showDepartmentTickets(IDDepartment);
+          Ticket.showDepartmentTickets(IDDepartment, 'show');
         },
         'errCallBack':function(Return) {
           baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, 'hide');
@@ -721,8 +721,8 @@ var Ticket = {
     return true;
   },
 
-  'showDepartmentTickets': function(IDDepartment) {
-      baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment);
+  'showDepartmentTickets': function(IDDepartment, Force) {
+      baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, Force);
   },
 
   'showTicket': function(IDTicket, IDDepartment, Clicked) {
@@ -769,8 +769,7 @@ var Ticket = {
       'okCallBack':function(htmlReturn) {
         var contentDisplay = gID('contentDisplay');
         Ticket.reloadTicketList('ignored',true,'show');
-        if (gID('IDDepartment'))
-          Ticket.reloadTicketList(IDDepartment,true,'show');
+        Ticket.reloadTicketList(IDDepartment,true,'show');
         appendHTML(htmlReturn, contentDisplay, true);
       }
     };

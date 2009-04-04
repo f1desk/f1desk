@@ -23,16 +23,16 @@ if (isset($_POST['StAction'])) {
   switch ($StAction) {
     case 'ignore':
       if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
-      	$returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+        ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
         if (F1DeskUtils::isIgnored($_POST['IDSupporter'], $_POST['IDTicket'])){
-          $returnMessage = ALREADY_IGNORED; $returnType = 'error';
+          ErrorHandler::setNotice(ALREADY_IGNORED, 'error');
         } else {
           if (!$ObjTicket->ignoreTicket($_POST['IDSupporter'], $_POST['IDTicket'])){
-            $returnMessage = ERROR_IGNORING; $returnType = 'error';
+            ErrorHandler::setNotice(ERROR_IGNORING, 'error');
           } else {
             $BoIgnored = true;
-            $returnMessage = SUCESS_IGNORED; $returnType = 'ok';
+            ErrorHandler::setNotice(SUCESS_IGNORED, 'ok');
           }
         }
       }
@@ -40,13 +40,13 @@ if (isset($_POST['StAction'])) {
 
     case 'unignore':
       if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
-        $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+        ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
         if (!F1DeskUtils::isIgnored($_POST['IDSupporter'], $_POST['IDTicket'])){
-          $returnMessage = ALREADY_UNIGNORED; $returnType = 'error';
+          ErrorHandler::setNotice(ALREADY_UNIGNORED, 'error');
         } else {
           $ObjTicket->deleteFromTable(DBPREFIX . 'Ignored', "IDSupporter = ".$_POST['IDSupporter']." AND IDTicket = ".$_POST['IDTicket'],1);
-          $returnMessage = SUCESS_UNIGNORED; $returnType = 'ok';
+          ErrorHandler::setNotice(SUCESS_UNIGNORED, 'ok');
           $BoIgnored = false;
         }
       }
@@ -54,15 +54,15 @@ if (isset($_POST['StAction'])) {
 
     case 'bookmark':
       if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
-        $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+        ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
         if (F1DeskUtils::isBookmarked($_POST['IDSupporter'], $_POST['IDTicket'])){
-          $returnMessage = ALREADY_BOOKMARKED; $returnType = 'error';
+          ErrorHandler::setNotice(ALREADY_BOOKMARKED, 'error');
         } else {
           if (!$ObjTicket->bookmarkTicket($_POST['IDSupporter'], $_POST['IDTicket'])){
-            $returnMessage = ERROR_BOOKMARKING; $returnType = 'error';
+            ErrorHandler::setNotice(ERROR_BOOKMARKING, 'error');
           } else {
-            $returnMessage = SUCESS_BOOKMARK; $returnType = 'ok';
+            ErrorHandler::setNotice(SUCESS_BOOKMARK, 'ok');
           }
         }
       }
@@ -70,44 +70,44 @@ if (isset($_POST['StAction'])) {
 
     case 'attach':
       if (!is_numeric($_POST['IDAttached'])){
-        $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+        ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
         $IDAttached = $_POST['IDAttached'];
         if (F1DeskUtils::isAttached($_POST['IDTicket'],$IDAttached)){
-          $returnMessage = ALREADY_ATTACHED; $returnType = 'error';
+          ErrorHandler::setNotice(ALREADY_ATTACHED, 'error');
         } else {
           $ObjTicket->attachTicket($_POST['IDTicket'],$IDAttached);
-          $returnMessage = SUCESS_ATTACHING; $returnType = 'ok';
+          ErrorHandler::setNotice(SUCESS_ATTACHING, 'ok');
         }
       }
     break;
 
     case 'changeDepartment':
       if (!is_numeric($_POST['IDTicket']) || !is_numeric($_POST['IDDepartment'])){
-        $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+        ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
         $BoReturn = $ObjTicket->changeDepartment($_POST['IDTicket'], $_POST['IDDepartment']);
         if (!$BoReturn){
-          $returnMessage = EXC_ERR_CHANGE; $returnType = 'error';
+          ErrorHandler::setNotice(EXC_ERR_CHANGE, 'error');
         } else {
-          $returnMessage = SUCESS_CHANGEDEPARTMENT; $returnType = 'ok';
+          ErrorHandler::setNotice(SUCESS_CHANGEDEPARTMENT, 'ok');
         }
       }
     break;
 
     case 'setOwner':
       if (!is_numeric($_POST['IDTicket']) || !is_numeric($_POST['IDSupporter'])){
-        $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+        ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
         $Ticket = new TicketHandler();
         $Ticket->setTicketOwner($_POST['IDTicket'], $_POST['IDSupporter'], getSessionProp('IDUser'));
-        $returnMessage = SUCESS_SETOWNER; $returnType = 'ok';
+        ErrorHandler::setNotice(SUCESS_SETOWNER, 'ok');
       }
     break;
 
     case 'answer':
       if (empty($_POST['TxMessage']) || !is_numeric($_POST['IDTicket']) || empty($_POST['StMessageType'])){
-        $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+        ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
         $_POST['TxMessage'] = f1desk_escape_html($_POST['TxMessage']);
         $ObjTicket = new TicketHandler();
@@ -118,13 +118,13 @@ if (isset($_POST['StAction'])) {
         } else {
           $ObjTicket->answerTicket($IDWriter,$_POST['IDTicket'],$_POST['TxMessage'],$ArMessageType[$_POST['StMessageType']]);
         }
-        $returnMessage = SUCESS_ANSWERING; $returnType = 'ok';
+        ErrorHandler::setNotice(SUCESS_ANSWERING, 'ok');
       }
     break;
 
     case 'previewAnswer':
       if (empty($_POST['TxMessage'])) {
-      	$returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
+        ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
         $TxMessagePreview = $ObjTicket->getPreviewAnswer(getSessionProp('IDUser'), $_POST['TxMessage'], $isSupporter);
       }
