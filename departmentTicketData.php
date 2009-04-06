@@ -1,20 +1,19 @@
 <?php
 
   require_once('main.php');
-  $IDSupporter = getSessionProp('IDSupporter');
-  $IDUser = getSessionProp('IDUser');
 
-  if (TemplateHandler::IsSupporter()) {
+  $ObjTicket = new TicketHandler();
+
+  if (F1DeskUtils::IsSupporter()) {
+    $IDSupporter = getSessionProp('IDSupporter');
   	$ArDepartments = F1DeskUtils::getDepartments($IDSupporter);
   	$ArIDDepartments = array_keys($ArDepartments);
-  	$ArTickets = TemplateHandler::getTickets($ArIDDepartments,$IDSupporter);
+  	$ArTickets = $ObjTicket->getTickets($ArIDDepartments,$IDSupporter);
   } else {
-    $ArDepartments = TemplateHandler::getUserDepartments();
+    $IDUser = getSessionProp('IDUser');
+    $ArDepartments = F1DeskUtils::getUserDepartments();
     $ArIDDepartments = array_keys($ArDepartments);
-    #
-    # AINDA NUM FIZ ESSA FUNCAO !!!
-    #
-    $ArTickets = TemplateHandler::getUserTickets($ArIDDepartments,$IDUser);
+    $ArTickets = $ObjTicket->getUserTickets($IDUser);
   }
 
 ?>

@@ -607,11 +607,11 @@ WHERE
    }
 
   /**
-   * get user data, handling importation, after being included
+   * get user data, handling importation, after being included (FUNCAO INUTILIZADA, REFAZER POSTERIORMENTE)
    *
    * @param int $IDUser
    */
-  public function getUserData($IDUser) {
+  /*public function getUserData($IDUser) {
     global $UserFields;
 
     $UserDB = new DBHandler(true);
@@ -659,7 +659,7 @@ WHERE
     }
 
     return $ArUser[0];
-  }
+  }*/
 
   /**
    * generates a random password
@@ -693,6 +693,8 @@ WHERE
    * @author Mario Vitor <mario@digirati.com.br>
    */
   public function listSupporters($IDTicket){
+
+    $ArSupporters = $ArSupporter1 = $ArSupporter2 = array();
 
   	$StSQL = '
 SELECT
@@ -730,7 +732,19 @@ GROUP BY
     $this->execSQL($StSQL);
     $ArSupporter2 = $this->getResult("string");
 
-    return array($ArSupporter1,$ArSupporter2);
+    if (! empty($ArSupporter1)) {
+    	foreach ($ArSupporter1 as $ArField) {
+    	  $ArSupporters[$ArField['IDSupporter']] = $ArField['StName'];
+    	}
+    }
+
+    if (! empty($ArSupporter2)) {
+    	foreach ($ArSupporter2 as $ArField) {
+    	  $ArSupporters[$ArField['IDSupporter']] = $ArField['StName'];
+    	}
+    }
+
+    return $ArSupporters;
   }
 
 }

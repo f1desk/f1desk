@@ -2,6 +2,7 @@
 abstract class F1DeskUtils {
 
 	private static $DBHandler;
+	public static $CurrentPage = '';
 
   /**
    * Get one DBHandler's class instance
@@ -12,7 +13,59 @@ abstract class F1DeskUtils {
 		if ( ! self::$DBHandler instanceof DBHandler ) {
 			self::$DBHandler = new DBHandler();
 		}
-		return self::$DBHandler;
+	}
+
+	/**
+	 * outputs the right page, handling templates
+	 *
+	 * @return bool
+	 *
+	 * @author Dimitri Lameri <dimitri@digirati.com.br>
+	 */
+	public static function showPage($StPage) {
+	  $StPage = preg_replace('/[^A-Z0-9]*/i','',$StPage);
+	  if (file_exists(ABSTEMPLATEDIR . $StPage . '.php')) {
+	    self::$CurrentPage = $StPage;
+	    require_once(ABSTEMPLATEDIR . $StPage . '.php');
+	  } else {
+	    self::$CurrentPage = 'home';
+	    require_once(ABSTEMPLATEDIR . 'home.php');
+	  }
+
+	  return true;
+	}
+
+  /**
+	 * return all Menu Tabs configured on options.xml
+	 *
+	 * @param string $StPage
+	 *
+	 * @return array
+	 */
+	public static function getMenuTab( $StPage ) {
+		$ArMenu = array();
+		$ObMenu = getOption( "menu_tabs", "DOM" );
+		foreach ( $ObMenu as $Item ){
+			if ( $StPage == $Item->getAttribute('id') ) $StCurrent = "current";
+			else $StCurrent = "";
+			$ArMenu[] = array(
+				"Link" => $Item->getAttribute('id'),
+				"Name" => $Item->nodeValue,
+				"Current" => $StCurrent
+			);
+		}
+
+		return $ArMenu;
+	}
+
+  /**
+	 * Checks if the user is a supporter
+	 *
+	 * @return unknown
+	 */
+	public static function IsSupporter() {
+	  $isSupporter = getSessionProp('isSupporter');
+	  return ($isSupporter && $isSupporter == 'true');
 	}
 
 	/**
@@ -123,6 +176,20 @@ abstract class F1DeskUtils {
   }
 
   /**
+   * list the departments of an user
+   *
+   * @return array
+   */
+  public static function getUserDepartments() {
+    $ArDepartment = array();
+
+    $ArDepartment['opened'] = OPENEDCALLS;
+  	$ArDepartment['closed'] = CLOSEDCALLS;
+
+  	return $ArDepartment;
+  }
+
+  /**
    * get all departmentes
    *
    * @param int $IDUser
@@ -154,7 +221,7 @@ ORDER BY
     }
 
     $ArDepartments['single'] = DEPT_SINGLE;
-    $ArDepartments['byme'] = DEPT_BYME;
+    $ArDepartments['mine'] = DEPT_MINE;
     $ArDepartments['bookmark'] = DEPT_BOOKMARK;
     $ArDepartments['ignored'] = DEPT_IGNORED;
 
@@ -216,7 +283,8 @@ SELECT
 FROM
 	" . DBPREFIX . "Unit";
 
-  	self::getDBinstance(); self::$DBHandler->execSQL($StSQL);
+  	self::getDBinstance();
+  	self::$DBHandler->execSQL($StSQL);
     $ArUnits = self::$DBHandler->getResult("string");
     $ArReturn = array();
     for ( $aux = 0; $aux < count( $ArUnits ); $aux++){
@@ -238,7 +306,8 @@ SELECT
   *
 FROM
 " . DBPREFIX . "Category";
-    $ArCategories = self::getDBinstance(); self::$DBHandler->execSQL($StSQL);
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
     $ArCategories = self::$DBHandler->getresult('string');
     $ArReturn = array();
     for($i=0; $i < count($ArCategories); $i++ ) {
@@ -258,7 +327,8 @@ SELECT
   *
 FROM
 ". DBPREFIX . "Priority";
-    $ArPriority = self::getDBinstance(); self::$DBHandler->execSQL($StSQL);
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
     $ArPriority = self::$DBHandler->getResult('string');
     $ArReturn = array();
     for($i=0; $i < count($ArPriority); $i++ ) {
@@ -278,8 +348,10 @@ SELECT
   *
 FROM
 " . DBPREFIX . "Rate";
-    $ArRates = self::getDBinstance(); self::$DBHandler->execSQL($StSQL);
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
     self::$DBHandler->getResult('string');
+
     for($i=0; $i < count($ArRates); $i++ ) {
       $ArReturn [ $ArRates[$i]['IDRate'] ] = $ArRates[$i]['StRate'];
     }
@@ -297,10 +369,17 @@ SELECT
   *
 FROM
 " . DBPREFIX . "Type";
-    $DBHandler = self::getDBinstance();
-      $DBHandler->execSQL($StSQL);
-    $ArTypes = $DBHandler->getResult('string');
-    return $ArTypes;
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+
+    $ArTypes = self::$DBHandler->getResult('string');
+    $ArReturn = array();
+
+    for($i=0; $i < count($ArTypes); $i++ ) {
+      $ArReturn[ $ArTypes[$i]['IDType'] ] = $ArTypes[$i]['StType'];
+    }
+
+    return $ArReturn;
   }
 
   /**
@@ -347,7 +426,7 @@ FROM
    * @author Matheus Ashton <matheus@digirati.com.br>
    */
   public static function getPermission($StAction, $IDSupporter) {
-    $DBHandler = self::getDBinstance();
+    self::getDBinstance();
     $StSQL = "
 SELECT
   $StAction
@@ -357,8 +436,8 @@ LEFT JOIN
   " . DBPREFIX . "Supporter S ON (S.IDUnit = U.IDUnit)
 WHERE
   S.IDSupporter = $IDSupporter";
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('string');
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
 
     return ($ArResult[0][$StAction] == 0) ? false : true;
   }
@@ -385,18 +464,18 @@ WHERE
   WHERE
     ". DBPREFIX ."$StTable.$StField = $ID ";
 
-    $DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('string');
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
     return array_shift($ArResult);
   }
 
 	public static function updateUserData( $IDUser, $ArData ){
   	$StTableName = DBPREFIX . "User";
   	$StCondition = "IDUser = $IDUser";
-  	$DBHandler = self::getDBinstance();
+  	self::getDBinstance();
 
-  	return $DBHandler->updateTable($StTableName, $ArData, $StCondition);
+  	return self::$DBHandler->updateTable($StTableName, $ArData, $StCondition);
   }
 
   public static function listCannedResponses($IDSupporter) {
@@ -434,19 +513,19 @@ WHERE
 OR
   D.IDDepartment IN ($StIDs)";
 
-    $DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('string');
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
     return $ArResult;
   }
 
   public static function createCannedResponse ( $ArData ){
   	$ArFields = array_keys($ArData);
   	$StTableName = DBPREFIX . 'CannedResponse';
-  	$DBHandler = self::getDBinstance();
+  	self::getDBinstance();
 
-  	if ( $DBHandler->insertIntoTable($StTableName, $ArFields, array($ArData)) ) {
-  		return $DBHandler->getID();
+  	if ( self::$DBHandler->insertIntoTable($StTableName, $ArFields, array($ArData)) ) {
+  		return self::$DBHandler->getID();
   	} else {
   		return false;
   	}
@@ -456,17 +535,17 @@ OR
   public static function editCannedResponse( $IDCannedResponse, $ArData ){
 		$StTableName = DBPREFIX . 'CannedResponse';
 		$StCondition = 'IDCannedResponse = ' . $IDCannedResponse;
-		$DBHandler = self::getDBinstance();
+		self::getDBinstance();
 
-		return $DBHandler->updateTable( $StTableName, $ArData, $StCondition );
+		return self::$DBHandler->updateTable( $StTableName, $ArData, $StCondition );
   }
 
   public static function removeCannedResponse ( $IDCannedResponse ) {
 		$StTableName = DBPREFIX . 'CannedResponse';
 		$StCondition = 'IDCannedResponse = ' . $IDCannedResponse;
-  	$DBHandler = self::getDBinstance();
+  	self::getDBinstance();
 
- 		return $DBHandler->deleteFromTable($StTableName,$StCondition);
+ 		return self::$DBHandler->deleteFromTable($StTableName,$StCondition);
   }
 
   public static function listNotes( $IDSupporter ){
@@ -478,19 +557,19 @@ WHERE
 	N.IDSupporter = $IDSupporter
   	";
 
-  	$DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('string');
+  	self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
     return $ArResult;
   }
 
   public static function createNote( $ArData ){
   	$ArFields = array_keys($ArData);
   	$StTableName = DBPREFIX . "Note";
-  	$DBHandler = self::getDBinstance();
+  	self::getDBinstance();
 
-  	if ( $DBHandler->insertIntoTable($StTableName, $ArFields, array($ArData)) ) {
-  		return $DBHandler->getID();
+  	if ( self::$DBHandler->insertIntoTable($StTableName, $ArFields, array($ArData)) ) {
+  		return self::$DBHandler->getID();
   	} else {
   		return false;
   	}
@@ -499,17 +578,17 @@ WHERE
   public static function editNote( $IDNote, $ArData ){
 		$StTableName = DBPREFIX . "Note";
 		$StCondition = "IDNote = " . $IDNote;
-		$DBHandler = self::getDBinstance();
+		self::getDBinstance();
 
-		return $DBHandler->updateTable( $StTableName, $ArData, $StCondition );
+		return self::$DBHandler->updateTable( $StTableName, $ArData, $StCondition );
   }
 
   public static function removeNote ( $IDNote ) {
 		$StTableName = DBPREFIX . 'Note';
 		$StCondition = 'IDNote = ' . $IDNote;
-  	$DBHandler = self::getDBinstance();
+  	self::getDBinstance();
 
- 		return $DBHandler->deleteFromTable($StTableName,$StCondition, 1);
+ 		return self::$DBHandler->deleteFromTable($StTableName,$StCondition, 1);
   }
 
   public static function listSupporterBookmark( $IDSupporter ){
@@ -523,18 +602,18 @@ WHERE
 	B.IDSupporter = $IDSupporter
   	";
 
-  	$DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('string');
+  	self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
     return $ArResult;
   }
 
   public static function removeBookmark ( $IDTicket, $IDSupporter ) {
 		$StTableName = DBPREFIX . 'Bookmark';
 		$StCondition = 'IDTicket = ' . $IDTicket . ' AND IDSupporter = ' . $IDSupporter;
-  	$DBHandler = self::getDBinstance();
+  	self::getDBinstance();
 
- 		return $DBHandler->deleteFromTable($StTableName,$StCondition, 1);
+ 		return self::$DBHandler->deleteFromTable($StTableName,$StCondition, 1);
   }
 
   public static function toTMP($StIncome,$StMode = 'path') {
@@ -549,7 +628,7 @@ WHERE
   }
 
   public static function getUserHeaderSign($IDUser) {
-    $DBHandler = self::getDBinstance();
+    self::getDBinstance();
     $StSQL = '
 SELECT
   U.TxHeader, U.TxSign
@@ -557,8 +636,8 @@ FROM
   ' . DBPREFIX . "User U
 WHERE
   U.IDUser = $IDUser";
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('string');
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
     return array_shift($ArResult);
   }
 
@@ -572,9 +651,9 @@ WHERE
   IDSupporter = $IDSupporter
 AND
   IDTicket = $IDTicket";
-    $DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ArReturn = $DBHandler->getResult('num');
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+    $ArReturn = self::$DBHandler->getResult('num');
 
     return ($ArReturn[0][0] > 0) ? true : false;
   }
@@ -589,10 +668,10 @@ WHERE
   IDSupporter = $IDSupporter
 AND
   IDTicket = $IDTicket";
-    $DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ItAffected = $DBHandler->getNumRows();
-    $ArReturn = $DBHandler->getResult('num');
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+    $ItAffected = self::$DBHandler->getNumRows();
+    $ArReturn = self::$DBHandler->getResult('num');
 
     return ($ArReturn[0][0] > 0) ? true : false;
   }
@@ -607,10 +686,10 @@ WHERE
   IDTicket = $IDTicket
 AND
   IDAttachedTicket = $IDAttach";
-    $DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ItAffected = $DBHandler->getNumRows();
-    $ArReturn = $DBHandler->getResult('num');
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+    $ItAffected = self::$DBHandler->getNumRows();
+    $ArReturn = self::$DBHandler->getResult('num');
 
     return ($ArReturn[0][0] > 0) ? true : false;
   }
@@ -627,9 +706,9 @@ FROM
 '.DBPREFIX.'Supporter S
 LEFT JOIN '.DBPREFIX.'User U ON (S.IDUser = U.IDUser)
 ORDER BY S.IDSupporter';
-    $DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('string');
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
     return $ArResult;
   }
 
@@ -647,9 +726,9 @@ FROM
   '.DBPREFIX."User
 WHERE
   IDUser = $IDUser";
-    $DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('num');
+    self::getDBinstance();
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('num');
     return (boolean)$ArResult[0][0];
   }
 
@@ -669,8 +748,8 @@ LEFT JOIN '.DBPREFIX.'DepartmentSupporter DS ON (S.IDSupporter = DS.IDSupporter)
 LEFT JOIN '.DBPREFIX."Department D ON (D.IDDepartment = DS.IDDepartment)
 WHERE
   D.IDDepartment = $IDDepartment";
-    $DBHanlder = self::getDBinstance();
-    $DBHanlder->execSQL($StSQL);
+    self::getDBinstance();
+    self::$DBHanlder->execSQL($StSQL);
     $ArResult = $DBHanlder->getResult('string');
 
     return $ArResult;
@@ -690,17 +769,17 @@ WHERE
       }
 
       $ArFormatted[$IDDepartment] = array(
-      'ID' => $IDDepartment,
-      'StDepartment' => $StDepartment,
-      'ArSubDepartments' => $ArSubs
+        'ID' => $IDDepartment,
+        'StDepartment' => $StDepartment,
+        'ArSubDepartments' => $ArSubs
       );
     }
       foreach ($ArSubDepartments as $IDDepartment => $ArSubDepartments) {
         foreach ($ArSubDepartments as $IDSubDepartments) {
           if (array_key_exists($IDSubDepartments,$ArDepartments) === true) {
             $ArFormatted[$IDSubDepartments] = array(
-            'ID' => $IDSubDepartments,
-            'StDepartment' => $ArDepartments[$IDDepartment] . '::' . $ArDepartments[$IDSubDepartments]
+              'ID' => $IDSubDepartments,
+              'StDepartment' => $ArDepartments[$IDDepartment] . '::' . $ArDepartments[$IDSubDepartments]
             );
           }
         }
@@ -708,27 +787,77 @@ WHERE
     return $ArFormatted;
   }
 
-  public static function getPublicDepartments($BoPublic = true) {
-    if ($BoPublic) {
-      $StSQL = '
-SELECT
-  *
-FROM
-'.DBPREFIX.'Department
-WHERE
-  BoPublic = 1';
-    } else {
-      $StSQL = '
-SELECT
-  *
-FROM
-  '.DBPREFIX.'Departments';
-    }
-    $DBHandler = self::getDBinstance();
-    $DBHandler->execSQL($StSQL);
-    $ArResult = $DBHandler->getResult('string');
+    /**
+   * Return the non-internal departments or all departments
+   *
+   * @return Array
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+  public function getPublicDepartments($BoPublic = true) {
 
-    return $ArResult;
+    self::getDBinstance();
+    $ArDepartments = array();
+
+    if ($BoPublic !== true) {
+      $StSQL = '
+SELECT
+  D.*
+FROM
+  '.DBPREFIX.'Department D
+LEFT JOIN '.DBPREFIX.'SubDepartment SD ON (D.IDDepartment = SD.IDDepartment)
+GROUP BY
+  D.IDDepartment';
+    } else  {
+      $StSQL = '
+SELECT
+  D.*
+FROM
+  '.DBPREFIX.'Department D
+LEFT JOIN '.DBPREFIX.'SubDepartment SD ON (D.IDDepartment = SD.IDDepartment)
+WHERE
+  BoInternal = 0
+GROUP BY
+  D.IDDepartment';
+    }
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
+
+    foreach ($ArResult as $ArDepartment) {
+      $ArDepartments[$ArDepartment['IDDepartment']] = $ArDepartment;
+    }
+
+    $StSQL = '
+SELECT
+  D.IDDepartment, GROUP_CONCAT(SD.IDSubDepartment) as IDSubDepartments
+FROM
+	'.DBPREFIX.'SubDepartment SD
+LEFT JOIN '.DBPREFIX.'Department D ON (SD.IDDepartment = D.IDDepartment)
+LEFT JOIN '.DBPREFIX.'DepartmentSupporter DS ON (DS.IDDepartment = D.IDDepartment)
+GROUP BY
+  SD.IDDepartment';
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
+
+    foreach ( $ArResult as $Department ) {
+      $ArSubSeparation = explode(',', $Department[ 'IDSubDepartments' ]);
+      $ArSubDepartments[$Department['IDDepartment']] = array_unique($ArSubSeparation);
+    }
+
+    foreach ($ArDepartments as $ArDepartment) {
+      if (array_key_exists($ArDepartment['IDDepartment'],$ArSubDepartments)) {
+        foreach ($ArSubDepartments as $Key => $SubDepartments) {
+          if ($Key == $ArDepartment['IDDepartment']) {
+            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['IDSub'] = $IDSub = array_shift($SubDepartments);
+            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['StSub'] = $ArDepartments[$IDSub]['StDepartment'];
+            if (isset($ArDepartments[$IDSub]))
+              unset($ArDepartments[$IDSub]);
+          }
+        }
+      }
+    }
+
+    return $ArDepartments;
   }
 }
 ?>

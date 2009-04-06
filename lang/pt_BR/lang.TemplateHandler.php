@@ -1,7 +1,6 @@
 <?php
 
-define('OPENEDCALLS','Chamados Abertos');
-define('CLOSEDCALLS','Chamados Fechados');
+
 define('EXC_NOTTYPE','N&atilde;o h&aacute; tipos cadastrados');
 define('DEFAULT_OPTION','Escolha uma op&ccedil;&atilde;o');
 define('INFO_FILES','Arquivos Anexados');

@@ -7,7 +7,7 @@ require_once('header.php');
 			Efetue Login
 		</div>
 		<div id="boxContent">
-			<form action='login.submit.php' method="POST">
+			<form action='<?= TEMPLATEDIR ?>login.submit.php' method="POST">
 			  <table>
 			    <tr>
 			      <td>Informe seu e-mail</td>

@@ -1,7 +1,8 @@
 <? require_once('header.php'); ?>
 
 <div id='contentDepartments' class='Left'>
-<? require_once('departmentList.php'); ?>
+  <!-- VERIFICAR SE NUM SERIA MELHOR JOGAR DIRETO A departmentList PRA CA -->
+  <? require_once('departmentList.php'); ?>
 </div>
 
 <div id='contentDisplay' class='Right'></div>

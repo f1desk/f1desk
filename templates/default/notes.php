@@ -1,10 +1,6 @@
-<?php require_once(dirname(__FILE__).'/../../homeData.php'); handleLanguage(__FILE__);?>
+<? handleLanguage(__FILE__);?>
   <!--[ERROR/OK BOX]-->
-  <? if(isset($returnMessage) && isset($returnType)): ?>
-    <div class="boxmsg <?=$returnType?>">
-      <?=$returnMessage ?>
-    </div>
-  <? endif; ?>
+    <?= ErrorHandler::getNotice(); ?>
   <!--[ERROR/OK BOX]-->
     <span class="homeBoxTitle" onclick="baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide')"><?=NOTES?></span>
     <span class="homeBoxTitle newElement" onclick="Home.startCreatingElement('note')"><img src="<?= TEMPLATEDIR ?>images/new_canned.png"> Criar</span>

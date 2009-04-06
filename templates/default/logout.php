@@ -1,6 +1,6 @@
 <?php
-$UserHandler = new UserHandler();
-$UserHandler->logginOut();
+
+require_once('logoutData.php');
 header('Location: index.php');
 
 ?>

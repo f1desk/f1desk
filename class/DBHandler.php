@@ -21,7 +21,7 @@ class DBHandler {
       if (! $this->ObjConnection) {
          $this->ObjConnection = mysqli_init();
 
-         if ($isUser) {
+         if ($isUser && ISEXTERNAL) {
            $Connection = $this->ObjConnection->real_connect(USERDBHOST,USERDBUSER,USERDBPASS,USERDBNAME);
          } else {
            $Connection = $this->ObjConnection->real_connect(DBHOST,DBUSER,DBPASS,DBNAME);

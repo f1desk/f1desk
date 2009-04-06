@@ -12,7 +12,7 @@ function __autoload($StClass) {
   require_once(CLASSDIR . $StClass . '.php');
 
   if (! class_exists($StClass, false)) {
-    trigger_error("N&atilde;o foi poss&iacute;vel carregar a classe: $StClass", E_USER_WARNING);
+    throw new Exception("N&atilde;o foi poss&iacute;vel carregar a classe: $StClass");
   }
 
 }
