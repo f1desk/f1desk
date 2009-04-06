@@ -1,4 +1,5 @@
 var templateDir = 'templates/default/';
+var adminOptions = ['manage_users','manage_menus','preferences'];
 
 /**
  *  OBJECT CONTAIN GLOBALS OBJECTS AND METHODS FROM THE DEFAULT TEMPLATE
@@ -783,7 +784,19 @@ var Search = {
 };
 
 var Admin = {
-
+  'changeOption':function(StPage) {
+    for(i in adminOptions) {
+      if (adminOptions[i] == StPage) {
+        tParams = {
+          'method':'get',
+          'okCallBack':function(response) {
+            appendHTML(response,gID('contentAdminMenu'));
+          }
+        };
+        xhr.makeRequest('Change Menu',templateDir + StPage,tParams);
+      }
+    }
+  }
 };
 
 var flowWindow = {

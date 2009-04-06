@@ -565,3 +565,44 @@ html>body #main{
   color: green;
   background: #DFD;
 }
+
+#adminMenu {
+  width:20%;
+  font: 12px Verdana, sans-serif;
+  float:left;
+}
+#adminMenu ul {
+  list-style: none;
+  padding-left:0px;
+}
+
+#adminMenu li {
+  border-bottom: 1px solid #636363;
+  margin: 0;
+}
+
+#adminMenu li a {
+  background-color:#E3E3E3;
+  border-left:10px solid #ACACAC;
+  border-right:10px solid #EDEDED;
+  color:#000000;
+  display:block;
+  padding:5px 5px 5px 0.5em;
+  text-decoration:none;
+}
+
+#adminMenu li a:hover {
+  background-color:#F1F1F1;
+  border-left:10px solid #CFCFCF;
+  border-right:10px solid #F8F8F8;
+}
+
+#contentAdminMenu {
+  float:left;
+  border: 1px solid #000;
+  width: 75%;
+  height:100%;
+  margin-left:2%;
+  margin-top:1%;
+  font: 40px Verdana, sans-serif;
+}
