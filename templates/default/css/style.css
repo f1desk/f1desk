@@ -606,13 +606,45 @@ html>body #main{
   margin-top:1%;
 }
 
-#createSupporter h3 {
+#manageSupporter, #createSupporter {
+  width:100%;
+}
+
+#adminWrapper h3 {
   border-bottom:1px solid #ABABAB;
   color:#02764F;
   width:98%;
-  margin-top:-10px;
   margin-left:-5px;
 }
-#createSupporter p {
+
+#createSupporter p, #createMenu p {
   margin-top:0px;
+}
+
+#SupporterDepartment {
+  margin-left: 20px;
+}
+
+#SupporterDepartment img, #manageMenu img {
+  vertical-align:middle;
+  margin-left: 5px;
+}
+
+#SupporterDepartment ul{
+  border:1px solid #000;
+  padding:5px;
+}
+
+#SupporterDepartment li{
+  display:block;
+}
+
+.adminDptRows {
+ margin-top:1px;
+ width:25%;
+}
+
+#manageMenu table {
+  width:30%;
+  font-weight:bold;
 }
