@@ -22,11 +22,16 @@ abstract class F1DeskUtils {
 	 *
 	 * @author Dimitri Lameri <dimitri@digirati.com.br>
 	 */
-	public static function showPage($StPage) {
+	public static function showPage($StPage = '') {
 	  $StPage = preg_replace('/[^A-Z0-9]*/i','',$StPage);
-	  if (file_exists(ABSTEMPLATEDIR . $StPage . '.php')) {
+
+	  if ( !empty($StPage) && file_exists(ABSTEMPLATEDIR . $StPage . '.php') )  {
 	    self::$CurrentPage = $StPage;
 	    require_once(ABSTEMPLATEDIR . $StPage . '.php');
+	  }else if ($StPage = getSessionProp( 'lastPage' )) {
+	    self::$CurrentPage = $StPage;
+	    require_once(ABSTEMPLATEDIR . $StPage . '.php');
+	    unsetSessionProp('lastPage');
 	  } else {
 	    self::$CurrentPage = 'home';
 	    require_once(ABSTEMPLATEDIR . 'home.php');

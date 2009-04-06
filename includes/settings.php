@@ -136,10 +136,21 @@ function defaultCSS() {
  * @return mixed
  */
 function getSessionProp( $StProp ){
-	if ( isset( $_SESSION[ $StProp ] ) ) {
-		return  $_SESSION[ $StProp ];
+	if ( array_key_exists($StProp,$_SESSION) ) {
+		return  $_SESSION[$StProp];
 	} else {
 		return "";
+	}
+}
+
+/**
+ * unsets a propertie from the session
+ *
+ * @param string $StProp
+ */
+function unsetSessionProp( $StProp ) {
+  if ( array_key_exists($StProp,$_SESSION) ) {
+		unset($_SESSION[$StProp]);
 	}
 }
 
@@ -151,7 +162,7 @@ function getSessionProp( $StProp ){
  * @return mixed
  */
 function setSessionProp( $StProp, $StValue ){
-	$_SESSION[ $StProp ] = $StValue;
+	$_SESSION[$StProp] = $StValue;
 	return $StValue;
 }
 
