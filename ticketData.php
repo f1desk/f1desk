@@ -22,6 +22,7 @@ if (isset($_POST['StAction'])) {
 
   switch ($StAction) {
     case 'ignore':
+      if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
         ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
@@ -39,6 +40,7 @@ if (isset($_POST['StAction'])) {
     break;
 
     case 'unignore':
+      if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
         ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
@@ -53,6 +55,7 @@ if (isset($_POST['StAction'])) {
     break;
 
     case 'bookmark':
+      if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
         ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
@@ -69,6 +72,7 @@ if (isset($_POST['StAction'])) {
     break;
 
     case 'attach':
+      if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       if (!is_numeric($_POST['IDAttached'])){
         ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
@@ -83,6 +87,7 @@ if (isset($_POST['StAction'])) {
     break;
 
     case 'changeDepartment':
+      if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       if (!is_numeric($_POST['IDTicket']) || !is_numeric($_POST['IDDepartment'])){
         ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
@@ -96,6 +101,7 @@ if (isset($_POST['StAction'])) {
     break;
 
     case 'setOwner':
+      if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       if (!is_numeric($_POST['IDTicket']) || !is_numeric($_POST['IDSupporter'])){
         ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
       } else {
@@ -158,9 +164,6 @@ if ($isSupporter) {
   }
 
 } else {
-  /**
-   * NAUM EH UTILIZADO QUANDO PARA CLIENTES !!!
-   */
   $ArDepartments = F1DeskUtils::getPublicDepartments();
 }
 
@@ -169,7 +172,7 @@ if ($isSupporter) {
 #
 $StTitle = $ArHeaders['StTitle'];
 $IDTicket = $ArHeaders['IDTicket'];
-$IDDepartment = $_POST['IDDepartment'];
+$IDDepartment = array_key_exists('IDDepartment',$ArHeaders) ? $ArHeaders['IDDepartment'] : $_POST['IDDepartment'];
 $StSupporter = (!empty($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 $StSituation = $ArHeaders['StSituation'];
 if ($isSupporter) {

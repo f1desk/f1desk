@@ -71,7 +71,7 @@ Class ErrorHandler extends ErrorException {
   public function _getErrorAsHTML($Print = false) {
 
     $Dom = new DOMDocument();
-    $Dom->loadHTMLFile(PAGEDIR . '/error.html');
+    $Dom->loadHTMLFile(ABSPAGEDIR . 'error.html');
 
     $Dom->getElementsByTagName('title')->item(0)->nodeValue = $this->getTitle();
     $Dom->getElementById('StTitle')->nodeValue = $this->getTitle();
@@ -108,7 +108,7 @@ Class ErrorHandler extends ErrorException {
   public function _getExceptionAsHTML($Print = false) {
 
     $Dom = new DOMDocument();
-    $Dom->loadHTMLFile(PAGEDIR . '/exception.html');
+    $Dom->loadHTMLFile(ABSPAGEDIR . 'exception.html');
 
     $Dom->getElementsByTagName('title')->item(0)->nodeValue = $this->getTitle();
     $Dom->getElementById('StTitle')->nodeValue = $this->getTitle();
@@ -137,7 +137,7 @@ Class ErrorHandler extends ErrorException {
   public static function _getNoticeAsHTML($StMessage, $StClass) {
 
     $Dom = new DOMDocument();
-    $Dom->loadHTMLFile(ABSPAGEDIR . '/notice.html');
+    $Dom->loadHTMLFile(ABSPAGEDIR . 'notice.html');
 
     $StClass = $Dom->getElementById('box')->getAttribute('class') . ' ' . $StClass;
     $Dom->getElementById('box')->setAttribute('class',$StClass);

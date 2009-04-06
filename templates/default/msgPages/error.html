@@ -4,6 +4,14 @@
     <head>
       <title>##ERROR_TITLE##</title>
       <style type="text/css">
+        a {
+           cursor:pointer;
+        }
+
+        a:hover {
+          text-decoration: underline;
+        }
+
         .boxForm {
           background-color:#F4F8FE;
           border:1px solid #BFD7E3;
@@ -24,6 +32,20 @@
           font-size:13px;
         }
       </style>
+      <script type="text/javascript">
+        var Texts = {'Abrir': 'Exibir BackTrace', 'Fechar': 'Esconder BackTrace'};
+
+        function toogleView(Object) {
+          var Backtrace = document.getElementById('backtrace');
+          if (Object.innerHTML == Texts.Abrir) {
+            Backtrace.style.display = '';
+            Object.innerHTML = Texts.Fechar;
+          } else {
+            Backtrace.style.display = 'none';
+            Object.innerHTML = Texts.Abrir;
+          }
+        }
+      </script>
     </head>
     <body>
       <div id="box" class="boxForm">
@@ -48,11 +70,13 @@
             </li>
             <li>
               <span class='TxTitle'>BackTrace :</span>
-              <span class="TxMessage">Clique Aqui !</span>
+              <span class="TxMessage">
+                <a onclick="toogleView(this)">Exibir BackTrace</a>
+              </span>
             </li>
           </ul>
         </div>
-        <div>
+        <div style="display:none;" id="backtrace">
           <pre id='StBacktrace'></pre>
         </div>
       </div>

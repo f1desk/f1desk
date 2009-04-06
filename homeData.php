@@ -3,6 +3,8 @@ require_once('main.php');
 
 handleLanguage(__FILE__);
 
+$isSupporter = F1DeskUtils::isSupporter();
+
 /***************************************
  *           Home Actions              *
 ****************************************/
@@ -58,6 +60,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
 
     switch ( $_POST['StAction'] ) {
       case 'edit':
+        if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
         $ArData = array(
           "StTitle" => f1desk_escape_string($_POST['StTitle']),
           "TxMessage" => f1desk_escape_string($_POST['TxMessage'])
@@ -71,6 +74,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
       break;
 
       case 'remove':
+        if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
         $ItAffedcted = F1DeskUtils::removeCannedResponse( $IDCannedResponse );
         if ( !$ItAffedcted ) {
           ErrorHandler::setNotice(ERROR_DELETE, 'error');
@@ -80,6 +84,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
       break;
 
       case 'insert':
+        if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
         if (!get_magic_quotes_gpc()) {
           $ArData = array(
     			  "StTitle" => f1desk_escape_string($_POST['StTitle']),
@@ -119,6 +124,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
 
     switch ( $_POST['StAction'] ) {
       case 'edit':
+        if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
         $ArData = array(
           "StTitle" => f1desk_escape_string($_POST['StTitle']),
           "TxNote" => f1desk_escape_string($_POST['TxNote'])
@@ -132,6 +138,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
       break;
 
       case 'remove':
+        if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
         $ItAffedcted = F1DeskUtils::removeNote( $IDNote );
         if ( !$ItAffedcted ) {
           ErrorHandler::setNotice(ERROR_NOTES_REMOVE . $IDNote, 'error');
@@ -141,6 +148,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
       break;
 
       case 'insert':
+        if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
         if (!get_magic_quotes_gpc()) {
         $ArData = array(
       			"StTitle" => f1desk_escape_string($_POST['StTitle']),
@@ -179,6 +187,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
   	switch ( $_POST['StAction'] ) {
 
   		case 'remove':
+  		  if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
   			$ItAffedcted = F1DeskUtils::removeBookmark( $IDTicket, getSessionProp('IDSupporter') );
   			if ( !$ItAffedcted ) {
   			  ErrorHandler::setNotice(ERROR, 'error');
@@ -201,7 +210,7 @@ if(!empty($_POST['StArea']) && !empty($_POST['StAction'])) {
 #
 # User's data
 #
-if ( F1DeskUtils::isSupporter() ){
+if ( $isSupporter ){
 	$ArUser = F1DeskUtils::getUserData( getSessionProp('IDSupporter'), 0);
 
 	#
