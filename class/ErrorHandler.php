@@ -71,7 +71,7 @@ Class ErrorHandler extends ErrorException {
   public function _getErrorAsHTML($Print = false) {
 
     $Dom = new DOMDocument();
-    $Dom->loadHTMLFile(PAGEDIR . '/error.html');
+    $Dom->loadHTMLFile(ABSPAGEDIR . 'error.html');
 
     $Dom->getElementsByTagName('title')->item(0)->nodeValue = $this->getTitle();
     $Dom->getElementById('StTitle')->nodeValue = $this->getTitle();

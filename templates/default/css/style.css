@@ -599,10 +599,20 @@ html>body #main{
 
 #contentAdminMenu {
   float:left;
-  border: 1px solid #000;
+  /*border: 1px solid #000;*/
   width: 75%;
   height:100%;
   margin-left:2%;
   margin-top:1%;
-  font: 40px Verdana, sans-serif;
+}
+
+#createSupporter h3 {
+  border-bottom:1px solid #ABABAB;
+  color:#02764F;
+  width:98%;
+  margin-top:-10px;
+  margin-left:-5px;
+}
+#createSupporter p {
+  margin-top:0px;
 }
