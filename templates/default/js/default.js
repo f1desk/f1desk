@@ -798,6 +798,22 @@ var Admin = {
         xhr.makeRequest('Change Menu',adminDir + StPage,tParams);
       }
     }
+  },
+
+  'insertMenu':function() {
+    var StName = gID('StName').value;
+    var StAddress = gID('StAddress').value;
+    StName = StName.replace(/\.php/,'');
+    StAddress = StAddress.replace(/(\.php)|(\.html)|(\.htm)/,'');
+    var content = { 'StAction':'insertMenu', 'StName':StName, 'StAddress':StAddress };
+    var tParams = {
+      'method':'post',
+      'content':content,
+      'okCallBack':function(response) {
+        appendHTML(response,gID('contentAdminMenu'),true);
+      }
+    };
+    xhr.makeRequest('Insert Menu', adminDir + 'manageMenus.php', tParams);
   }
 };
 
