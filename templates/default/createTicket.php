@@ -2,11 +2,7 @@
 require_once('header.php');
 require_once('createData.php');
 handleLanguage(__FILE__);
-
 ?>
-
-<div id='contentDisplay' class='Right'></div>
-
 <div id='createWrapper'>
   <form id='formCreate' method='POST' enctype='multipart/form-data' action='<?$PHP_SELF?>' onsubmit='return Writing.createTicketSubmit();'>
   <?php if (F1DeskUtils::IsSupporter()):?>

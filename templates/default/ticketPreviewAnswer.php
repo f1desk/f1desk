@@ -6,7 +6,7 @@
 
 <div id="previewAnswer">
   <h3>Sua Resposta</h3>
-  <div class="message">
+  <div class="message<?=($_POST['StMessageType'] == 'INTERNAL')?'Internal':''?>">
     <?$TxMessagePreview = (isset($TxMessagePreview))?nl2br($TxMessagePreview):' -- '?>
     <?=$TxMessagePreview?>
   </div>

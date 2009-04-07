@@ -1,5 +1,6 @@
 var templateDir = 'templates/default/';
-var adminOptions = ['manage_users','manage_menus','preferences'];
+var adminDir = templateDir + 'admin/';
+var adminOptions = ['manageUsers.php','manageMenus.php','preferences.php'];
 
 /**
  *  OBJECT CONTAIN GLOBALS OBJECTS AND METHODS FROM THE DEFAULT TEMPLATE
@@ -778,7 +779,6 @@ var Ticket = {
     };
     xhr.makeRequest('Unignore Ticket', templateDir + 'ticket.php',tParams);
   }
-
 };
 
 var Search = {
@@ -792,12 +792,28 @@ var Admin = {
         tParams = {
           'method':'get',
           'okCallBack':function(response) {
-            appendHTML(response,gID('contentAdminMenu'));
+            appendHTML(response,gID('contentAdminMenu'),true);
           }
         };
-        xhr.makeRequest('Change Menu',templateDir + StPage,tParams);
+        xhr.makeRequest('Change Menu',adminDir + StPage,tParams);
       }
     }
+  },
+
+  'insertMenu':function() {
+    var StName = gID('StName').value;
+    var StAddress = gID('StAddress').value;
+    StName = StName.replace(/\.php/,'');
+    StAddress = StAddress.replace(/(\.php)|(\.html)|(\.htm)/,'');
+    var content = { 'StAction':'insertMenu', 'StName':StName, 'StAddress':StAddress };
+    var tParams = {
+      'method':'post',
+      'content':content,
+      'okCallBack':function(response) {
+        appendHTML(response,gID('contentAdminMenu'),true);
+      }
+    };
+    xhr.makeRequest('Insert Menu', adminDir + 'manageMenus.php', tParams);
   }
 };
 
