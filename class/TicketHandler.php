@@ -643,6 +643,14 @@ AND
     return ($ItAffected < 0) ? false : true;
   }
 
+  public function removeBookmark( $IDSupporter, $IDTicket ) {
+		$StTableName = DBPREFIX . 'Bookmark';
+		$StCondition = 'IDTicket = ' . $IDTicket . ' AND IDSupporter = ' . $IDSupporter;
+    $ItAffected = $this->deleteFromTable($StTableName,$StCondition, 1);
+
+ 		return ($ItAffected < 0) ? false : true;
+  }
+
   /**
    * Update a ticket inserting it's new avaliation
    *
@@ -1169,7 +1177,7 @@ WHERE
     $ArData = F1DeskUtils::getUserHeaderSign($IDUser);
     if ($StMessageType == 'INTERNAL')
       return $TxMessage;
-    else 
+    else
       return $ArData['TxHeader'] . "\n\n" . $TxMessage . "\n\n" . $ArData['TxSign'];
   }
 

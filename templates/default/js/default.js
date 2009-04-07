@@ -156,7 +156,10 @@ var Home = {
     xhr.makeRequest('newNote',tUrl,tParams);
   },
 
-  'removeBookmark': function(IDTicket) {
+  /*
+  * REFAZER usando a Ticket.removeBookmark
+  */
+  /*'removeBookmark': function(IDTicket) {
     if(!IDTicket){
       flowWindow.alert(i18n.noBookmarkID);
     }
@@ -181,7 +184,7 @@ var Home = {
       }
     };
     flowWindow.confirm(i18n.deleteBookmark,tFunction);
-  },
+  },*/
 
   'removeCannedResponse': function(IDCannedResponse) {
     if(!IDCannedResponse){
@@ -550,6 +553,25 @@ var Ticket = {
     xhr.makeRequest('Bookmark Ticket', templateDir + 'ticket.php',tParams);
   },
 
+  'removeBookmark': function(IDSupporter, IDTicket, IDDepartment) {
+    var tParams = {
+      'method':'post',
+      'content': {
+        'IDSupporter':IDSupporter,
+        'IDTicket':IDTicket,
+        'IDDepartment':IDDepartment,
+        'StAction':'unbookmark'
+      },
+      'okCallBack':function(htmlReturn) {
+        var contentDisplay = gID('contentDisplay');
+        Ticket.reloadTicketList('bookmark', true,'show');
+        Ticket.reloadTicketList(IDDepartment, true, 'show');
+        appendHTML(htmlReturn, contentDisplay, true);
+      }
+    };
+    xhr.makeRequest('Unbookmark Ticket', templateDir + 'ticket.php',tParams);
+  },
+
   'changeDepartment': function(IDTicket, IDDepartmentTo, IDDepartmentFrom) {
     var tParams = {
       'method':'post',
@@ -684,7 +706,7 @@ var Ticket = {
         }
       };
       var tUrl = templateDir + 'ticketList.php';
-      xhr.makeRequest('showTickets',tUrl,tParams);
+      xhr.makeRequest('reloadTicketList',tUrl,tParams);
     }
   },
 
@@ -696,8 +718,11 @@ var Ticket = {
       for (var j=0; j < trs.length; j++) {
         if (trs[j].className.indexOf('notRead') !== -1)   className = 'notRead';
         else    className = '';
-        if (j % 2 == 0)   trs[j].className = className + ' Alt';
-        else  trs[j].className = className;
+        if (j % 2 == 0) {
+          trs[j].className = className;
+        } else {
+          trs[j].className = className + ' Alt';
+        }
       }
     }
     Clicked.className = 'Selected';
@@ -752,7 +777,7 @@ var Ticket = {
       }
     };
     var tUrl = templateDir + 'ticket.php';
-    xhr.makeRequest('refreshTicket', tUrl, tParams);
+    xhr.makeRequest('showTicket', tUrl, tParams);
     return true;
   },
 

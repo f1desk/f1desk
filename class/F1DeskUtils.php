@@ -613,14 +613,6 @@ WHERE
     return $ArResult;
   }
 
-  public static function removeBookmark ( $IDTicket, $IDSupporter ) {
-		$StTableName = DBPREFIX . 'Bookmark';
-		$StCondition = 'IDTicket = ' . $IDTicket . ' AND IDSupporter = ' . $IDSupporter;
-  	self::getDBinstance();
-
- 		return self::$DBHandler->deleteFromTable($StTableName,$StCondition, 1);
-  }
-
   public static function toTMP($StIncome,$StMode = 'path') {
     $tmpFile = tmpfile();
     if ($StMode == 'path') {
