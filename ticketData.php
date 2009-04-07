@@ -66,6 +66,25 @@ if (isset($_POST['StAction'])) {
             ErrorHandler::setNotice(ERROR_BOOKMARKING, 'error');
           } else {
             ErrorHandler::setNotice(SUCESS_BOOKMARK, 'ok');
+            $BoBookMark = true;
+          }
+        }
+      }
+    break;
+
+    case 'unbookmark':
+      if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
+      if (!is_numeric($_POST['IDSupporter']) || !is_numeric($_POST['IDTicket'])) {
+        ErrorHandler::setNotice(EXC_GLOBAL_EXPPARAM, 'error');
+      } else {
+        if (! F1DeskUtils::isBookmarked($_POST['IDSupporter'], $_POST['IDTicket'])){
+          ErrorHandler::setNotice(NOT_BOOKMARKED, 'error');
+        } else {
+          if (!$ObjTicket->removeBookmark($_POST['IDSupporter'], $_POST['IDTicket'])){
+            ErrorHandler::setNotice(ERROR_UNBOOKMARKING, 'error');
+          } else {
+            ErrorHandler::setNotice(SUCESS_UNBOOKMARK, 'ok');
+            $BoBookMark = false;
           }
         }
       }
@@ -175,8 +194,10 @@ $IDTicket = $ArHeaders['IDTicket'];
 $IDDepartment = array_key_exists('IDDepartment',$ArHeaders) ? $ArHeaders['IDDepartment'] : $_POST['IDDepartment'];
 $StSupporter = (!empty($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
 $StSituation = $ArHeaders['StSituation'];
+
 if ($isSupporter) {
   $BoIgnored = (isset($BoIgnored)) ? $BoIgnored : F1DeskUtils::isIgnored($IDSupporter, $IDTicket);
+  $BoBookMark = (isset($BoBookMark)) ? $BoBookMark : F1DeskUtils::isBookmarked($IDSupporter, $IDTicket);
 }
 
 #

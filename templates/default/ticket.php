@@ -61,19 +61,26 @@
             </a>
           </td>
           <td>
-              <? if ($BoIgnored): ?>
-            <a href='javascript:void(0);' onclick='Ticket.unignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'>
-              <img src='<?= TEMPLATEDIR ?>images/unignore.png' alt='Ignore Call' title='Ignore Call'>
-              <? else: ?>
-            <a href='javascript:void(0);' onclick='Ticket.ignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'>
-              <img src='<?= TEMPLATEDIR ?>images/ignore.png' alt='Ignore Call' title='Ignore Call'>
-              <? endif;?>
+            <? if ($BoIgnored): ?>
+            <a href='javascript:void(0);' onclick='Ticket.unignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'
+              <img src='<?= TEMPLATEDIR ?>images/unignore.png' alt='Ignore Ticket' title='Ignore Ticket'>
             </a>
+            <? else: ?>
+            <a href='javascript:void(0);' onclick='Ticket.ignoreTicket(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'>
+              <img src='<?= TEMPLATEDIR ?>images/ignore.png' alt='Ignore Ticket' title='Ignore Ticket'>
+            </a>
+            <? endif;?>
           </td>
           <td>
-            <a href='javascript:void(0);' onclick='Ticket.bookmarkTicket(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'>
-              <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Call' title='Bookmark Call'>
-            </a>
+           <? if ($BoBookMark) : ?>
+           <a href='javascript:void(0);' onclick='Ticket.removeBookmark(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'>
+              <img src='<?= TEMPLATEDIR ?>images/unbookmark.png' alt='Unbookmark Ticket' title='Unbookmark Ticket'>
+           </a>
+           <? else : ?>
+           <a href='javascript:void(0);' onclick='Ticket.bookmarkTicket(<?=$IDSupporter?>,<?=$IDTicket?>, "<?=$IDDepartment?>")'>
+              <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Ticket' title='Bookmark Ticket'>
+           </a>
+           <? endif; ?>
           </td>
           <? endif; ?>
         </tr>
