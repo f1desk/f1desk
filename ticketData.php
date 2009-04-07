@@ -66,14 +66,14 @@ if (isset($_POST['StAction'])) {
     break;
   
     case 'attach':
-      if (!is_numeric($_POST['IDAttached'])){
+      if (!is_numeric($_POST['IDAttached']) || !is_numeric($_POST['IDTicket'])){
         $returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
       } else {
         $IDAttached = $_POST['IDAttached'];
-        if (F1DeskUtils::isAttached($IDTicket,$IDAttached)){
+        if (F1DeskUtils::isAttached($_POST['IDTicket'], $_POST['IDAttached'])){
           $returnMessage = ALREADY_ATTACHED; $returnType = 'error';
         } else {
-          $TicketHandler->attachTicket($IDTicket,$IDAttached);
+          $TicketHandler->attachTicket($_POST['IDTicket'], $_POST['IDAttached']);
           $returnMessage = SUCESS_ATTACHING; $returnType = 'ok';
         }
       }
@@ -120,10 +120,11 @@ if (isset($_POST['StAction'])) {
     break;
     
     case 'previewAnswer':
-      if (empty($_POST['TxMessage'])) {
+      if (empty($_POST['TxMessage']) || empty($_POST['StMessageType'])) {
       	$returnMessage = EXC_GLOBAL_EXPPARAM; $returnType = 'error';
       } else {
-        $TxMessagePreview = TemplateHandler::getPreviewAnswer(getSessionProp('IDUser'), $_POST['TxMessage'], TemplateHandler::IsSupporter());
+        $TicketHandler = new TicketHandler();
+        $TxMessagePreview = $TicketHandler->getPreviewAnswer(getSessionProp('IDUser'), $_POST['TxMessage'], $_POST['StMessageType']);
       }
     break;
   }

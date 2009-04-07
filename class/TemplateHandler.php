@@ -279,18 +279,6 @@ abstract class TemplateHandler {
 	}
 
 	/**
-	 * get the preview of a wrote answer
-	 *
-	 * @param integer $IDUser
-	 * @param text $TxMessage
-	 * @return text
-	 */
-	public static function getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter = false) {
-	  $TicketHandler = self::getInstance('TicketHandler');
-	  return $TicketHandler->getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter);
-	}
-
-	/**
    * get all tickets that attached this ticket
    *
    * @param integer $IDTicket
