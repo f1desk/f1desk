@@ -46,5 +46,7 @@ var i18n = {
   'noRecipient':'É necessário escolher um destinatário',
 
   'flowAlertTitle':'Atenção',
-  'flowConfirmTitle':'Confime'
+  'flowConfirmTitle':'Confime',
+
+  'deleteMenu':'Deseja remover o menu?'
 };

@@ -14,7 +14,7 @@
       </p>
     </div>
   </div>
-  <div id='manageMenu'>
+  <div id='manageMenu' class='Left'>
       <h3>Gerenciar Menus</h3>
       <table class='tableTickets'>
         <thead>
@@ -25,5 +25,16 @@
           <?=TemplateHandler::showMenus($ArMenus);?>
         </tbody>
       </table>
+  </div>
+  <div id='editMenu' class='Left Invisible'>
+  <h3>Editar Menu</h3>
+    Nome:
+    <p><input type='text' id='StNameEdit' name='StName' class='inputCombo' /></p>
+    Endere&ccedil;o:
+    <p><input type='text' id='StAddressEdit' name='StAddress' class='inputCombo' /></p>
+    <p>
+      <button class='button' onclick='Admin.editMenu(gID("StAddressEdit").value);'>Cadastrar</button>
+      <button class='button' onclick='Admin.hideEditMenu();'>Limpar</button>
+    </p>
   </div>
 </div>

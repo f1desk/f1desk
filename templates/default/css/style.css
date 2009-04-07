@@ -644,6 +644,14 @@ html>body #main{
  width:25%;
 }
 
+#manageMenu {
+ width:100%;
+}
+
 #manageMenu table {
   width:30%;
+}
+
+#editMenu {
+  margin-left:5%;
 }
