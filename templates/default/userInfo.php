@@ -1,4 +1,14 @@
-<? handleLanguage(__FILE__); ?>
+<?
+  #
+  # Cuidado, gambiarra abaixo
+  #
+  if (file_exists('main.php')) {
+    require_once('main.php');
+  } else {
+    require_once('../../main.php');
+  }
+  handleLanguage(__FILE__);
+?>
   <!--[ERROR/OK BOX]-->
     <?= ErrorHandler::getNotice(); ?>
   <!--[ERROR/OK BOX]-->
@@ -22,12 +32,6 @@
 					 <pre><?=$ArUser['StEmail']?></pre>
 					 <input type='hidden' id='StDataEmail' value='<?=$ArUser['StEmail']?>'>
 					</td>
-				</tr>
-				<tr>
-				  <td class='TicketNumber'><?=PASS?></td>
-				  <td>
-				    <pre> ******** </pre>
-				  </td>
 				</tr>
 				<tr>
 					<td class='TicketNumber'><?=NOTIFY?>:</td>

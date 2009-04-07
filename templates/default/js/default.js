@@ -478,7 +478,9 @@ var Ticket = {
   'addCannedResponse': function(IDDepartment,IDSupporter) {
     var Responses = gID('cannedAnswers');
     var TxMessage = Responses[Responses.selectedIndex].value
-    gID('TxMessage').value += br2nl(unescape(TxMessage)) + '\n';
+    if (TxMessage && TxMessage != 'null') {
+      gID('TxMessage').value += br2nl(unescape(TxMessage)) + '\n';
+    }
     return false;
   },
 
