@@ -499,6 +499,7 @@ abstract class TemplateHandler {
         $StHTML .= "<a id='{$Menu['Link']}' href='javascript:void(0);' onclick='Admin.removeMenu(this.id);'>";
         $StHTML .= '<img src="templates/default/images/button_cancel.png"> </a></td>';
         $StHTML .= '</tr>';
+        $i++;
       }
     } else {
         $StHTML = '<tr><td colspan="3">'.NO_MENUS.'</td></tr>';

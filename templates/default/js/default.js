@@ -814,6 +814,10 @@ var Admin = {
       }
     };
     xhr.makeRequest('Insert Menu', adminDir + 'manageMenus.php', tParams);
+  },
+
+  'editMenu':function(IDMenu) {
+    alert(IDMenu);
   }
 };
 
