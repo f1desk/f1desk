@@ -53,7 +53,6 @@ abstract class TemplateHandler {
     return $StHtml;
   }
 
-
 	/**
 	 * Create the departments combobox in the ticket creation page
 	 *

@@ -1165,23 +1165,12 @@ WHERE
    * @param integer $IDUser
    * @param text $TxMessage
    */
-  public function getPreviewAnswer($IDUser, $TxMessage, $BoIsSupporter=false) {
-    if ( $BoIsSupporter ) {
-    	$StSQL = '
-SELECT
-  S.IDSupporter
-FROM
-  '.DBPREFIX.'Supporter S
-  LEFT JOIN
-    '.DBPREFIX.'User U ON (U.IDUser = S.IDUser)
-WHERE
-  U.IDUser = ' . $IDUser ;
-    	$this->execSQL($StSQL);
-      $ArResult = $this->getResult('string');
-      $IDSupporter = (isset($ArResult[0]))?$ArResult[0]['IDSupporter']:'';
-    }
+  public function getPreviewAnswer($IDUser, $TxMessage, $StMessageType) {
     $ArData = F1DeskUtils::getUserHeaderSign($IDUser);
-    return $ArData['TxHeader'] . "\n\n" . $TxMessage . "\n\n" . $ArData['TxSign'];
+    if ($StMessageType == 'INTERNAL')
+      return $TxMessage;
+    else 
+      return $ArData['TxHeader'] . "\n\n" . $TxMessage . "\n\n" . $ArData['TxSign'];
   }
 
   /**
