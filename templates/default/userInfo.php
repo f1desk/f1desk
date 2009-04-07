@@ -1,10 +1,16 @@
-<?php require_once(dirname(__FILE__).'/../../homeData.php'); handleLanguage(__FILE__);?>
+<?
+  #
+  # Cuidado, gambiarra abaixo
+  #
+  if (file_exists('main.php')) {
+    require_once('main.php');
+  } else {
+    require_once('../../main.php');
+  }
+  handleLanguage(__FILE__);
+?>
   <!--[ERROR/OK BOX]-->
-  <? if(isset($returnMessage) && isset($returnType)): ?>
-    <div class="boxmsg <?=$returnType?>">
-      <?=$returnMessage ?>
-    </div>
-  <? endif; ?>
+    <?= ErrorHandler::getNotice(); ?>
   <!--[ERROR/OK BOX]-->
 	<span class='homeBoxTitle' onclick="baseActions.toogleArrow('dataArrow', 'dataBoxEditAreaContent', 'hide')"><?=USER_DATA?></span>
 	<span class='homeBoxTitle newElement' onclick='Home.startDataEdit();'><img src='<?= TEMPLATEDIR ?>images/button_edit.png'> Editar</span>
@@ -26,12 +32,6 @@
 					 <pre><?=$ArUser['StEmail']?></pre>
 					 <input type='hidden' id='StDataEmail' value='<?=$ArUser['StEmail']?>'>
 					</td>
-				</tr>
-				<tr>
-				  <td class='TicketNumber'><?=PASS?></td>
-				  <td>
-				    <pre> ******** </pre>
-				  </td>
 				</tr>
 				<tr>
 					<td class='TicketNumber'><?=NOTIFY?>:</td>

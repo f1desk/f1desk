@@ -1,10 +1,6 @@
-<?php require_once(dirname(__FILE__).'/../../homeData.php'); handleLanguage(__FILE__);?>
+<?php handleLanguage(__FILE__);?>
   <!--[ERROR/OK BOX]-->
-  <? if(isset($returnMessage) && isset($returnType)): ?>
-    <div class="boxmsg <?=$returnType?>">
-      <?=$returnMessage ?>
-    </div>
-  <? endif; ?>
+    <?= ErrorHandler::getNotice(); ?>
   <!--[ERROR/OK BOX]-->
 <? if ( getSessionProp('isSupporter')=="true" ):?>
 		<span class="homeBoxTitle"><?=BOOK_MARK?></span>

@@ -1,11 +1,15 @@
 <?php
 
+require_once('main.php');
+
 /***************************************
  *           Create Submit             *
 ****************************************/
-require_once('main.php');
+
+$ObjTicket = new TicketHandler();
+
 if (!empty($_POST) && $_POST['StAction'] == 'create') {
-  $TicketHandler = new TicketHandler();
+
   foreach ($_POST as &$StArg) {
     UserHandler::SQLInjectionHandle($StArg);
   }
@@ -20,55 +24,62 @@ if (!empty($_POST) && $_POST['StAction'] == 'create') {
   $ArReaders = (isset($_POST['ArReaders'])) ? explode(',',$_POST['ArReaders']) : array();
   $ArAttached = (isset($_POST['ArAttached'])) ? explode(',',$_POST['ArAttached']) : array();
 
-  if (TemplateHandler::IsSupporter()) {
+  if (F1DeskUtils::IsSupporter()) {
+
     if (!empty($_FILES['Attachment']['name'])) {
-      $IDTicket = $TicketHandler->createSupporterTicket(getSessionProp('IDSupporter'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment, $IDDepartmentReader,$ArUsers,$ArReaders,true,$_FILES);
+      $IDTicket = $ObjTicket->createSupporterTicket(getSessionProp('IDSupporter'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment, $IDDepartmentReader,$ArUsers,$ArReaders,true,$_FILES);
     } else {
-      $IDTicket = $TicketHandler->createSupporterTicket(getSessionProp('IDSupporter'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment, $IDDepartmentReader,$ArUsers,$ArReaders,true);
+      $IDTicket = $ObjTicket->createSupporterTicket(getSessionProp('IDSupporter'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment, $IDDepartmentReader,$ArUsers,$ArReaders,true);
     }
+
   } else {
+
     if (!empty($_FILES['Attachment']['name'])) {
-      $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDClient'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment,$_FILES);
+      $IDTicket = $ObjTicket->createUserTicket(getSessionProp('IDClient'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment,$_FILES);
     } else {
-      $IDTicket = $TicketHandler->createUserTicket(getSessionProp('IDClient'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment);
+      $IDTicket = $ObjTicket->createUserTicket(getSessionProp('IDClient'),$IDCategory,$IDPriority,$StTitle,$TxMessage,$IDDepartment);
     }
+
   }
+
   if (!empty($ArAttached)) {
+
     foreach ($ArAttached as $IDAttach) {
       if (! F1DeskUtils::isAttached($IDTicket,$IDAttach))
-      $TicketHandler->attachTicket($IDTicket,$IDAttach);
+      $ObjTicket->attachTicket($IDTicket,$IDAttach);
     }
+
   }
+
 } elseif (!empty($_POST) && $_POST['StAction'] == 'addSupporters') {
+
   $ArSupporters = F1DeskUtils::getAllSupporters();
   if ($ArSupporters[0]['IDSupporter'] == 0) {
     array_shift($ArSupporters);
   }
+
 }
 
 /***************************************
  *           Create Data               *
 ****************************************/
+if (F1DeskUtils::isSupporter()) {
 
-if (getSessionProp('isSupporter') == 'true') {
-  if (! isset($TicketHandler))
-    $TicketHandler = new TicketHandler();
-  else
-    if(! is_a($TicketHandler,'TicketHandler'))
-      $TicketHandler = new TicketHandler();
   $BoCreate = F1DeskUtils::getPermission('BoCreateCall',getSessionProp('IDSupporter'));
   if ($BoCreate) {
-    $ArDepartments = $TicketHandler->getPublicDepartments(false);
+    $ArDepartments = F1DeskUtils::getPublicDepartments(false);
   } else {
     $ArDepartments = F1DeskUtils::getDepartmentsFormatted(getSessionProp('IDSupporter'));
   }
+
 } else {
-  $ArDepartments = $TicketHandler->getPublicDepartments();
+  $ArDepartments = F1DeskUtils::getPublicDepartments();
 }
 
+$ArTypes = F1DeskUtils::listTicketTypes();
 $ArPriorities = F1DeskUtils::listPriorities();
 $ArCategories = F1DeskUtils::listCategories();
-if (TemplateHandler::IsSupporter()) {
+if (F1DeskUtils::IsSupporter()) {
   $ArSub = F1DeskUtils::getSubDepartments(getSessionProp('IDSupporter'));
 }
 ?>

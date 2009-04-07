@@ -10,11 +10,7 @@
 ?>
 
 <!--[ERROR/OK BOX]-->
-<? if(isset($returnMessage) && isset($returnType)): ?>
-  <div class="boxmsg <?=$returnType?>">
-    <?=$returnMessage ?>
-  </div>
-<? endif; ?>
+<?= ErrorHandler::getNotice(); ?>
 <!--[ERROR/OK BOX]-->
 
 <!--[TICKET HEADER]-->
@@ -38,8 +34,8 @@
             <th><?=TICKET_HEADER_DEPARTMENT?></th>
           <?endif;?>
           <th><?=TICKET_HEADER_SUPPORTER?></th>
-          <? if (TemplateHandler::IsSupporter() && !$preview): ?>
-          <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
+          <? if ($isSupporter && !$preview): ?>
+            <th colspan='3'><?=TICKET_HEADER_ACTIONS?></th>
           <? endif; ?>
         </tr>
       </thead>
@@ -51,8 +47,14 @@
           <?if(is_numeric($IDDepartment)):?>
             <td><?=TemplateHandler::createHeaderDepartmentCombo($ArDepartments, $IDDepartment, $IDTicket,'Departments', 'inputCombo',$preview);?></td>
           <?endif;?>
-          <td><?=TemplateHandler::createSupportersCombo($IDTicket, $IDDepartment, $ArSupporters, $ArHeaders, 'StSupporter','inputCombo', $preview);?></td>
-          <? if (TemplateHandler::IsSupporter() && !$preview): ?>
+          <td>
+            <?if ($isSupporter) : ?>
+              <?= TemplateHandler::createSupportersCombo($IDTicket, $IDDepartment, $ArSupporters, $ArHeaders, 'StSupporter','inputCombo', $preview); ?>
+            <? else : ?>
+              <?= $StSupporter ?>
+            <? endif ?>
+          </td>
+          <? if ($isSupporter && !$preview): ?>
           <td>
             <a href='javascript:void(0);' onclick='Ticket.attachTicket(<?=$IDTicket?>,"<?=$IDDepartment?>");'>
               <img src='<?= TEMPLATEDIR ?>images/attach.png' alt='Attach Ticket' title='Attach Ticket'>
@@ -110,29 +112,32 @@
     <?=TemplateHandler::showAttachments($ArAttachments);?>
     <!--[/ATTACHMENT FILES]-->
 
-    <!--[ATTACHED TICKETS]-->
-    <?=TemplateHandler::showAttachedTickets($ArAttachedTickets);?>
-    <!--[/ATTACHED TICKETS]-->
+    <? if ($isSupporter) : ?>
+      <!--[ATTACHED TICKETS]-->
+      <?=TemplateHandler::showAttachedTickets($ArAttachedTickets);?>
+      <!--[/ATTACHED TICKETS]-->
 
-    <!--[TICKETS ATTACHED]-->
-    <?=TemplateHandler::showTicketsAttached($ArTicketsAttached);?>
-    <!--[/TICKETS ATTACHED]-->
+      <!--[TICKETS ATTACHED]-->
+      <?=TemplateHandler::showTicketsAttached($ArTicketsAttached);?>
+      <!--[/TICKETS ATTACHED]-->
 
-    <!--[TICKET DEPARTMENTS]-->
-    <?=TemplateHandler::showTicketDepartments($ArTicketDepartments);?>
-    <!--[/TICKET DEPARTMENTS]-->
+      <!--[TICKET DEPARTMENTS]-->
+      <?=TemplateHandler::showTicketDepartments($ArTicketDepartments);?>
+      <!--[/TICKET DEPARTMENTS]-->
 
-    <!--[TICKET SUPPORTERS]-->
-    <?=TemplateHandler::showTicketSupporters($ArTicketDestinations);?>
-    <!--[/TICKET SUPPORTERS]-->
+      <!--[TICKET SUPPORTERS]-->
+      <?=TemplateHandler::showTicketSupporters($ArTicketDestinations);?>
+      <!--[/TICKET SUPPORTERS]-->
 
-    <!--[TICKET DEPARTMENTS]-->
-    <?=TemplateHandler::showDepartmentReaders($ArTicketDepartmentsReader);?>
-    <!--[/TICKET DEPARTMENTS]-->
+      <!--[TICKET DEPARTMENTS]-->
+      <?=TemplateHandler::showDepartmentReaders($ArTicketDepartmentsReader);?>
+      <!--[/TICKET DEPARTMENTS]-->
 
-    <!--[TICKET SUPPORTERS]-->
-    <?=TemplateHandler::showSupporterReaders($ArTicketReaders)?>
-    <!--[/TICKET SUPPORTERS]-->
+      <!--[TICKET SUPPORTERS]-->
+      <?=TemplateHandler::showSupporterReaders($ArTicketReaders)?>
+      <!--[/TICKET SUPPORTERS]-->
+
+    <? endif; ?>
 
   </div>
 </div>
@@ -146,13 +151,13 @@
   </div>
 
   <div id="historyContent<?=$uid?>" >
-    <?=TemplateHandler::showHistory($IDTicket, $ArAttachments);?>
+    <?= TemplateHandler::showHistory($ArMessages, $ArAttachments); ?>
   </div>
 </div>
 <!--[/TICKET HISTORY]-->
 
 <!--[TICKET ANSWER]-->
-<?if(!$preview):?>
+<? if(!$preview) : ?>
 	<div id='ticketAnswer' class='defaultBody'>
 	  <div id='answerCaption' class='defaultCaption'>
 	  	<img alt="Ticket" id='arrowAnswer<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_hide.gif" onclick='baseActions.toogleArrow( this.id, "answerContent<?=$uid?>")' class="menuArrow"/>
@@ -164,7 +169,7 @@
 	      <div id='messageType' class='Right'>
 	    	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
 	    				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
-	    				<? if (TemplateHandler::IsSupporter()): ?>
+	    				<? if ($isSupporter): ?>
 	    				<option value="INTERNAL"><?=MSGTYPE_INTERNAL?></option>
 	    				<option value="SATISFACTION"><?=MSGTYPE_SATISFACTION?></option>
 	    				<? endif; ?>
@@ -184,7 +189,7 @@
 	    		  <div>
 	    		    <input type='hidden' name='IDDepartment' id='IDDepartment' value='<?= $IDDepartment ?>' />
 	    		    <input type='hidden' name='IDTicket' id='IDTicket' value='<?= $IDTicket ?>' />
-	    		    <? if (TemplateHandler::IsSupporter()) : ?>
+	    		    <? if ($isSupporter) : ?>
 	    		     <?=TemplateHandler::createCannedCombo($ArResponses)?>
 	    		    <? endif; ?>
 	    		</div>

@@ -1,11 +1,7 @@
 <?require_once( dirname(__FILE__) . '/../../ticketData.php' );?>
 
 <!--[ERROR/OK BOX]-->
-<? if(isset($returnMessage) && isset($returnType)): ?>
-  <div class="boxmsg <?=$returnType?>">
-    <?=$returnMessage ?>
-  </div>
-<? endif; ?>
+  <?= ErrorHandler::getNotice(); ?>
 <!--[ERROR/OK BOX]-->
 
 <div id="previewAnswer">

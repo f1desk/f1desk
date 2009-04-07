@@ -155,7 +155,7 @@ SET
    *
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public function listTickets($ArIDDepartment){
+  private function _listTickets($ArIDDepartment){
 
   	if ( is_null( $ArIDDepartment ) ) {
   		throw new ErrorHandler(EXC_CALL_INVALIDLISTOFCALLS);
@@ -204,51 +204,6 @@ AND
   }
 
   /**
-   * list the tickets of a client
-   *
-   * @param int $IDUser
-   * @param bool $BoOpened
-   *
-   * @return array
-   *
-   * @author Mario Vitor <mario@digirati.com.br>
-   */
-  public function listClientTickets($IDUser, $BoOpened = true){
-
-  	if ( is_null( $IDUser ) ) {
-  		throw new ErrorHandler(EXC_CALL_INVALIDLISTOFCALLS);
-  	}
-
-  	if ($BoOpened) {
-      $StConditionStatus = "'NOT_READ','WAITING_SUP','WAITING_USER'";
-  	} else {
-  	  $StConditionStatus = "'CLOSED'";
-  	}
-
-  	$StSQL = "
-SELECT
-  T.*, U2.StName as StSupporter
-FROM
-  " . DBPREFIX . "Client C
-  LEFT JOIN " . DBPREFIX . "User U on (C.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "Ticket T on (T.IDUser = U.IDUser)
-  LEFT JOIN " . DBPREFIX . "Supporter S on (S.IDSupporter = T.IDSupporter)
-  LEFT JOIN " . DBPREFIX . "User U2 on (U2.IDUser = S.IDUser)
-WHERE
-  T.StSituation IN ($StConditionStatus)
-AND
-  U.IDUser = $IDUser
-  	";
-  	$this->execSQL($StSQL);
-		$ArTickets = $this->getResult("string");
-
-		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
-
-		return $ArTickets;
-
-  }
-
-  /**
    * list the ignored tickets
    *
    * @param int $IDSupporter
@@ -256,7 +211,7 @@ AND
    *
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public function listIgnoredTickets($IDSupporter) {
+  private function _listIgnoredTickets($IDSupporter) {
     $StSQL = "
 SELECT
   T.*, U.StName as StSupporter
@@ -287,7 +242,7 @@ AND
    *
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public function listBookmarkTickets($IDSupporter) {
+  private function _listBookmarkTickets($IDSupporter) {
     $StSQL = "
 SELECT
   T.*,  U.StName as StSupporter
@@ -316,7 +271,7 @@ WHERE
    *
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public function listSingleTickets($IDSupporter) {
+  private function _listSingleTickets($IDSupporter) {
     $StSQL = "
 SELECT
   T.*,  U.StName as StSupporter
@@ -327,7 +282,9 @@ FROM
   LEFT JOIN " . DBPREFIX . "TicketSupporter TS ON (TS.IDTicket = T.IDTicket)
   LEFT JOIN " . DBPREFIX . "Supporter S ON (S.IDSupporter = TS.IDSupporter)
 WHERE
-  S.IDSupporter = $IDSupporter";
+  S.IDSupporter = $IDSupporter
+AND
+  T.StSituation IN ('NOT_READ','WAITING_SUP')";
 
     $this->execSQL($StSQL);
 		$ArTickets = $this->getResult("string");
@@ -345,7 +302,7 @@ WHERE
    *
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public function listByMeTickets($IDSupporter) {
+  private function _listByMeTickets($IDSupporter) {
     $StSQL = "
 SELECT
   T.*,  U2.StName as StSupporter
@@ -368,6 +325,66 @@ AND
   }
 
   /**
+   * list the user opened tickets
+   *
+   * @param int $IDUser
+   * @return array
+   *
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+  private function _listUserOpenTickets($IDUser) {
+      	$StSQL = "
+SELECT
+  T.*, U2.StName as StSupporter
+FROM
+  " . DBPREFIX . "Client C
+  LEFT JOIN " . DBPREFIX . "User U on (C.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T on (T.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Supporter S on (S.IDSupporter = T.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "User U2 on (U2.IDUser = S.IDUser)
+WHERE
+  T.StSituation != 'CLOSED'
+AND
+  U.IDUser = $IDUser";
+
+    $this->execSQL($StSQL);
+		$ArTickets = $this->getResult("string");
+		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
+
+		return $ArTickets;
+  }
+
+  /**
+   * list the user closed tickets
+   *
+   * @param int $IDUser
+   * @return array
+   *
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+  private function _listUserCloseTickets($IDUser) {
+      	$StSQL = "
+SELECT
+  T.*, U2.StName as StSupporter
+FROM
+  " . DBPREFIX . "Client C
+  LEFT JOIN " . DBPREFIX . "User U on (C.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Ticket T on (T.IDUser = U.IDUser)
+  LEFT JOIN " . DBPREFIX . "Supporter S on (S.IDSupporter = T.IDSupporter)
+  LEFT JOIN " . DBPREFIX . "User U2 on (U2.IDUser = S.IDUser)
+WHERE
+  T.StSituation = 'CLOSED'
+AND
+  U.IDUser = $IDUser";
+
+    $this->execSQL($StSQL);
+		$ArTickets = $this->getResult("string");
+		$ArTickets = F1DeskUtils::sortByID($ArTickets, 'IDTicket');
+
+		return $ArTickets;
+  }
+
+  /**
    * get the tickets read by a supporter
    *
    * @param integer $IDSupporter
@@ -376,7 +393,7 @@ AND
    * @return array
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-  public function getReadTickets($IDSupporter, $TicketList) {
+  private function _getReadTickets($IDSupporter, $TicketList) {
 
     if (is_array($TicketList)) {
       $Tickets = implode(', ',$TicketList);
@@ -398,9 +415,6 @@ WHERE
 AND
   S.IDSupporter = $IDSupporter";
 
-    /*if (in_array('64',$TicketList))
-    ErrorHandler::Debug($StSQL);*/
-
   	$this->execSQL($StSQL);
   	$ArResult = $this->getResult("string");
 
@@ -411,15 +425,14 @@ AND
   }
 
   /**
-   * get the tickets read by a supporter, from a specific department
+   * get the tickets read by a user
    *
-   * @param integer $IDDepartment
    * @param integer $IDUser
    *
    * @return array
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-   public function getUserReadTickets($IDUser) {
+   private function _getUserReadTickets($IDUser) {
 
   	$StSQL = "
 SELECT
@@ -431,16 +444,109 @@ FROM
 WHERE
   U.IDUser = $IDUser
 AND
-  T.StSituation IN ('NOT_READ','WAITING_SUP','WAITING_USER')";
+  T.StSituation != 'CLOSED'";
 
   	$this->execSQL($StSQL);
-  	$ArResult = $this->getResult("string");
-
-  	$ArRead = F1DeskUtils::sortByID($ArResult, 'IDTicket');
+  	$ArRead = $this->getResult("string");
+  	$ArRead = F1DeskUtils::sortByID($ArRead, 'IDTicket');
 
   	return $ArRead;
 
   }
+
+  /**
+   * get the tickets of all departments
+   *
+   * @param array $ArIDDepartment
+   * @param int $IDSupporter
+   * @return array
+   */
+  public function getTickets($ArIDDepartment,$IDSupporter) {
+    $ArTickets = array();
+
+    $ArDepartmentTickets['open'] = $this->_listTickets($ArIDDepartment);
+    $ArDepartmentTickets['ignored'] = $this->_listIgnoredTickets($IDSupporter);
+    $ArDepartmentTickets['bookmark'] = $this->_listBookmarkTickets($IDSupporter);
+    $ArDepartmentTickets['single'] = $this->_listSingleTickets($IDSupporter);
+    $ArDepartmentTickets['byme'] = $this->_listByMeTickets($IDSupporter);
+    $ArIgnored = array_keys($ArDepartmentTickets['ignored']);
+
+    foreach ($ArIDDepartment as $IDDepartment) {
+      if (array_key_exists($IDDepartment,$ArDepartmentTickets)) {
+        $ArCurrentTickets = $ArDepartmentTickets[$IDDepartment];
+      } else {
+        if (array_key_exists($IDDepartment,$ArDepartmentTickets['open'])) {
+          $ArCurrentTickets = $ArDepartmentTickets['open'][$IDDepartment];
+        } else {
+          $ArCurrentTickets = array();
+        }
+      }
+
+      $TicketList = array();
+      foreach ($ArCurrentTickets as $Key => $ArCurrentTicket) {
+        if ($IDDepartment == 'ignored' || ! in_array($ArCurrentTicket['IDTicket'],$ArIgnored) ) {
+          $TicketList[] = $ArCurrentTicket['IDTicket'];
+        } else {
+          unset($ArCurrentTickets[$Key]);
+        }
+      }
+
+      $ArReadTickets = $this->_getReadTickets($IDSupporter, $TicketList);
+
+      $ItnotReadCount = 0;
+
+      foreach ($ArCurrentTickets as &$ArTicket) {
+        if (array_key_exists($ArTicket['IDTicket'],$ArReadTickets)) {
+          $ArTicket['isRead'] = 1;
+        } else {
+          $ArTicket['isRead'] = 0;
+          ++$ItnotReadCount;
+        }
+      }
+
+      $ArTickets[$IDDepartment]['Tickets'] = $ArCurrentTickets;
+      $ArTickets[$IDDepartment]['notReadCount'] = $ItnotReadCount;
+    }
+
+    return $ArTickets;
+  }
+
+  /**
+   * list the tickets of a client
+   *
+   * @param int $IDUser
+   * @param bool $BoOpened
+   *
+   * @return array
+   *
+   * @author Mario Vitor <mario@digirati.com.br>
+   */
+  public function getUserTickets($IDUser){
+
+  	if ( is_null( $IDUser ) ) {
+  		throw new ErrorHandler(EXC_CALL_INVALIDLISTOFCALLS);
+  	}
+
+  	$ArTickets['opened']['Tickets'] = $this->_listUserOpenTickets($IDUser);
+  	$ArTickets['closed']['Tickets'] = $this->_listUserCloseTickets($IDUser);
+  	$ArReadTickets = array_keys($this->_getUserReadTickets($IDUser));
+
+  	$ArTickets['opened']['notReadCount'] = 0;
+    $ArTickets['closed']['notReadCount'] = 0;
+
+  	foreach ($ArTickets['opened']['Tickets'] as &$ArTicket) {
+      if (in_array($ArTicket['IDTicket'],$ArReadTickets)) {
+        $ArTicket['isRead'] = 1;
+      } else {
+        $ArTicket['isRead'] = 0;
+        ++$ArTickets['opened']['notReadCount'];
+      }
+  	}
+
+		return $ArTickets;
+
+  }
+
 
   /**
    * Set a Call as read for a certain supporter
@@ -841,7 +947,7 @@ AND
    */
   public function answerTicket ($IDWriter, $IDTicket, $TxMessage, $StMsgType, $ArFiles = array()) {
     #check if the answer came from a supporter or a client
-    if ( TemplateHandler::IsSupporter() ) {
+    if ( F1DeskUtils::IsSupporter() ) {
       $this->_supporterAnswer($IDWriter,$IDTicket,$TxMessage, $StMsgType, $ArFiles);
     } else {
       $this->_clientAnswer($IDWriter,$IDTicket,$TxMessage, $ArFiles);
@@ -929,6 +1035,7 @@ AND
    * @param int $IDTicket
    */
   public function getTicketHeaders($IDTicket) {
+
     $StSQL = "
 SELECT
   T.*, D.*, U.StName
@@ -944,12 +1051,13 @@ WHERE
 AND
   TD.IDTicket = $IDTicket
 AND
-  TD.BoReader = 0";
+  TD.BoReader = 0
+GROUP BY
+  T.IDTicket";
+
     $this->execSQL($StSQL);
     $ArHeader = $this->getResult('string');
 
-    ###    FIX ME FIX ME FIX ME FIX ME    ###
-    # CUIDADOOOOOO!!! GAMBIARRA ABAIXOOO!!! #
     ###    FIX ME FIX ME FIX ME FIX ME    ###
 
     if (empty($ArHeader)) {
@@ -962,11 +1070,14 @@ FROM
   LEFT JOIN '.DBPREFIX.'Supporter S ON (TS.IDSupporter = S.IDSupporter)
   LEFT JOIN '.DBPREFIX."User U ON (S.IDUser = U.IDUser)
 WHERE
-  T.IDTicket = $IDTicket";
+  T.IDTicket = $IDTicket
+GROUP BY
+  T.IDTicket";
       $this->execSQL($StSQL);
       $ArHeader = $this->getResult('string');
     }
-    return $ArHeader;
+
+    return $ArHeader[0];
   }
 
   /**
@@ -1011,30 +1122,6 @@ WHERE
   }
 
   /**
-   * Get the attachments of the message given
-   *
-   * @param int $IDMessage
-   * @return array
-   *
-   * @author Matheus Ashton <matheus@digirati.com.br>
-   */
-  public function getAttachments($IDMessage) {
-    $StSQL = '
-SELECT
-  A.*
-FROM
-  ' . DBPREFIX . 'Attachment A
-LEFT JOIN
-  ' . DBPREFIX . "Message M ON (A.IDMessage = M.IDMessage)
-WHERE
-  M.IDMessage = $IDMessage";
-    $this->execSQL($StSQL);
-    $ArReturn = $this->getResult('string');
-
-    return $ArReturn;
-  }
-
-  /**
    * Check's if the user have permission to download the file given
    *
    * @param int $IDAttachment
@@ -1073,77 +1160,6 @@ WHERE
   }
 
   /**
-   * Return the non-internal departments or all departments
-   *
-   * @return Array
-   *
-   * @author Matheus Ashton <matheus@digirati.com.br>
-   */
-  public function getPublicDepartments($BoPublic = true) {
-
-    $ArDepartments = array();
-    if ($BoPublic !== true) {
-      $StSQL = '
-SELECT
-  D.*
-FROM
-  '.DBPREFIX.'Department D
-LEFT JOIN '.DBPREFIX.'SubDepartment SD ON (D.IDDepartment = SD.IDDepartment)
-GROUP BY
-  D.IDDepartment';
-    } else  {
-      $StSQL = '
-SELECT
-  D.*
-FROM
-  '.DBPREFIX.'Department D
-LEFT JOIN '.DBPREFIX.'SubDepartment SD ON (D.IDDepartment = SD.IDDepartment)
-WHERE
-  BoInternal = 0
-GROUP BY
-  D.IDDepartment';
-    }
-    $this->execSQL($StSQL);
-    $ArResult = $this->getResult('string');
-
-    foreach ($ArResult as $ArDepartment) {
-      $ArDepartments[$ArDepartment['IDDepartment']] = $ArDepartment;
-    }
-
-    $StSQL = '
-SELECT
-  D.IDDepartment, GROUP_CONCAT(SD.IDSubDepartment) as IDSubDepartments
-FROM
-	'.DBPREFIX.'SubDepartment SD
-LEFT JOIN '.DBPREFIX.'Department D ON (SD.IDDepartment = D.IDDepartment)
-LEFT JOIN '.DBPREFIX.'DepartmentSupporter DS ON (DS.IDDepartment = D.IDDepartment)
-GROUP BY
-  SD.IDDepartment';
-    $this->execSQL($StSQL);
-    $ArResult = $this->getResult('string');
-
-    foreach ( $ArResult as $Department ) {
-      $ArSubSeparation = explode(',', $Department[ 'IDSubDepartments' ]);
-      $ArSubDepartments[$Department['IDDepartment']] = array_unique($ArSubSeparation);
-    }
-
-    foreach ($ArDepartments as $ArDepartment) {
-      if (array_key_exists($ArDepartment['IDDepartment'],$ArSubDepartments)) {
-        foreach ($ArSubDepartments as $Key => $SubDepartments) {
-          if ($Key == $ArDepartment['IDDepartment']) {
-            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['IDSub'] = $IDSub = array_shift($SubDepartments);
-            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['StSub'] = $ArDepartments[$IDSub]['StDepartment'];
-            if (isset($ArDepartments[$IDSub]))
-              unset($ArDepartments[$IDSub]);
-          }
-        }
-      }
-    }
-
-    return $ArDepartments;
-  }
-
-  /**
    * Return a preview anser for the user
    *
    * @param integer $IDUser
@@ -1174,9 +1190,56 @@ FROM
 WHERE
   AT.IDAttachedTicket = ' . $IDTicket ;
     $this->execSQL($StSQL);
+
     $ArResult = $this->getResult('string');
+
     return  $ArResult;
   }
+
+  /**
+   * Get the attachments of the message given
+   *
+   * @param int $IDMessage
+   * @return array
+   *
+   * @author Matheus Ashton <matheus@digirati.com.br>
+   */
+  private function _getAttachments($IDMessage) {
+    $StSQL = '
+SELECT
+  A.*
+FROM
+  ' . DBPREFIX . 'Attachment A
+LEFT JOIN
+  ' . DBPREFIX . "Message M ON (A.IDMessage = M.IDMessage)
+WHERE
+  M.IDMessage = $IDMessage";
+    $this->execSQL($StSQL);
+    $ArReturn = $this->getResult('string');
+
+    return $ArReturn;
+  }
+
+  /**
+	 * Get all attachments from all messagens of a call
+	 *
+	 * @param int $IDTicket
+	 * @return array
+	 *
+	 * @author Matheus Ashton <matheus@digirati.com.br>
+	 */
+	public function getAttachments($IDTicket) {
+	  $ArAttachments = array();
+
+	  $ArMessages = $this->listTicketMessages($IDTicket);
+
+	  foreach ($ArMessages as $ArMessage) {
+	    $ArAttachment = $this->_getAttachments($ArMessage['IDMessage']);
+	    if (! empty($ArAttachment))
+	    $ArAttachments[$ArMessage['IDMessage']] = $ArAttachment;
+	  }
+	  return $ArAttachments;
+	}
 
   /**
    * get all attacheds tickets from a ID given

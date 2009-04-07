@@ -1,5 +1,5 @@
 <?php
-require_once('header.php');
+  require_once('header.php');
 ?>
 <div id="loginTemplate">
 	<div id="loginBox">
@@ -7,7 +7,7 @@ require_once('header.php');
 			Efetue Login
 		</div>
 		<div id="boxContent">
-			<form action='login.submit.php' method="POST">
+			<form action='<?= TEMPLATEDIR ?>login.submit.php' method="POST">
 			  <table>
 			    <tr>
 			      <td>Informe seu e-mail</td>
@@ -33,5 +33,5 @@ require_once('header.php');
 	</div><!-- Login Box -->
 </div>
 <?php
-require_once('footer.php');
+  require_once('footer.php');
 ?>

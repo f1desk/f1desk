@@ -9,9 +9,9 @@ handleLanguage(__FILE__);
 
 <div id='createWrapper'>
   <form id='formCreate' method='POST' enctype='multipart/form-data' action='<?$PHP_SELF?>' onsubmit='return Writing.createTicketSubmit();'>
-  <?php if (TemplateHandler::IsSupporter()):?>
+  <?php if (F1DeskUtils::IsSupporter()):?>
     <h3><?=TICKET_TYPE?></h3>
-    <?=TemplateHandler::showTicketTypes();?>
+    <?=TemplateHandler::showTicketTypes($ArTypes);?>
 
     <div id='AttachTickets'>
       <h3><?=ATTACH_TICKET?></h3>
@@ -33,7 +33,7 @@ handleLanguage(__FILE__);
     <div id='sendTo'>
       <h3><?=SEND_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDRecipient','IDRecipient','inputCombo');?>
-      <?php if (TemplateHandler::IsSupporter()):?>
+      <?php if (F1DeskUtils::IsSupporter()):?>
       <p><?=CLICK?> <a href='javascript:void(0);' class='Link' onclick='Writing.listSupporters("Recipients")'><?=HERE?></a><?=ADD_SUPPORTER?></p>
       <div id='addedRecipients' class='Invisible'>
         <h4><?=ADDED_SUP?></h4>
@@ -41,7 +41,7 @@ handleLanguage(__FILE__);
       <?php endif; ?>
     </div>
 
-    <?php if (TemplateHandler::IsSupporter()):?>
+    <?php if (F1DeskUtils::IsSupporter()):?>
     <div id='respondTo'>
       <h3><?=REPLY_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDReader','IDReader','inputCombo');?>

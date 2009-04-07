@@ -155,7 +155,11 @@ abstract class Validate {
       return $Valid;
     } else if ($Valid === false) {
       session_destroy();
-      TemplateHandler::showPage('login');
+      if (array_key_exists('page',$_GET)) {
+        session_start();
+        setSessionProp('lastPage',$_GET['page']);
+      }
+      F1DeskUtils::showPage('login');
     	die();
     }
   }

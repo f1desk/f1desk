@@ -1,4 +1,5 @@
 var templateDir = 'templates/default/';
+var adminOptions = ['manage_users','manage_menus','preferences'];
 
 /**
  *  OBJECT CONTAIN GLOBALS OBJECTS AND METHODS FROM THE DEFAULT TEMPLATE
@@ -476,7 +477,9 @@ var Ticket = {
   'addCannedResponse': function(IDDepartment,IDSupporter) {
     var Responses = gID('cannedAnswers');
     var TxMessage = Responses[Responses.selectedIndex].value
-    gID('TxMessage').value += br2nl(unescape(TxMessage)) + '\n';
+    if (TxMessage && TxMessage != 'null') {
+      gID('TxMessage').value += br2nl(unescape(TxMessage)) + '\n';
+    }
     return false;
   },
 
@@ -557,9 +560,8 @@ var Ticket = {
       'okCallBack':function(htmlReturn) {
         var contentDisplay = gID('contentDisplay');
         appendHTML(htmlReturn, contentDisplay, true);
-        if(gID(IDDepartmentTo))
-          Ticket.reloadTicketList(IDDepartmentTo, true, 'show');
         Ticket.reloadTicketList(IDDepartmentFrom, true, 'show');
+        Ticket.reloadTicketList(IDDepartmentTo, true, 'show');
       }
     };
     xhr.makeRequest('Change Department', templateDir + 'ticket.php',tParams);
@@ -660,27 +662,29 @@ var Ticket = {
   },
 
   'reloadTicketList': function(IDDepartment, First, Force) {
-    var tParams = {
-      'enqueue':1,
-      'returnType':'txt',
-      'method':'post',
-      'content':{'IDDepartment':IDDepartment},
-      'startCallBack' : function() {
-        baseActions.animateReload( IDDepartment, 'start' );
-      },
-      'okCallBack':function(HTMLTickets) {
-        baseActions.animateReload( IDDepartment, 'stop' );
-        Ticket.insertTickets(IDDepartment, HTMLTickets);
-        Ticket.refreshNotReadCount( IDDepartment );
-        if (First === true) { baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, Force); }
-      },
-      'errCallBack':function(Return) {
-        baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, 'hide');
-        baseActions.animateReload( IDDepartment, 'stop' );
-      }
-    };
-    var tUrl = templateDir + 'ticketList.php';
-    xhr.makeRequest('showTickets',tUrl,tParams);
+    if (gID('departmentContent' + IDDepartment)) {
+      var tParams = {
+        'enqueue':1,
+        'returnType':'txt',
+        'method':'post',
+        'content':{'IDDepartment':IDDepartment},
+        'startCallBack' : function() {
+          baseActions.animateReload( IDDepartment, 'start' );
+        },
+        'okCallBack':function(HTMLTickets) {
+          baseActions.animateReload( IDDepartment, 'stop' );
+          Ticket.insertTickets(IDDepartment, HTMLTickets);
+          Ticket.refreshNotReadCount( IDDepartment );
+          Ticket.showDepartmentTickets(IDDepartment, 'show');
+        },
+        'errCallBack':function(Return) {
+          baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, 'hide');
+          baseActions.animateReload( IDDepartment, 'stop' );
+        }
+      };
+      var tUrl = templateDir + 'ticketList.php';
+      xhr.makeRequest('showTickets',tUrl,tParams);
+    }
   },
 
   'selectTicket': function(Clicked) {
@@ -720,8 +724,8 @@ var Ticket = {
     return true;
   },
 
-  'showDepartmentTickets': function(IDDepartment) {
-      baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment);
+  'showDepartmentTickets': function(IDDepartment, Force) {
+      baseActions.toogleArrow("arrow"+IDDepartment, 'departmentContent' + IDDepartment, Force);
   },
 
   'showTicket': function(IDTicket, IDDepartment, Clicked) {
@@ -768,8 +772,7 @@ var Ticket = {
       'okCallBack':function(htmlReturn) {
         var contentDisplay = gID('contentDisplay');
         Ticket.reloadTicketList('ignored',true,'show');
-        if (gID('IDDepartment'))
-          Ticket.reloadTicketList(IDDepartment,true,'show');
+        Ticket.reloadTicketList(IDDepartment,true,'show');
         appendHTML(htmlReturn, contentDisplay, true);
       }
     };
@@ -783,7 +786,19 @@ var Search = {
 };
 
 var Admin = {
-
+  'changeOption':function(StPage) {
+    for(i in adminOptions) {
+      if (adminOptions[i] == StPage) {
+        tParams = {
+          'method':'get',
+          'okCallBack':function(response) {
+            appendHTML(response,gID('contentAdminMenu'));
+          }
+        };
+        xhr.makeRequest('Change Menu',templateDir + StPage,tParams);
+      }
+    }
+  }
 };
 
 var flowWindow = {

@@ -38,7 +38,7 @@ EOF_HTML;
   if ($StType == 'ERR') {
     $Html .= <<<EOF_HTML
 
-          <p>
+          <div>
             <ul style='list-style-type: none; padding-left:10px;'>
               <li>
                 <span class='TxTitle'>Mensagem :</span>
@@ -57,7 +57,7 @@ EOF_HTML;
                 <span class="TxMessage">$ItLine</span>
               </li>
             </ul>
-          </p>
+          </div>
 EOF_HTML;
   } else {
     $Html .= <<<EOF_HTML

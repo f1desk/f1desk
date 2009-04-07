@@ -56,7 +56,7 @@ Class ErrorHandler extends ErrorException {
 
     if ( ! empty($StMessage) ) {
       $this->_saveData(self::TYPE_EXP,$StMessage,$ItCode);
-      $this->_getErrorAsHTML(true);
+      $this->_getExceptionAsHTML(true);
     }
 
   }
@@ -70,17 +70,25 @@ Class ErrorHandler extends ErrorException {
    */
   public function _getErrorAsHTML($Print = false) {
 
-    require_once(INCLUDESDIR . '/errorPage.php');
+    $Dom = new DOMDocument();
+    $Dom->loadHTMLFile(ABSPAGEDIR . 'error.html');
 
-    $Trace = $this->_filterTrace($this->getTrace());
-    $StType = ($this->TypeOfError == self::TYPE_EXP) ? 'EXP' : 'ERR';
-    $StTitle = $this->getTitle();
-    $StMessage = $this->getMessage();
-    $ItSeverity = $this->getSeverity();
-    $StFile = $this->getFile();
-    $ItLine = $this->getLine();
+    $Dom->getElementsByTagName('title')->item(0)->nodeValue = $this->getTitle();
+    $Dom->getElementById('StTitle')->nodeValue = $this->getTitle();
+    $Dom->getElementById('StMessage')->nodeValue = $this->getMessage();
+    $Dom->getElementById('ItSeverity')->nodeValue = $this->getSeverity();
+    $Dom->getElementById('StFile')->nodeValue = $this->getFile();
+    $Dom->getElementById('ItLine')->nodeValue = $this->getLine();
 
-    $Html = getErrorPageHTML($StType,$StTitle,$StMessage,$ItSeverity,$StFile,$ItLine);
+    #
+    # VERIFICAR DEPOIS
+    #
+    $Dom->getElementById('StBacktrace')->nodeValue = print_r($this->_filterTrace($this->getTrace()),1);
+
+
+    $Html = $Dom->saveHTML();
+
+    die($Html);
 
     if ($Print) {
       die($Html);
@@ -88,6 +96,86 @@ Class ErrorHandler extends ErrorException {
       return $Html;
     }
 
+  }
+
+  /**
+   * generates a html with the exception message
+   *
+   * @param boolean $Print
+   *
+   * @author Dimitri Lameri <Contato@DimitriLameri.com>
+   */
+  public function _getExceptionAsHTML($Print = false) {
+
+    $Dom = new DOMDocument();
+    $Dom->loadHTMLFile(ABSPAGEDIR . 'exception.html');
+
+    $Dom->getElementsByTagName('title')->item(0)->nodeValue = $this->getTitle();
+    $Dom->getElementById('StTitle')->nodeValue = $this->getTitle();
+    $Dom->getElementById('StMessage')->nodeValue = $this->getMessage();
+
+    $Html = $Dom->saveHTML();
+
+    die($Html);
+
+    if ($Print) {
+      die($Html);
+    } else {
+      return $Html;
+    }
+
+  }
+
+  /**
+   * generates a html with the notice message
+   *
+   * @param string $StMessage
+   * @param string $StClass
+   *
+   * @author Dimitri Lameri <Contato@DimitriLameri.com>
+   */
+  public static function _getNoticeAsHTML($StMessage, $StClass) {
+
+    $Dom = new DOMDocument();
+    $Dom->loadHTMLFile(ABSPAGEDIR . 'notice.html');
+
+    $StClass = $Dom->getElementById('box')->getAttribute('class') . ' ' . $StClass;
+    $Dom->getElementById('box')->setAttribute('class',$StClass);
+
+    $Dom->getElementsByTagName('title')->item(0)->nodeValue = $StClass;
+    $Dom->getElementById('StMessage')->nodeValue = $StMessage;
+
+    $Html = $Dom->saveHTML();
+
+    return $Html;
+  }
+
+  /**
+   * get the saved notice and shows it
+   *
+   * @return string
+   *
+   * @author Dimitri Lameri <Contato@DimitriLameri.com>
+   */
+  public static function getNotice() {
+    $Html = getSessionProp('notice');
+    if ($Html) {
+      setSessionProp('notice','');
+      return $Html;
+    }
+  }
+
+  /**
+   * set the first notice to be shown after
+   *
+   * @return bool
+   *
+   * @author Dimitri Lameri <Contato@DimitriLameri.com>
+   */
+  public static function setNotice($StMessage, $StClass) {
+    setSessionProp('notice',self::_getNoticeAsHTML($StMessage, $StClass));
+
+    return true;
   }
 
   /**
@@ -104,35 +192,6 @@ Class ErrorHandler extends ErrorException {
 
     return $ArTitle[$this->TypeOfError];
 
-  }
-
-  /**
-   * get the saved notice and shows it
-   *
-   * @return string
-   *
-   * @author Dimitri Lameri <Contato@DimitriLameri.com>
-   */
-  public function getNotice() {
-    $Html = getSessionProp('notice');
-    setSessionProp('notice','');
-    return $Html;
-
-  }
-
-  /**
-   * set the first notice to be shown after
-   *
-   * @return bool
-   *
-   * @author Dimitri Lameri <Contato@DimitriLameri.com>
-   */
-  private function setNotice() {
-    if (getSessionProp('notice') == '') {
-      setSessionProp('notice',$this->_getErrorAsHTML());
-    }
-
-    return true;
   }
 
   /**
