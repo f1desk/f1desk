@@ -1,10 +1,8 @@
 <?php
-
   /*default language*/
   handleLanguage(__FILE__);
   require_once('header.php');
   require_once('homeData.php');
-
 ?>
 <div id='homeTemplate'>
 
@@ -36,6 +34,4 @@
   <?endif;?>
 
 </div>
-<?php
-require_once('footer.php');
-?>
+<?php require_once('footer.php'); ?>

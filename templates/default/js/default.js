@@ -1,6 +1,4 @@
 var templateDir = 'templates/default/';
-var adminDir = templateDir + 'admin/';
-var adminOptions = ['manageUsers.php','manageMenus.php','preferences.php'];
 
 /**
  *  OBJECT CONTAIN GLOBALS OBJECTS AND METHODS FROM THE DEFAULT TEMPLATE
@@ -786,18 +784,17 @@ var Search = {
 };
 
 var Admin = {
+  
+  'adminDir': templateDir + 'admin/' ,
+  
   'changeOption':function(StPage) {
-    for(i in adminOptions) {
-      if (adminOptions[i] == StPage) {
-        tParams = {
-          'method':'get',
-          'okCallBack':function(response) {
-            appendHTML(response,gID('contentAdminMenu'),true);
-          }
-        };
-        xhr.makeRequest('Change Menu',adminDir + StPage,tParams);
+    tParams = {
+      'method':'get',
+      'okCallBack':function(response) {
+        appendHTML(response,gID('contentAdminMenu'),true);
       }
-    }
+    };
+    xhr.makeRequest('Change Menu', this.adminDir + StPage,tParams);
   }
 };
 

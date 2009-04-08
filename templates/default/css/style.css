@@ -392,7 +392,14 @@ html>body #main{
 	text-align:left;
 	width:80%;
 }
-
+.homeBox h3{
+  border-bottom:1px solid #ABABAB;
+  color:#02764F;
+  margin-bottom:20px;
+  margin-top:25px;
+  width:98%;
+}
+/*
 .newElement{
 	cursor: pointer !important;
 }
@@ -401,13 +408,13 @@ html>body #main{
 	xsystemfont:none;
 	background:scroll 3px 4px;
 	border:2px solid #DDDDDD;
-	fontfamily:'Trebuchet MS',verdana,sans;
-	fontsize:10px;
-	fontsizeadjust:none;
-	fontstretch:normal;
-	fontstyle:normal;
-	fontvariant:normal;
-	fontweight:bold;
+	font-family:'Trebuchet MS',verdana,sans;
+	font-size:10px;
+	font-sizeadjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
 	lineheight:normal;
 	padding:8px 5px 1px 5px !important;
 	color:#ffffff;

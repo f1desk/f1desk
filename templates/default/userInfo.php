@@ -12,7 +12,7 @@
   <!--[ERROR/OK BOX]-->
     <?= ErrorHandler::getNotice(); ?>
   <!--[ERROR/OK BOX]-->
-	<span class='homeBoxTitle' onclick="baseActions.toogleArrow('dataArrow', 'dataBoxEditAreaContent', 'hide')"><?=USER_DATA?></span>
+	<h3><?=USER_DATA?></h3>
 	<span class='homeBoxTitle newElement' onclick='Home.startDataEdit();'><img src='<?= TEMPLATEDIR ?>images/button_edit.png'> Editar</span>
 	<span class='homeBoxTitle loadingRequest' id='dataLoading'><img src='<?= TEMPLATEDIR ?>images/loading.gif'> Carregando...</span>
 	<div id='dataBoxContent' class='homeBoxContent'>

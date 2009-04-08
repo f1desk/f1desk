@@ -1,4 +1,3 @@
-<?php require_once(dirname(__FILE__).'/../../../main.php');?>
 <div id='adminWrapper'>
   <div id='createSupporter' class='Left'>
     <h3>Cadastrar Atendente</h3>
