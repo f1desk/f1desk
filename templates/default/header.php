@@ -40,9 +40,9 @@
           <div class='Left' id='content'>
             <div class='Left' id='contentHeader'>
             	<? if ( count($ArMenu) != 0 ): ?>
-	              <ul>
+	              <ul id='menuList'>
 	              	<?foreach ($ArMenu as $ArMenuSettings):?>
-									<li>
+									<li id='<?=$ArMenuSettings['Link']?>'>
 										<span class='<?=$ArMenuSettings['Current']?>'>
 											<a href='?page=<?=$ArMenuSettings['Link']?>'>
 												<?=$ArMenuSettings['Name']?>

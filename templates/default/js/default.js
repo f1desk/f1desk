@@ -794,7 +794,7 @@ var Admin = {
         appendHTML(response,gID('contentAdminMenu'),true);
       }
     };
-    xhr.makeRequest('Change Menu', this.adminDir + StPage,tParams);
+    xhr.makeRequest('Change Menu', Admin.adminDir + StPage,tParams);
   },
 
   'clearUserForm':function(){
@@ -812,18 +812,20 @@ var Admin = {
   'editMenu':function() {
     var StName = gID('StNameEdit').value;
     var StAddress = gID('StAddressEdit').value;
+    var StOldAddress = gID('StOldAddressEdit').value;
     StName = StName.replace(/\.php/,'');
     StAddress = StAddress.replace(/(\.php)|(\.html)|(\.htm)/,'');
 
-    var content = { 'StAction':'editMenu', 'StName':StName, 'StAddress':StAddress };
+    var content = { 'StAction':'editMenu', 'StName':StName, 'StAddress':StAddress, 'StOldAddress':StOldAddress };
     var tParams = {
       'method':'post',
       'content':content,
       'okCallBack':function(response) {
+        Admin.editFromMenuList(StOldAddress, StName, StAddress)
         appendHTML(response,gID('contentAdminMenu'),true);
       }
     };
-    xhr.makeRequest('Edit Menu', this.adminDir + 'manageMenus.php', tParams);
+    xhr.makeRequest('Edit Menu', Admin.adminDir + 'manageMenus.php', tParams);
   },
 
   'hideEditMenu':function() {
@@ -831,6 +833,28 @@ var Admin = {
     gID('manageMenu').style.width = '100%';
     var table = gTN('table');
     table[0].style.width = '30%';
+  },
+
+  'editFromMenuList' : function (StOldAddress, StName, StAddress) {
+    var Li = gID(StOldAddress);
+
+    var A = gTN('a', Li).item(0);
+    Li.setAttribute('id',StAddress)
+    A.setAttribute('href','?page=' + StAddress);
+    appendHTML(StName,A,true);
+  },
+
+  'insertInMenuList' : function(StName, StAddress) {
+    var menuList = gID('menuList');
+    var Html = '' +
+      '<li id="' + StAddress+ '">' +
+        '<span>' +
+					'<a href="?page=' + StAddress + '">' +
+						StName +
+					'</a>' +
+				'</span>' +
+      '</li>';
+    appendHTML(Html,menuList);
   },
 
   'insertMenu':function() {
@@ -843,10 +867,11 @@ var Admin = {
       'method':'post',
       'content':content,
       'okCallBack':function(response) {
+        Admin.insertInMenuList(StName,StAddress);
         appendHTML(response,gID('contentAdminMenu'),true);
       }
     };
-    xhr.makeRequest('Insert Menu', this.adminDir + 'manageMenus.php', tParams);
+    xhr.makeRequest('Insert Menu', Admin.adminDir + 'manageMenus.php', tParams);
   },
 
   'removeMenu':function(IDMenu) {
@@ -857,10 +882,11 @@ var Admin = {
           'method':'post',
           'content':content,
           'okCallBack':function(response) {
+            removeElements(gID(IDMenu));
             appendHTML(response,gID('contentAdminMenu'),true);
           }
         };
-        xhr.makeRequest('Remove Menu', this.adminDir + 'manageMenus.php',tParams);
+        xhr.makeRequest('Remove Menu', Admin.adminDir + 'manageMenus.php',tParams);
       }
     };
     flowWindow.confirm(i18n.deleteMenu,tFunction);
@@ -878,17 +904,15 @@ var Admin = {
   },
 
   'showEditMenu':function(IDMenu) {
-    gID('StNameEdit').value = gID(IDMenu).parentNode.previousSibling.textContent;
+    gID('StNameEdit').value = trim(gID(IDMenu).textContent);
     gID('StAddressEdit').value = IDMenu;
+    gID('StOldAddressEdit').value = IDMenu;
     gID('manageMenu').style.width = '30%';
     var table = gTN('table');
     table[0].style.width = '100%';
     gID('editMenu').className = gID('editMenu').className.replace(/ ?Invisible ?/,'');
   }
-<<<<<<< HEAD:templates/default/js/default.js
-=======
 
->>>>>>> 3b8a90a3a3f10b56a802ae2054c52325c1cd96f0:templates/default/js/default.js
 };
 
 var flowWindow = {

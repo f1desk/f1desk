@@ -170,11 +170,14 @@ Class ErrorHandler extends ErrorException {
   /**
    * set the first notice to be shown after
    *
+   * @param string StMessage
+   * @param string StClass ok|error
+   *
    * @return bool
    *
    * @author Dimitri Lameri <Contato@DimitriLameri.com>
    */
-  public static function setNotice($StMessage, $StClass) {
+  public static function setNotice($StMessage, $StClass = 'ok') {
     setSessionProp('notice',self::_getNoticeAsHTML($StMessage, $StClass));
 
     return true;

@@ -35,6 +35,7 @@
     <p>
       <button class='button' onclick='Admin.editMenu(gID("StAddressEdit").value);'>Cadastrar</button>
       <button class='button' onclick='Admin.hideEditMenu();'>Limpar</button>
+      <input type='hidden' id='StOldAddressEdit' name='StOldAddressEdit' />
     </p>
   </div>
 </div>

@@ -14,7 +14,7 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
     break;
 
     case 'editMenu':
-      if (!setOption($_POST['StAddress'], array('id'=>$_POST['StAddress'],'text'=>$_POST['StName']) ,'id'))
+      if (!setOption($_POST['StOldAddress'], array('id'=>$_POST['StAddress'],'text'=>$_POST['StName']) ,'id'))
         ErrorHandler::setNotice(MENU_EDIT_ERR,'error');
     break;
   }
