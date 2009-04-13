@@ -16,7 +16,7 @@
     <menu_tabs id="search">Busca Avançada</menu_tabs>
     <menu_tabs id="admin">Administração</menu_tabs>
     <menu_tabs id="logout">Logout</menu_tabs>
-  </menu>
+  <menu_tabs id="teste">teste</menu_tabs><menu_tabs id="teste2">teste2</menu_tabs><menu_tabs id="teste3">teste3</menu_tabs></menu>
 
   <html_permited>
     <tag>font</tag>

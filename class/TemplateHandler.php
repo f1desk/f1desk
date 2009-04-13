@@ -397,90 +397,27 @@ abstract class TemplateHandler {
 	}
 
 	/**
-	 * Return the HTML Table with all Canned Responses
+	 * Print all menus
 	 *
-	 * @param array $ArCannedResponses
-	 * @param string $StClass
-	 * @return string
 	 */
-	public static function showCannedAnswers($ArCannedResponses, $StClass = 'inputCombo') {
-	  $StHtml = '';
-	  if (!empty($ArCannedResponses[0]['IDCannedResponse'])) {
-      foreach ($ArCannedResponses as $ArCannedResponse) {
-        $StHtml .= "<tr id='cannedTR{$ArCannedResponse['IDCannedResponse']}'>";
-        $StHtml .= '<td class="TicketNumber">';
-        $StHtml .= $ArCannedResponse['StTitle'];
-        $StHtml .= "<input type='hidden' id='StCannedTitle{$ArCannedResponse['IDCannedResponse']}' value='".f1desk_escape_string($ArCannedResponse['StTitle'],false,true)."'>";
-        $StHtml .= '</td><td>';
-        $StHtml .= "<input type='hidden' id='TxCannedResponse{$ArCannedResponse['IDCannedResponse']}' value='".f1desk_escape_string($ArCannedResponse['TxMessage'],false,true)."'>";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/button_edit.png' alt='Editar' title='Editar' class='cannedAction' onclick='Home.startEditElement(\"canned\",\"{$ArCannedResponse['IDCannedResponse']}\");'>";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/button_cancel.png' alt='Remover' title='Remover' class='cannedAction' onclick='Home.removeCannedResponse(\"{$ArCannedResponse['IDCannedResponse']}\")'>";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/visualizar.png' title='Visualizar' id='previemCanned{$ArCannedResponse['IDCannedResponse']}' alt='Visualizar' class='cannedAction' onclick='flowWindow.previewCannedResponse(\"".f1desk_escape_string($ArCannedResponse['StTitle'],false,true).'","'.f1desk_escape_string($ArCannedResponse['TxMessage'], true,true).'");\'>';
-        $StHtml .= '</td> </tr>';
+	public static function showMenus($ArMenus) {
+	  $StHTML = ''; $i = 0;
+    if (!empty($ArMenus[0])) {
+      foreach ($ArMenus as $Menu) {
+        $StHTML .= ($i%2 == 0) ? '<tr class="Alt">' : '<tr>';
+        $StHTML .= "<td>{$Menu['Name']}</td>";
+        $StHTML .= '<td>';
+        $StHTML .= "<a id='{$Menu['Link']}' href='javascript:void(0);' onclick='Admin.showEditMenu(this.id);'>";
+        $StHTML .= '<img src="templates/default/images/button_edit.png"> </a></td>';
+        $StHTML .= "<a id='{$Menu['Link']}' href='javascript:void(0);' onclick='Admin.removeMenu(this.id);'>";
+        $StHTML .= '<img src="templates/default/images/button_cancel.png"> </a></td>';
+        $StHTML .= '</tr>';
+        $i++;
       }
     } else {
-      $StHtml = '<tr id="noCanned">';
-      $StHtml .= '<td colspan="3" align="center">'.NO_CANNED.'</td></tr>';
-    }
-    return $StHtml;
-	}
-
-	/**
-	 * Return the HTML Table with all Notes
-	 *
-	 * @param array $ArNotes
-	 * @param string $StClass
-	 * @return string
-	 */
-	public static function showNotes($ArNotes, $StClass = '') {
-	  $StHtml = '';
-	  if (empty($ArNotes[0])) {
-      $StHtml = '<tr id="noNote">';
-      $StHtml .= '<td colspan="3" align="center">'.NO_NOTES.'</td> </tr>';
-	  } else {
-      foreach ($ArNotes as $ArNote) {
-        $StHtml .= "<tr id='noteTR{$ArNote['IDNote']}'>";
-        $StHtml .= '<td class="TicketNumber">';
-        $StHtml .= $ArNote['StTitle'];
-        $StHtml .= "<input type='hidden' id='StNoteTitle{$ArNote['IDNote']}' value=".f1desk_escape_string($ArNote['StTitle'],false,true)."> </td> <td>";
-        $StHtml .= "<input type='hidden' id='TxNote{$ArNote['IDNote']}' value='".f1desk_escape_string($ArNote['TxNote'],false,true)."'>";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/button_edit.png' alt='Editar' title='Editar' class='cannedAction' onclick=\"Home.startEditElement('note',{$ArNote['IDNote']});\">";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/button_cancel.png' alt='Remover' title='Remover' class='cannedAction' onclick=\"Home.removeNote({$ArNote['IDNote']})\">";
-        $StHtml .= "<img src='".TEMPLATEDIR."images/visualizar.png' alt='Visualizar' title='Visualizar' class='cannedAction' onclick='flowWindow.previewNote(\"".f1desk_escape_string($ArNote['StTitle'],false,true)."\", \"".f1desk_escape_string($ArNote['TxNote'], true, true)."\");'>";
-        $StHtml .= '</td> </tr>';
+        $StHTML = '<tr><td colspan="3">'.NO_MENUS.'</td></tr>';
       }
-    }
-    return $StHtml;
-	}
-
-	/**
-	 * Return the HTML Table with all Bookmarked Tickets
-	 *
-	 * @param array $ArBookmarks
-	 * @param string $StClass
-	 * @return string
-	 */
-	public static function showBookmarkedTickets($ArBookmarks) {
-	  $StHtml = '';
-	  if ( empty($ArBookmarks[0]) ) {
-      $StHtml .= '<tr id="noBookmark">';
-			$StHtml .= '<td colspan="3" align="center">'.NO_BOOKMARK.'</td> </tr>';
-	  } else {
-      foreach ($ArBookmarks as $ArBookmark) {
-        $StHtml .= "<tr id='bookmarkTR{$ArBookmark['IDTicket']}'>";
-				$StHtml .= '<td class="TicketNumber">';
-				$StHtml .= $ArBookmark['IDTicket'];
-				$StHtml .= "<input type='hidden' id='StBookmarkID{$ArBookmark['IDTicket']}' value='{$ArBookmark['IDTicket']}'>";
-				$StHtml .= '</td> <td>';
-				$StHtml .= $ArBookmark['StTitle'];
-				$StHtml .= "<input type='hidden' id='StBookmarkTitle{$ArBookmark['IDTicket']}' value={$ArBookmark['StTitle']}'>";
-				$StHtml .= '</td> <td>';
-				$StHtml .= "<img src='".TEMPLATEDIR."images/button_cancel.png' alt='Remover' title='Remover' class='cannedAction' onclick=\"Home.removeBookmark({$ArBookmark['IDTicket']})\">";
-				$StHtml .= "<img src='".TEMPLATEDIR."images/visualizar.png' alt='Visualizar' title='Visualizar' class='cannedAction' onclick=\"flowWindow.previewTicket({$ArBookmark['IDTicket']})\">";
-				$StHtml .= '</td> </tr>';
-      }
-    }
-    return $StHtml;
+    return $StHTML;
 	}
 }
 ?>

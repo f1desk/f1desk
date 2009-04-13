@@ -1,6 +1,8 @@
 var i18n = {
   'create':'Criar',
   'edit':'Editar',
+  'editData': 'Editar Dados',
+  'apply': 'Aplicar',
 
   'no':'Não',
   'yes':'Sim',
@@ -46,5 +48,7 @@ var i18n = {
   'noRecipient':'É necessário escolher um destinatário',
 
   'flowAlertTitle':'Atenção',
-  'flowConfirmTitle':'Confime'
+  'flowConfirmTitle':'Confime',
+
+  'deleteMenu':'Deseja remover o menu?'
 };

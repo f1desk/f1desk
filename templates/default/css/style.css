@@ -279,7 +279,7 @@ html>body #main{
   font-weight:bold;
 }
 
-.tableTickets thead th {
+.tableTickets thead th, .tableTickets tbody th {
   background-image:url("../images/bg_table_th.gif");
   background-repeat: repeat-x;
   color:#4679A8;
@@ -349,7 +349,7 @@ html>body #main{
 
 .inputCombo {
   border:1px solid #2E669F;
-  color:#7B9FC3;
+  color:#7F8689;
   font-weight:bold;
   font-size:12px;
 }
@@ -392,6 +392,9 @@ html>body #main{
 	text-align:left;
 	width:80%;
 }
+.homeBox button{
+  margin-bottom:20px;
+}
 .homeBox h3{
   border-bottom:1px solid #ABABAB;
   color:#02764F;
@@ -399,66 +402,29 @@ html>body #main{
   margin-top:25px;
   width:98%;
 }
-/*
-.newElement{
-	cursor: pointer !important;
+h3 .loading{
+  background-color:#708FAE;
+  float: right;
+  font-size: 11px;
+  color: white;
+  padding: 4px;
+  visibility: visible;
+}
+h3 .loading img{ 
+  vertical-align: middle; 
+}
+h3 .hidden {
+  visibility: hidden !important;
+}
+#dataTable tbody tr td pre{ padding-left:15px; }
+#dataTable textarea{  height: 80px !important;  }
+
+.homeTable tbody .hiddenTR, #cannedTable tbody tr td .hiddenTR { display: none; }
+.homeTable tbody tr td div img{
+  cursor: pointer;
+  margin-left: 2px;
 }
 
-.loadingRequest{
-	xsystemfont:none;
-	background:scroll 3px 4px;
-	border:2px solid #DDDDDD;
-	font-family:'Trebuchet MS',verdana,sans;
-	font-size:10px;
-	font-sizeadjust:none;
-	font-stretch:normal;
-	font-style:normal;
-	font-variant:normal;
-	font-weight:bold;
-	lineheight:normal;
-	padding:8px 5px 1px 5px !important;
-	color:#ffffff;
-	visibility:hidden;
-}
-
-.homeBox .homeBoxTitle{
-	background:#9CB6CD none repeat scroll 0 0;
-	padding:5px 5px 2px;
-	cursor: default;
-	font-weight: bold;
-}
-
-.homeBox .homeBoxContent{
-	padding:15px;
-	border: 2px ridge #9CB6CD;
-}
-
-.homeBox .homeBoxContent .editAreaTitle{
-	background-color: #B6CFDC;
-	padding:2px 5px;
-	margin: 5px;
-	cursor: pointer;
-}
-
-.homeBox .homeBoxContent .editAreaTitle img{
-	cursor: pointer;
-	margin-right: 2px;
-}
-
-.homeBox .homeBoxContent .editAreaContent{
-	margin: 10px;
-	font-weight: bold;
-}
-
-.homeBox .homeBoxContent .editAreaContent input, .homeBox .homeBoxContent .editAreaContent textarea{
-	margin-left: 5px;
-	font-weight: none;
-}
-
-.homeBox .homeBoxContent .cannedAction{
-	margin-left:2px;
-	cursor: pointer;
-}
 /*HOME TEMPLATE END;*/
 
 #AttachCall {
@@ -651,7 +617,14 @@ html>body #main{
  width:25%;
 }
 
+#manageMenu {
+ width:100%;
+}
+
 #manageMenu table {
   width:30%;
-  font-weight:bold;
+}
+
+#editMenu {
+  margin-left:5%;
 }
