@@ -79,16 +79,9 @@ Class ErrorHandler extends ErrorException {
     $Dom->getElementById('ItSeverity')->nodeValue = $this->getSeverity();
     $Dom->getElementById('StFile')->nodeValue = $this->getFile();
     $Dom->getElementById('ItLine')->nodeValue = $this->getLine();
-
-    #
-    # VERIFICAR DEPOIS
-    #
     $Dom->getElementById('StBacktrace')->nodeValue = print_r($this->_filterTrace($this->getTrace()),1);
 
-
     $Html = $Dom->saveHTML();
-
-    die($Html);
 
     if ($Print) {
       die($Html);
@@ -112,11 +105,20 @@ Class ErrorHandler extends ErrorException {
 
     $Dom->getElementsByTagName('title')->item(0)->nodeValue = $this->getTitle();
     $Dom->getElementById('StTitle')->nodeValue = $this->getTitle();
-    $Dom->getElementById('StMessage')->nodeValue = $this->getMessage();
+
+    $StMessage = unserialize($this->getMessage());
+
+    if (is_array($StMessage)) {
+      $Pre = $Dom->createElement('pre');
+      $Pre->nodeValue = print_r($StMessage,1);
+      $Dom->getElementById('StMessage')->nodeValue = '';
+      $Dom->getElementById('StMessage')->appendChild($Pre);
+      $Pre->setAttribute('style','text-align:left');
+    } else {
+      $Dom->getElementById('StMessage')->nodeValue = $StMessage;
+    }
 
     $Html = $Dom->saveHTML();
-
-    die($Html);
 
     if ($Print) {
       die($Html);
@@ -209,7 +211,7 @@ Class ErrorHandler extends ErrorException {
   private function _saveData($Type,$StMessage = '',$ItCode = 0,$ItSeverity = 0,$StFile = '',$ItLine = 0 ) {
 
     if ($Type == self::TYPE_EXP)
-      Exception::__construct($StMessage,$ItCode);
+      Exception::__construct(serialize($StMessage),$ItCode);
     else
       ErrorException::__construct($StMessage,$ItCode,$ItSeverity,$StFile,$ItLine);
 
@@ -327,7 +329,7 @@ WHERE
    * @param array $Array
    */
   public static function Debug( $Array ) {
-    throw new ErrorHandler('<pre style="text-align:left">' . print_r($Array,1) . '</pre>');
+    throw new ErrorHandler($Array);
   }
 
   /**
