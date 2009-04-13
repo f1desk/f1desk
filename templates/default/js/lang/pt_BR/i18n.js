@@ -48,5 +48,6 @@ var i18n = {
   'flowAlertTitle':'Atenção',
   'flowConfirmTitle':'Confime',
 
-  'deleteMenu':'Deseja remover o menu?'
+  'deleteMenu':'Deseja remover o menu?',
+  'noDepartment':'Escolha um departamento!'
 };

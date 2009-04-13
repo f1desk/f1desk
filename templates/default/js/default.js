@@ -811,6 +811,41 @@ var Search = {
 };
 
 var Admin = {
+  'addDepartment':function(){
+
+    var combo = gID('IDDepartment');
+    IDDepartment = combo[combo.selectedIndex].value;
+
+    if(combo[combo.selectedIndex].value == 'null') {
+      flowWindow.alert(i18n.noDepartment);
+      return false;
+    }
+
+    if(gID('p'+IDDepartment))
+      return false;
+
+    if(gID('null'))
+      gID('null').className = 'Invisible';
+
+    if(gID('ArDepartments')) {
+      gID('ArDepartments').value += ','+IDDepartment;
+    } else {
+      var hidden = createElement('input',{'type':'hidden','id':'ArDepartments','value':IDDepartment});
+      document.body.appendChild(hidden);
+    }
+
+    var p = createElement('p',{'id':'p'+IDDepartment});
+    var span = createElement('span');
+    var link = createElement('a',{'href':'javascript:void(0);','onclick':'Admin.removeDepartment('+IDDepartment+');'});
+    var img = createElement('img',{'src':templateDir+'images/button_cancel.png','style':'margin-right:5px;'});
+    text = createTextNode(combo[combo.selectedIndex].textContent);
+    link.appendChild(img)
+    span.appendChild(text);
+    p.appendChild(link);
+    p.appendChild(span)
+    gID('Departments').appendChild(p);
+  },
+
   'changeOption':function(StPage) {
     for(i in adminOptions) {
       if (adminOptions[i] == StPage) {
@@ -825,21 +860,33 @@ var Admin = {
     }
   },
 
-  'removeMenu':function(IDMenu) {
-    var tFunction = function(ok) {
-      if(ok) {
-        var content = { 'StAction':'removeMenu', 'IDMenu':IDMenu };
-        var tParams = {
-          'method':'post',
-          'content':content,
-          'okCallBack':function(response) {
-            appendHTML(response,gID('contentAdminMenu'),true);
-          }
-        };
-        xhr.makeRequest('Remove Menu',adminDir + 'manageMenus.php',tParams);
+  'clearUserForm':function(){
+    gID('StName').value = '';
+    gID('StEmail').value = '';
+    gID('StPassword').value = '';
+    gID('IDDepartment').selectedIndex = 0;
+    var fieldSet = gID('Departments');
+    while( fieldSet.getElementsByTagName('p').length != 0) {
+      fieldSet.getElementsByTagName('p')[0].parentNode.removeChild( fieldSet.getElementsByTagName('p')[0] );
+    }
+    gID('null').className = '';
+  },
+
+  'editMenu':function() {
+    var StName = gID('StNameEdit').value;
+    var StAddress = gID('StAddressEdit').value;
+    StName = StName.replace(/\.php/,'');
+    StAddress = StAddress.replace(/(\.php)|(\.html)|(\.htm)/,'');
+
+    var content = { 'StAction':'editMenu', 'StName':StName, 'StAddress':StAddress };
+    var tParams = {
+      'method':'post',
+      'content':content,
+      'okCallBack':function(response) {
+        appendHTML(response,gID('contentAdminMenu'),true);
       }
     };
-    flowWindow.confirm(i18n.deleteMenu,tFunction);
+    xhr.makeRequest('Edit Menu', adminDir + 'manageMenus.php', tParams);
   },
 
   'hideEditMenu':function() {
@@ -865,14 +912,42 @@ var Admin = {
     xhr.makeRequest('Insert Menu', adminDir + 'manageMenus.php', tParams);
   },
 
+  'removeMenu':function(IDMenu) {
+    var tFunction = function(ok) {
+      if(ok) {
+        var content = { 'StAction':'removeMenu', 'IDMenu':IDMenu };
+        var tParams = {
+          'method':'post',
+          'content':content,
+          'okCallBack':function(response) {
+            appendHTML(response,gID('contentAdminMenu'),true);
+          }
+        };
+        xhr.makeRequest('Remove Menu',adminDir + 'manageMenus.php',tParams);
+      }
+    };
+    flowWindow.confirm(i18n.deleteMenu,tFunction);
+  },
+
+  'removeDepartment':function(IDDepartment) {
+    if(!gID('p'+IDDepartment))
+      return false;
+
+      var pattern = new RegExp(',?'+IDDepartment);
+      gID('ArDepartments').value = gID('ArDepartments').value.replace(pattern,'');
+      removeElements(gID('p'+IDDepartment));
+      if(gID('Departments').getElementsByTagName('p').length == 0)
+        gID('null').className = '';
+  },
+
   'showEditMenu':function(IDMenu) {
-    gID('StNameEdit').value = IDMenu
-    gID('StAddressEdit').value = gID(IDMenu).parentNode.previousSibling.textContent;
+    gID('StNameEdit').value = gID(IDMenu).parentNode.previousSibling.textContent;
+    gID('StAddressEdit').value = IDMenu;
     gID('manageMenu').style.width = '30%';
     var table = gTN('table');
     table[0].style.width = '100%';
     gID('editMenu').className = gID('editMenu').className.replace(/ ?Invisible ?/,'');
-  },
+  }
 };
 
 var flowWindow = {
