@@ -823,7 +823,7 @@ var Admin = {
         appendHTML(response,gID('contentAdminMenu'),true);
       }
     };
-    xhr.makeRequest('Edit Menu', adminDir + 'manageMenus.php', tParams);
+    xhr.makeRequest('Edit Menu', this.adminDir + 'manageMenus.php', tParams);
   },
 
   'hideEditMenu':function() {
@@ -846,7 +846,7 @@ var Admin = {
         appendHTML(response,gID('contentAdminMenu'),true);
       }
     };
-    xhr.makeRequest('Insert Menu', adminDir + 'manageMenus.php', tParams);
+    xhr.makeRequest('Insert Menu', this.adminDir + 'manageMenus.php', tParams);
   },
 
   'removeMenu':function(IDMenu) {
@@ -860,7 +860,7 @@ var Admin = {
             appendHTML(response,gID('contentAdminMenu'),true);
           }
         };
-        xhr.makeRequest('Remove Menu',adminDir + 'manageMenus.php',tParams);
+        xhr.makeRequest('Remove Menu', this.adminDir + 'manageMenus.php',tParams);
       }
     };
     flowWindow.confirm(i18n.deleteMenu,tFunction);
