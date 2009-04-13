@@ -1,6 +1,8 @@
 var i18n = {
   'create':'Criar',
   'edit':'Editar',
+  'editData': 'Editar Dados',
+  'apply': 'Aplicar',
 
   'no':'Não',
   'yes':'Sim',

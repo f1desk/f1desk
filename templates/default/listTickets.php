@@ -18,7 +18,7 @@
       		  <span id="notReadCount<?=$ID?>">
     			    <?= $ArTickets[$ID]['notReadCount'] ?>
       		  </span>
-      		  <?=TO_READ?>
+      		  <?=UNREAD?>
     		  </span>
     		<? endif; ?>
       </div>
