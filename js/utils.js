@@ -277,6 +277,14 @@ function br2nl(Text){
 }
 
 /**
+ * trim
+ * @param Text < text >
+ */
+function trim(Text) {
+  return Text.replace(/^\s*/, "").replace(/\s*$/, "");
+}
+
+/**
  *  merge
  *  @param destination < obj >
  *  @param source < obj >

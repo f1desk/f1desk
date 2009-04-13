@@ -1,6 +1,4 @@
 var templateDir = 'templates/default/';
-var adminDir = templateDir + 'admin/';
-var adminOptions = ['manageUsers.php','manageMenus.php','preferences.php'];
 
 /**
  *  OBJECT CONTAIN GLOBALS OBJECTS AND METHODS FROM THE DEFAULT TEMPLATE
@@ -48,135 +46,136 @@ var baseActions = {
 var Home = {
 
   '_doLoading': function( formName, action ){
-    setStyle(  gID(formName+'Loading'),  {
-      'visibility': ( action=='hide' )?'hidden':'visible'
-    });
+    var loadingBox = gID(formName + 'Loading'); if(!loadingBox) return false;
+    if (action == 'hide')
+      loadingBox.className = 'loading hidden';
+    else
+      loadingBox.className = 'loading';
   },
 
-  'editCannedResponse': function() {
-    var editForm = gID("cannedForm");
-    if(editForm.elements['IDCanned'].value == ""){
-      flowWindow.alert(i18n.noCannedSelected); return false;
+  'editData': function() {
+    if (gID('dataEditAction').value == "start"){
+      var dataTableTR = gID('dataTable').getElementsByTagName('TR');
+      /*Deixando em modo de edição*/
+      for (var aux=1; aux < dataTableTR.length; aux = aux+2) {
+        var TD = dataTableTR.item(aux).getElementsByTagName('TD')[0];
+        var PRE = TD.getElementsByTagName('PRE')[0];
+        if(PRE.innerHTML == '<i>vazio</i>') PRE.innerHTML = "";
+        if (aux == 7 || aux == 9)
+          PRE.innerHTML = '<textarea id="'+TD.id+'Input" class="answerArea">'+PRE.innerHTML+'</textarea>';
+        else if (aux == 5) {
+          PRE.innerHTML = '<input type="radio" id="'+TD.id+'Input" name="'+TD.id+'Input" value="'+i18n.yes+'" checked>'+i18n.yes;
+          PRE.innerHTML += '<input type="radio" id="'+TD.id+'Input" name="'+TD.id+'Input" value="'+i18n.no+'" >'+i18n.no;
+        }
+        else
+          PRE.innerHTML = '<input id="'+TD.id+'Input" type="text" class="inputCombo" value="'+PRE.innerHTML+'" >';
+      }
+      /*Modificando o botão*/
+      gID('dataButton').getElementsByTagName('IMG')[0].src = templateDir + 'images/unignore.png';
+      gID('dataButton').getElementsByTagName('SPAN')[0].innerHTML = i18n.apply;
+      gID('dataEditAction').value = "finish";
+    } else {
+      var tParams = {
+        'method':'post',
+        'content': {
+          'StAction':'updateUserData',
+          'StName': gID('StDataNameTDInput').value,
+          'StEmail': gID('StDataEmailTDInput').value,
+          'BoNotify': (gID('StDataNotifyTDInput').checked)?1:0,
+          'TxHeader': gID('TxDataHeaderTDInput').value,
+          'TxSign': gID('TxDataSignTDInput').value
+        },
+        'startCallBack': function(){
+          gID('dataEditAction').value = "start";
+          Home._doLoading('data', 'show');
+        },
+        'okCallBack':function(response) {
+          appendHTML(response, gID('dataBox'), true);
+        }
+      };
+      xhr.makeRequest('Edit User Data',templateDir + 'userInfo.php',tParams);
     }
-    this._doLoading( 'canned','show' );
-    var content = {
-      'StArea': 'CannedResponses',
-      'StAction':'edit',
-      'IDCannedResponse': editForm.elements['IDCanned'].value,
-      'StTitle': editForm.elements['StTitle'].value,
-      'TxMessage': editForm.elements['TxCannedResponse'].value
-    };
-    var tParams = {
-      'enqueue':1,
-      'method':'post',
-      'content':content,
-      'okCallBack': function(htmlEdited){
-        appendHTML(htmlEdited, gID('cannedResponsesBox'), true);
-        Home._doLoading( 'canned','hide' );
-        baseActions.toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide');
-      }
-    };
-    var tUrl = templateDir + 'cannedResponses.php';
-    xhr.makeRequest('editCannedResponse',tUrl,tParams);
   },
 
-  'editNote': function() {
-    var editForm = gID("noteForm");
-    if(editForm.elements['IDNote'].value == ""){
-      flowWindow.alert(i18n.noNoteSelected); return false;
+  'elementCreateSubmit': function(elementName) {
+    if (elementName == 'canned'){
+      var tURL = 'cannedResponses.php'; var StAction = 'createCannedResponse';
     }
-    this._doLoading( 'note','show' );
-    var content = {
-      'StArea':'Notes',
-      'StAction':'edit',
-      'IDNote': editForm.elements['IDNote'].value,
-      'StTitle': editForm.elements['StTitle'].value,
-      'TxNote': editForm.elements['TxNote'].value
-    };
+    else if(elementName == 'notes'){
+      var tURL = 'notes.php'; var StAction = 'createNote';
+    }
     var tParams = {
-      'enqueue':1,
       'method':'post',
-      'content':content,
-      'okCallBack': function( htmlEdited ){
-        appendHTML(htmlEdited, gID('notesBox'), true);
-        Home._doLoading( 'note','hide' );
-        baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide');
+      'content': {
+        'StAction': StAction,
+        'StTitle': gID(elementName + 'InsertTitle').value,
+        'TxMessage': gID(elementName + 'InsertAnswer').value,
+        'BoPersonal': 1
+      },
+      'startCallBack': function(){
+        if(elementName == 'canned')
+          Home._doLoading('cannedResponse', 'show');
+        else if(elementName == 'notes')
+          Home._doLoading('notes', 'show');
+      },
+      'okCallBack':function(response) {
+        if(elementName == 'canned') var element = gID('cannedResponsesBox');
+        else if(elementName == 'notes') var element = gID('notesBox');
+        appendHTML(response, element, true);
       }
     };
-    var tUrl = templateDir + 'notes.php';
-    xhr.makeRequest('editNote',tUrl,tParams);
+    xhr.makeRequest('Create Element',templateDir + tURL,tParams);
   },
 
-  'newCannedResponse': function() {
-    this._doLoading( 'canned','show' );
-    var editForm = gID("cannedForm");
-    var content = {
-      'StArea':'CannedResponses',
-      'StAction':'insert',
-      'IDCannedResponse': 'autoincrement',
-      'StTitle': editForm.elements['StTitle'].value,
-      'TxMessage': editForm.elements['TxCannedResponse'].value,
-      'BoPersonal': '1'
-    };
+  'elementEditSubmit': function(elementName, elementID) {
+    var StAction, tURL;
+    if (elementName == 'canned'){
+      StAction = 'editCannedResponse';
+      tURL = 'cannedResponses.php';
+    }
+    else if(elementName == 'notes'){
+      StAction = 'editNote';
+      tURL = 'notes.php';
+    }
     var tParams = {
-      'enqueue':1,
       'method':'post',
-      'content':content,
-      'okCallBack': function(htmlEdited) {
-        appendHTML(htmlEdited, gID('cannedResponsesBox'), true);
-        baseActions.toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide');
-        Home._doLoading( 'canned','hide' );
+      'content': {
+        'StAction': StAction,
+        'IDEdit': elementID,
+        'StTitle': gID(elementName + 'EditTitle'+elementID).value,
+        'TxMessage': gID(elementName + 'Answer'+elementID).value
+      },
+      'startCallBack': function(){
+        if (elementName == 'canned')
+          Home._doLoading('cannedResponse', 'show');
+        else if(elementName == 'notes')
+          Home._doLoading('notes', 'show');
+      },
+      'okCallBack':function(response) {
+        if(elementName == 'canned') var element = gID('cannedResponsesBox');
+        else if(elementName == 'notes') var element = gID('notesBox');
+        appendHTML(response, element, true);
       }
     };
-    var tUrl = templateDir + 'cannedResponses.php';
-    xhr.makeRequest('newCannedResponse',tUrl,tParams);
+    xhr.makeRequest('Edit Element',templateDir + tURL,tParams);
   },
 
-  'newNote': function() {
-    this._doLoading( 'note', 'show' );
-    var editForm = gID("noteForm");
-    var content = {
-      'StArea':'Notes',
-      'StAction':'insert',
-      'IDNote': 'autoincrement',
-      'StTitle': editForm.elements['StTitle'].value,
-      'TxNote': editForm.elements['TxNote'].value
-    };
-    var tParams = {
-      'enqueue':1,
-      'method':'post',
-      'content':content,
-      'okCallBack': function( htmlEdited ){
-        appendHTML(htmlEdited, gID('notesBox'), true);
-        baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide');
-        Home._doLoading( 'note','hide' );
-      }
-    };
-    var tUrl = templateDir + 'notes.php';
-    xhr.makeRequest('newNote',tUrl,tParams);
-  },
-
-  /*
-  * REFAZER usando a Ticket.removeBookmark
-  */
-  /*'removeBookmark': function(IDTicket) {
+  'removeBookmark': function(IDTicket) {
     if(!IDTicket){
       flowWindow.alert(i18n.noBookmarkID);
     }
     var tFunction = function(opt) {
       if (opt == 1) {
-        Home._doLoading( 'bookmark','show' );
+        Home._doLoading('bookmark','show');
         var tParams = {
           'enqueue':1,
           'method':'post',
           'content':{
-            'StArea':'Bookmark',
-            'StAction':'remove',
+            'StAction':'removeBookmark',
             'IDTicket': IDTicket
           },
-          'okCallBack': function(returnedValue){
-            appendHTML(returnedValue,gID('bookmarkBox'),true);
-            Home._doLoading( 'bookmark','hide' );
+          'okCallBack': function(response){
+            appendHTML(response,gID('bookmarkBox'),true);
           }
         };
         var tUrl = templateDir + 'bookmark.php';
@@ -184,31 +183,25 @@ var Home = {
       }
     };
     flowWindow.confirm(i18n.deleteBookmark,tFunction);
-  },*/
+  },
 
   'removeCannedResponse': function(IDCannedResponse) {
-    if(!IDCannedResponse){
-      flowWindow.alert(i18n.noCannedID);
-    }
+    if(!IDCannedResponse){  flowWindow.alert(i18n.noCannedID);  }
     var tFunction = function(opt) {
       if (opt == 1) {
-        Home._doLoading( 'canned','show' );
+        Home._doLoading( 'cannedResponse','show' );
         var tParams = {
           'enqueue':1,
           'method':'post',
           'content':{
-            'StArea':'CannedResponses',
-            'StAction':'remove',
+            'StAction':'removeCannedResponse',
             'IDCannedResponse': IDCannedResponse
           },
-          'okCallBack': function(htmlEdited){
-            appendHTML(htmlEdited, gID('cannedResponsesBox'), true);
-            baseActions.toogleArrow( 'cannedArrow', 'cannedBoxEditAreaContent', 'hide');
-            Home._doLoading( 'canned','hide' );
+          'okCallBack': function(response){
+            appendHTML(response, gID('cannedResponsesBox'), true);
           }
         };
-        var tUrl = templateDir + 'cannedResponses.php';
-        xhr.makeRequest('removeCannedResponse',tUrl,tParams);
+        xhr.makeRequest('removeCannedResponse',templateDir + 'cannedResponses.php',tParams);
       }
     }
     flowWindow.confirm(i18n.deleteCanned,tFunction);
@@ -220,19 +213,16 @@ var Home = {
     }
     var tFunction = function(opt) {
       if (opt == 1) {
-        Home._doLoading( 'note','show' );
+        Home._doLoading( 'notes','show' );
         var tParams = {
           'enqueue':1,
           'method':'post',
           'content':{
-            'StArea':'Notes',
-            'StAction':'remove',
+            'StAction':'removeNote',
             'IDNote': IDNote
           },
-          'okCallBack': function( htmlEdited ){
-            appendHTML(htmlEdited, gID('notesBox'), true);
-            baseActions.toogleArrow( 'noteArrow', 'noteBoxEditAreaContent', 'hide');
-            Home._doLoading( 'note','hide' );
+          'okCallBack': function( response ){
+            appendHTML(response, gID('notesBox'), true);
           }
         };
         var tUrl = templateDir + 'notes.php';
@@ -242,94 +232,42 @@ var Home = {
     flowWindow.confirm(i18n.deleteNote,tFunction);
   },
 
-  'startCreatingElement': function(StElement) {
-    var editForm = gID(StElement + "Form");
-    for (var aux = 0; aux < editForm.elements.length; aux++) {
-      editForm.elements[aux].value = "";
-    }
-    gID(StElement+'FormButton').textContent = i18n.create;
-    baseActions.toogleArrow( StElement + 'Arrow', StElement+'BoxEditAreaContent', 'show');
+  'startCreateElement': function(elementName) {
+    /*Visualizando TR de insert*/
+    gID(elementName + 'InsertTitleTR').className = "";
+    gID(elementName + 'InsertAnswerTR').className = "";
+    /*deixa de ser burro!*/
+    setStyle ( gID(elementName + 'InsertButton'), {'display': 'none'} );
   },
 
-  'startDataEdit': function() {
-    baseActions.toogleArrow('dataArrow', 'dataBoxEditAreaContent');
-    var dataForm = gID('dataForm');
-    dataForm.elements['StDataName'].value = unescape(gID('StDataName').value);
-    dataForm.elements['StDataEmail'].value = unescape(gID('StDataEmail').value);
-    dataForm.elements['StDataNotify'][gID('StDataNotify').value].checked = 'true';
-    dataForm.elements['TxDataHeader'].value = unescape(gID('TxDataHeader').value);
-    dataForm.elements['TxDataSign'].value = unescape(gID('TxDataSign').value);
+  'startEditElement': function(elementName, elementID) {
+    /*Modificando o td de ações*/
+    gID(elementName+'ActionEdit'+elementID).className = "hiddenTR";
+    gID(elementName+'ActionApply'+elementID).className = "";
+    /*Exibindo o textarea*/
+    gID(elementName+'AnswerTR'+elementID).className = "";
+    /*Titulo em modo de edição*/
+    var TD = gID(elementName+'TitleTR'+elementID).getElementsByTagName('TD')[0];
+    TD.innerHTML = '<input type="text" id="'+elementName+'EditTitle'+elementID+'" class="inputCombo" value="'+trim(TD.innerHTML)+'">';
   },
 
-  'startEditElement': function(formName, IDMessage) {
-    baseActions.toogleArrow( formName+'Arrow', formName+'BoxEditAreaContent', 'show');
-    var editForm = gID(formName + 'Form');
-    if( formName == 'canned' ){
-      editForm.elements['IDCanned'].value = IDMessage;  /*ID*/
-      editForm.elements['StTitle'].value = unescape(gID('StCannedTitle'+IDMessage).value);  /*StTitle*/
-      editForm.elements['TxCannedResponse'].value = unescape(gID('TxCannedResponse'+IDMessage).value);  /*TxMessage*/
-    } else if( formName == 'note' ){
-      editForm.elements['IDNote'].value = IDMessage;  /*ID*/
-      editForm.elements['StTitle'].value = unescape(gID('StNoteTitle'+IDMessage).value);  /*StTitle*/
-      editForm.elements['TxNote'].value = unescape(gID('TxNote'+IDMessage).value);  /*TxMessage*/
-    }
-    gID(formName + 'FormButton').textContent = i18n.edit;
+  'stopCreateElement': function(elementName) {
+    /*Visualizando TR de insert*/
+    gID(elementName + 'InsertTitleTR').className = "hiddenTR";
+    gID(elementName + 'InsertAnswerTR').className = "hiddenTR";
+    /* ¬¬ */
+    setStyle ( gID(elementName + 'InsertButton'), {'display': ''} );
   },
 
-  'submitForm': function (formName, action) {
-    if(!action || !formName){
-      flowWindow.alert(i18n.noAction); return false;
-    } else {
-      if( formName == 'canned' ){
-        switch (action){
-          case i18n.edit:
-            Home.editCannedResponse();
-          break;
-          case i18n.create:
-            Home.newCannedResponse();
-          break;
-        }
-      } else if( formName == 'note' ){
-        switch (action){
-          case i18n.edit:
-            Home.editNote();
-          break;
-          case i18n.create:
-            Home.newNote();
-          break;
-        }
-      }
-    }
-  },
-
-  'updateInformations': function() {
-    this._doLoading('data','show');  baseActions.toogleArrow('dataArrow', 'dataBoxEditAreaContent','hide');
-    var dataForm = gID('dataForm');
-    var content = {
-      'StName': dataForm.elements['StDataName'].value,
-      'StEmail': dataForm.elements['StDataEmail'].value,
-      'StPassword':dataForm.elements['StDataPassword'].value,
-      'BoNotify': (dataForm.elements['StDataNotify'][0].checked) ? 0 : 1,
-      'TxHeader': dataForm.elements['TxDataHeader'].value,
-      'TxSign': dataForm.elements['TxDataSign'].value,
-      'StArea':'User',
-      'StAction':'Update'
-    };
-    var tParams = {
-      'enqueue':1,
-      'method':'post',
-      'content':content,
-      'okCallBack': function(requestResponse) {
-        appendHTML(requestResponse,gID('dataBox'),true);
-        Home._doLoading('data','hide');
-      },
-      'errCallBack':function(requestResponse) {
-        flowWindow.alert(requestResponse);
-        Home._doLoading('data','hide');
-      }
-    };
-    var tUrl = templateDir + 'userInfo.php';
-    xhr.makeRequest('Edit User Data',tUrl,tParams);
+  'stopEditElement': function(elementName, elementID) {
+    /*Modificando o td de ações*/
+    gID(elementName+'ActionEdit'+elementID).className = "";
+    gID(elementName+'ActionApply'+elementID).className = "hiddenTR";
+    /*Exibindo o textarea*/
+    gID(elementName+'AnswerTR'+elementID).className = "hiddenTR";
+    /*Titulo sem modo de edição*/
+    var TD = gID(elementName+'TitleTR'+elementID).getElementsByTagName('TD')[0];
+    TD.innerHTML = gID(elementName+'EditTitle'+elementID).value;
   }
 
 };
@@ -811,35 +749,81 @@ var Search = {
 };
 
 var Admin = {
-  'changeOption':function(StPage) {
-    for(i in adminOptions) {
-      if (adminOptions[i] == StPage) {
-        tParams = {
-          'method':'get',
-          'okCallBack':function(response) {
-            appendHTML(response,gID('contentAdminMenu'),true);
-          }
-        };
-        xhr.makeRequest('Change Menu',adminDir + StPage,tParams);
-      }
+
+  'adminDir': templateDir + 'admin/' ,
+
+  'addDepartment':function(){
+
+    var combo = gID('IDDepartment');
+    IDDepartment = combo[combo.selectedIndex].value;
+
+    if(combo[combo.selectedIndex].value == 'null') {
+      flowWindow.alert(i18n.noDepartment);
+      return false;
     }
+
+    if(gID('p'+IDDepartment))
+      return false;
+
+    if(gID('null'))
+      gID('null').className = 'Invisible';
+
+    if(gID('ArDepartments')) {
+      gID('ArDepartments').value += ','+IDDepartment;
+    } else {
+      var hidden = createElement('input',{'type':'hidden','id':'ArDepartments','value':IDDepartment});
+      document.body.appendChild(hidden);
+    }
+
+    var p = createElement('p',{'id':'p'+IDDepartment});
+    var span = createElement('span');
+    var link = createElement('a',{'href':'javascript:void(0);','onclick':'Admin.removeDepartment('+IDDepartment+');'});
+    var img = createElement('img',{'src':templateDir+'images/button_cancel.png','style':'margin-right:5px;'});
+    text = createTextNode(combo[combo.selectedIndex].textContent);
+    link.appendChild(img)
+    span.appendChild(text);
+    p.appendChild(link);
+    p.appendChild(span)
+    gID('Departments').appendChild(p);
   },
 
-  'removeMenu':function(IDMenu) {
-    var tFunction = function(ok) {
-      if(ok) {
-        var content = { 'StAction':'removeMenu', 'IDMenu':IDMenu };
-        var tParams = {
-          'method':'post',
-          'content':content,
-          'okCallBack':function(response) {
-            appendHTML(response,gID('contentAdminMenu'),true);
-          }
-        };
-        xhr.makeRequest('Remove Menu',adminDir + 'manageMenus.php',tParams);
+  'changeOption':function(StPage) {
+    tParams = {
+      'method':'get',
+      'okCallBack':function(response) {
+        appendHTML(response,gID('contentAdminMenu'),true);
       }
     };
-    flowWindow.confirm(i18n.deleteMenu,tFunction);
+    xhr.makeRequest('Change Menu', this.adminDir + StPage,tParams);
+  },
+
+  'clearUserForm':function(){
+    gID('StName').value = '';
+    gID('StEmail').value = '';
+    gID('StPassword').value = '';
+    gID('IDDepartment').selectedIndex = 0;
+    var fieldSet = gID('Departments');
+    while( fieldSet.getElementsByTagName('p').length != 0) {
+      fieldSet.getElementsByTagName('p')[0].parentNode.removeChild( fieldSet.getElementsByTagName('p')[0] );
+    }
+    gID('null').className = '';
+  },
+
+  'editMenu':function() {
+    var StName = gID('StNameEdit').value;
+    var StAddress = gID('StAddressEdit').value;
+    StName = StName.replace(/\.php/,'');
+    StAddress = StAddress.replace(/(\.php)|(\.html)|(\.htm)/,'');
+
+    var content = { 'StAction':'editMenu', 'StName':StName, 'StAddress':StAddress };
+    var tParams = {
+      'method':'post',
+      'content':content,
+      'okCallBack':function(response) {
+        appendHTML(response,gID('contentAdminMenu'),true);
+      }
+    };
+    xhr.makeRequest('Edit Menu', adminDir + 'manageMenus.php', tParams);
   },
 
   'hideEditMenu':function() {
@@ -865,14 +849,46 @@ var Admin = {
     xhr.makeRequest('Insert Menu', adminDir + 'manageMenus.php', tParams);
   },
 
+  'removeMenu':function(IDMenu) {
+    var tFunction = function(ok) {
+      if(ok) {
+        var content = { 'StAction':'removeMenu', 'IDMenu':IDMenu };
+        var tParams = {
+          'method':'post',
+          'content':content,
+          'okCallBack':function(response) {
+            appendHTML(response,gID('contentAdminMenu'),true);
+          }
+        };
+        xhr.makeRequest('Remove Menu',adminDir + 'manageMenus.php',tParams);
+      }
+    };
+    flowWindow.confirm(i18n.deleteMenu,tFunction);
+  },
+
+  'removeDepartment':function(IDDepartment) {
+    if(!gID('p'+IDDepartment))
+      return false;
+
+      var pattern = new RegExp(',?'+IDDepartment);
+      gID('ArDepartments').value = gID('ArDepartments').value.replace(pattern,'');
+      removeElements(gID('p'+IDDepartment));
+      if(gID('Departments').getElementsByTagName('p').length == 0)
+        gID('null').className = '';
+  },
+
   'showEditMenu':function(IDMenu) {
-    gID('StNameEdit').value = IDMenu
-    gID('StAddressEdit').value = gID(IDMenu).parentNode.previousSibling.textContent;
+    gID('StNameEdit').value = gID(IDMenu).parentNode.previousSibling.textContent;
+    gID('StAddressEdit').value = IDMenu;
     gID('manageMenu').style.width = '30%';
     var table = gTN('table');
     table[0].style.width = '100%';
     gID('editMenu').className = gID('editMenu').className.replace(/ ?Invisible ?/,'');
-  },
+  }
+<<<<<<< HEAD:templates/default/js/default.js
+=======
+
+>>>>>>> 3b8a90a3a3f10b56a802ae2054c52325c1cd96f0:templates/default/js/default.js
 };
 
 var flowWindow = {

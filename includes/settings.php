@@ -73,31 +73,6 @@ function createOption($StParentName, $StSetting, $StValue, $ArAttributes = array
 
 }
 
-/**
- * set options
- *
- * @param string $StSetting
- * @param string $StValue
- *
- * @return string
- */
-function setOption($StSetting, $StValue) {
-  $Dom = new DOMDocument();
-  $Dom->load(dirname(__FILE__) . '/option.xml');
-
-  $StSetting = strtolower($StSetting);
-  $StValue = htmlspecialchars($StValue);
-
-  $Dom->getElementsByTagName($StSetting)->item(0)->nodeValue = $StValue;
-
-  if ( $Dom->save(dirname(__FILE__) . '/option.xml') ) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-
 function getElementByID($ID,$Node = '') {
   if ($Node == '') {
     $Dom = new DOMDocument();
@@ -105,25 +80,26 @@ function getElementByID($ID,$Node = '') {
     $Options = $Dom->getElementsByTagName('options')->item(0);
     $Children = $Options->childNodes;
     foreach ($Children as $Child) {
-      if (! $Child instanceof DOMText)
-          print "1 CHILD: {$Child->tagName} ID: $ID ATTR: {$Child->getAttribute('id')} RES:".($Child->getAttribute('id') == $ID)."<br>";
       if (! $Child instanceof DOMText && $Child->getAttribute('id') == $ID)
         return $Child;
       if ($Child->hasChildNodes()) {
-        getElementByID($ID,$Child);
+        $Node = getElementByID($ID,$Child);
+      if(! is_null($Node))
+        return $Node;
       }
     }
   } else {
     if ($Node instanceof DOMElement) {
       $Children = $Node->childNodes;
       foreach ($Children as $Child) {
-        if (! $Child instanceof DOMText)
-          print "2 ID: $ID ATTR: {$Child->getAttribute('id')} RES:".($Child->getAttribute('id') == $ID)."<br>";
-        if (! $Child instanceof DOMText && $Child->getAttribute('id') == $ID)
-          die($Child->getAttribute('id'));
+        if (! $Child instanceof DOMText && $Child->getAttribute('id') == $ID) {
           return $Child;
+        }
+        else
         if ($Child->hasChildNodes()) {
-          getElementByID($ID,$Child);
+          $Node = getElementByID($ID,$Child);
+        if (! is_null($Node))
+          return $Node;
         }
       }
     }
@@ -142,10 +118,14 @@ function removeOption($Item, $Mode = 'name') {
   $Dom->load(dirname(__FILE__).'/option.xml');
   if ($Mode == 'id') {
     $Node = getElementById($Item);
-    if (!is_null($Node) && $Node instanceof DOMElement)
-      $Node->parentNode->removeChild($Node);
+    if (!is_null($Node) && $Node instanceof DOMElement) {
+      $Parent = $Node->parentNode;
+      $Result = $Parent->removeChild($Node);
+      if ($Result instanceof DOMElement)
+        return false;
+    }
     else
-      return false;
+    return false;
   } else {
     $NLElements = $Dom->getElementsByTagName($Item);
     foreach ($NLElements as $NElement) {
@@ -155,7 +135,49 @@ function removeOption($Item, $Mode = 'name') {
         return false;
       }
     }
+  }
+  if ( $Dom->save(dirname(__FILE__) . '/option.xml') )
     return true;
+}
+
+/**
+ * set options
+ *
+ * @param string $StSetting
+ * @param string $StValue
+ *
+ * @return string
+ */
+function setOption($StSetting, $ArValues = array(), $Mode = 'name') {
+  $Dom = new DOMDocument();
+  $Dom->load(dirname(__FILE__) . '/option.xml');
+
+  $StSetting = strtolower($StSetting);
+
+  if ($Mode == 'id') {
+    $Node = getElementByID($StSetting);
+    if (is_null($Node))
+      return false;
+    foreach ($ArValues as $Attr => $Value) {
+      if ($Attr == 'text')
+        $Node->nodeValue = htmlspecialchars($Value);
+      else
+        $Node->setAttribute($Attr,htmlspecialchars($Value));
+    }
+  } else {
+    foreach ($ArValues as $Attr => $Value) {
+      if ($Attr == 'text') {
+        $Dom->getElementsByTagName($StSetting)->item(0)->nodeValue = htmlspecialchars($Value);
+      } else {
+        $Dom->getElementsByTagName($StSetting)->item(0)->setAttribute($Attr,htmlspecialchars($Value));
+      }
+    }
+  }
+
+  if ($Dom->save(dirname(__FILE__) . '/option.xml')) {
+    return true;
+  } else {
+    return false;
   }
 }
 
