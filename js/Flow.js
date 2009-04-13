@@ -16,30 +16,30 @@
 
 var Flow={
 
-'MaxFunc': new Array(),
-'MinFunc': new Array(),
-'ClsFunc': new Array(),
-'RestFunc': new Array(),
-'ConfirmFunc': new Array(),
-'PromptFunc': new Array(),
+'MaxFunc': [],
+'MinFunc': [],
+'ClsFunc': [],
+'RestFunc': [],
+'ConfirmFunc': [],
+'PromptFunc': [],
 'PathImages':'images/',
 
 'Objects':{
-	'WindigBase':new Array(),
-	'TBWindig':new Array(),
-	'Windig':new Array(),
-	'ResV1':new Array(),
-	'ResV2':new Array(),
-	'ResH1':new Array(),
-	'ResH2':new Array(),
-	'ResHV':new Array()
+	'WindigBase':[],
+	'TBWindig':[],
+	'Windig':[],
+	'ResV1':[],
+	'ResV2':[],
+	'ResH1':[],
+	'ResH2':[],
+	'ResHV':[]
 },
 
-'outline':new Array(),
+'outline':[],
 
 'newID':-1,
 
-'WindowBKP':new Array(),
+'WindowBKP':[],
 
 'open':function(tParams){
 
@@ -57,20 +57,15 @@ var Flow={
 'ValidateParams':function(tParams){
 
 	for (var i in tParams){
-		if( i == "TB" && (tParams[i] != true && tParams[i] != false)  ) tParams[i] = true;
-
-		else if( i == "definition" && ( tParams[i].toLowerCase() != "url" && tParams[i].toLowerCase() != "response") ){
+		if( i == "TB" && (tParams[i] !== true && tParams[i] !== false)  )  {
+		  tParams[i] = true;
+		} else if( i == "definition" && ( tParams[i].toLowerCase() != "url" && tParams[i].toLowerCase() != "response") ){
 			tParams[i] = 'response';
-		}
-
-		else if( (i == "width" || i == "height") && ( !tParams[i] || tParams[i] < 100 || typeof(tParams[i]) != 'number' ) ) {
+		} else if( (i == "width" || i == "height") && ( !tParams[i] || tParams[i] < 100 || typeof(tParams[i]) != 'number' ) ) {
 			tParams[i] = 100;
-		}
-
-		else if( (i == "x" || i == "y") && ( tParams[i] === "" || typeof(tParams[i]) != 'number' ) ) {
+		} else if( (i == "x" || i == "y") && ( tParams[i] === "" || typeof(tParams[i]) != 'number' ) ) {
 			tParams[i] = 0;
 		}
-
 	}
 
 	return true;
@@ -86,23 +81,23 @@ var Flow={
 	body.appendChild(WindigBase);
 
 	setStyle( WindigBase, {
-		'left':tParams['x'] + 'px',
-		'top':tParams['y'] + 'px',
-		'width':tParams['width'] + 'px',
-		'height':tParams['height'] + 'px',
+		'left':tParams.x + 'px',
+		'top':tParams.y + 'px',
+		'width':tParams.width + 'px',
+		'height':tParams.height + 'px',
 		'zIndex':1000+NewID
 	});
 
 	this.Objects.WindigBase[NewID] = WindigBase;
 	this.CriateResizers(WindigBase, NewID, tParams);
 
-	if(tParams['TB'] == true){
+	if(tParams.TB === true){
 		this.CriateTitleBar(WindigBase, NewID, tParams);
 	}
 
 	this.CriateWindow(WindigBase, NewID, tParams);
-	
-	if( tParams.EventFuncs.length != 0 ) {
+
+	if( tParams.EventFuncs.length !== 0 ) {
 		this.loadEventFunctions( tParams.EventFuncs, NewID );
 	}
 
@@ -111,12 +106,12 @@ var Flow={
 },
 
 'loadEventFunctions': function( eventObj, NewID ){
-	if( eventObj['Max'] != undefined && eventObj['Max'] != "" ) this.MaxFunc[NewID] = eventObj['Max'];
-	if( eventObj['Min'] != undefined && eventObj['Min'] != "" ) this.MinFunc[NewID] = eventObj['Min'];
-	if( eventObj['Rest'] != undefined && eventObj['Rest'] != "" ) this.RestFunc[NewID] = eventObj['Rest'];
-	if( eventObj['Close'] != undefined && eventObj['Close'] != "" ) this.ClsFunc[NewID] = eventObj['Close'];
-	if( eventObj['Confirm'] != undefined && eventObj['Confirm'] != "" ) this.ConfirmFunc[NewID] = eventObj['Confirm'];
-	if( eventObj['Prompt'] != undefined && eventObj['Prompt'] != "" ) this.PromptFunc[NewID] = eventObj['Prompt'];
+	if( eventObj.Max !== undefined && eventObj.Max !== "" ) { this.MaxFunc[NewID] = eventObj.Max; }
+	if( eventObj.Min !== undefined && eventObj.Min !== "" ) { this.MinFunc[NewID] = eventObj.Min; }
+	if( eventObj.Rest !== undefined && eventObj.Rest !== "" ) { this.RestFunc[NewID] = eventObj.Rest; }
+	if( eventObj.Close !== undefined && eventObj.Close !== "" ) { this.ClsFunc[NewID] = eventObj.Close; }
+	if( eventObj.Confirm !== undefined && eventObj.Confirm !== "" ) { this.ConfirmFunc[NewID] = eventObj.Confirm; }
+	if( eventObj.Prompt !== undefined && eventObj.Prompt !== "" ) { this.PromptFunc[NewID] = eventObj.Prompt; }
 },
 
 'CriateTitleBar':function(WindigBase, NewID, tParams){
@@ -126,38 +121,36 @@ var Flow={
 	this.Objects.TBWindig[NewID] = TitleBar;
 
 	var IMG = "";
-	switch( tParams['Window'] ){
-		case "default":
-			if(tParams['TBStyle'].Image != "" && tParams['TBStyle'].Image != undefined)
-				IMG = "<img src='"+ this.PathImages + tParams['TBStyle'].Image +"' border='0' class='img'>";
-		break;
-		
-		default:
-			IMG = "<img src='"+ this.PathImages + 'flow_' + tParams['Window']+".gif' border='0' class='img'>";
-		break;
+	if (tParams.Window == 'default') {
+	  if (tParams.TBStyle.Image !== "" && tParams.TBStyle.Image !== undefined) {
+			IMG = "<img src='"+ this.PathImages + tParams.TBStyle.Image +"' border='0' class='img'>";
+		}
+	} else {
+	  IMG = "<img src='"+ this.PathImages + 'flow_' + tParams.Window+".gif' border='0' class='img'>";
 	}
-	
+
 	var inner =  "<span class='img'>"+IMG+"</span>";
-	inner += "<span id='cap"+ NewID +"' class='cap' onclick=\"if(this.nextSibling.className=='minres'){Flow.Minimize("+NewID+")}\">" + tParams['TBStyle'].Caption + "</span>";
+	inner += "<span id='cap"+ NewID +"' class='cap' onclick=\"if(this.nextSibling.className=='minres'){Flow.Minimize("+NewID+")}\">" + tParams.TBStyle.Caption + "</span>";
 	inner += "<span id='min"+ NewID +"' class='min' onclick=Flow.Minimize(" + NewID + ")></span>";
 	inner += "<span id='max"+ NewID +"' class='max' onclick=Flow.Maximize(" + NewID + ")></span>";
 	inner += "<span id='fec"+ NewID +"' class='fec' onclick=Flow.Close(" + NewID + ")></span>";
 
 	appendHTML(inner, TitleBar);
 
-	if(tParams['TBStyle'].BackgroundColor != undefined && tParams['TBStyle'].BackgroundColor != "") {
-		setStyle(TitleBar, {'backgroundColor':tParams['TBStyle'].BackgroundColor} );
-		setStyle(WindigBase, {'borderColor': tParams['TBStyle'].BackgroundColor});
+	if(tParams.TBStyle.BackgroundColor !== undefined && tParams.TBStyle.BackgroundColor !== "") {
+		setStyle(TitleBar, {'backgroundColor':tParams.TBStyle.BackgroundColor} );
+		setStyle(WindigBase, {'borderColor': tParams.TBStyle.BackgroundColor});
 	} else {
 		setStyle(TitleBar, {'background': "url('" + this.PathImages + "flow_top.png') repeat-x"});
 		setStyle( this.Objects.TBWindig[NewID], {'backgroundColor':'gray'} );
 	}
 
-	if(tParams['TBStyle'].Color != undefined && tParams['TBStyle'].Color != "")
-	setStyle(TitleBar, {'color':tParams['TBStyle'].Color});
+	if(tParams.TBStyle.Color !== undefined && tParams.TBStyle.Color !== "") {
+	 setStyle(TitleBar, {'color':tParams.TBStyle.Color});
+	}
 
-	if(tParams['TBStyle'].Font != undefined && tParams['TBStyle'].Font != ""){
-		setStyle(TitleBar, {'font':tParams['TBStyle'].Font});
+	if(tParams.TBStyle.Font !== undefined && tParams.TBStyle.Font !== ""){
+		setStyle(TitleBar, {'font':tParams.TBStyle.Font});
 		setStyle(TitleBar, {'lineHeight':'30px'});
 	}
 
@@ -168,36 +161,38 @@ var Flow={
 'CriateWindow':function(WindigBase, NewID, tParams) {
 
 	var Window = createElement('div', {'id':'Windig' + NewID, 'class':'Janela'},'');
+	var inner;
 
 	WindigBase.appendChild(Window);
 
-	setStyle(Window, {'height': parseInt(WindigBase.style.height) - 32 + 'px'});
-	if( tParams['WindowStyle'] && tParams['WindowStyle'].BackgroundImage != "" && tParams['WindowStyle'].BackgroundImage != undefined)
-		setStyle(Window, {'background': "url('"+tParams['WindowStyle'].BackgroundImage+"')"});
-	else if( tParams['WindowStyle'] && tParams['WindowStyle'].BackgroundColor != "" && tParams['WindowStyle'].BackgroundImage != undefined)
-		setStyle(Window, {'background': tParams['WindowStyle'].BackgroundColor});
+	setStyle(Window, {'height': parseInt(WindigBase.style.height,10) - 32 + 'px'});
+	if( tParams.WindowStyle && tParams.WindowStyle.BackgroundImage !== "" && tParams.WindowStyle.BackgroundImage !== undefined) {
+		setStyle(Window, {'background': "url('"+tParams.WindowStyle.BackgroundImage+"')"});
+	} else if( tParams.WindowStyle && tParams.WindowStyle.BackgroundColor !== "" && tParams.WindowStyle.BackgroundImage !== undefined) {
+		setStyle(Window, {'background': tParams.WindowStyle.BackgroundColor});
+	}
 
-	var OptWindow = tParams['Window'].toLowerCase();
+	var OptWindow = tParams.Window.toLowerCase();
 
-	if(OptWindow == 'default' || OptWindow == "" || OptWindow == undefined) { //CRIANDO JANELA COMUM
-		if( tParams['definition'].toLowerCase() == 'url') {//OU e URL
-			this.doIframe(tParams['innerHTML'], Window, NewID);
+	if(OptWindow == 'default' || OptWindow === "" || OptWindow === undefined) { //CRIANDO JANELA COMUM
+		if( tParams.definition.toLowerCase() == 'url') {//OU e URL
+			this.doIframe(tParams.innerHTML, Window, NewID);
 		}
-		else if( tParams['definition'].toLowerCase() == 'response'){ //Ou e conteudo ja tratado (ResponseText, ResponseXML)
-			Window.innerHTML = tParams['innerHTML'];
+		else if( tParams.definition.toLowerCase() == 'response'){ //Ou e conteudo ja tratado (ResponseText, ResponseXML)
+			Window.innerHTML = tParams.innerHTML;
 			setStyle(Window, {'overflow': 'auto'});
 		}
 	}
 
 	else if(OptWindow == 'error' || OptWindow == 'information' || OptWindow == 'alert') { //CRIANDO JANELA ESPECIAL DE ERRO ou INFO
 
-		var inner =  "<p class='Msg'>";
-				inner +=   tParams['WindowStyle'].Caption;
-				inner += "</p>";
-				inner += "<p class='Msg'> "+tParams['innerHTML']+" </p>";
-				inner += "<p class='Msg'>";
-				inner +=    "<input type='button' value='OK' onclick='Flow.Close("+NewID+");'>";
-				inner += "</p>";
+    inner =  "<p class='Msg'>";
+		inner +=   tParams.WindowStyle.Caption;
+		inner += "</p>";
+		inner += "<p class='Msg'> " + tParams.innerHTML +" </p>";
+		inner += "<p class='Msg'>";
+		inner +=    "<input type='button' value='OK' onclick='Flow.Close("+NewID+");'>";
+		inner += "</p>";
 
 		Window.innerHTML = inner;
 
@@ -205,11 +200,12 @@ var Flow={
 
 	else {
 
-		var inner =  "<p class='Msg'>";
-				inner +=   tParams['WindowStyle'].Caption;
-				inner += "</p>";
+    inner =  "<p class='Msg'>";
+		inner +=   tParams.WindowStyle.Caption;
+		inner += "</p>";
+
 		if(OptWindow == "confirm"){
-			inner += "<p class='Msg'> "+tParams['innerHTML']+" </p>";
+			inner += "<p class='Msg'> " + tParams.innerHTML + " </p>";
 			inner += "<p class='Msg'>";
 			inner +=    "<input type='button' id='sim' value='Sim' onclick='Flow.ConfirmFunc["+NewID+"](1,"+NewID+");Flow.Close("+NewID+");'>";
 			inner +=    "<input type='button' id='nao' value='N&atilde;o' onclick='Flow.ConfirmFunc["+NewID+"](0,"+NewID+");Flow.Close("+NewID+");'>";
@@ -218,7 +214,7 @@ var Flow={
 			gID('nao').focus();
 		} else {
 			inner += "<form name='prompt"+NewID+"' id='prompt"+NewID+"' class='Prompt' onsubmit='prompt"+NewID+".ok.onclick();return false;'>";
-			inner +=     "<input type='text' id='abcd' class='inputCombo' name='abcd' value='"+tParams['innerHTML']+"'>";
+			inner +=     "<input type='text' id='abcd' class='inputCombo' name='abcd' value='" + tParams.innerHTML + "'>";
 			inner +=     "<p class='Msg'>";
 			inner +=       "<input type='button' name='ok' value='OK' onclick='Flow.PromptFunc["+NewID+"](prompt"+NewID+".abcd.value,"+NewID+");Flow.Close("+NewID+");'>";
 			inner +=     "</p>";
@@ -240,26 +236,29 @@ var Flow={
 
 	WindigBase.appendChild(ResH1);WindigBase.appendChild(ResH2);
 
-	with(this){ Objects.ResH1[NewID] = ResH1;Objects.ResH2[NewID] = ResH2; }
+  this.Objects.ResH1[NewID] = ResH1;
+  this.Objects.ResH2[NewID] = ResH2;
 	this.outline['ResH'+NewID] = new DragNdrop(ResH2, {'handle': ResH2,'type':'ghost', 'vMove': true, 'hMove':false, 'onFinish': this.CallBack, 'onStart':this.LimitFunc, 'onDrag': this.Resizing  });
 
 	var ResV1 = createElement('div', {'id':'ResV1' + NewID, 'class':'ResV1'},'');
 	var ResV2 = createElement('div', {'id':'ResV2' + NewID, 'class':'ResV2'},'');
 
-	WindigBase.appendChild(ResV1);WindigBase.appendChild(ResV2);
-	with(this){
-		Objects.ResV1[NewID] = ResV1;Objects.ResH2[NewID] = ResH2;
-		Objects.ResV2[NewID] = ResV2;Objects.ResH1[NewID] = ResH1;
-	}
-	if(tParams['TBStyle'].BackgroundColor != undefined && tParams['TBStyle'].BackgroundColor != "") {
-		setStyle( [ ResV1, ResV2, ResH1, ResH2 ], {'borderColor':tParams['TBStyle'].BackgroundColor} );
+	WindigBase.appendChild(ResV1);
+	WindigBase.appendChild(ResV2);
+	this.Objects.ResV1[NewID] = ResV1;
+	this.Objects.ResH2[NewID] = ResH2;
+	this.Objects.ResV2[NewID] = ResV2;
+	this.Objects.ResH1[NewID] = ResH1;
+
+	if(tParams.TBStyle.BackgroundColor !== undefined && tParams.TBStyle.BackgroundColor !== "") {
+		setStyle( [ ResV1, ResV2, ResH1, ResH2 ], {'borderColor':tParams.TBStyle.BackgroundColor} );
 	}
 	this.outline['ResV'+NewID] = new DragNdrop(ResV2, {'handle': ResV2,'type':'ghost', 'vMove': false, 'hMove':true, 'onFinish': this.CallBack, 'onStart':this.LimitFunc, 'onDrag': this.Resizing  });
 
 	var ResHV = createElement('div', {'id':'ResHV' + NewID, 'class':'ResHV'},'');
 
 	WindigBase.appendChild(ResHV);
-	with(this){ Objects.ResHV[NewID] = ResHV;  }
+	this.Objects.ResHV[NewID] = ResHV;
 	this.outline['ResHV'+NewID] = new DragNdrop(ResHV, {'handle': ResHV,'type':'ghost', 'vMove': true, 'hMove': true, 'onFinish': this.CallBack, 'onStart':this.LimitFunc, 'onDrag': this.Resizing  });
 
 },
@@ -270,8 +269,8 @@ var Flow={
 	Obj = Obj.element;
 
 	var ID = Obj.id.substr(5);
-	var TotalHeight = /*parseInt(Flow.Objects.WindigBase[ID].style.top) + */parseInt(Flow.Objects.WindigBase[ID].style.height) - 5;
-	var TotalWidth = /*parseInt(Flow.Objects.WindigBase[ID].style.left) +*/ parseInt(Flow.Objects.WindigBase[ID].style.width);
+	var TotalHeight = parseInt(Flow.Objects.WindigBase[ID].style.height,10) - 5;
+	var TotalWidth = parseInt(Flow.Objects.WindigBase[ID].style.width,10);
 
 	if(Obj.id.substr(0,5) == "ResH2"){
 		setStyle(Flow.Objects.ResH2[ID],{'visibility':'hidden'});
@@ -289,8 +288,8 @@ var Flow={
 
 		setStyle([Flow.Objects.ResH1[ID],Flow.Objects.ResH2[ID]],{ 'width': x + 'px'});
 		setStyle([Flow.Objects.ResV1[ID],Flow.Objects.ResV2[ID]],{ 'height': y + 'px'});
-		setStyle(Flow.Objects.ResH2[ID], {'bottom': parseInt( TotalHeight - y )  +'px'});
-		setStyle(Flow.Objects.ResV2[ID], {'right': parseInt( TotalWidth - x ) +'px'});
+		setStyle(Flow.Objects.ResH2[ID], {'bottom': parseInt( TotalHeight - y, 10)  +'px'});
+		setStyle(Flow.Objects.ResV2[ID], {'right': parseInt( TotalWidth - x, 10) +'px'});
 
 	}
 
@@ -320,12 +319,13 @@ var Flow={
 	else if(Nome.substr(0,4) == "ResH"){
 
 		setStyle([ Flow.Objects.ResV1[ID], Flow.Objects.ResV2[ID] ],{
-		'borderStyle':'dashed',	'borderWidth':'1px', 'borderBottom': 'none',
+		'borderStyle':'dashed',	'borderWidth':'1px', 'borderBottom': 'none'
 		});
-		if(Flow.Objects.TBWindig[ID])
-		setStyle([ Flow.Objects.ResV1[ID], Flow.Objects.ResV2[ID] ],{
-		'borderColor':Flow.Objects.TBWindig[ID].style.backgroundColor
-		});
+		if(Flow.Objects.TBWindig[ID]) {
+  		setStyle([ Flow.Objects.ResV1[ID], Flow.Objects.ResV2[ID] ],{
+  		'borderColor':Flow.Objects.TBWindig[ID].style.backgroundColor
+  		});
+		}
 
 		setStyle(Flow.Objects.ResV1[ID],{'borderRight': 'none'});
 		setStyle(Flow.Objects.ResV2[ID],{'borderLeft': 'none'});
@@ -340,10 +340,11 @@ var Flow={
 		'borderStyle':'dashed', 'borderWidth':'1px',
 		'borderRight': 'none',	'borderLeft': 'none'
 		});
-		if(Flow.Objects.TBWindig[ID])
-		setStyle([ Flow.Objects.ResH1[ID], Flow.Objects.ResH2[ID] ],{
-		'borderColor':Flow.Objects.TBWindig[ID].style.backgroundColor
-		});
+		if(Flow.Objects.TBWindig[ID]) {
+  		setStyle([ Flow.Objects.ResH1[ID], Flow.Objects.ResH2[ID] ],{
+  		'borderColor':Flow.Objects.TBWindig[ID].style.backgroundColor
+  		});
+		}
 
 		setStyle(Flow.Objects.ResH1[ID], {'borderBottom':'none'});
 		setStyle(Flow.Objects.ResH2[ID], {'borderTop':'none'});
@@ -375,7 +376,7 @@ var Flow={
 	if (Janelas[JanelaID]) {
 		for(var i = 0; i <= Janelas.length-1; i++) {
 			if( Janelas[i] && (Janelas[i].style.zIndex >= Janelas[JanelaID].style.zIndex) ) {
-				Janelas[JanelaID].style.zIndex = parseInt(Janelas[i].style.zIndex) + 1;
+				Janelas[JanelaID].style.zIndex = parseInt(Janelas[i].style.zIndex,10) + 1;
 			}
 		}
 	}
@@ -384,12 +385,12 @@ var Flow={
 
 'CallBack': function(a){
 
-	if (a['element'].id.substr(0,10) == "WindigBase") {
-		Flow.Focus( a['element'].id.substr(10) );
+	if (a.element.id.substr(0,10) == "WindigBase") {
+		Flow.Focus( a.element.id.substr(10) );
 		return;
 	} else {
-		var ID = a['element'].id.substr(5);
-		if ( a['element'].id.substr(0, 5) == "ResHV" ) {
+		var ID = a.element.id.substr(5);
+		if ( a.element.id.substr(0, 5) == "ResHV" ) {
 			setStyle(Flow.Objects.ResHV[ID], {
 			'visibility':'visible', 'top':'', 'left':'',
 			'right':'0px', 'bottom':'0px'
@@ -425,7 +426,7 @@ var Flow={
 			});
 
 		}
-		else if( a['element'].id.substr(0, 4) == "ResH" ){
+		else if( a.element.id.substr(0, 4) == "ResH" ){
 
 			setStyle(Flow.Objects.ResH2[ID], {'visibility':'visible', 'top':'', 'bottom':'0px'});
 			setStyle(Flow.Objects.ResV1[ID], {
@@ -443,7 +444,7 @@ var Flow={
 
 		}
 
-		else if ( a['element'].id.substr(0, 4) == "ResV" ){
+		else if ( a.element.id.substr(0, 4) == "ResV" ){
 
 			setStyle(Flow.Objects.ResV2[ID], {'visibility':'visible', 'left':'', 'right':'0px'});
 			setStyle(Flow.Objects.ResH1[ID], {
@@ -469,8 +470,9 @@ var Flow={
 	var ArrObj = this.Objects.WindigBase;
 
 	for(var i = 0; i <= ArrObj.length-1; i++) {
-		if( ArrObj[i] && ArrObj[i].childNodes[5].childNodes[2].className == "minres" && (parseInt(ArrObj[i].style.bottom) > parseInt(ArrObj[ID].style.bottom) ) )
-		setStyle(ArrObj[i], {'bottom':parseInt(ArrObj[i].style.bottom) - 30 + "px"});
+		if( ArrObj[i] && ArrObj[i].childNodes[5].childNodes[2].className == "minres" && (parseInt(ArrObj[i].style.bottom,10) > parseInt(ArrObj[ID].style.bottom,10) ) ) {
+		  setStyle(ArrObj[i], {'bottom':parseInt(ArrObj[i].style.bottom,10) - 30 + "px"});
+		}
 	}
 
 },
@@ -483,12 +485,16 @@ var Flow={
 
 	if(MIN.className == "min"){
 
-		if(MAX.className == "max") this.SavePos(Obj, TBJanelaID);
+		if(MAX.className == "max") {
+		  this.SavePos(Obj, TBJanelaID);
+		}
 
-		if(Limit != 0){
-			for(var i = 0; i <= ArrObj.length-1; i++)
-			if( ArrObj[i] && ArrObj[i].childNodes[5].childNodes[2].className == "minres" )
-			NewBottom += 30;
+		if(Limit !== 0){
+		  for(var i = 0; i <= ArrObj.length-1; i++) {
+		    if( ArrObj[i] && ArrObj[i].childNodes[5].childNodes[2].className == "minres" ) {
+		      NewBottom += 30;
+		    }
+		  }
 		}
 
 		setStyle( [ this.Objects.ResH2[TBJanelaID], this.Objects.ResV2[TBJanelaID], this.Objects.ResHV[TBJanelaID] ], {'visibility':'hidden'});
@@ -504,7 +510,9 @@ var Flow={
 
 		MIN.className = "minres"; MAX.className = "max";
 
-		if( this.MinFunc[TBJanelaID] != null )  this.MinFunc[TBJanelaID](TBJanelaID);
+		if( this.MinFunc[TBJanelaID] !== null ) {
+		  this.MinFunc[TBJanelaID](TBJanelaID);
+		}
 
 	} else {
 		setStyle(this.Objects.WindigBase[TBJanelaID], {
@@ -515,7 +523,7 @@ var Flow={
 		'top': this.WindowBKP[TBJanelaID].top
 		});
 		setStyle(this.Objects.Windig[TBJanelaID],{
-		'height':parseInt(this.WindowBKP[TBJanelaID].height) - 32 + 'px',
+		'height':parseInt(this.WindowBKP[TBJanelaID].height,10) - 32 + 'px',
 		'visibility': 'visible'
 		});
 		setStyle( [ this.Objects.ResH2[TBJanelaID], this.Objects.ResV2[TBJanelaID], this.Objects.ResHV[TBJanelaID] ], {'visibility':'visible'});
@@ -523,7 +531,9 @@ var Flow={
 
 		MIN.className = "min"; MAX.className = "max"; this.Focus(TBJanelaID);
 
-		if( this.RestFunc[TBJanelaID] != null ) this.RestFunc[TBJanelaID](TBJanelaID);
+		if( this.RestFunc[TBJanelaID] !== null ) {
+		  this.RestFunc[TBJanelaID](TBJanelaID);
+		}
 
 	}
 
@@ -536,9 +546,11 @@ var Flow={
 	var MAX = gID('max' + TBJanelaID);  var MIN = gID('min' + TBJanelaID);
 	var WindigBase = this.Objects.WindigBase[TBJanelaID];
 
-	if(MAX.className == "max"){
+	if(MAX.className == "max") {
 
-		if(MIN.className != "minres")  this.SavePos(WindigBase, TBJanelaID);
+		if(MIN.className != "minres") {
+		  this.SavePos(WindigBase, TBJanelaID);
+		}
 
 		MAX.className = "res"; MIN.className = "min";
 
@@ -553,7 +565,9 @@ var Flow={
 		setStyle([this.Objects.ResH2[TBJanelaID],this.Objects.ResV2[TBJanelaID]],{'visibility':'visible'} );
 		this.Focus(TBJanelaID);
 
-		if( this.MaxFunc[TBJanelaID] != null )  this.MaxFunc[TBJanelaID](TBJanelaID, WinWidth, WinHeight);
+		if( this.MaxFunc[TBJanelaID] !== null ) {
+		  this.MaxFunc[TBJanelaID](TBJanelaID, WinWidth, WinHeight);
+		}
 
 	} else {
 
@@ -567,12 +581,14 @@ var Flow={
 		'left': this.WindowBKP[TBJanelaID].left
 		});
 		setStyle(this.Objects.Windig[TBJanelaID],{
-		'height': parseInt(WindigBase.style.height) - 32 + 'px',
-		'width': '99%',
+		'height': parseInt(WindigBase.style.height,10) - 32 + 'px',
+		'width': '99%'
 		});
 		setStyle([ this.Objects.ResH2[TBJanelaID],this.Objects.ResV2[TBJanelaID] ], { 'visibility':'visible' } );
 
-		if( this.RestFunc[TBJanelaID] != null )  this.RestFunc[TBJanelaID]( TBJanelaID );
+		if( this.RestFunc[TBJanelaID] !== null ) {
+		  this.RestFunc[TBJanelaID]( TBJanelaID );
+		}
 
 	}
 
@@ -580,10 +596,13 @@ var Flow={
 
 'Close':function(JanelaID){
 
-	if( this.ClsFunc[JanelaID] != null )  this.ClsFunc[JanelaID](JanelaID);
+	if( this.ClsFunc[JanelaID] !== null ) {
+	  this.ClsFunc[JanelaID](JanelaID);
+	}
 
-	if( (this.Objects.TBWindig[JanelaID]) && this.Objects.TBWindig[JanelaID].childNodes[2].className == "minres" )
-	this.MergeMinPos(JanelaID);
+	if( (this.Objects.TBWindig[JanelaID]) && this.Objects.TBWindig[JanelaID].childNodes[2].className == "minres" ) {
+	 this.MergeMinPos(JanelaID);
+	}
 
 	var Obj = this.Objects.WindigBase[JanelaID];
 	Obj.parentNode.removeChild(Obj);

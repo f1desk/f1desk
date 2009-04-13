@@ -259,7 +259,7 @@ function debug(toDebug, recursive){
  */
 function isEmpty(Text){
   var TxEmpty; TxEmpty = Text.replace(/\s+|\s+/g,"");
-  if(TxEmpty == ""){
+  if(TxEmpty === ""){
     return true;
   } else {
     return false;
@@ -337,12 +337,16 @@ function bindPlus(method,handler) {
 function appendHTML(HTML, Target, Refresh) {
     var tmpDiv = createElement('div');
     tmpDiv.innerHTML = HTML;
+    var node = null;
+    var i = 0;
     var nodes = tmpDiv.childNodes, element;
 
-    if(Refresh){   Target.innerHTML = "";   }
-    for (var i = 0, node = null; node = nodes[i]; i++) {
+    if(Refresh){ Target.innerHTML = ""; }
+    while (nodes[i]) {
+        node = nodes[i];
         element = node.cloneNode(true);
         Target.appendChild(element);
+        i++;
     }
 
     return (nodes.length > 0);

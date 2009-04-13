@@ -164,7 +164,7 @@ function setOption($StSetting, $ArValues = array(), $Mode = 'name') {
  */
 function defaultJS() {
   $Html = '';
-  $ArDefaultJs = array('json2','utils','libAjax','DragNdrop','Flow', 'global');
+  $ArDefaultJs = array('utils','libAjax','DragNdrop','Flow', 'global');
 
   foreach ($ArDefaultJs as $JsFile) {
     $Html .= '<script type="text/javascript" src="' . JSDIR . $JsFile . '.js"></script>' . "\n";

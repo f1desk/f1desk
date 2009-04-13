@@ -137,7 +137,6 @@ var xhr = {
         var tPs = tParams.extraParams;
         var response = (tParams.returnType == 'xml') ? 'responseXML' : 'responseText';
         tPs.unshift(tXHR[response]);
-        if (tParams.returnType == 'json') { tPs = JSON.parse(tPs[0]); }
         xhr.stopRequests(xhr.curName, xhr.uID);
          tParams.okCallBack(tPs);
          xhr.checkQueue();
@@ -178,14 +177,9 @@ var xhr = {
   },
 
   'makeQueryString':function(content) {
-    var qS = '', json = '';
+    var qS = '';
     for (var field in content) {
-      if(typeof(content[field]) == 'object' || content[field] instanceof Array) {
-        json = JSON.stringify(content[field]);
-        qS += encodeURI(field) + "=" + json + "&";
-      } else {
-        qS += encodeURI(field) + "=" + encodeURI(content[field]) + "&";
-      }
+      qS += encodeURI(field) + "=" + encodeURI(content[field]) + "&";
     }
     return qS;
   }
