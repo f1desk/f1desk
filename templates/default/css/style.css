@@ -352,7 +352,7 @@ html>body #main{
   background-color: #708FAE;
   color: white;
   vertical-align:middle;
-  margin-left:1%;
+  margin-right:1%;
 }
 
 .inputCombo {
@@ -360,6 +360,7 @@ html>body #main{
   color:#7F8689;
   font-weight:bold;
   font-size:12px;
+  margin-right:1%;
 }
 
 .inputFile {

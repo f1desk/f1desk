@@ -62,6 +62,8 @@ function createOption($StParentName, $StSetting, $StValue, $ArAttributes = array
     if (is_array($ArAttributes) && count($ArAttributes)!=0){
       foreach ($ArAttributes as $StAttributeName => $StAttributeValue) {
         $StAttributeName = ($StAttributeName == 'id') ? 'xml:id' : $StAttributeName;
+        Validate::NCName($StAttributeName);
+        Validate::NCName($StAttributeValue);
         $Element->setAttribute($StAttributeName, $StAttributeValue);
       }
     }
@@ -136,16 +138,22 @@ function setOption($StSetting, $ArValues = array(), $Mode = 'name') {
         $Node->nodeValue = htmlspecialchars($Value);
       } else {
         $Attr = ($Attr == 'id') ? 'xml:id' : $Attr;
-        $Node->setAttribute($Attr,htmlspecialchars($Value));
+        $Value = htmlspecialchars($Value);
+        Validate::NCName($Attr);
+        Validate::NCName($Value);
+        $Node->setAttribute($Attr,$Value);
       }
     }
   } else {
     foreach ($ArValues as $Attr => $Value) {
+      $Value = htmlspecialchars($Value);
+      Validate::NCName($Value);
       if ($Attr == 'text') {
-        $Dom->getElementsByTagName($StSetting)->item(0)->nodeValue = htmlspecialchars($Value);
+        $Dom->getElementsByTagName($StSetting)->item(0)->nodeValue = $Value;
       } else {
         $Attr = ($Attr == 'id') ? 'xml:id' : $Attr;
-        $Dom->getElementsByTagName($StSetting)->item(0)->setAttribute($Attr,htmlspecialchars($Value));
+        Validate::NCName($Attr);
+        $Dom->getElementsByTagName($StSetting)->item(0)->setAttribute($Attr,$Value);
       }
     }
   }

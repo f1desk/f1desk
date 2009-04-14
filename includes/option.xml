@@ -22,5 +22,5 @@
   <menu_tabs xml:id="search">Busca Avançada</menu_tabs>
   <menu_tabs xml:id="admin">Administração</menu_tabs>
   <menu_tabs xml:id="logout">Logout</menu_tabs>
-  </menu>
+</menu>
 </options>
