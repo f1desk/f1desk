@@ -650,7 +650,8 @@ var Ticket = {
       }
     }
     var element = gID('notReadCount' + IDDepartment);
-    removeChilds(element);  element.appendChild( createTextNode( count ) );
+    removeChilds(element);
+    element.appendChild( createTextNode( count + ' ') );
   },
 
   'refreshTicket': function(IDTicket, IDDepartment) {

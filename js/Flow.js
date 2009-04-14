@@ -531,7 +531,7 @@ var Flow={
 
 		MIN.className = "min"; MAX.className = "max"; this.Focus(TBJanelaID);
 
-		if( this.RestFunc[TBJanelaID] !== null ) {
+		if( this.RestFunc[TBJanelaID] !== undefined ) {
 		  this.RestFunc[TBJanelaID](TBJanelaID);
 		}
 
@@ -565,7 +565,7 @@ var Flow={
 		setStyle([this.Objects.ResH2[TBJanelaID],this.Objects.ResV2[TBJanelaID]],{'visibility':'visible'} );
 		this.Focus(TBJanelaID);
 
-		if( this.MaxFunc[TBJanelaID] !== null ) {
+		if( this.MaxFunc[TBJanelaID] !== undefined ) {
 		  this.MaxFunc[TBJanelaID](TBJanelaID, WinWidth, WinHeight);
 		}
 
@@ -596,7 +596,7 @@ var Flow={
 
 'Close':function(JanelaID){
 
-	if( this.ClsFunc[JanelaID] !== null ) {
+	if( this.ClsFunc[JanelaID] !== undefined ) {
 	  this.ClsFunc[JanelaID](JanelaID);
 	}
 
