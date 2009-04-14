@@ -51,10 +51,10 @@ abstract class F1DeskUtils {
 		$ArMenu = array();
 		$ObMenu = getOption( "menu_tabs", "DOM" );
 		foreach ( $ObMenu as $Item ){
-			if ( $StPage == $Item->getAttribute('id') ) $StCurrent = "current";
+			if ( $StPage == $Item->getAttribute('xml:id') ) $StCurrent = "current";
 			else $StCurrent = "";
 			$ArMenu[] = array(
-				"Link" => $Item->getAttribute('id'),
+				"Link" => $Item->getAttribute('xml:id'),
 				"Name" => $Item->nodeValue,
 				"Current" => $StCurrent
 			);

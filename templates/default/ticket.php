@@ -173,7 +173,7 @@
 
 	  <div id="answerContent<?=$uid?>" >
 	    <form method="POST" id="formAnswer" target="ajaxSubmit" action="<?=TEMPLATEDIR?>ticket.php" enctype="multipart/form-data" onsubmit='this.didSubmit.value="true"; if(isEmpty(gID("TxMessage").value)){ flowWindow.alert(i18n.answerPreviewNoAnswer); return false; }'>
-	      <div id='messageType' class='Right'>
+	      <div id='messageType' class='Left'>
 	    	  <select name='StMessageType' id='StMessageType' class='inputCombo'>
 	    				<option value="NORMAL"><?=MSGTYPE_NORMAL?></option>
 	    				<? if ($isSupporter): ?>
@@ -183,7 +183,9 @@
 	    		</select>
 	      </div>
 
-	    	<textarea id='TxMessage' name='TxMessage' cols='65' rows='33' class='answerArea'></textarea>
+	      <div class='Left' id='messageArea'>
+	    	  <textarea id='TxMessage' name='TxMessage' cols='65' rows='33' class='answerArea'></textarea>
+	    	</div>
 
 	      <div id='displayCommands'>
 	        <div id='answerOptions'>
