@@ -1096,7 +1096,6 @@ var Admin = {
     if(!gID('p'+IDDepartment)) {
       return false;
     }
-
     var pattern = new RegExp(',?'+IDDepartment);
     gID('ArDepartments').value = gID('ArDepartments').value.replace(pattern,'');
     removeElements(gID('p'+IDDepartment));
@@ -1113,6 +1112,206 @@ var Admin = {
     var table = gTN('table');
     table[0].style.width = '100%';
     gID('editMenu').className = gID('editMenu').className.replace(/ ?Invisible ?/,'');
+  },
+  
+  'startEditingDepartment': function(IDDepartment){
+    gID('manageEditDepartment').className = 'Left';
+    gID('StDepartmentEdit').value = gID('StDepartment'+IDDepartment).value;
+    gID('StDescriptionEdit').value = gID('StDescription'+IDDepartment).value;
+    gID('DepartmentID').value = IDDepartment;
+  },
+  
+  'submitManageDepartment': function(StAction, IDDepartment){
+    if(StAction == 'edit'){
+      var tParams = {
+        'method':'post',
+        'content':{
+          'StAction': 'editDepartment',
+          'StDepartment': gID('StDepartmentEdit').value,
+          'StDescription': gID('StDescriptionEdit').value,
+          'IDDepartment': gID('DepartmentID').value
+        },
+        'okCallBack':function(response) {
+          Admin.changeOption('manageDepartments.php')
+        }
+      };
+      xhr.makeRequest('Edit Department', this.adminDir + 'manageDepartments.php',tParams);
+    } else if(StAction == 'create'){
+      
+    } else if(StAction == 'remove'){
+      
+    } else {
+      return false;
+    }
+  }
+
+};
+
+var flowWindow = {
+
+  'alert': function(StArg) {
+    var flowParams = new this.flowParams();
+    with(flowParams) {
+      width = 350;
+      height = 175;
+      TBStyle.Caption = i18n.flowAlertTitle;
+      WindowStyle.Caption = '<br>';
+      innerHTML = StArg + '<br><br>';
+      Window = 'alert';
+    }
+    var ID = Flow.open(flowParams); return ID;
+  },
+
+  'confirm': function(StArg,tFunction) {
+    var option = ''; var flowParams = new this.flowParams();
+    with(flowParams) {
+      width = 350;  height = 175;
+      TBStyle.Caption = i18n.flowConfirmTitle;
+      WindowStyle.Caption = '<br>';
+      innerHTML = StArg + '<br><br>';
+      Window = 'confirm';
+      if(typeof(tFunction) == 'function') {
+        EventFuncs.Confirm = tFunction;
+      }
+    }
+    var ID = Flow.open(flowParams); return ID;
+  },
+
+  'flowParams': function(){
+    this.y = Positions.getScrollOffSet(gTN('body')[0]).y + 50;
+    this.x = Positions.getScrollOffSet(gTN('body')[0]).x + 200;
+    this.width=350; this.height=250;
+    this.definition='response';  this.innerHTML='TEXTO DA PAGINA';
+    this.TB = true; this.Window = 'default';
+    this.TBStyle = {
+      'BackgroundColor': '#4F6C9C',
+      'Color':'#fff',
+      'Font':'12px verdana, sans-serif',
+      'Image': '',
+      'Caption': 'TEXTO CAPTION BARRA DE TITULO'
+    };
+    this.WindowStyle = {
+      'BackgroundColor':'#ECEDEF',
+      'BackgroundImage':'',
+      'Caption':'TEXTO TITULO DA JANELA'
+    };
+    this.EventFuncs = {
+      'Confirm':function(){ },
+      'Prompt':function(){ },
+      'Close':'',
+      'Max':'',
+      'Min':'',
+      'Rest':''
+    }
+  },
+
+  'previewAnswer': function(TxMessage, IDTicket, IDDepartment, StMessageType) {
+    if(isEmpty(TxMessage)){ flowWindow.alert(i18n.answerPreviewNoAnswer); return false; }
+    var  tParams = {
+      'method':'post',
+      'content':{
+        'StAction':'previewAnswer',
+        'TxMessage': TxMessage,
+        'IDTicket': IDTicket,
+        'IDDepartment': IDDepartment,
+        'StMessageType': StMessageType
+      },
+      'okCallBack':function(response) {
+        var flowParams = new flowWindow.flowParams();
+        with(flowParams) {
+          width = 480;  height = 350; innerHTML = response;
+          TBStyle.Caption = i18n.answerPreviewTitle;
+        }
+        Flow.open(flowParams);
+      }
+    };
+    xhr.makeRequest('preview Ticket', templateDir + 'ticketPreviewAnswer.php', tParams);
+  },
+
+  'previewCannedResponse': function(StTitle, TxMessage) {
+    StTitle = unescape( StTitle );  TxMessage = unescape( TxMessage );
+    var flowParams = new this.flowParams();
+    with(flowParams){
+      innerHTML = ''+
+        '<table class="tableTickets">'+
+          '<thead>'+
+            '<th>'+i18n.cannedTableTitle+'</th>'+
+          '</thead>'+
+          '<tbody>'+
+            '<td class="TicketNumber">'+ StTitle +'</td>'+
+          '</tbody>'+
+        '</table>'+
+        '<br />'+
+        '<table class="tableTickets">'+
+          '<thead>'+
+            '<th>'+i18n.cannedTableMessage+'</th>'+
+          '</thead>'+
+          '<tbody>'+
+            '<td>'+ TxMessage +'</td>'+
+          '</tbody>'+
+        '</table>';
+      TBStyle.Caption = StTitle; width = 550; height = 380;
+    }
+    var ID = Flow.open(flowParams);
+  },
+
+  'previewNote': function(StTitle, TxNote) {
+    StTitle = unescape( StTitle );  TxNote = unescape( TxNote );
+    var flowParams = new this.flowParams();
+    with(flowParams){
+      innerHTML = ''+
+        '<table class="tableTickets">'+
+          '<thead>'+
+            '<th>'+i18n.noteTableTitle+'</th>'+
+          '</thead>'+
+          '<tbody>'+
+            '<td class="TicketNumber">'+ StTitle +'</td>'+
+          '</tbody>'+
+        '</table>'+
+        '<br />'+
+        '<table class="tableTickets">'+
+          '<thead>'+
+            '<th>'+i18n.noteTableNote+'</th>'+
+          '</thead>'+
+          '<tbody>'+
+            '<td>'+ TxNote +'</td>'+
+          '</tbody>'+
+        '</table>';
+      TBStyle.Caption = StTitle; width = 550; height = 380;
+    }
+    var ID = Flow.open(flowParams);
+  },
+
+  'previewTicket': function(IDTicket, IDDepartment) {
+    var tParams = {
+      'method':'post',
+      'content': {
+        'IDTicket':IDTicket,
+        'IDDepartment':IDDepartment,
+        'preview':'true'
+      },
+      'okCallBack':function( ticketHTML ) {
+        var flowParams = new flowWindow.flowParams();
+        with(flowParams){
+          innerHTML = '<span style="padding:10px">'+ticketHTML+'</span>';
+          TBStyle.Caption = i18n.ticketPreviewTitle + IDTicket;
+          width = 600; height = 450;
+        }
+        var ID = Flow.open(flowParams);
+      }
+    };
+    xhr.makeRequest('Bookmark Ticket', templateDir + 'ticket.php',tParams);
+  },
+
+  'prompt': function(StArg, tFunction) {
+    var flowParams = new this.flowParams();
+    with(flowParams) {
+      width = 350;  height = 175; innerHTML = ''; Window = 'prompt';
+      if(typeof(tFunction) == 'function') {
+        EventFuncs.Prompt = tFunction;
+      }
+    }
+    var ID = Flow.open(windowParams); return ID;
   }
 
 };

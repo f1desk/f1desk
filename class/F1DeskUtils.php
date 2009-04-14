@@ -147,6 +147,21 @@ abstract class F1DeskUtils {
     }
     return $IDDepartment;
   }
+  
+  /**
+   * Edits a department
+   *
+   * @param integer $IDDepartment
+   * @param array $ArData
+   * @return int
+   */
+  public static function editDepartment($IDDepartment, $ArData){
+    $StTableName = DBPREFIX . "Department";
+		$StCondition = "IDDepartment = " . $IDDepartment;
+		self::getDBinstance();
+
+		return self::$DBHandler->updateTable( $StTableName, $ArData, $StCondition );
+  }
 
   /**
    * Create a new Rate

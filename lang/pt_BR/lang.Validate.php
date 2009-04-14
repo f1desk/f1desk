@@ -10,5 +10,6 @@
   define('EXC_INVALID_IP','Endere&ccedil;o IP inv&aacute;lido');
   define('EXC_INVALID_EXTERNALUSER','P&eacute;gina indispon&iacute;vel');
   define('EXC_INVALID_SESSION','Sess&atilde;o inv&aacute;lida');
+  define('EXC_INVALID_NCNAME','Atributo inv&aacute;lido');
 
 ?>

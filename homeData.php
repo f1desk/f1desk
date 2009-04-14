@@ -8,7 +8,7 @@ $isSupporter = F1DeskUtils::isSupporter();
  *           Home Actions              *
 ****************************************/
 if(!empty($_POST['StAction'])) {
-  
+
   switch ($_POST['StAction']) {
     #
     # User's Data Update
@@ -36,12 +36,12 @@ if(!empty($_POST['StAction'])) {
       $UserHanlder = new UserHandler();
       $ItAffedcted = $UserHanlder->updateUser($ArData, getSessionProp('IDUser'));
       if ($ItAffedcted < 0) {
-        ErrorHandler::setNotice(USER_ERROR, 'error');
+        ErrorHandler::setNotice('user',USER_ERROR, 'error');
       } else {
-        ErrorHandler::setNotice(USER_OK, 'ok');
+        ErrorHandler::setNotice('user',USER_OK, 'ok');
       }
 		break;
-		
+
   	case 'editCannedResponse':
   	  if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       $ArData = array(
@@ -50,22 +50,22 @@ if(!empty($_POST['StAction'])) {
       );
       $ItAffedcted = F1DeskUtils::editCannedResponse( $_POST['IDEdit'], $ArData );
       if ( !$ItAffedcted ) {
-        ErrorHandler::setNotice(ERROR_ID . $_POST['IDEdit'], 'error');
+        ErrorHandler::setNotice('cannedresponse',ERROR_ID . $_POST['IDEdit'], 'error');
       } else {
-        ErrorHandler::setNotice(CANNED_EDIT_OK, 'ok');
+        ErrorHandler::setNotice('cannedresponse',CANNED_EDIT_OK, 'ok');
       }
   	break;
-  	
+
   	case 'removeCannedResponse':
   	  if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       $ItAffedcted = F1DeskUtils::removeCannedResponse( $_POST['IDCannedResponse'] );
       if ( !$ItAffedcted ) {
-        ErrorHandler::setNotice(ERROR_DELETE, 'error');
+        ErrorHandler::setNotice('cannedresponse',ERROR_DELETE, 'error');
       } else {
-        ErrorHandler::setNotice(CANNED_DELETE_OK, 'ok');
+        ErrorHandler::setNotice('cannedresponse',CANNED_DELETE_OK, 'ok');
       }
   	break;
-  	
+
   	case 'createCannedResponse':
   	  if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       if (!get_magic_quotes_gpc()) {
@@ -85,12 +85,12 @@ if(!empty($_POST['StAction'])) {
       }
       $ItAffedcted = F1DeskUtils::createCannedResponse($ArData);
       if ( !$ItAffedcted ) {
-        ErrorHandler::setNotice(ERROR_INSERT, 'error');
+        ErrorHandler::setNotice('cannedresponse',ERROR_INSERT, 'error');
       } else {
-        ErrorHandler::setNotice(CANNED_INSERT_OK, 'ok');
+        ErrorHandler::setNotice('cannedresponse',CANNED_INSERT_OK, 'ok');
       }
   	break;
-  	
+
   	case 'createNote':
       if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       if (!get_magic_quotes_gpc()) {
@@ -108,22 +108,22 @@ if(!empty($_POST['StAction'])) {
       }
       $ItAffedcted = F1DeskUtils::createNote( $ArData );
       if ( !$ItAffedcted ) {
-        ErrorHandler::setNotice(ERROR_NOTES_INSERT, 'error');
+        ErrorHandler::setNotice('note',ERROR_NOTES_INSERT, 'error');
       } else {
-        ErrorHandler::setNotice(NOTE_INSERT_OK, 'ok');
+        ErrorHandler::setNotice('note',NOTE_INSERT_OK, 'ok');
       }
   	break;
-  	
+
   	case 'removeNote':
   	  if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       $ItAffedcted = F1DeskUtils::removeNote( $_POST['IDNote'] );
       if ( !$ItAffedcted ) {
-        ErrorHandler::setNotice(ERROR_NOTES_REMOVE . $_POST['IDNote'], 'error');
+        ErrorHandler::setNotice('note',ERROR_NOTES_REMOVE . $_POST['IDNote'], 'error');
       } else {
-        ErrorHandler::setNotice(NOTE_REMOVE_OK, 'ok');
+        ErrorHandler::setNotice('note',NOTE_REMOVE_OK, 'ok');
       }
   	break;
-  	
+
   	case 'editNote':
   	  if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
       $ArData = array(
@@ -132,29 +132,29 @@ if(!empty($_POST['StAction'])) {
       );
       $ItAffedcted = F1DeskUtils::editNote( $_POST['IDEdit'], $ArData );
       if ( !$ItAffedcted ) {
-        ErrorHandler::setNotice(ERROR_NOTES_EDIT . $_POST['IDEdit'], 'error');
+        ErrorHandler::setNotice('note',ERROR_NOTES_EDIT . $_POST['IDEdit'], 'error');
       } else {
-        ErrorHandler::setNotice(NOTE_EDIT_OK, 'ok');
+        ErrorHandler::setNotice('note',NOTE_EDIT_OK, 'ok');
       }
   	break;
-  	
+
   	case 'removeBookmark':
   	  if (! $isSupporter) { throw new ErrorHandler(INVALID_OPTION); }
   	  $TicketHandler = new TicketHandler();
 			$ItAffedcted = $TicketHandler->removeBookmark( getSessionProp('IDSupporter'), $_POST['IDTicket'] );
 			if ( !$ItAffedcted ) {
-			  ErrorHandler::setNotice(ERROR, 'error');
+			  ErrorHandler::setNotice('bookmark',ERROR, 'error');
 			} else {
-			  ErrorHandler::setNotice(BOOKMARK_OK, 'ok');
+			  ErrorHandler::setNotice('bookmark',BOOKMARK_OK, 'ok');
 			}
   	break;
-  	
+
   	default:
-		  ErrorHandler::setNotice(NO_ACTION, 'error');
+		  ErrorHandler::setNotice('user',NO_ACTION, 'error');
 		break;
-  	
+
   }
-  
+
 }
 
 /***************************************

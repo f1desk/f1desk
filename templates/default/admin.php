@@ -1,5 +1,4 @@
-<?//die('<pre>'. print_r(get_included_files(),1));
-require_once('header.php');?>
+<?require_once('header.php');?>
 <div id='adminMenu'>
   <ul id='Menu'>
     <li>

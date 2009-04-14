@@ -352,7 +352,7 @@ html>body #main{
   background-color: #708FAE;
   color: white;
   vertical-align:middle;
-  margin-left:1%;
+  margin-right:1%;
 }
 
 .inputCombo {
@@ -360,6 +360,7 @@ html>body #main{
   color:#7F8689;
   font-weight:bold;
   font-size:12px;
+  margin-right:1%;
 }
 
 .inputFile {
@@ -402,6 +403,9 @@ html>body #main{
 }
 .homeBox button{
   margin-bottom:20px;
+}
+.homeBox button img{
+  vertical-align: middle;
 }
 .homeBox h3{
   border-bottom:1px solid #ABABAB;
@@ -603,7 +607,7 @@ h3 .hidden {
   margin-left:-5px;
 }
 
-#createSupporter p, #createMenu p {
+#createSupporter p, #createMenu p, #insertDepartment p {
   margin-top:0px;
 }
 
