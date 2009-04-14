@@ -869,12 +869,11 @@ var Admin = {
   'removeDepartment':function(IDDepartment) {
     if(!gID('p'+IDDepartment))
       return false;
-
-      var pattern = new RegExp(',?'+IDDepartment);
-      gID('ArDepartments').value = gID('ArDepartments').value.replace(pattern,'');
-      removeElements(gID('p'+IDDepartment));
-      if(gID('Departments').getElementsByTagName('p').length == 0)
-        gID('null').className = '';
+    var pattern = new RegExp(',?'+IDDepartment);
+    gID('ArDepartments').value = gID('ArDepartments').value.replace(pattern,'');
+    removeElements(gID('p'+IDDepartment));
+    if(gID('Departments').getElementsByTagName('p').length == 0)
+      gID('null').className = '';
   },
 
   'showEditMenu':function(IDMenu) {
@@ -884,11 +883,39 @@ var Admin = {
     var table = gTN('table');
     table[0].style.width = '100%';
     gID('editMenu').className = gID('editMenu').className.replace(/ ?Invisible ?/,'');
+  },
+  
+  'startEditingDepartment': function(IDDepartment){
+    gID('manageEditDepartment').className = 'Left';
+    gID('StDepartmentEdit').value = gID('StDepartment'+IDDepartment).value;
+    gID('StDescriptionEdit').value = gID('StDescription'+IDDepartment).value;
+    gID('DepartmentID').value = IDDepartment;
+  },
+  
+  'submitManageDepartment': function(StAction, IDDepartment){
+    if(StAction == 'edit'){
+      var tParams = {
+        'method':'post',
+        'content':{
+          'StAction': 'editDepartment',
+          'StDepartment': gID('StDepartmentEdit').value,
+          'StDescription': gID('StDescriptionEdit').value,
+          'IDDepartment': gID('DepartmentID').value
+        },
+        'okCallBack':function(response) {
+          Admin.changeOption('manageDepartments.php')
+        }
+      };
+      xhr.makeRequest('Edit Department', this.adminDir + 'manageDepartments.php',tParams);
+    } else if(StAction == 'create'){
+      
+    } else if(StAction == 'remove'){
+      
+    } else {
+      return false;
+    }
   }
-<<<<<<< HEAD:templates/default/js/default.js
-=======
 
->>>>>>> 3b8a90a3a3f10b56a802ae2054c52325c1cd96f0:templates/default/js/default.js
 };
 
 var flowWindow = {

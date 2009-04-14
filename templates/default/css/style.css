@@ -395,6 +395,9 @@ html>body #main{
 .homeBox button{
   margin-bottom:20px;
 }
+.homeBox button img{
+  vertical-align: middle;
+}
 .homeBox h3{
   border-bottom:1px solid #ABABAB;
   color:#02764F;
@@ -590,7 +593,7 @@ h3 .hidden {
   margin-left:-5px;
 }
 
-#createSupporter p, #createMenu p {
+#createSupporter p, #createMenu p, #insertDepartment p {
   margin-top:0px;
 }
 

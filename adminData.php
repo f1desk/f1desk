@@ -17,6 +17,21 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
       if (!setOption($_POST['StAddress'], array('id'=>$_POST['StAddress'],'text'=>$_POST['StName']) ,'id'))
         ErrorHandler::setNotice(MENU_EDIT_ERR,'error');
     break;
+    
+    case 'editDepartment':
+      if (!isset($_POST['IDDepartment']))
+      	ErrorHandler::setNotice(NO_EDIT_ID,'error');
+      $ArData = array(
+        'StDepartment' => f1desk_escape_string($_POST['StDepartment']),
+        'StDescription' => f1desk_escape_string($_POST['StDescription'])
+      );
+      $ItAffedcted = F1DeskUtils::editDepartment($_POST['IDDepartment'], $ArData);
+      if(!$ItAffedcted){
+        ErrorHandler::setNotice(REQUEST_OK,'error');
+      } else {
+        ErrorHandler::setNotice(REQUEST_ERROR,'ok');
+      }
+    break;
   }
 }
 
