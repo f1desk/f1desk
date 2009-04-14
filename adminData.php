@@ -14,7 +14,7 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
     break;
 
     case 'editMenu':
-      if (!setOption($_POST['StOldAddress'], array('id'=>$_POST['StAddress'],'text'=>$_POST['StName']) ,'id'))
+      if (!setOption($_POST['StOldAddress'], array('id'=>addslashes($_POST['StAddress']),'text'=>addslashes($_POST['StName'])) ,'id'))
         ErrorHandler::setNotice(MENU_EDIT_ERR,'error');
     break;
   }
@@ -22,6 +22,11 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
 
 
 $ArMenus = F1DeskUtils::getMenuTab('admin');
+$ArDepartments = F1DeskUtils::getPublicDepartments(false);
+$ArSupporters = array();
+foreach ($ArDepartments as $ArDepartment) {
+  $ArSupporters[$ArDepartment['IDDepartment']] = F1DeskUtils::getDepartmentSupporters($ArDepartment['IDDepartment']);
+}
 
 if (F1DeskUtils::isSupporter()) {
 

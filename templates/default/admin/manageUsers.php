@@ -29,18 +29,23 @@
     </div>
   </div>
   <div id='manageSupporter' class='Left'>
-      <h3>Gerenciar Usu&aacute;rios</h3>
-      <div id='menuTitle' class='departmentRows adminDptRows'>
-        <img id='arrow' class='menuArrow' src='templates/default/images/arrow_show.gif' alt='Show' />
-        <span class='TxPadrao'>Suporte</span>
-      </div>
-      <div id='menuTitle' class='departmentRows adminDptRows'>
-        <img id='arrow' class='menuArrow' src='templates/default/images/arrow_show.gif' alt='Show' />
-        <span class='TxPadrao'>Comercial</span>
-      </div>
-      <div id='menuTitle' class='departmentRows adminDptRows'>
-        <img id='arrow' class='menuArrow' src='templates/default/images/arrow_show.gif' alt='Show' />
-        <span class='TxPadrao'>Financeiro</span>
-      </div>
+    <h3>Gerenciar Usu&aacute;rios</h3>
+    <?php foreach ($ArDepartments as $ID => $ArDepartment): ?>
+    <div id='menuTitle' class='departmentRows adminDptRows'>
+      <img id='arrow<?=$ID?>' class='menuArrow' src='templates/default/images/arrow_show.gif' alt='Show' onclick="Ticket.showDepartmentTickets('<?=$ID?>')"/>
+      <span class='TxPadrao'><?=$ArDepartment['StDepartment']?></span>
+    </div>
+    <div style='display:none;' id="departmentContent<?=$ID?>">
+      <table class="tableTickets">
+      <?php foreach ($ArSupporters as $ArSupporter): ?>
+        <tr>
+          <td><?=$ArSupporter['StName']?></td>
+          <td><img src="templates/default/images/button_editar.png"></td>
+          <td><img src="templates/default/images/button_excluir.png"></td>
+        </tr>
+      <?php endforeach ?>
+      </table>
+    </div>
+    <?php endforeach; ?>
   </div>
 </div>
