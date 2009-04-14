@@ -51,5 +51,7 @@ var i18n = {
   'flowConfirmTitle':'Confime',
 
   'deleteMenu':'Deseja remover o menu?',
-  'noDepartment':'Escolha um departamento!'
+  'noDepartment':'Escolha um departamento!',
+  
+  'deleteDepartment': 'Deseja remover o departamento?'
 };

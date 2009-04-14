@@ -1165,14 +1165,42 @@ var Admin = {
           'IDDepartment': gID('DepartmentID').value
         },
         'okCallBack':function(response) {
-          Admin.changeOption('manageDepartments.php')
+          appendHTML(response, gID('adminWrapper'), true);
         }
       };
       xhr.makeRequest('Edit Department', this.adminDir + 'manageDepartments.php',tParams);
     } else if(StAction == 'create'){
-
+      var tForm = gID('insertDepartmentForm');
+      var tParams = {
+        'method':'post',
+        'content':{
+          'StAction': 'createDepartment',
+          'StDepartment': tForm.name.value,
+          'StDescription': tForm.description.value,
+          'IDSubDepartment': tForm.subOf.value
+        },
+        'okCallBack':function(response) {
+          appendHTML(response, gID('adminWrapper'), true);
+        }
+      };
+      xhr.makeRequest('Create Department', this.adminDir + 'manageDepartments.php',tParams);
     } else if(StAction == 'remove'){
-
+      var tFunction = function(ok) {
+        if(ok) {
+          var tParams = {
+            'method':'post',
+            'content':{
+              'StAction': 'removeDepartment',
+              'IDDepartment': IDDepartment
+            },
+            'okCallBack':function(response) {
+              appendHTML(response, gID('adminWrapper'), true);
+            }
+          };
+          xhr.makeRequest('Remove Department', Admin.adminDir + 'manageDepartments.php',tParams);
+        }
+      }
+      flowWindow.confirm(i18n.deleteDepartment,tFunction);
     } else {
       return false;
     }
