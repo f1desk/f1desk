@@ -159,7 +159,9 @@ var xhr = {
       }
     } catch(e) {
       alert('Erro na requisição ' + xhr.curName + ':\n' + e.message + '\n\nArquivo:\n' + e.fileName + '\nLinha: ' + e.lineNumber);
-      tParams.errCallBack(tPs,e);
+      if (tParams.errCallBack !== undefined) {
+        tParams.errCallBack(tPs,e);
+      }
     }
   },
 

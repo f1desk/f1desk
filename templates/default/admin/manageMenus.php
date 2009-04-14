@@ -1,7 +1,7 @@
 <?php require_once(dirname(__FILE__).'/../../../adminData.php');?>
 <div id='adminWrapper'>
   <div id='createMenu'>
-  <?=ErrorHandler::getNotice();?>
+  <?=ErrorHandler::getNotice('menu');?>
     <h3>Cadastrar Menu</h3>
     <div id='newMenuData'>
       Nome:

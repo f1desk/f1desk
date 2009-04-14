@@ -165,6 +165,26 @@ abstract class Validate {
   }
 
   /**
+   * validate NCName
+   *
+   * @param string $StData
+   * @return bool
+   *
+   * @author Dimitri Lameri <contato@DimitriLameri.com>
+   */
+  public static function NCName($StData) {
+    $StartExpReg = '[\:A-Z\_a-z]';
+
+    $CharExpReg = substr($StartExpReg,0,-1) . '\-\.0-9]+';
+
+    $StStartChar = substr($StData,0,1);
+
+    if (self::doValidation('/' . $StartExpReg . '/',$StStartChar,EXC_INVALID_NCNAME)) {
+      return self::doValidation('/' . $CharExpReg . '/',$StData,EXC_INVALID_NCNAME);
+    }
+  }
+
+  /**
    * validate if a user is external
    *
    * @return bool
