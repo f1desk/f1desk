@@ -3,7 +3,7 @@
   handleLanguage(__FILE__);
 ?>
 <div id="adminWrapper">
-  <?=ErrorHandler::getNotice();?>
+  <?=ErrorHandler::getNotice('department');?>
   <div id="insertDepartment">
     <h3><?=INSERT_DEPARTMENT?></h3>
     <form name="insertDepartment" id="insertDepartmentForm" onsubmit="return false;">
