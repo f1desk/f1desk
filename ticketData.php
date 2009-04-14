@@ -163,64 +163,82 @@ if (isset($_POST['StAction'])) {
 
 /************************** ### Loading Data ### ***************************/
 
-$IDTicket = $_POST['IDTicket'];
+$IDTicket = array_key_exists('id',$_GET) ? $_GET['id'] : $_REQUEST['IDTicket'];
 $IDSupporter = getSessionProp('IDSupporter');
+$IDUser = getSessionProp('IDUser');
 $preview = (isset($_POST['preview']))?true:false;
+$isVisible = false;
 
 $ObjTicket = new TicketHandler();
-$ObjTicket->setAsRead(getSessionProp('IDUser'),$IDTicket);
-$ArHeaders = $ObjTicket->getTicketHeaders($IDTicket);
-$ArAttachments = $ObjTicket->getAttachments($IDTicket);
 
-if ($isSupporter) {
-  $ArSupporters = $ObjUser->listSupporters($IDTicket);
-  $BoCreate = F1DeskUtils::getPermission('BoCreateCall', $IDSupporter);
+if ($ObjTicket->ticketExists($IDTicket)) {
+  if ($isSupporter || $ObjTicket->isVisible($IDTicket,$IDUser)) {
+    $isVisible = true;
+  }
+}
 
-  if ($BoCreate) {
-    $ArDepartments = F1DeskUtils::getPublicDepartments(false);
+if ($isVisible) {
+  $ObjTicket->setAsRead(getSessionProp('IDUser'),$IDTicket);
+  $ArHeaders = $ObjTicket->getTicketHeaders($IDTicket);
+  $ArAttachments = $ObjTicket->getAttachments($IDTicket);
+
+  if ($isSupporter) {
+    $ArSupporters = $ObjUser->listSupporters($IDTicket);
+    $BoCreate = F1DeskUtils::getPermission('BoCreateCall', $IDSupporter);
+
+    if ($BoCreate) {
+      $ArDepartments = F1DeskUtils::getPublicDepartments(false);
+    } else {
+      $ArDepartments = F1DeskUtils::getDepartmentsFormatted($IDSupporter);
+    }
+
   } else {
-    $ArDepartments = F1DeskUtils::getDepartmentsFormatted($IDSupporter);
+    $ArDepartments = F1DeskUtils::getPublicDepartments();
   }
 
-} else {
-  $ArDepartments = F1DeskUtils::getPublicDepartments();
+  #
+  # Ticket Header
+  #
+  $StTitle = $ArHeaders['StTitle'];
+  $IDTicket = $ArHeaders['IDTicket'];
+
+  if (array_key_exists('IDDepartment',$ArHeaders)) {
+    $IDDepartment = $ArHeaders['IDDepartment'];
+  } elseif (array_key_exists('IDDepartment',$_POST)) {
+    $IDDepartment = $_POST['IDDepartment'];
+  } else {
+    $IDDepartment = 'single';
+  }
+
+  $StSupporter = (!empty($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
+  $StSituation = $ArHeaders['StSituation'];
+
+  if ($isSupporter) {
+    $BoIgnored = (isset($BoIgnored)) ? $BoIgnored : F1DeskUtils::isIgnored($IDSupporter, $IDTicket);
+    $BoBookMark = (isset($BoBookMark)) ? $BoBookMark : F1DeskUtils::isBookmarked($IDSupporter, $IDTicket);
+  }
+
+  #
+  # Ticket Info
+  #
+  if ($isSupporter) {
+    $ArAttachedTickets = $ObjTicket->getAttachedTickets($IDTicket);
+    $ArTicketsAttached = $ObjTicket->getTicketsAttached($IDTicket);
+    $ArTicketDepartments = $ObjTicket->getTicketDepartments($IDTicket);
+    $ArTicketDepartmentsReader = $ObjTicket->getTicketDepartmentsReader($IDTicket);
+    $ArTicketDestinations = $ObjTicket->getTicketDestination($IDTicket);
+    $ArTicketReaders = $ObjTicket->getTicketReaders($IDTicket);
+  }
+
+  $ArMessages = $ObjTicket->listTicketMessages($IDTicket);
+  $DtOpened = F1DeskUtils::formatDate('datetime_format',$ArHeaders['DtOpened']);
+  $StTicketCategory = $ObjTicket->getTicketCategory($IDTicket);
+  $StTicketPriority = $ObjTicket->getTicketPriority($IDTicket);
+  $StTicketType = $ObjTicket->getTicketType($IDTicket);
+
+  if ($isSupporter) {
+    $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter,$IDDepartment);
+  }
 }
-
-#
-# Ticket Header
-#
-$StTitle = $ArHeaders['StTitle'];
-$IDTicket = $ArHeaders['IDTicket'];
-$IDDepartment = array_key_exists('IDDepartment',$ArHeaders) ? $ArHeaders['IDDepartment'] : $_POST['IDDepartment'];
-$StSupporter = (!empty($ArHeaders['StName'])) ? $ArHeaders['StName'] : '';
-$StSituation = $ArHeaders['StSituation'];
-
-if ($isSupporter) {
-  $BoIgnored = (isset($BoIgnored)) ? $BoIgnored : F1DeskUtils::isIgnored($IDSupporter, $IDTicket);
-  $BoBookMark = (isset($BoBookMark)) ? $BoBookMark : F1DeskUtils::isBookmarked($IDSupporter, $IDTicket);
-}
-
-#
-# Ticket Info
-#
-if ($isSupporter) {
-  $ArAttachedTickets = $ObjTicket->getAttachedTickets($IDTicket);
-  $ArTicketsAttached = $ObjTicket->getTicketsAttached($IDTicket);
-  $ArTicketDepartments = $ObjTicket->getTicketDepartments($IDTicket);
-  $ArTicketDepartmentsReader = $ObjTicket->getTicketDepartmentsReader($IDTicket);
-  $ArTicketDestinations = $ObjTicket->getTicketDestination($IDTicket);
-  $ArTicketReaders = $ObjTicket->getTicketReaders($IDTicket);
-}
-
-$ArMessages = $ObjTicket->listTicketMessages($IDTicket);
-$DtOpened = F1DeskUtils::formatDate('datetime_format',$ArHeaders['DtOpened']);
-$StTicketCategory = $ObjTicket->getTicketCategory($IDTicket);
-$StTicketPriority = $ObjTicket->getTicketPriority($IDTicket);
-$StTicketType = $ObjTicket->getTicketType($IDTicket);
-
-if ($isSupporter) {
-  $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter,$IDDepartment);
-}
-
 /************************** ### End - Loading Data ### ***************************/
 ?>

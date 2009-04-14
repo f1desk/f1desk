@@ -36,8 +36,38 @@ var baseActions = {
       arrow.src = 'templates/default/images/arrow_hide.gif';
       arrow.alt = 'Hide';
     }
-  }
+  },
 
+  'validateQuickSearch': function(form) {
+    var i = 0;
+    var Inputs = gTN('input',form);
+    var expreg = /^\#?[0-9]*$/;
+    while (Inputs[i]) {
+      if (Inputs[i].type == 'text') {
+        if (! expreg.test(Inputs[i].value)) {
+          Inputs[i].value = '';
+          return false;
+        } else if (Inputs[i].value.indexOf('#') !== false) {
+          Inputs[i].value = Inputs[i].value.replace(/#/g,"");
+        }
+      }
+      i++;
+    }
+
+    form.submit();
+    return true;
+  },
+
+  'selectFromSearch': function(id) {
+    IDDepartment = Ticket.findTicket(id);
+    if (IDDepartment) {
+      Ticket.showDepartmentTickets(IDDepartment);
+      Clicked = gID(id);
+      if (Clicked) {
+        Ticket.selectTicket(Clicked.parentNode);
+      }
+    }
+  }
 };
 
 /**
@@ -582,11 +612,13 @@ var Ticket = {
   },
 
   'findTicket': function(IDTicket) {
-    var TicketNode = gID('ticket1');
-    if (TicketNode && TicketNode.parentNode.className.indexOf == 'notRead') {
+    var TicketNode = gID(IDTicket);
+    if (TicketNode) {
       var TicketTable = TicketNode.parentNode.parentNode.parentNode.id;
       var ID = TicketTable.split('ticketTable');
-      Ticket.reloadTicketList(ID[1]);
+      return ID[1];
+    } else {
+      return false;
     }
   },
 
@@ -762,12 +794,13 @@ var Ticket = {
       },
       'okCallBack':function(returnedValue) {
         baseActions.animateReload( IDDepartment, 'stop' );
-        var contentDisplay = gID('contentDisplay');   removeChilds(contentDisplay);
+        var contentDisplay = gID('contentDisplay');
+        removeChilds(contentDisplay);
         appendHTML(returnedValue, contentDisplay);
         Ticket.selectTicket(Clicked);
         Ticket.refreshNotReadCount( IDDepartment );
         if (IDDepartment == 'bookmark') {
-          Ticket.findTicket(IDTicket);
+          baseAction.selectFromSearch(IDTicket);
         }
       }
     };
@@ -1113,14 +1146,14 @@ var Admin = {
     table[0].style.width = '100%';
     gID('editMenu').className = gID('editMenu').className.replace(/ ?Invisible ?/,'');
   },
-  
+
   'startEditingDepartment': function(IDDepartment){
     gID('manageEditDepartment').className = 'Left';
     gID('StDepartmentEdit').value = gID('StDepartment'+IDDepartment).value;
     gID('StDescriptionEdit').value = gID('StDescription'+IDDepartment).value;
     gID('DepartmentID').value = IDDepartment;
   },
-  
+
   'submitManageDepartment': function(StAction, IDDepartment){
     if(StAction == 'edit'){
       var tParams = {
@@ -1137,9 +1170,9 @@ var Admin = {
       };
       xhr.makeRequest('Edit Department', this.adminDir + 'manageDepartments.php',tParams);
     } else if(StAction == 'create'){
-      
+
     } else if(StAction == 'remove'){
-      
+
     } else {
       return false;
     }

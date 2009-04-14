@@ -30,6 +30,11 @@
   <!-- FAZER COM A TEMPLATE HANDLER -->
 </div>
 
-<div id='contentDisplay' class='Right'></div>
+<div id='contentDisplay' class='Right'>
+  <? if (array_key_exists('id',$_GET)) : ?>
+    <? require_once('ticket.php'); ?>
+    <script type="text/javascript">baseActions.selectFromSearch(<?= $_GET['id']; ?>)</script>
+  <? endif; ?>
+</div>
 
 <? require_once('footer.php'); ?>
