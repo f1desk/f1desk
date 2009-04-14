@@ -10,7 +10,7 @@
 ?>
 
 <!--[ERROR/OK BOX]-->
-<?= ErrorHandler::getNotice(); ?>
+<?= ErrorHandler::getNotice('ticket'); ?>
 <!--[ERROR/OK BOX]-->
 
 <!--[TICKET HEADER]-->

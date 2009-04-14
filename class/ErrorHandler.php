@@ -159,10 +159,10 @@ Class ErrorHandler extends ErrorException {
    *
    * @author Dimitri Lameri <Contato@DimitriLameri.com>
    */
-  public static function getNotice() {
-    $Html = getSessionProp('notice');
+  public static function getNotice($StID) {
+    $Html = getSessionProp('notice' . $StID);
     if ($Html) {
-      setSessionProp('notice','');
+      unsetSessionProp('notice' . $StID);
       return $Html;
     }
   }
@@ -177,8 +177,8 @@ Class ErrorHandler extends ErrorException {
    *
    * @author Dimitri Lameri <Contato@DimitriLameri.com>
    */
-  public static function setNotice($StMessage, $StClass = 'ok') {
-    setSessionProp('notice',self::_getNoticeAsHTML($StMessage, $StClass));
+  public static function setNotice($StID, $StMessage, $StClass = 'ok') {
+    setSessionProp('notice' . $StID,self::_getNoticeAsHTML($StMessage, $StClass));
 
     return true;
   }
