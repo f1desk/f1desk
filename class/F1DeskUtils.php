@@ -138,7 +138,6 @@ abstract class F1DeskUtils {
     self::$DBHandler->insertIntoTable($StTblName,$ArFields,$ArValues);
     $IDDepartment = self::$DBHandler->getID();
     # if is a subdpartment
-
     if (! is_null($IDParent)) {
       $StTblName = DBPREFIX . 'SubDepartment';
       $ArFields = array('IDSubDepartment','IDDepartment');
@@ -161,6 +160,36 @@ abstract class F1DeskUtils {
 		self::getDBinstance();
 
 		return self::$DBHandler->updateTable( $StTableName, $ArData, $StCondition );
+  }
+  
+  /**
+   * remove a department by its ID
+   *
+   * @param integer $IDDepartment
+   * @return int
+   */
+  public static function removeDepartment ($IDDepartment) {
+    self::getDBinstance();
+    
+    #
+    # Do this department have any tickets? yes? =O  poor tickets...
+    #
+    $StTableName = DBPREFIX . 'TicketDepartment';
+    $StCondition = 'IDDepartment = '. $IDDepartment;
+    self::$DBHandler->deleteFromTable($StTableName,$StCondition);
+    
+    #
+    # Or have any subdepartment...
+    #
+		$StTableName = DBPREFIX . 'SubDepartment';
+		$StCondition = 'IDDepartment = ' . $IDDepartment . 
+		               ' OR IDSubDepartment = ' . $IDDepartment;
+  	self::$DBHandler->deleteFromTable($StTableName,$StCondition);
+  	
+		$StTableName = DBPREFIX . 'Department';
+		$StCondition = 'IDDepartment = ' . $IDDepartment;
+    return self::$DBHandler->deleteFromTable($StTableName,$StCondition);
+ 		
   }
 
   /**
@@ -841,7 +870,7 @@ GROUP BY
 
     $StSQL = '
 SELECT
-  D.IDDepartment, GROUP_CONCAT(SD.IDSubDepartment) as IDSubDepartments
+  D.IDDepartment, D.StDescription, GROUP_CONCAT(SD.IDSubDepartment) as IDSubDepartments
 FROM
 	'.DBPREFIX.'SubDepartment SD
 LEFT JOIN '.DBPREFIX.'Department D ON (SD.IDDepartment = D.IDDepartment)
@@ -850,7 +879,7 @@ GROUP BY
   SD.IDDepartment';
     self::$DBHandler->execSQL($StSQL);
     $ArResult = self::$DBHandler->getResult('string');
-
+    
     foreach ( $ArResult as $Department ) {
       $ArSubSeparation = explode(',', $Department[ 'IDSubDepartments' ]);
       $ArSubDepartments[$Department['IDDepartment']] = array_unique($ArSubSeparation);
@@ -858,17 +887,20 @@ GROUP BY
 
     foreach ($ArDepartments as $ArDepartment) {
       if (array_key_exists($ArDepartment['IDDepartment'],$ArSubDepartments)) {
-        foreach ($ArSubDepartments as $Key => $SubDepartments) {
-          if ($Key == $ArDepartment['IDDepartment']) {
-            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['IDSub'] = $IDSub = array_shift($SubDepartments);
-            $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['StSub'] = $ArDepartments[$IDSub]['StDepartment'];
-            if (isset($ArDepartments[$IDSub]))
-              unset($ArDepartments[$IDSub]);
+        foreach ($ArSubDepartments as $IDParent => $ArSub) {
+          if ($IDParent == $ArDepartment['IDDepartment']) {
+            foreach ($ArSub as $IDSub){
+              $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['IDSub'] = $IDSub ;
+              $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['StSub'] = $ArDepartments[$IDSub]['StDepartment'];
+              $ArDepartments[$ArDepartment['IDDepartment']]['SubDepartments'][$IDSub]['StSubDescription'] = $ArDepartments[$IDSub]['StDescription'];
+              if (isset($ArDepartments[$IDSub]))
+                unset($ArDepartments[$IDSub]);
+            }
           }
         }
       }
     }
-
+    
     return $ArDepartments;
   }
 }

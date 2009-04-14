@@ -27,9 +27,31 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
       );
       $ItAffedcted = F1DeskUtils::editDepartment($_POST['IDDepartment'], $ArData);
       if(!$ItAffedcted){
-        ErrorHandler::setNotice(REQUEST_OK,'error');
+        ErrorHandler::setNotice(DEPTO_EDIT_ERROR,'error');
       } else {
-        ErrorHandler::setNotice(REQUEST_ERROR,'ok');
+        ErrorHandler::setNotice(DEPTO_EDIT_OK,'ok');
+      }
+    break;
+    
+    case 'removeDepartment':
+      if (!isset($_POST['IDDepartment']))
+      	ErrorHandler::setNotice(NO_EDIT_ID,'error');
+      $ItAffedcted = F1DeskUtils::removeDepartment($_POST['IDDepartment']);
+      if(!$ItAffedcted){
+        ErrorHandler::setNotice(DEPTO_REMOVE_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice(DEPTO_REMOVE_OK,'ok');
+      }
+    break;
+    
+    case 'createDepartment':
+      if (!isset($_POST['IDSubDepartment']) || $_POST['IDSubDepartment'] == ""){ $_POST['IDSubDepartment'] = null; }
+      if (!isset($_POST['TxSign'])){ $_POST['TxSign'] = ''; }
+      $ItNewID = F1DeskUtils::createDepartment($_POST['StDepartment'], $_POST['StDescription'], $_POST['TxSign'], $_POST['IDSubDepartment']);
+      if(!$ItNewID){
+        ErrorHandler::setNotice(DEPTO_CREATE_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice(DEPTO_CREATE_OK,'ok');
       }
     break;
   }
