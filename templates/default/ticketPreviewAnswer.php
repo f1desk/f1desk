@@ -1,7 +1,7 @@
 <?require_once( dirname(__FILE__) . '/../../ticketData.php' );?>
 
 <!--[ERROR/OK BOX]-->
-  <?= ErrorHandler::getNotice(); ?>
+  <?= ErrorHandler::getNotice('ticket'); ?>
 <!--[ERROR/OK BOX]-->
 
 <div id="previewAnswer">

@@ -21,6 +21,9 @@
          @import url('<?= TEMPLATEDIR ?>css/fonts.css');
       </style>
       <?= defaultCSS() ?>
+      <?= defaultJS() ?>
+      <script type='text/javascript' src='<?= TEMPLATEDIR ?>js/lang/<?=getOption('lang')?>/i18n.js'></script>
+      <script type='text/javascript' src='<?= TEMPLATEDIR ?>js/default.js'></script>
    </head>
 
     <body>
@@ -29,10 +32,17 @@
           <img src='images/logotipo.jpg' alt='F1Desk'/>
         </div>
 
+        <? if (Validate::Session(true)) : ?>
         <div class='Right' id="search_box">
-	        <input type="text" class='Left' id="search_text" value="Busca" onclick='if (this.value =="Busca") { this.value=""; }' onblur='if (this.value =="") { this.value="Busca"; }'/>
-	        <input type="image" class='Right' id="search_image" src="<?= TEMPLATEDIR ?>images/btn_search_box.gif" alt="Search" title="Search" />
+          <form name='formSearch' action='index.php' method='GET' onsubmit='return baseActions.validateQuickSearch(this);'>
+
+  	        <input type="text" name='id' class='Left' id="search_text" />
+  	        <img class='Right' id="search_image" src="<?= TEMPLATEDIR ?>images/btn_search_box.gif" alt="Search" title="Search" onclick='formSearch.onsubmit();'/>
+            <input type='hidden' name='page' value='listTickets' />
+
+	        </form>
 				</div>
+				<? endif; ?>
       </div>
 
       <div class='Left' id='main'>
