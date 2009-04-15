@@ -82,6 +82,8 @@
               <?endforeach;?>
             <?endif;?>
           <?endforeach;?>
+        <?else:?>
+          <tr><td align="center" colspan="2"><?=NO_DEPARTMENT?><td></tr>
         <?endif;?>
       </tbody>
     </table>

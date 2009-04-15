@@ -196,7 +196,7 @@ abstract class F1DeskUtils {
     #
     # Or have any cannedResponses...
     #
-		$StTableName = DBPREFIX . 'DepartmentCannedResponses';
+		$StTableName = DBPREFIX . 'DepartmentCannedResponse';
 		$StCondition = 'IDDepartment = ' . $IDDepartment;
   	self::$DBHandler->deleteFromTable($StTableName,$StCondition);
   	
@@ -342,19 +342,15 @@ GROUP BY
 
   	$StSQL = "
 SELECT
-	IDUnit, StUnit
+	*
 FROM
 	" . DBPREFIX . "Unit";
 
   	self::getDBinstance();
   	self::$DBHandler->execSQL($StSQL);
     $ArUnits = self::$DBHandler->getResult("string");
-    $ArReturn = array();
-    for ( $aux = 0; $aux < count( $ArUnits ); $aux++){
-    	$ArReturn[ $ArUnits[ $aux ][ 'IDUnit' ] ] = $ArUnits[ $aux ][ 'StUnit' ];
-    }
 
-    return $ArReturn;
+    return $ArUnits;
 
   }
 
