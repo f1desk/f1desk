@@ -186,6 +186,20 @@ abstract class F1DeskUtils {
 		               ' OR IDSubDepartment = ' . $IDDepartment;
   	self::$DBHandler->deleteFromTable($StTableName,$StCondition);
   	
+    #
+    # Or have any supporters...
+    #
+		$StTableName = DBPREFIX . 'DepartmentSupporter';
+		$StCondition = 'IDDepartment = ' . $IDDepartment;
+  	self::$DBHandler->deleteFromTable($StTableName,$StCondition);
+  	
+    #
+    # Or have any cannedResponses...
+    #
+		$StTableName = DBPREFIX . 'DepartmentCannedResponses';
+		$StCondition = 'IDDepartment = ' . $IDDepartment;
+  	self::$DBHandler->deleteFromTable($StTableName,$StCondition);
+  	
 		$StTableName = DBPREFIX . 'Department';
 		$StCondition = 'IDDepartment = ' . $IDDepartment;
     return self::$DBHandler->deleteFromTable($StTableName,$StCondition);
