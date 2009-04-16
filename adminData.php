@@ -54,6 +54,32 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
         ErrorHandler::setNotice('department',DEPTO_CREATE_OK,'ok');
       }
     break;
+    
+    case 'createUnit':
+      function validateBooleanPost( $StPost ){
+        if ( isset($_POST[$StPost]) && ( $_POST[$StPost]===true || $_POST[$StPost] == '1' ) ) {
+        	return '1';
+        } else {
+          return '0';
+        }
+      }
+      $ItNewID = F1DeskUtils::createUnit( f1desk_escape_string( $_POST['StUnit'] ), array(
+        "BoAnswer" => validateBooleanPost('BoAnswer'),
+        "BoAttachTicket" => validateBooleanPost('BoAttachTicket'),
+        "BoCreateTicket" => validateBooleanPost('BoCreateTicket'),
+        "BoDeleteTicket" => validateBooleanPost('BoDeleteTicket'),
+        "BoViewTicket" => validateBooleanPost('BoViewTicket'),
+        "BoReleaseAnswer" => validateBooleanPost('BoReleaseAnswer'),
+        "BoMailError" => validateBooleanPost('BoMailError'),
+        "BoCannedResponse" => validateBooleanPost('BoCannedResponse')
+      ) );
+      if(!$ItNewID){
+        ErrorHandler::setNotice('unit',UNIT_CREATE_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice('unit',UNIT_CREATE_OK,'ok');
+      }
+    break;
+    
   }
 }
 

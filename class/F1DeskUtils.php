@@ -116,6 +116,7 @@ abstract class F1DeskUtils {
     $StTblName = DBPREFIX . 'Unit';
     $ArFields = array_keys($ArPermissions);
     array_unshift($ArFields,'StUnit');
+    array_unshift($ArPermissions, $StName);
     self::getDBinstance();
     $ItReturn = self::$DBHandler->insertIntoTable($StTblName,$ArFields,$ArPermissions);
     return $ItReturn;

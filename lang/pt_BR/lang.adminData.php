@@ -10,5 +10,7 @@ define('DEPTO_CREATE_OK', 'Departamento criado com sucesso.');
 define('DEPTO_EDIT_ERROR', 'Erro ao editar departamento.');
 define('DEPTO_REMOVE_ERROR', 'Erro ao remover departamento.');
 define('DEPTO_CREATE_ERROR', 'Erro ao criar departamento.');
+define('UNIT_CREATE_ERROR', 'Erro ao criar Grupo.');
+define('UNIT_CREATE_OK', 'Grupo criado com sucesso.');
 define('MENU_EDIT_ERR','Erro ao editar o menu, por gentileza, tente novamente.');
 ?>

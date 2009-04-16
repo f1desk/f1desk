@@ -1153,6 +1153,20 @@ var Admin = {
     gID('StDescriptionEdit').value = gID('StDescription'+IDDepartment).value;
     gID('DepartmentID').value = IDDepartment;
   },
+  
+  'startEditingUnit': function(IDUnit){
+    gID('manageEditUnit').className = 'Left';
+    gID('StUnitEdit').value = gID('StUnit' + IDUnit).value;
+    gID('BoAnswerEdit').checked = (gID('BoAnswer' + IDUnit).value=='1')?true:false;
+    gID('BoAttachEdit').checked = (gID('BoAttachTicket' + IDUnit).value=='1')?true:false;
+    gID('BoCreateEdit').checked = (gID('BoCreateTicket' + IDUnit).value=='1')?true:false;
+    gID('BoDeleteEdit').checked = (gID('BoDeleteTicket' + IDUnit).value=='1')?true:false;
+    gID('BoViewEdit').checked = (gID('BoViewTicket' + IDUnit).value=='1')?true:false;
+    gID('BoReleaseEdit').checked = (gID('BoReleaseAnswer' + IDUnit).value=='1')?true:false;
+    gID('BoMailErrorEdit').checked = (gID('BoMailError' + IDUnit).value=='1')?true:false;
+    gID('BoCannedResponseEdit').checked = (gID('BoCannedResponse' + IDUnit).value=='1')?true:false;
+    gID('UnitID').value = IDUnit;
+  },
 
   'submitManageDepartment': function(StAction, IDDepartment){
     if(StAction == 'edit'){
@@ -1201,6 +1215,48 @@ var Admin = {
         }
       }
       flowWindow.confirm(i18n.deleteDepartment,tFunction);
+    } else {
+      return false;
+    }
+  },
+  
+  'submitManageUnit': function(StAction, IDUnit){
+    if (StAction == 'create'){
+      var tForm = gID('insertUnitForm');
+      var tParams = {
+        'method':'post',
+        'content':{
+          'StAction': 'createUnit',
+          'StUnit': tForm.name.value,
+          'BoAnswer': (tForm.BoAnswer.checked)?'1':'0',
+          'BoAttachTicket': (tForm.BoAttach.checked)?'1':'0',
+          'BoCreateTicket': (tForm.BoCreate.checked)?'1':'0',
+          'BoDeleteTicket': (tForm.BoDelete.checked)?'1':'0',
+          'BoViewTicket': (tForm.BoView.checked)?'1':'0',
+          'BoReleaseAnswer': (tForm.BoRelease.checked)?'1':'0',
+          'BoMailError': (tForm.BoMailError.checked)?'1':'0',
+          'BoCannedResponse': (tForm.BoCannedResponse.checked)?'1':'0'
+        },
+        'okCallBack':function(response) {
+          appendHTML(response, gID('adminWrapper'), true);
+        }
+      };
+      xhr.makeRequest('Create Unit', this.adminDir + 'manageUnits.php',tParams);
+    } else if(StAction == 'edit'){
+      var tParams = {
+        'method':'post',
+        'content':{
+          'StAction': 'editUnit',
+          'IDUnir': gID('UnitID'),
+          'StUnit': gID('StUnitEdit').value,
+          'BoAnswer': (gID('BoAnswerEdit').checked)?'1':'0',
+          'BoAttachTicket': (gID('BoAttachEdit').checked)?'1':'0',
+        },
+        'okCallBack':function(response) {
+          appendHTML(response, gID('adminWrapper'), true);
+        }
+      };
+      xhr.makeRequest('Edit Unit', this.adminDir + 'manageUnits.php',tParams);
     } else {
       return false;
     }

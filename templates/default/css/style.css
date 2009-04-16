@@ -645,6 +645,3 @@ h3 .hidden {
 #editMenu {
   margin-left:5%;
 }
-
-.permissionUL { margin:0px; padding:0px;  }
-.permissionUL li{ display: inline; float: left; width: 50%;  }
