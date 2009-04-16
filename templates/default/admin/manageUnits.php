@@ -76,7 +76,7 @@
                   <img src="templates/default/images/button_edit.png"/>
                 </a>
                 <a href="javascript:void(0);" onclick="">
-                  <img src="templates/default/images/button_cancel.png"/>
+                  <img src="templates/default/images/button_cancel.png" onclick="Admin.submitManageUnit('remove','<?=$ArUnitsOptions['IDUnit']?>')"/>
                 </a>
               </td>
               <td style="display:none;">
@@ -147,7 +147,7 @@
     </p>
     <p>
       <input type="hidden" id="UnitID" value="">
-      <button class='button' onclick=""><?=SAVE?></button>
+      <button class='button' onclick="Admin.submitManageUnit('edit');"><?=SAVE?></button>
       <button class='button' onclick="gID('manageEditUnit').className='Left Invisible'"><?=CLEAR?></button>
     </p>
   </div>

@@ -65,7 +65,7 @@ if (!empty($_POST) && $_POST['StAction'] == 'create') {
 ****************************************/
 if (F1DeskUtils::isSupporter()) {
 
-  $BoCreate = F1DeskUtils::getPermission('BoCreateCall',getSessionProp('IDSupporter'));
+  $BoCreate = F1DeskUtils::getPermission('BoCreateTicket',getSessionProp('IDSupporter'));
   if ($BoCreate) {
     $ArDepartments = F1DeskUtils::getPublicDepartments(false);
   } else {

@@ -1247,16 +1247,39 @@ var Admin = {
         'method':'post',
         'content':{
           'StAction': 'editUnit',
-          'IDUnir': gID('UnitID'),
+          'IDUnit': gID('UnitID').value,
           'StUnit': gID('StUnitEdit').value,
           'BoAnswer': (gID('BoAnswerEdit').checked)?'1':'0',
           'BoAttachTicket': (gID('BoAttachEdit').checked)?'1':'0',
+          'BoCreateTicket': (gID('BoCreateEdit').checked)?'1':'0',
+          'BoDeleteTicket': (gID('BoDeleteEdit').checked)?'1':'0',
+          'BoViewTicket': (gID('BoViewEdit').checked)?'1':'0',
+          'BoReleaseAnswer': (gID('BoReleaseEdit').checked)?'1':'0',
+          'BoMailError': (gID('BoMailErrorEdit').checked)?'1':'0',
+          'BoCannedResponse': (gID('BoCannedResponseEdit').checked)?'1':'0'
         },
         'okCallBack':function(response) {
           appendHTML(response, gID('adminWrapper'), true);
         }
       };
       xhr.makeRequest('Edit Unit', this.adminDir + 'manageUnits.php',tParams);
+    } else if(StAction == 'remove'){
+      var tFunction = function(ok) {
+        if(ok) {
+          var tParams = {
+            'method':'post',
+            'content':{
+              'StAction': 'removeUnit',
+              'IDUnit': IDUnit
+            },
+            'okCallBack':function(response) {
+              appendHTML(response, gID('adminWrapper'), true);
+            }
+          };
+          xhr.makeRequest('Remove Unit', Admin.adminDir + 'manageUnits.php',tParams);
+        }
+      }
+      flowWindow.confirm(i18n.deleteUnit,tFunction); 
     } else {
       return false;
     }

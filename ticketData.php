@@ -184,7 +184,7 @@ if ($isVisible) {
 
   if ($isSupporter) {
     $ArSupporters = $ObjUser->listSupporters($IDTicket);
-    $BoCreate = F1DeskUtils::getPermission('BoCreateCall', $IDSupporter);
+    $BoCreate = F1DeskUtils::getPermission('BoCreateTicket', $IDSupporter);
 
     if ($BoCreate) {
       $ArDepartments = F1DeskUtils::getPublicDepartments(false);

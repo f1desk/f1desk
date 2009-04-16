@@ -121,6 +121,38 @@ abstract class F1DeskUtils {
     $ItReturn = self::$DBHandler->insertIntoTable($StTblName,$ArFields,$ArPermissions);
     return $ItReturn;
   }
+  
+  /**
+   * Edit a unit created
+   *
+   * @param int $IDUnit
+   * @param array $ArData
+   * @return int
+   */
+  public static function editUnit($IDUnit, $ArData){
+    $StTableName = DBPREFIX . "Unit";
+		$StCondition = "IDUnit = " . $IDUnit;
+		self::getDBinstance();
+
+		return self::$DBHandler->updateTable( $StTableName, $ArData, $StCondition );
+  }
+  
+  /**
+   * removes a Unit created
+   *
+   * @param integer $IDUnit
+   * @return int / boll
+   */
+  public static function removeUnit($IDUnit){
+    self::getDBinstance();
+    $StTableName = DBPREFIX . 'Unit';
+    $StCondition = 'IDUnit = '. $IDUnit;
+    try {
+      return self::$DBHandler->deleteFromTable($StTableName,$StCondition);
+    } catch (Exception $e){
+      return false;
+    }
+  }
 
   /**
    * creates a new department
