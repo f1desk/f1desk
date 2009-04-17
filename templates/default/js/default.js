@@ -61,7 +61,7 @@ var baseActions = {
   'selectFromSearch': function(id) {
     IDDepartment = Ticket.findTicket(id);
     if (IDDepartment) {
-      Ticket.showDepartmentTickets(IDDepartment);
+      Ticket.showDepartmentTickets(IDDepartment, 'show');
       Clicked = gID(id);
       if (Clicked) {
         Ticket.selectTicket(Clicked.parentNode);
@@ -123,10 +123,10 @@ var flowWindow = {
     this.EventFuncs = {
       'Confirm':function(){ },
       'Prompt':function(){ },
-      'Close':'',
-      'Max':'',
-      'Min':'',
-      'Rest':''
+      'Close':function(){ },
+      'Max':function(){ },
+      'Min':function(){ },
+      'Rest':function(){ }
     };
   },
 
@@ -652,22 +652,45 @@ var Ticket = {
     appendHTML(HTMLTickets, departmentContent);
   },
 
-  'orderTicketList': function(ItTD, tableID) {
+  'orderTicketList': function(ItTD, tableID, ArTH) {
     var tBody = gID(tableID).getElementsByTagName('TBODY')[0];
     var toIterate = tBody.getElementsByTagName('TR');
     var tdsValues = [];
-    for (var aux = 0; aux < toIterate.length; aux++){
-      tdsValues[aux] = [];
-      tdsValues[aux][0] = toIterate[aux].getElementsByTagName('TD')[ItTD].innerHTML.toLowerCase();
-      tdsValues[aux][1] = toIterate[aux];
-    }
-    while (toIterate.length !== 0){
-      removeElements(toIterate[0]);
-    }
-    tdsValues = tdsValues.sort();
-    for (aux =0; aux < tdsValues.length; aux++){
-      tBody.appendChild(tdsValues[aux][1]);
-    }
+    /*** Lets modify the arrow? ***/
+      ArTH = ArTH.getElementsByTagName('TH');
+      /*First of all: increasing or decreasing?*/
+      var setOrder = (ArTH.item(ItTD).getElementsByTagName('SPAN')[0].className.substring(12) == 'increasing')?'decreasing':'increasing';
+      /*Unseting the increasing or decreasing of all*/
+      for (var aux=0; aux<3; aux++){
+        ArTH.item(aux).getElementsByTagName('SPAN')[0].className = 'orderTicket';
+        ArTH.item(aux).width = '';
+      }
+      /*New, Seting of the clicked*/
+      ArTH.item(ItTD).width = '31%';  
+      ArTH.item(ItTD).getElementsByTagName('SPAN')[0].className += ' ' + setOrder;
+    /*** Yep! We modified! ***/
+    
+    /*** Now, do "THE MAGIC" ***/
+      if(toIterate.item(0).getElementsByTagName('TD')[0].id == 'noTicket') return false;
+      for (var aux = 0; aux < toIterate.length; aux++){
+        tdsValues[aux] = [];
+        tdsValues[aux][0] = toIterate[aux].getElementsByTagName('TD')[ItTD].innerHTML.toLowerCase();
+        tdsValues[aux][1] = toIterate[aux];
+      }
+      while (toIterate.length !== 0){
+        removeElements(toIterate[0]);
+      }
+      tdsValues = tdsValues.sort();
+      if (setOrder == 'increasing'){
+        for (aux =0; aux < tdsValues.length; aux++){
+          tBody.appendChild(tdsValues[aux][1]);
+        }
+      } else {
+        for (aux = (tdsValues.length)-1; aux >= 0; aux--){
+          tBody.appendChild(tdsValues[aux][1]);
+        }
+      }
+    /*** Magic done \0/ ***/
   },
 
   'refreshNotReadCount': function(IDDepartment) {
@@ -800,7 +823,7 @@ var Ticket = {
         Ticket.selectTicket(Clicked);
         Ticket.refreshNotReadCount( IDDepartment );
         if (IDDepartment == 'bookmark') {
-          baseAction.selectFromSearch(IDTicket);
+          baseActions.selectFromSearch(IDTicket);
         }
       }
     };

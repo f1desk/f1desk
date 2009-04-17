@@ -419,5 +419,22 @@ abstract class TemplateHandler {
       }
     return $StHTML;
 	}
+	
+	/**
+	 * Reduce a text to a better look in template
+	 *
+	 * @param string $StTitle
+	 */
+	public static function reduceTitle($StTitle){
+	  $ArReduce = explode(' ', $StTitle);
+	  $StReduceReturn = '';
+	  for ($aux = 0; $aux < count($ArReduce); $aux++){
+	    $StReduceReturn .= $ArReduce[$aux] . ' ';
+	    if (strlen(trim($StReduceReturn)) > 15){
+	      return substr($StReduceReturn, 0, 15) . '...';
+	    }
+	  }
+	  return trim($StReduceReturn);
+	}
 }
 ?>
