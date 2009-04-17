@@ -833,8 +833,8 @@ LEFT JOIN '.DBPREFIX."Department D ON (D.IDDepartment = DS.IDDepartment)
 WHERE
   D.IDDepartment = $IDDepartment";
     self::getDBinstance();
-    self::$DBHanlder->execSQL($StSQL);
-    $ArResult = $DBHanlder->getResult('string');
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
 
     return $ArResult;
   }

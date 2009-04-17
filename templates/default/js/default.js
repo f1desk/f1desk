@@ -1010,7 +1010,7 @@ var Admin = {
 
     var p = createElement('p',{'id':'p'+IDDepartment});
     var span = createElement('span');
-    var link = createElement('a',{'href':'','onclick':'Admin.removeDepartment('+IDDepartment+');'});
+    var link = createElement('a',{'href':'javascript:void(0);','onclick':'Admin.removeDepartment('+IDDepartment+');'});
     var img = createElement('img',{'src':templateDir+'images/button_cancel.png','style':'margin-right:5px;'});
     var text = createTextNode(combo[combo.selectedIndex].textContent);
     link.appendChild(img);
@@ -1153,7 +1153,7 @@ var Admin = {
     gID('StDescriptionEdit').value = gID('StDescription'+IDDepartment).value;
     gID('DepartmentID').value = IDDepartment;
   },
-  
+
   'startEditingUnit': function(IDUnit){
     gID('manageEditUnit').className = 'Left';
     gID('StUnitEdit').value = gID('StUnit' + IDUnit).value;
@@ -1219,7 +1219,7 @@ var Admin = {
       return false;
     }
   },
-  
+
   'submitManageUnit': function(StAction, IDUnit){
     if (StAction == 'create'){
       var tForm = gID('insertUnitForm');
@@ -1279,7 +1279,7 @@ var Admin = {
           xhr.makeRequest('Remove Unit', Admin.adminDir + 'manageUnits.php',tParams);
         }
       }
-      flowWindow.confirm(i18n.deleteUnit,tFunction); 
+      flowWindow.confirm(i18n.deleteUnit,tFunction);
     } else {
       return false;
     }
