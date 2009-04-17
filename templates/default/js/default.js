@@ -1184,9 +1184,6 @@ var Admin = {
       };
       xhr.makeRequest('Edit Department', this.adminDir + 'manageDepartments.php',tParams);
     } else if(StAction == 'create'){
-<<<<<<< HEAD:templates/default/js/default.js
-
-=======
       var tForm = gID('insertDepartmentForm');
       var tParams = {
         'method':'post',
@@ -1266,11 +1263,7 @@ var Admin = {
         }
       };
       xhr.makeRequest('Edit Unit', this.adminDir + 'manageUnits.php',tParams);
->>>>>>> 312893c91fd8ffe09c4214a866c9c943d8ac8a55:templates/default/js/default.js
     } else if(StAction == 'remove'){
-<<<<<<< HEAD:templates/default/js/default.js
-
-=======
       var tFunction = function(ok) {
         if(ok) {
           var tParams = {
@@ -1287,7 +1280,6 @@ var Admin = {
         }
       }
       flowWindow.confirm(i18n.deleteUnit,tFunction);
->>>>>>> 312893c91fd8ffe09c4214a866c9c943d8ac8a55:templates/default/js/default.js
     } else {
       return false;
     }
