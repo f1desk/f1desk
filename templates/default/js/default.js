@@ -59,10 +59,10 @@ var baseActions = {
   },
 
   'selectFromSearch': function(id) {
-    IDDepartment = Ticket.findTicket(id);
+    var IDDepartment = Ticket.findTicket(id);
     if (IDDepartment) {
       Ticket.showDepartmentTickets(IDDepartment, 'show');
-      Clicked = gID(id);
+      var Clicked = gID(id);
       if (Clicked) {
         Ticket.selectTicket(Clicked.parentNode);
       }
@@ -661,9 +661,9 @@ var Ticket = {
       /*First of all: increasing or decreasing?*/
       var setOrder = (ArTH.item(ItTD).getElementsByTagName('SPAN')[0].className.substring(12) == 'increasing')?'decreasing':'increasing';
       /*Unseting the increasing or decreasing of all*/
-      for (var aux=0; aux<3; aux++){
-        ArTH.item(aux).getElementsByTagName('SPAN')[0].className = 'orderTicket';
-        ArTH.item(aux).width = '';
+      for (var cont=0; cont<3; cont++){
+        ArTH.item(cont).getElementsByTagName('SPAN')[0].className = 'orderTicket';
+        ArTH.item(cont).width = '';
       }
       /*New, Seting of the clicked*/
       ArTH.item(ItTD).width = '31%';  
@@ -671,7 +671,9 @@ var Ticket = {
     /*** Yep! We modified! ***/
     
     /*** Now, do "THE MAGIC" ***/
-      if(toIterate.item(0).getElementsByTagName('TD')[0].id == 'noTicket') return false;
+      if(toIterate.item(0).getElementsByTagName('TD')[0].id == 'noTicket'){
+        return false;
+      }
       for (var aux = 0; aux < toIterate.length; aux++){
         tdsValues[aux] = [];
         tdsValues[aux][0] = toIterate[aux].getElementsByTagName('TD')[ItTD].innerHTML.toLowerCase();
@@ -1033,7 +1035,7 @@ var Admin = {
 
     var p = createElement('p',{'id':'p'+IDDepartment});
     var span = createElement('span');
-    var link = createElement('a',{'href':'javascript:void(0);','onclick':'Admin.removeDepartment('+IDDepartment+');'});
+    var link = createElement('a',{'href':'javascript:void(0)','onclick':'Admin.removeDepartment('+IDDepartment+');'});
     var img = createElement('img',{'src':templateDir+'images/button_cancel.png','style':'margin-right:5px;'});
     var text = createTextNode(combo[combo.selectedIndex].textContent);
     link.appendChild(img);
