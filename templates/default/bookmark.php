@@ -15,17 +15,23 @@
 		<th width="20%"><?=BOOKMARK_ACTIONS?></th>
 	</thead>
 	<tbody>
-    <? foreach ($ArBookmark as $Alt => $ArBookmarkOptions): ?>
-      <tr class="<?=(($Alt%2)==0)?'Alt':''?>">
-        <td class="TicketNumber"><?=$ArBookmarkOptions['IDTicket']?></td>
-        <td><?=$ArBookmarkOptions['StTitle']?></td>
-        <td>
-          <div>
-            <img src="<?=TEMPLATEDIR?>images/button_cancel.png" onclick="Home.removeBookmark('<?=$ArBookmarkOptions['IDTicket']?>')">
-            <img src="<?=TEMPLATEDIR?>images/visualizar.png" onclick='flowWindow.previewTicket("<?=$ArBookmarkOptions['IDTicket']?>");'>
-          </div>
-        </td>
+    <? if (count($ArBookmark)!= 0): ?>
+      <? foreach ($ArBookmark as $Alt => $ArBookmarkOptions): ?>
+        <tr class="<?=(($Alt%2)==0)?'Alt':''?>">
+          <td class="TicketNumber"><?=$ArBookmarkOptions['IDTicket']?></td>
+          <td><?=$ArBookmarkOptions['StTitle']?></td>
+          <td>
+            <div>
+              <img src="<?=TEMPLATEDIR?>images/button_cancel.png" onclick="Home.removeBookmark('<?=$ArBookmarkOptions['IDTicket']?>')">
+              <img src="<?=TEMPLATEDIR?>images/visualizar.png" onclick='flowWindow.previewTicket("<?=$ArBookmarkOptions['IDTicket']?>");'>
+            </div>
+          </td>
+        </tr>
+      <? endforeach; ?>
+    <? else: ?>
+      <tr>
+        <td align="center" colspan="3"><?=NO_BOOKMARK?></td>
       </tr>
-    <? endforeach; ?>
+    <? endif; ?>
 	</tbody>
 </table>
