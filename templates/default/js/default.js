@@ -977,7 +977,7 @@ var Admin = {
 
     var p = createElement('p',{'id':'p'+IDDepartment});
     var span = createElement('span');
-    var link = createElement('a',{'href':'','onclick':'Admin.removeDepartment('+IDDepartment+');'});
+    var link = createElement('a',{'href':'javascript:void(0);','onclick':'Admin.removeDepartment('+IDDepartment+');'});
     var img = createElement('img',{'src':templateDir+'images/button_cancel.png','style':'margin-right:5px;'});
     var text = createTextNode(combo[combo.selectedIndex].textContent);
     link.appendChild(img);
@@ -1113,14 +1113,14 @@ var Admin = {
     table[0].style.width = '100%';
     gID('editMenu').className = gID('editMenu').className.replace(/ ?Invisible ?/,'');
   },
-  
+
   'startEditingDepartment': function(IDDepartment){
     gID('manageEditDepartment').className = 'Left';
     gID('StDepartmentEdit').value = gID('StDepartment'+IDDepartment).value;
     gID('StDescriptionEdit').value = gID('StDescription'+IDDepartment).value;
     gID('DepartmentID').value = IDDepartment;
   },
-  
+
   'submitManageDepartment': function(StAction, IDDepartment){
     if(StAction == 'edit'){
       var tParams = {
@@ -1137,9 +1137,9 @@ var Admin = {
       };
       xhr.makeRequest('Edit Department', this.adminDir + 'manageDepartments.php',tParams);
     } else if(StAction == 'create'){
-      
+
     } else if(StAction == 'remove'){
-      
+
     } else {
       return false;
     }
