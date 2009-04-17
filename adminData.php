@@ -4,8 +4,8 @@ handleLanguage(__FILE__);
 if (isset($_POST) && !empty($_POST['StAction'])) {
   switch ($_POST['StAction']) {
     case 'insertMenu':
-        if (!createOption('menu','menu_tabs',$_POST['StName'],array('id'=>$_POST['StAddress'])))
-          ErrorHandler::setNotice('menu',MENU_INSERT_ERR,'error');
+      if (!createOption('menu','menu_tabs',$_POST['StName'],array('id'=>$_POST['StAddress'])))
+        ErrorHandler::setNotice('menu',MENU_INSERT_ERR,'error');
     break;
 
     case 'removeMenu':
@@ -27,11 +27,100 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
       );
       $ItAffedcted = F1DeskUtils::editDepartment($_POST['IDDepartment'], $ArData);
       if(!$ItAffedcted){
-        ErrorHandler::setNotice('department',REQUEST_OK,'error');
+        ErrorHandler::setNotice('department', DEPTO_EDIT_ERROR,'error');
       } else {
-        ErrorHandler::setNotice('department',REQUEST_ERROR,'ok');
+        ErrorHandler::setNotice('department', DEPTO_EDIT_OK,'ok');
       }
     break;
+
+    case 'removeDepartment':
+      if (!isset($_POST['IDDepartment']))
+      	ErrorHandler::setNotice('department', NO_EDIT_ID,'error');
+      $ItAffedcted = F1DeskUtils::removeDepartment($_POST['IDDepartment']);
+      if(!$ItAffedcted){
+        ErrorHandler::setNotice('department', DEPTO_REMOVE_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice('department', DEPTO_REMOVE_OK,'ok');
+      }
+    break;
+
+    case 'createDepartment':
+      if (!isset($_POST['IDSubDepartment']) || $_POST['IDSubDepartment'] == ""){ $_POST['IDSubDepartment'] = null; }
+      if (!isset($_POST['TxSign'])){ $_POST['TxSign'] = ''; }
+      $ItNewID = F1DeskUtils::createDepartment( f1desk_escape_string($_POST['StDepartment']), f1desk_escape_string($_POST['StDescription']), f1desk_escape_string($_POST['TxSign']), $_POST['IDSubDepartment']);
+      if(!$ItNewID){
+        ErrorHandler::setNotice('department',DEPTO_CREATE_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice('department',DEPTO_CREATE_OK,'ok');
+      }
+    break;
+
+    case 'createUnit':
+      function validateBooleanPost( $StPost ){
+        if ( isset($_POST[$StPost]) && ( $_POST[$StPost]===true || $_POST[$StPost] == '1' ) ) {
+        	return '1';
+        } else {
+          return '0';
+        }
+      }
+      $ItNewID = F1DeskUtils::createUnit( f1desk_escape_string( $_POST['StUnit'] ), array(
+        "BoAnswer" => validateBooleanPost('BoAnswer'),
+        "BoAttachTicket" => validateBooleanPost('BoAttachTicket'),
+        "BoCreateTicket" => validateBooleanPost('BoCreateTicket'),
+        "BoDeleteTicket" => validateBooleanPost('BoDeleteTicket'),
+        "BoViewTicket" => validateBooleanPost('BoViewTicket'),
+        "BoReleaseAnswer" => validateBooleanPost('BoReleaseAnswer'),
+        "BoMailError" => validateBooleanPost('BoMailError'),
+        "BoCannedResponse" => validateBooleanPost('BoCannedResponse')
+      ) );
+      if(!$ItNewID){
+        ErrorHandler::setNotice('unit',UNIT_CREATE_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice('unit',UNIT_CREATE_OK,'ok');
+      }
+    break;
+
+    case 'editUnit':
+      function validateBooleanPost( $StPost ){
+        if ( $_POST[$StPost]===true || $_POST[$StPost] == '1' ) {
+        	return '1';
+        } else {
+          return '0';
+        }
+      }
+      if (!isset($_POST['IDUnit']))
+      	ErrorHandler::setNotice('unit', NO_EDIT_ID,'error');
+      $IDUnit = $_POST['IDUnit'];
+      $ArData = array(
+        'StUnit' => f1desk_escape_string($_POST['StUnit']),
+        'BoAnswer' => validateBooleanPost('BoAnswer'),
+        'BoAttachTicket' => validateBooleanPost('BoAttachTicket'),
+        'BoCreateTicket' => validateBooleanPost('BoCreateTicket'),
+        'BoDeleteTicket' => validateBooleanPost('BoDeleteTicket'),
+        'BoViewTicket' => validateBooleanPost('BoViewTicket'),
+        'BoReleaseAnswer' => validateBooleanPost('BoReleaseAnswer'),
+        'BoMailError' => validateBooleanPost('BoMailError'),
+        'BoCannedResponse' => validateBooleanPost('BoCannedResponse')
+      );
+      $ItAffedcted = F1DeskUtils::editUnit($IDUnit, $ArData);
+      if(!$ItAffedcted){
+        ErrorHandler::setNotice('unit',UNIT_EDIT_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice('unit',UNIT_EDIT_OK,'ok');
+      }
+    break;
+
+    case 'removeUnit':
+      if (!isset($_POST['IDUnit']))
+      	ErrorHandler::setNotice('unit', NO_EDIT_ID,'error');
+      $ItAffedcted = F1DeskUtils::removeUnit($_POST['IDUnit']);
+      if(!$ItAffedcted){
+        ErrorHandler::setNotice('unit',UNIT_REMOVE_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice('unit',UNIT_REMOVE_OK,'ok');
+      }
+    break;
+
   }
 }
 
@@ -42,10 +131,9 @@ $ArSupporters = array();
 foreach ($ArDepartments as $ArDepartment) {
   $ArSupporters[$ArDepartment['IDDepartment']] = F1DeskUtils::getDepartmentSupporters($ArDepartment['IDDepartment']);
 }
-
+$ArUnits = F1DeskUtils::listUnits();
 if (F1DeskUtils::isSupporter()) {
-
-  $BoCreate = F1DeskUtils::getPermission('BoCreateCall',getSessionProp('IDSupporter'));
+  $BoCreate = F1DeskUtils::getPermission('BoCreateTicket',getSessionProp('IDSupporter'));
   if ($BoCreate) {
     $ArDepartments = F1DeskUtils::getPublicDepartments(false);
   } else {

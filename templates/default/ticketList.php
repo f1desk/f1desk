@@ -28,7 +28,7 @@
         }
       ?>
       <tr style='cursor:pointer;' class='<?= $StClass ?>'>
-        <td onclick='Ticket.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )' id='<?= $ID ?>' class='TicketNumber'>
+        <td onclick='Ticket.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )' id='<?= $Ticket['IDTicket'] ?>' class='TicketNumber'>
           #<?= $Ticket['IDTicket']?>
         </td>
         <td onclick='Ticket.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )'>

@@ -150,7 +150,7 @@ if(!empty($_POST['StAction'])) {
   	break;
 
   	default:
-		  ErrorHandler::setNotice('user',NO_ACTION, 'error');
+		  ErrorHandler::setNotice('user', NO_ACTION, 'error');
 		break;
 
   }

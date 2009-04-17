@@ -1193,8 +1193,7 @@ SELECT
   AT.IDTicket
 FROM
   '.DBPREFIX.'AttachedTicket AT
-  LEFT JOIN
-    '.DBPREFIX.'Ticket T ON (T.IDTicket = AT.IDTicket)
+  LEFT JOIN '.DBPREFIX.'Ticket T ON (T.IDTicket = AT.IDTicket)
 WHERE
   AT.IDAttachedTicket = ' . $IDTicket ;
     $this->execSQL($StSQL);
@@ -1218,8 +1217,7 @@ SELECT
   A.*
 FROM
   ' . DBPREFIX . 'Attachment A
-LEFT JOIN
-  ' . DBPREFIX . "Message M ON (A.IDMessage = M.IDMessage)
+  LEFT JOIN ' . DBPREFIX . "Message M ON (A.IDMessage = M.IDMessage)
 WHERE
   M.IDMessage = $IDMessage";
     $this->execSQL($StSQL);
@@ -1261,8 +1259,7 @@ SELECT
   AT.IDAttachedTicket
 FROM
   '.DBPREFIX.'AttachedTicket AT
-  LEFT JOIN
-    '.DBPREFIX.'Ticket T ON (T.IDTicket = AT.IDTicket)
+  LEFT JOIN '.DBPREFIX.'Ticket T ON (T.IDTicket = AT.IDTicket)
 WHERE
   AT.IDTicket = ' . $IDTicket ;
     $this->execSQL($StSQL);
@@ -1282,10 +1279,8 @@ SELECT
   D.*
 FROM
   '.DBPREFIX.'Ticket T
-  LEFT JOIN
-    '.DBPREFIX.'TicketDepartment TD ON (T.IDTicket = TD.IDTicket)
-  LEFT JOIN
-    '.DBPREFIX.'Department D ON (D.IDDepartment = TD.IDDepartment)
+  LEFT JOIN '.DBPREFIX.'TicketDepartment TD ON (T.IDTicket = TD.IDTicket)
+  LEFT JOIN '.DBPREFIX.'Department D ON (D.IDDepartment = TD.IDDepartment)
 WHERE
     T.IDTicket = ' . $IDTicket . '
   AND
@@ -1307,10 +1302,8 @@ SELECT
   D.*
 FROM
   '.DBPREFIX.'Ticket T
-  LEFT JOIN
-    '.DBPREFIX.'TicketDepartment TD ON (T.IDTicket = TD.IDTicket)
-  LEFT JOIN
-    '.DBPREFIX.'Department D ON (D.IDDepartment = TD.IDDepartment)
+  LEFT JOIN '.DBPREFIX.'TicketDepartment TD ON (T.IDTicket = TD.IDTicket)
+  LEFT JOIN '.DBPREFIX.'Department D ON (D.IDDepartment = TD.IDDepartment)
 WHERE
     T.IDTicket = ' . $IDTicket . '
   AND
@@ -1332,12 +1325,9 @@ SELECT
   U.*
 FROM
   '.DBPREFIX.'User U
-  LEFT JOIN
-    '.DBPREFIX.'Supporter S ON (U.IDUser = S.IDUser)
-  LEFT JOIN
-    '.DBPREFIX.'TicketSupporter TS ON (S.IDSupporter = TS.IDSupporter)
-  LEFT JOIN
-    '.DBPREFIX.'Ticket T ON (T.IDTicket = TS.IDTicket)
+  LEFT JOIN '.DBPREFIX.'Supporter S ON (U.IDUser = S.IDUser)
+  LEFT JOIN '.DBPREFIX.'TicketSupporter TS ON (S.IDSupporter = TS.IDSupporter)
+  LEFT JOIN '.DBPREFIX.'Ticket T ON (T.IDTicket = TS.IDTicket)
 WHERE
     T.IDTicket = ' . $IDTicket . '
   AND
@@ -1359,12 +1349,9 @@ SELECT
   U.*
 FROM
   '.DBPREFIX.'User U
-  LEFT JOIN
-    '.DBPREFIX.'Supporter S ON (U.IDUser = S.IDUser)
-  LEFT JOIN
-    '.DBPREFIX.'TicketSupporter TS ON (S.IDSupporter = TS.IDSupporter)
-  LEFT JOIN
-    '.DBPREFIX.'Ticket T ON (T.IDTicket = TS.IDTicket)
+  LEFT JOIN '.DBPREFIX.'Supporter S ON (U.IDUser = S.IDUser)
+  LEFT JOIN '.DBPREFIX.'TicketSupporter TS ON (S.IDSupporter = TS.IDSupporter)
+  LEFT JOIN '.DBPREFIX.'Ticket T ON (T.IDTicket = TS.IDTicket)
 WHERE
     T.IDTicket = ' . $IDTicket . '
   AND
@@ -1372,6 +1359,51 @@ WHERE
     $this->execSQL($StSQL);
     $ArResult = $this->getResult('string');
     return  $ArResult;
+  }
+
+  /**
+   * verify if a ticket exists
+   *
+   * @param int $IDTicket
+   * @return bool
+   */
+  public function ticketExists($IDTicket) {
+    $StSQL = '
+SELECT
+  IDTicket
+FROM
+  '.DBPREFIX.'Ticket T
+WHERE
+  T.IDTicket = ' . $IDTicket;
+
+    $this->execSQL($StSQL);
+    $ItNumRows = $this->getNumRows();
+    return ($ItNumRows > 0);
+  }
+
+  /**
+   * verify if a user can see the ticket
+   *
+   * @param int $IDTicket
+   * @param int $IDUser
+   *
+   * @return bool
+   */
+  public function isVisible($IDTicket, $IDUser) {
+    $StSQL = '
+SELECT
+  U.*
+FROM
+  '.DBPREFIX.'User U
+  LEFT JOIN '.DBPREFIX.'Ticket T ON (T.IDUser= U.IDUser)
+WHERE
+  T.IDTicket = ' . $IDTicket . '
+AND
+  U.IDUser = ' . $IDUser;
+
+    $this->execSQL($StSQL);
+    $ItNumRows = $this->getNumRows();
+    return ($ItNumRows > 0);
   }
 
   /**
