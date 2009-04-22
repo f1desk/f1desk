@@ -49,7 +49,7 @@ abstract class F1DeskUtils {
 	 */
 	public static function getMenuTab( $StPage ) {
 		$ArMenu = array();
-		$ObMenu = getOption( "menu_tabs", "DOM" );
+		$ObMenu = getOption( 'menu_tabs', 'node' );
 		foreach ( $ObMenu as $Item ){
 			if ( $StPage == $Item->getAttribute('xml:id') ) $StCurrent = "current";
 			else $StCurrent = "";
@@ -146,7 +146,7 @@ abstract class F1DeskUtils {
     }
     return $IDDepartment;
   }
-  
+
   /**
    * Edits a department
    *
@@ -161,7 +161,7 @@ abstract class F1DeskUtils {
 
 		return self::$DBHandler->updateTable( $StTableName, $ArData, $StCondition );
   }
-  
+
   /**
    * remove a department by its ID
    *
@@ -170,40 +170,40 @@ abstract class F1DeskUtils {
    */
   public static function removeDepartment ($IDDepartment) {
     self::getDBinstance();
-    
+
     #
     # Do this department have any tickets? yes? =O  poor tickets...
     #
     $StTableName = DBPREFIX . 'TicketDepartment';
     $StCondition = 'IDDepartment = '. $IDDepartment;
     self::$DBHandler->deleteFromTable($StTableName,$StCondition);
-    
+
     #
     # Or have any subdepartment...
     #
 		$StTableName = DBPREFIX . 'SubDepartment';
-		$StCondition = 'IDDepartment = ' . $IDDepartment . 
+		$StCondition = 'IDDepartment = ' . $IDDepartment .
 		               ' OR IDSubDepartment = ' . $IDDepartment;
   	self::$DBHandler->deleteFromTable($StTableName,$StCondition);
-  	
+
     #
     # Or have any supporters...
     #
 		$StTableName = DBPREFIX . 'DepartmentSupporter';
 		$StCondition = 'IDDepartment = ' . $IDDepartment;
   	self::$DBHandler->deleteFromTable($StTableName,$StCondition);
-  	
+
     #
     # Or have any cannedResponses...
     #
 		$StTableName = DBPREFIX . 'DepartmentCannedResponse';
 		$StCondition = 'IDDepartment = ' . $IDDepartment;
   	self::$DBHandler->deleteFromTable($StTableName,$StCondition);
-  	
+
 		$StTableName = DBPREFIX . 'Department';
 		$StCondition = 'IDDepartment = ' . $IDDepartment;
     return self::$DBHandler->deleteFromTable($StTableName,$StCondition);
- 		
+
   }
 
   /**
@@ -353,6 +353,33 @@ FROM
     return $ArUnits;
 
   }
+
+  /**
+   * List gereral options
+   *
+   * @return array
+   *
+   * @author Dimitri Lameri <dimitri@digirati.com.br>
+   */
+  public static function listGeneralOptions(){
+
+    $ArGeneralOptions = array(
+      'title' => '',
+      'date_format' => '',
+      'time_format' => '',
+      'datetime_format' => '',
+      'upload_max_size' => ''
+    );
+
+    foreach ($ArGeneralOptions as $NodeName => &$Option) {
+      $Option = getOption($NodeName);
+    }
+
+
+    return $ArGeneralOptions;
+  }
+
+
 
   /**
    * Lists All Categories
@@ -889,7 +916,7 @@ GROUP BY
   SD.IDDepartment';
     self::$DBHandler->execSQL($StSQL);
     $ArResult = self::$DBHandler->getResult('string');
-    
+
     foreach ( $ArResult as $Department ) {
       $ArSubSeparation = explode(',', $Department[ 'IDSubDepartments' ]);
       $ArSubDepartments[$Department['IDDepartment']] = array_unique($ArSubSeparation);
@@ -910,7 +937,7 @@ GROUP BY
         }
       }
     }
-    
+
     return $ArDepartments;
   }
 }

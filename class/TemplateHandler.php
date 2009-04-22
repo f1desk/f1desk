@@ -405,12 +405,15 @@ abstract class TemplateHandler {
     if (!empty($ArMenus[0])) {
       foreach ($ArMenus as $Menu) {
         $StHTML .= ($i%2 == 0) ? '<tr class="Alt">' : '<tr>';
-        $StHTML .= "<td>{$Menu['Name']}</td>";
-        $StHTML .= '<td>';
-        $StHTML .= "<a id='{$Menu['Link']}' href='javascript:void(0);' onclick='Admin.showEditMenu(this.id);'>";
-        $StHTML .= '<img src="templates/default/images/button_edit.png"> </a></td>';
-        $StHTML .= "<a id='{$Menu['Link']}' href='javascript:void(0);' onclick='Admin.removeMenu(this.id);'>";
-        $StHTML .= '<img src="templates/default/images/button_cancel.png"> </a></td>';
+          $StHTML .= "<td>{$Menu['Name']}</td>";
+          $StHTML .= '<td>';
+            $StHTML .= "<a id='{$Menu['Link']}' href='javascript:void(0);' onclick='Admin.showEditMenu(this.id);'>";
+            $StHTML .= '<img src="templates/default/images/button_edit.png"> </a>';
+          $StHTML .= '</td>';
+          $StHTML .= '<td>';
+            $StHTML .= "<a id='{$Menu['Link']}' href='javascript:void(0);' onclick='Admin.removeMenu(this.id);'>";
+            $StHTML .= '<img src="templates/default/images/button_cancel.png"> </a>';
+          $StHTML .= '</td>';
         $StHTML .= '</tr>';
         $i++;
       }

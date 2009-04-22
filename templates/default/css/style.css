@@ -589,11 +589,9 @@ h3 .hidden {
 
 #contentAdminMenu {
   float:left;
-  /*border: 1px solid #000;*/
   width: 75%;
   height:100%;
   margin-left:2%;
-  margin-top:1%;
 }
 
 #manageSupporter, #createSupporter {
@@ -615,7 +613,7 @@ h3 .hidden {
   margin-left: 20px;
 }
 
-#SupporterDepartment img, #manageMenu img {
+#SupporterDepartment img, #manageMenu img, #manageOptions img {
   vertical-align:middle;
   margin-left: 5px;
 }
@@ -634,12 +632,12 @@ h3 .hidden {
  width:25%;
 }
 
-#manageMenu {
+#manageMenu, #manageOptions {
  width:100%;
 }
 
-#manageMenu table {
-  width:30%;
+#manageMenu table, #manageOptions table {
+  width:40%;
 }
 
 #editMenu {

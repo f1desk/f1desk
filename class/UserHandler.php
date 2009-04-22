@@ -607,11 +607,11 @@ WHERE
    }
 
   /**
-   * get user data, handling importation, after being included (FUNCAO INUTILIZADA, REFAZER POSTERIORMENTE)
+   * get user data, handling importation, after being included
    *
    * @param int $IDUser
    */
-  /*public function getUserData($IDUser) {
+  public function getUserData($IDUser) {
     global $UserFields;
 
     $UserDB = new DBHandler(true);
@@ -659,7 +659,7 @@ WHERE
     }
 
     return $ArUser[0];
-  }*/
+  }
 
   /**
    * generates a random password

@@ -154,9 +154,8 @@ abstract class Validate {
     if ($Return == true || $Valid === true) {
       return $Valid;
     } else if ($Valid === false) {
-      session_destroy();
+      $_SESSION = array();
       if (array_key_exists('page',$_GET)) {
-        session_start();
         setSessionProp('lastPage',$_GET['page']);
       }
       F1DeskUtils::showPage('login');

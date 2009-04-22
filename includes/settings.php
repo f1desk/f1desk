@@ -13,10 +13,13 @@ function getOption($StSetting, $StReturnType = "string") {
   $Dom->formatOutput = true;
 
   $StSetting = strtolower($StSetting);
+
+  $Node = $Dom->getElementsByTagName($StSetting);
+
   if ( $StReturnType == "string" ) {
-  	return $Dom->getElementsByTagName($StSetting)->item(0)->nodeValue;
+  	return $Node->item(0)->nodeValue;
   } else {
-  	return $Dom->getElementsByTagName($StSetting);
+  	return $Node;
   }
 
 }
@@ -267,9 +270,9 @@ function f1desk_strip_tags($TxMessage, $StHTML) {
 
 function f1desk_escape_html($toEscape){
   $StHTML = "";
-	$ObDOM = getOption( "tag", "DOM" );
+	$ObDOM = getOption( 'tag', 'node' );
 	foreach ($ObDOM as $item) {
-		$StHTML .= ('<' . $item->nodeValue . '>');
+	  $StHTML .= sprintf('<%s>', $item->nodeValue);
 	}
 	return f1desk_strip_tags($toEscape, $StHTML);
 }
