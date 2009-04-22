@@ -1,8 +1,11 @@
 - VERIFICAR TAMBEM A UNIFICACAO DA HOME (EM PROL DA REDUCAO DE ARQUIVOS)
+  * Complicado. A cada requisição de inserção, edição ou exclusão nas partes da home, obrigaria
+    a recarregar todo o resto da página. Hoje, ele recarrega somente o necessário.
 
 - ATUALIZAR O BLOG
 
 - ATUALIZAR O DER COM AS INUMERAS MODIFICACOES FEITAS NO BANCO
+  * Denovo!? =P
 
 - FAZER FUNCIONAR A IMPORTACAO DE USUARIOS
 

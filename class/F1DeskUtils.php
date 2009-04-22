@@ -116,9 +116,42 @@ abstract class F1DeskUtils {
     $StTblName = DBPREFIX . 'Unit';
     $ArFields = array_keys($ArPermissions);
     array_unshift($ArFields,'StUnit');
+    array_unshift($ArPermissions, $StName);
     self::getDBinstance();
     $ItReturn = self::$DBHandler->insertIntoTable($StTblName,$ArFields,$ArPermissions);
     return $ItReturn;
+  }
+
+  /**
+   * Edit a unit created
+   *
+   * @param int $IDUnit
+   * @param array $ArData
+   * @return int
+   */
+  public static function editUnit($IDUnit, $ArData){
+    $StTableName = DBPREFIX . "Unit";
+		$StCondition = "IDUnit = " . $IDUnit;
+		self::getDBinstance();
+
+		return self::$DBHandler->updateTable( $StTableName, $ArData, $StCondition );
+  }
+
+  /**
+   * removes a Unit created
+   *
+   * @param integer $IDUnit
+   * @return int / boll
+   */
+  public static function removeUnit($IDUnit){
+    self::getDBinstance();
+    $StTableName = DBPREFIX . 'Unit';
+    $StCondition = 'IDUnit = '. $IDUnit;
+    try {
+      return self::$DBHandler->deleteFromTable($StTableName,$StCondition);
+    } catch (Exception $e){
+      return false;
+    }
   }
 
   /**
@@ -524,8 +557,10 @@ WHERE
   S.IDSupporter = $IDSupporter";
     self::$DBHandler->execSQL($StSQL);
     $ArResult = self::$DBHandler->getResult('string');
-
-    return ($ArResult[0][$StAction] == 0) ? false : true;
+    if(isset($ArResult[0][$StAction]))
+      return ($ArResult[0][$StAction] == 0) ? false : true;
+    else
+      return false;
   }
 
   /**
@@ -827,8 +862,8 @@ LEFT JOIN '.DBPREFIX."Department D ON (D.IDDepartment = DS.IDDepartment)
 WHERE
   D.IDDepartment = $IDDepartment";
     self::getDBinstance();
-    self::$DBHanlder->execSQL($StSQL);
-    $ArResult = $DBHanlder->getResult('string');
+    self::$DBHandler->execSQL($StSQL);
+    $ArResult = self::$DBHandler->getResult('string');
 
     return $ArResult;
   }

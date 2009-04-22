@@ -59,10 +59,10 @@ var baseActions = {
   },
 
   'selectFromSearch': function(id) {
-    IDDepartment = Ticket.findTicket(id);
+    var IDDepartment = Ticket.findTicket(id);
     if (IDDepartment) {
-      Ticket.showDepartmentTickets(IDDepartment);
-      Clicked = gID(id);
+      Ticket.showDepartmentTickets(IDDepartment, 'show');
+      var Clicked = gID(id);
       if (Clicked) {
         Ticket.selectTicket(Clicked.parentNode);
       }
@@ -123,10 +123,10 @@ var flowWindow = {
     this.EventFuncs = {
       'Confirm':function(){ },
       'Prompt':function(){ },
-      'Close':'',
-      'Max':'',
-      'Min':'',
-      'Rest':''
+      'Close':function(){ },
+      'Max':function(){ },
+      'Min':function(){ },
+      'Rest':function(){ }
     };
   },
 
@@ -652,22 +652,47 @@ var Ticket = {
     appendHTML(HTMLTickets, departmentContent);
   },
 
-  'orderTicketList': function(ItTD, tableID) {
+  'orderTicketList': function(ItTD, tableID, ArTH) {
     var tBody = gID(tableID).getElementsByTagName('TBODY')[0];
     var toIterate = tBody.getElementsByTagName('TR');
     var tdsValues = [];
-    for (var aux = 0; aux < toIterate.length; aux++){
-      tdsValues[aux] = [];
-      tdsValues[aux][0] = toIterate[aux].getElementsByTagName('TD')[ItTD].innerHTML.toLowerCase();
-      tdsValues[aux][1] = toIterate[aux];
-    }
-    while (toIterate.length !== 0){
-      removeElements(toIterate[0]);
-    }
-    tdsValues = tdsValues.sort();
-    for (aux =0; aux < tdsValues.length; aux++){
-      tBody.appendChild(tdsValues[aux][1]);
-    }
+    /*** Lets modify the arrow? ***/
+      ArTH = ArTH.getElementsByTagName('TH');
+      /*First of all: increasing or decreasing?*/
+      var setOrder = (ArTH.item(ItTD).getElementsByTagName('SPAN')[0].className.substring(12) == 'increasing')?'decreasing':'increasing';
+      /*Unseting the increasing or decreasing of all*/
+      for (var cont=0; cont<3; cont++){
+        ArTH.item(cont).getElementsByTagName('SPAN')[0].className = 'orderTicket';
+        ArTH.item(cont).width = '';
+      }
+      /*New, Seting of the clicked*/
+      ArTH.item(ItTD).width = '31%';  
+      ArTH.item(ItTD).getElementsByTagName('SPAN')[0].className += ' ' + setOrder;
+    /*** Yep! We modified! ***/
+    
+    /*** Now, do "THE MAGIC" ***/
+      if(toIterate.item(0).getElementsByTagName('TD')[0].id == 'noTicket'){
+        return false;
+      }
+      for (var aux = 0; aux < toIterate.length; aux++){
+        tdsValues[aux] = [];
+        tdsValues[aux][0] = toIterate[aux].getElementsByTagName('TD')[ItTD].innerHTML.toLowerCase();
+        tdsValues[aux][1] = toIterate[aux];
+      }
+      while (toIterate.length !== 0){
+        removeElements(toIterate[0]);
+      }
+      tdsValues = tdsValues.sort();
+      if (setOrder == 'increasing'){
+        for (aux =0; aux < tdsValues.length; aux++){
+          tBody.appendChild(tdsValues[aux][1]);
+        }
+      } else {
+        for (aux = (tdsValues.length)-1; aux >= 0; aux--){
+          tBody.appendChild(tdsValues[aux][1]);
+        }
+      }
+    /*** Magic done \0/ ***/
   },
 
   'refreshNotReadCount': function(IDDepartment) {
@@ -800,7 +825,7 @@ var Ticket = {
         Ticket.selectTicket(Clicked);
         Ticket.refreshNotReadCount( IDDepartment );
         if (IDDepartment == 'bookmark') {
-          baseAction.selectFromSearch(IDTicket);
+          baseActions.selectFromSearch(IDTicket);
         }
       }
     };
@@ -1010,7 +1035,7 @@ var Admin = {
 
     var p = createElement('p',{'id':'p'+IDDepartment});
     var span = createElement('span');
-    var link = createElement('a',{'href':'','onclick':'Admin.removeDepartment('+IDDepartment+');'});
+    var link = createElement('a',{'href':'javascript:void(0)','onclick':'Admin.removeDepartment('+IDDepartment+');'});
     var img = createElement('img',{'src':templateDir+'images/button_cancel.png','style':'margin-right:5px;'});
     var text = createTextNode(combo[combo.selectedIndex].textContent);
     link.appendChild(img);
@@ -1154,6 +1179,20 @@ var Admin = {
     gID('DepartmentID').value = IDDepartment;
   },
 
+  'startEditingUnit': function(IDUnit){
+    gID('manageEditUnit').className = 'Left';
+    gID('StUnitEdit').value = gID('StUnit' + IDUnit).value;
+    gID('BoAnswerEdit').checked = (gID('BoAnswer' + IDUnit).value=='1')?true:false;
+    gID('BoAttachEdit').checked = (gID('BoAttachTicket' + IDUnit).value=='1')?true:false;
+    gID('BoCreateEdit').checked = (gID('BoCreateTicket' + IDUnit).value=='1')?true:false;
+    gID('BoDeleteEdit').checked = (gID('BoDeleteTicket' + IDUnit).value=='1')?true:false;
+    gID('BoViewEdit').checked = (gID('BoViewTicket' + IDUnit).value=='1')?true:false;
+    gID('BoReleaseEdit').checked = (gID('BoReleaseAnswer' + IDUnit).value=='1')?true:false;
+    gID('BoMailErrorEdit').checked = (gID('BoMailError' + IDUnit).value=='1')?true:false;
+    gID('BoCannedResponseEdit').checked = (gID('BoCannedResponse' + IDUnit).value=='1')?true:false;
+    gID('UnitID').value = IDUnit;
+  },
+
   'submitManageDepartment': function(StAction, IDDepartment){
     if(StAction == 'edit'){
       var tParams = {
@@ -1201,6 +1240,71 @@ var Admin = {
         }
       }
       flowWindow.confirm(i18n.deleteDepartment,tFunction);
+    } else {
+      return false;
+    }
+  },
+
+  'submitManageUnit': function(StAction, IDUnit){
+    if (StAction == 'create'){
+      var tForm = gID('insertUnitForm');
+      var tParams = {
+        'method':'post',
+        'content':{
+          'StAction': 'createUnit',
+          'StUnit': tForm.name.value,
+          'BoAnswer': (tForm.BoAnswer.checked)?'1':'0',
+          'BoAttachTicket': (tForm.BoAttach.checked)?'1':'0',
+          'BoCreateTicket': (tForm.BoCreate.checked)?'1':'0',
+          'BoDeleteTicket': (tForm.BoDelete.checked)?'1':'0',
+          'BoViewTicket': (tForm.BoView.checked)?'1':'0',
+          'BoReleaseAnswer': (tForm.BoRelease.checked)?'1':'0',
+          'BoMailError': (tForm.BoMailError.checked)?'1':'0',
+          'BoCannedResponse': (tForm.BoCannedResponse.checked)?'1':'0'
+        },
+        'okCallBack':function(response) {
+          appendHTML(response, gID('adminWrapper'), true);
+        }
+      };
+      xhr.makeRequest('Create Unit', this.adminDir + 'manageUnits.php',tParams);
+    } else if(StAction == 'edit'){
+      var tParams = {
+        'method':'post',
+        'content':{
+          'StAction': 'editUnit',
+          'IDUnit': gID('UnitID').value,
+          'StUnit': gID('StUnitEdit').value,
+          'BoAnswer': (gID('BoAnswerEdit').checked)?'1':'0',
+          'BoAttachTicket': (gID('BoAttachEdit').checked)?'1':'0',
+          'BoCreateTicket': (gID('BoCreateEdit').checked)?'1':'0',
+          'BoDeleteTicket': (gID('BoDeleteEdit').checked)?'1':'0',
+          'BoViewTicket': (gID('BoViewEdit').checked)?'1':'0',
+          'BoReleaseAnswer': (gID('BoReleaseEdit').checked)?'1':'0',
+          'BoMailError': (gID('BoMailErrorEdit').checked)?'1':'0',
+          'BoCannedResponse': (gID('BoCannedResponseEdit').checked)?'1':'0'
+        },
+        'okCallBack':function(response) {
+          appendHTML(response, gID('adminWrapper'), true);
+        }
+      };
+      xhr.makeRequest('Edit Unit', this.adminDir + 'manageUnits.php',tParams);
+    } else if(StAction == 'remove'){
+      var tFunction = function(ok) {
+        if(ok) {
+          var tParams = {
+            'method':'post',
+            'content':{
+              'StAction': 'removeUnit',
+              'IDUnit': IDUnit
+            },
+            'okCallBack':function(response) {
+              appendHTML(response, gID('adminWrapper'), true);
+            }
+          };
+          xhr.makeRequest('Remove Unit', Admin.adminDir + 'manageUnits.php',tParams);
+        }
+      }
+      flowWindow.confirm(i18n.deleteUnit,tFunction);
     } else {
       return false;
     }

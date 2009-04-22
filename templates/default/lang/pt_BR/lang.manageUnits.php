@@ -16,11 +16,5 @@
   define('NO_UNITS', 'N&atilde;o h&aacute; grupos cadastrados');
   define('SAVE','Salvar');
   define('CLEAR','Limpar');
-  
-  define('DESCRIPTION','Descri&ccedil;&atilde;o');
-  define('SUB_DEPARTMENT_OF','Subdepartamento de');
-  define('NO_SUBDEPARTMENTS','N&atilde;o &eacute; subdepartamento');
-  
-  
-  define('EDIT_DEPARTMENT', 'Editar Departamento');
+  define('EDIT_UNIT', 'Editar Grupo');
 ?>

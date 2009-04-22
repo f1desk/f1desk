@@ -14,7 +14,7 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
     break;
 
     case 'editMenu':
-      if (!setOption($_POST['StOldAddress'], array('id'=>$_POST['StAddress'],'text'=>$_POST['StName']) ,'id'))
+      if (!setOption($_POST['StOldAddress'], array('id'=>addslashes($_POST['StAddress']),'text'=>addslashes($_POST['StName'])) ,'id'))
         ErrorHandler::setNotice('menu',MENU_EDIT_ERR,'error');
     break;
 
@@ -32,7 +32,7 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
         ErrorHandler::setNotice('department', DEPTO_EDIT_OK,'ok');
       }
     break;
-    
+
     case 'removeDepartment':
       if (!isset($_POST['IDDepartment']))
       	ErrorHandler::setNotice('department', NO_EDIT_ID,'error');
@@ -43,7 +43,7 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
         ErrorHandler::setNotice('department', DEPTO_REMOVE_OK,'ok');
       }
     break;
-    
+
     case 'createDepartment':
       if (!isset($_POST['IDSubDepartment']) || $_POST['IDSubDepartment'] == ""){ $_POST['IDSubDepartment'] = null; }
       if (!isset($_POST['TxSign'])){ $_POST['TxSign'] = ''; }
@@ -54,15 +54,85 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
         ErrorHandler::setNotice('department',DEPTO_CREATE_OK,'ok');
       }
     break;
+
+    case 'createUnit':
+      function validateBooleanPost( $StPost ){
+        if ( isset($_POST[$StPost]) && ( $_POST[$StPost]===true || $_POST[$StPost] == '1' ) ) {
+        	return '1';
+        } else {
+          return '0';
+        }
+      }
+      $ItNewID = F1DeskUtils::createUnit( f1desk_escape_string( $_POST['StUnit'] ), array(
+        "BoAnswer" => validateBooleanPost('BoAnswer'),
+        "BoAttachTicket" => validateBooleanPost('BoAttachTicket'),
+        "BoCreateTicket" => validateBooleanPost('BoCreateTicket'),
+        "BoDeleteTicket" => validateBooleanPost('BoDeleteTicket'),
+        "BoViewTicket" => validateBooleanPost('BoViewTicket'),
+        "BoReleaseAnswer" => validateBooleanPost('BoReleaseAnswer'),
+        "BoMailError" => validateBooleanPost('BoMailError'),
+        "BoCannedResponse" => validateBooleanPost('BoCannedResponse')
+      ) );
+      if(!$ItNewID){
+        ErrorHandler::setNotice('unit',UNIT_CREATE_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice('unit',UNIT_CREATE_OK,'ok');
+      }
+    break;
+
+    case 'editUnit':
+      function validateBooleanPost( $StPost ){
+        if ( $_POST[$StPost]===true || $_POST[$StPost] == '1' ) {
+        	return '1';
+        } else {
+          return '0';
+        }
+      }
+      if (!isset($_POST['IDUnit']))
+      	ErrorHandler::setNotice('unit', NO_EDIT_ID,'error');
+      $IDUnit = $_POST['IDUnit'];
+      $ArData = array(
+        'StUnit' => f1desk_escape_string($_POST['StUnit']),
+        'BoAnswer' => validateBooleanPost('BoAnswer'),
+        'BoAttachTicket' => validateBooleanPost('BoAttachTicket'),
+        'BoCreateTicket' => validateBooleanPost('BoCreateTicket'),
+        'BoDeleteTicket' => validateBooleanPost('BoDeleteTicket'),
+        'BoViewTicket' => validateBooleanPost('BoViewTicket'),
+        'BoReleaseAnswer' => validateBooleanPost('BoReleaseAnswer'),
+        'BoMailError' => validateBooleanPost('BoMailError'),
+        'BoCannedResponse' => validateBooleanPost('BoCannedResponse')
+      );
+      $ItAffedcted = F1DeskUtils::editUnit($IDUnit, $ArData);
+      if(!$ItAffedcted){
+        ErrorHandler::setNotice('unit',UNIT_EDIT_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice('unit',UNIT_EDIT_OK,'ok');
+      }
+    break;
+
+    case 'removeUnit':
+      if (!isset($_POST['IDUnit']))
+      	ErrorHandler::setNotice('unit', NO_EDIT_ID,'error');
+      $ItAffedcted = F1DeskUtils::removeUnit($_POST['IDUnit']);
+      if(!$ItAffedcted){
+        ErrorHandler::setNotice('unit',UNIT_REMOVE_ERROR,'error');
+      } else {
+        ErrorHandler::setNotice('unit',UNIT_REMOVE_OK,'ok');
+      }
+    break;
+
   }
 }
 
 
 $ArMenus = F1DeskUtils::getMenuTab('admin');
+$ArDepartments = F1DeskUtils::getPublicDepartments(false);
+$ArSupporters = array();
+foreach ($ArDepartments as $ArDepartment) {
+  $ArSupporters[$ArDepartment['IDDepartment']] = F1DeskUtils::getDepartmentSupporters($ArDepartment['IDDepartment']);
+}
 $ArUnits = F1DeskUtils::listUnits();
-
 if (F1DeskUtils::isSupporter()) {
-
   $BoCreate = F1DeskUtils::getPermission('BoCreateTicket',getSessionProp('IDSupporter'));
   if ($BoCreate) {
     $ArDepartments = F1DeskUtils::getPublicDepartments(false);

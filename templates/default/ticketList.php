@@ -6,14 +6,28 @@
     require_once(dirname(__FILE__) . '/../../departmentTicketData.php');
     $ID = $_POST['IDDepartment'];
   }
+  
+  #
+  # Default Language
+  #
+  handleLanguage(__FILE__);
 ?>
 <table id='ticketTable<?=$ID?>' class='tableTickets'>
   <thead>
     <tr>
-      <th style="cursor:pointer;" onclick="Ticket.orderTicketList(0, 'ticketTable<?=$ID?>')">N&uacute;mero</th>
-      <th style="cursor:pointer;" onclick="Ticket.orderTicketList(1, 'ticketTable<?=$ID?>')">Nome</th>
-      <th style="cursor:pointer;" onclick="Ticket.orderTicketList(2, 'ticketTable<?=$ID?>')">Atendente</th>
-      <th>Abrir</th>
+      <th style="cursor:pointer;" width="31%" onclick="Ticket.orderTicketList(0, 'ticketTable<?=$ID?>', this.parentNode)">
+        <?=TICKET_NUMBER?>
+        <span class="orderTicket increasing"/>
+      </th>
+      <th style="cursor:pointer;" width="" onclick="Ticket.orderTicketList(1, 'ticketTable<?=$ID?>', this.parentNode)">
+        <?=TICKET_TITLE?>
+        <span class="orderTicket"/>
+      </th>
+      <th style="cursor:pointer;" width="" onclick="Ticket.orderTicketList(2, 'ticketTable<?=$ID?>', this.parentNode)">
+        <?=TICKET_SUPPORTER?>
+        <span class="orderTicket"/>
+      </th>
+      <th><?=TICKET_OPEN?></th>
     </tr>
   </thead>
   <tbody>
@@ -32,10 +46,10 @@
           #<?= $Ticket['IDTicket']?>
         </td>
         <td onclick='Ticket.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )'>
-          <?= $Ticket['StTitle']?>
+          <?= TemplateHandler::reduceTitle($Ticket['StTitle'])?>
         </td>
         <td onclick='Ticket.showTicket( <?=$Ticket['IDTicket']?>, "<?=$ID?>", this.parentNode )' id='TicketSupporter<?= $Ticket['IDTicket']?>'>
-          <?= $Ticket['StSupporter']?>
+          <?= TemplateHandler::reduceTitle($Ticket['StSupporter'])?>
         </td>
         <td onclick="flowWindow.previewTicket(<?=$Ticket['IDTicket']?>, '<?=$ID?>');" style='text-align:center;'>
           <img src="<?=TEMPLATEDIR?>images/visualizar.png">
@@ -44,7 +58,7 @@
       <? endforeach; ?>
     <? else : ?>
       <tr>
-        <td colspan='4' style='text-align:center;'><?= NO_CALLS ?></td>
+        <td id="noTicket" colspan='4' style='text-align:center;'><?=NO_CALLS?></td>
       </tr>
     <? endif; ?>
   </tbody>

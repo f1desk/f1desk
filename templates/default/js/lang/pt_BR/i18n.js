@@ -53,5 +53,6 @@ var i18n = {
   'deleteMenu':'Deseja remover o menu?',
   'noDepartment':'Escolha um departamento!',
   
-  'deleteDepartment': 'Ao remover o departamento, todos os usu&aacute;rios e chamados ser&atilde;o desvinculados do memsmo.  Deseja prosseguir?'
+  'deleteDepartment': 'Ao remover o departamento, todos os usu&aacute;rios e chamados ser&atilde;o desvinculados do memsmo.  Deseja prosseguir?',
+  'deleteUnit': 'Deseja remover este Grupo?'
 };
