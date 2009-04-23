@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <options>
-  <title>F1Desk</title>
+  <title>MarioDesk</title>
   <lang>pt_BR</lang>
   <date_format>d/m/Y</date_format>
   <time_format>H:i</time_format>
@@ -24,8 +24,9 @@
     <menu_tabs xml:id="logout">Logout</menu_tabs>
   </menu>
 
-  <avail_languages>
-    <language>pt_BR</language>
+  <avail_languages choosen="pt_BR">
+    <language xml:id="pt_BR" title="Português (BR)">pt_BR</language>
+    <language xml:id="eng" title="Inglês">eng</language>
   </avail_languages>
   
   <avail_templates choosen="default">

@@ -216,7 +216,7 @@ html>body #main{
 }
 
 .Invisible {
-  display: none;
+  visibility: hidden;
 }
 
 .departmentRows {
@@ -627,7 +627,7 @@ h3 .hidden {
   margin-left: 20px;
 }
 
-#SupporterDepartment img, #manageMenu img, #manageOptions img {
+#SupporterDepartment img, #manageMenu img, #manageOptions img, #manageLanguages img {
   vertical-align:middle;
   margin-left: 5px;
 }
@@ -647,22 +647,18 @@ h3 .hidden {
 }
 
 #manageMenu {
- width:100%;
+ width:50%;
 }
 
-#manageMenu table {
-  width:40%;
-}
-
-#editMenu, #manageEditOptions {
+#editMenu, #manageEditOptions, #manageEditLanguages {
   margin-left:5%;
 }
 
-#manageOptions{
+#manageOptions, #manageLanguages{
   width:50%;
 }
 
-#manageOptions table{
+#manageOptions table, #manageLanguages table{
   width:90%;
 }
 

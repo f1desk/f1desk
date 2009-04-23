@@ -171,6 +171,7 @@ $ArMenus = F1DeskUtils::getMenuTab('admin');
 $ArDepartments = F1DeskUtils::getPublicDepartments(false);
 $ArGeneralOptions = F1DeskUtils::listGeneralOptions();
 $ArTemplates = F1DeskUtils::getTemplates();
+$ArLanguages = F1DeskUtils::getLanguages();
 $ArSupporters = array();
 foreach ($ArDepartments as $ArDepartment) {
   $ArSupporters[$ArDepartment['IDDepartment']] = F1DeskUtils::getDepartmentSupporters($ArDepartment['IDDepartment']);

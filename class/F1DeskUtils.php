@@ -1014,5 +1014,20 @@ GROUP BY
     return removeOption($StName, 'id');
   }
   
+  public static function getLanguages(){
+    $DomLanguageNode = getOption('avail_languages', 'node');
+    $StChoosenLanguage = $DomLanguageNode->item(0)->getAttribute('choosen');
+    $DomAvailLanguages = $DomLanguageNode->item(0)->getElementsByTagName('language');
+    $ArLanguages = array();
+    foreach ($DomAvailLanguages as $elementLanguage) {
+    	$ArLanguages[] = array(
+        "StPath" => $elementLanguage->nodeValue,
+        "StTitle" => $elementLanguage->getAttribute('title'),
+        "BoSelected" => ($elementLanguage->nodeValue == $StChoosenLanguage)?true:false
+    	);
+    }
+    return $ArLanguages;
+  }
+  
 }
 ?>

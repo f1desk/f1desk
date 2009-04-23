@@ -1100,13 +1100,6 @@ var Admin = {
     xhr.makeRequest('Edit Menu', Admin.adminDir + 'manageMenus.php', tParams);
   },
 
-  'hideEditMenu':function() {
-    gID('editMenu').className += ' Invisible';
-    gID('manageMenu').style.width = '100%';
-    var table = gTN('table');
-    table[0].style.width = '30%';
-  },
-
   'editFromMenuList' : function (StOldAddress, StName, StAddress) {
     var Li = gID(StOldAddress);
 
@@ -1194,9 +1187,6 @@ var Admin = {
     gID('StNameEdit').value = trim(gID(IDMenu).textContent);
     gID('StAddressEdit').value = IDMenu;
     gID('StOldAddressEdit').value = IDMenu;
-    gID('manageMenu').style.width = '40%';
-    var table = gTN('table');
-    table[0].style.width = '100%';
     gID('editMenu').className = gID('editMenu').className.replace(/ ?Invisible ?/,'');
   },
 

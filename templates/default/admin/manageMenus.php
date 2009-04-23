@@ -26,7 +26,7 @@
         </tbody>
       </table>
   </div>
-  <div id='editMenu' class='Left Invisible'>
+  <div id='editMenu' class='Left Invisible' style="width:40%;">
   <h3>Editar Menu</h3>
     Nome:
     <p><input type='text' id='StNameEdit' name='StName' class='inputCombo' /></p>
@@ -34,7 +34,7 @@
     <p><input type='text' id='StAddressEdit' name='StAddress' class='inputCombo' /></p>
     <p>
       <button class='button' onclick='Admin.editMenu(gID("StAddressEdit").value);'>Cadastrar</button>
-      <button class='button' onclick='Admin.hideEditMenu();'>Limpar</button>
+      <button class='button' onclick="gID('editMenu').className += ' Invisible'">Limpar</button>
       <input type='hidden' id='StOldAddressEdit' name='StOldAddressEdit' />
     </p>
   </div>
