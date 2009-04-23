@@ -38,7 +38,7 @@
 
   	        <input type="text" name='id' class='Left' id="search_text" />
   	        <img class='Right' id="search_image" src="<?= TEMPLATEDIR ?>images/btn_search_box.gif" alt="Search" title="Search" onclick='formSearch.onsubmit();'/>
-            <input type='hidden' name='page' value='listTickets' />
+            <input type='hidden' name='page' value='departmentTickets' />
 
 	        </form>
 				</div>

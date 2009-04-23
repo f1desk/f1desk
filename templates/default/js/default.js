@@ -1066,6 +1066,20 @@ var Admin = {
     }
     gID('null').className = '';
   },
+  
+  'deleteTemplate': function(StName){
+    var tParams = {
+      'method':'post',
+      'content':{
+        'StAction': 'removeTemplate',
+        'StTemplateName': StName
+      },
+      'okCallBack':function(response) {
+        appendHTML(response, gID('adminWrapper'), true);
+      }
+    };
+    xhr.makeRequest('Delete Template', this.adminDir + 'manageTemplates.php',tParams);
+  },
 
   'editMenu':function() {
     var StName = gID('StNameEdit').value;
@@ -1161,6 +1175,20 @@ var Admin = {
       gID('null').className = '';
     }
   },
+  
+  'setCurrentTemplate': function(StName){
+    var tParams = {
+      'method':'post',
+      'content':{
+        'StAction': 'setCurrentTemplate',
+        'StTemplateName': StName
+      },
+      'okCallBack':function(response) {
+        appendHTML(response, gID('adminWrapper'), true);
+      }
+    };
+    xhr.makeRequest('Edit Template', this.adminDir + 'manageTemplates.php',tParams);
+  },
 
   'showEditMenu':function(IDMenu) {
     gID('StNameEdit').value = trim(gID(IDMenu).textContent);
@@ -1177,6 +1205,12 @@ var Admin = {
     gID('StDepartmentEdit').value = gID('StDepartment'+IDDepartment).value;
     gID('StDescriptionEdit').value = gID('StDescription'+IDDepartment).value;
     gID('DepartmentID').value = IDDepartment;
+  },
+  
+  'startEditingOption': function(StTitle, StValue){
+    gID('manageEditOptions').className = 'Left';
+    gID('optionEditTitle').innerHTML = StTitle;
+    gID('optionEditValue').value = unescape(StValue);
   },
 
   'startEditingUnit': function(IDUnit){
@@ -1243,6 +1277,39 @@ var Admin = {
     } else {
       return false;
     }
+  },
+  
+  'submitManageOption': function(){
+    var tParams = {
+      'method':'post',
+      'content':{
+        'StAction': 'editOption',
+        'StOption': gID('optionEditTitle').innerHTML,
+        'StValue': gID('optionEditValue').value
+      },
+      'okCallBack':function(response) {
+        appendHTML(response, gID('adminWrapper'), true);
+      }
+    };
+    xhr.makeRequest('Edit option', this.adminDir + 'preferences.php',tParams);
+  },
+  
+  'submitManageTemplate': function(){
+    var tForm = gID('templateForm');
+    var tParams = {
+      'method':'post',
+      'content':{
+        'StAction': 'createTemplate',
+        'StName': tForm.StName.value,
+        'StPath': tForm.StPath.value,
+        'StThumbnail': tForm.StThumbnail.value,
+        'TxDescription': tForm.StDescription.value
+      },
+      'okCallBack':function(response) {
+        appendHTML(response, gID('adminWrapper'), true);
+      }
+    };
+    xhr.makeRequest('Create Template', this.adminDir + 'manageTemplates.php',tParams);
   },
 
   'submitManageUnit': function(StAction, IDUnit){
@@ -1363,10 +1430,10 @@ var flowWindow = {
     this.EventFuncs = {
       'Confirm':function(){ },
       'Prompt':function(){ },
-      'Close':'',
-      'Max':'',
-      'Min':'',
-      'Rest':''
+      'Close':function(){ },
+      'Max':function(){ },
+      'Min':function(){ },
+      'Rest':function(){ }
     }
   },
 
@@ -1443,6 +1510,16 @@ var flowWindow = {
           '</tbody>'+
         '</table>';
       TBStyle.Caption = StTitle; width = 550; height = 380;
+    }
+    var ID = Flow.open(flowParams);
+  },
+  
+  'previewTemplate': function(StPath){
+    var flowParams = new flowWindow.flowParams();
+    with(flowParams){
+      innerHTML = '<img src="'+StPath+'">';
+      TBStyle.Caption = StPath;
+      width = 600; height = 450;
     }
     var ID = Flow.open(flowParams);
   },

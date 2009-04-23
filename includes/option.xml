@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <options>
   <title>F1Desk</title>
-  <template>default</template>
   <lang>pt_BR</lang>
   <date_format>d/m/Y</date_format>
   <time_format>H:i</time_format>
@@ -19,14 +18,18 @@
   <menu>
     <menu_tabs xml:id="home">Home</menu_tabs>
     <menu_tabs xml:id="createTicket">Escrever</menu_tabs>
-    <menu_tabs xml:id="listTickets">Listar</menu_tabs>
+    <menu_tabs xml:id="departmentTickets">Listar</menu_tabs>
     <menu_tabs xml:id="search">Busca Avançada</menu_tabs>
     <menu_tabs xml:id="admin">Administração</menu_tabs>
     <menu_tabs xml:id="logout">Logout</menu_tabs>
   </menu>
 
-  <availLanguages>
+  <avail_languages>
     <language>pt_BR</language>
-  </availLanguages>
+  </avail_languages>
+  
+  <avail_templates choosen="default">
+    <template xml:id="default" path="default" thumbnail="defaultTemplate.jpg" description="Template default para uso do mais novo sistema de HelpDesk do mercado.">default</template>
+  </avail_templates>
 
 </options>

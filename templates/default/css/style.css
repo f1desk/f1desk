@@ -308,7 +308,7 @@ html>body #main{
 .answerArea {
   background-color:#D8E1E6;
   height:200px;
-  overflow:hidden;
+  overflow:auto;
   width:99%;
   margin-bottom:1%;
 }
@@ -619,7 +619,7 @@ h3 .hidden {
   margin-left:-5px;
 }
 
-#createSupporter p, #createMenu p, #insertDepartment p, #insertUnit p {
+#createSupporter p, #createMenu p, #insertDepartment p, #insertUnit p, #manageTemplates p {
   margin-top:0px;
 }
 
@@ -646,14 +646,39 @@ h3 .hidden {
  width:25%;
 }
 
-#manageMenu, #manageOptions {
+#manageMenu {
  width:100%;
 }
 
-#manageMenu table, #manageOptions table {
+#manageMenu table {
   width:40%;
 }
 
-#editMenu {
+#editMenu, #manageEditOptions {
   margin-left:5%;
+}
+
+#manageOptions{
+  width:50%;
+}
+
+#manageOptions table{
+  width:90%;
+}
+
+.tableTemplates{
+  text-align:left;
+  width:100%;
+  margin-bottom:10px;
+  border:ridge 2px #ccc;
+  padding:5px;
+}
+.tableTemplates tbody td .thumbnail{
+  width: 255px;
+  height: 200px;
+  border: none;
+}
+.tableTemplates tbody tr span{
+  color:#02764F;
+  font-weight: bold;
 }

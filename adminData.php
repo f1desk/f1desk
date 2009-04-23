@@ -111,13 +111,55 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
     break;
 
     case 'removeUnit':
-      if (!isset($_POST['IDUnit']))
+      if (!isset($_POST['IDUnit'])){
       	ErrorHandler::setNotice('unit', NO_EDIT_ID,'error');
+      }
       $ItAffedcted = F1DeskUtils::removeUnit($_POST['IDUnit']);
       if(!$ItAffedcted){
         ErrorHandler::setNotice('unit',UNIT_REMOVE_ERROR,'error');
       } else {
         ErrorHandler::setNotice('unit',UNIT_REMOVE_OK,'ok');
+      }
+    break;
+    
+    case 'editOption':
+      if (!isset($_POST['StOption'])) {
+      	ErrorHandler::setNotice('option', NO_EDIT_ID,'error');
+      }
+      if (!F1DeskUtils::editOption($_POST['StOption'], $_POST['StValue'])) {
+      	ErrorHandler::setNotice('option', ERROR_EDIT_OPTION,'error');
+      } else {
+        ErrorHandler::setNotice('option', SUCESS_EDIT_OPTION,'ok');
+      }
+    break;
+    
+    case 'setCurrentTemplate':
+      if (!isset($_POST['StTemplateName'])) {
+      	ErrorHandler::setNotice('template', NO_ID_SET_TEMPLATE,'error');
+      }
+      if ( !F1DeskUtils::setCurrentTemplate($_POST['StTemplateName']) ) {
+      	ErrorHandler::setNotice('template', ERROR_SET_TEMPLATE,'error');
+      } else {
+        ErrorHandler::setNotice('template', SUCESS_SET_TEMPLATE,'ok');
+      }
+    break;
+    
+    case 'createTemplate':
+      if ( !F1DeskUtils::createTemplate($_POST['StName'], $_POST['StPath'], $_POST['StThumbnail'], $_POST['TxDescription']) ) {
+      	ErrorHandler::setNotice('template', ERROR_CREATE_TEMPLATE,'error');
+      } else {
+        ErrorHandler::setNotice('template', SUCESS_CREATE_TEMPLATE,'ok');
+      }
+    break;
+    
+    case 'removeTemplate':
+      if (!isset($_POST['StTemplateName'])) {
+      	ErrorHandler::setNotice('template', NO_ID_SET_TEMPLATE,'error');
+      }
+      if ( !F1DeskUtils::removeTemplate($_POST['StTemplateName']) ) {
+      	ErrorHandler::setNotice('template', ERROR_REMOVE_TEMPLATE,'error');
+      } else {
+        ErrorHandler::setNotice('template', SUCESS_REMOVE_TEMPLATE,'ok');
       }
     break;
 
@@ -127,6 +169,8 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
 
 $ArMenus = F1DeskUtils::getMenuTab('admin');
 $ArDepartments = F1DeskUtils::getPublicDepartments(false);
+$ArGeneralOptions = F1DeskUtils::listGeneralOptions();
+$ArTemplates = F1DeskUtils::getTemplates();
 $ArSupporters = array();
 foreach ($ArDepartments as $ArDepartment) {
   $ArSupporters[$ArDepartment['IDDepartment']] = F1DeskUtils::getDepartmentSupporters($ArDepartment['IDDepartment']);

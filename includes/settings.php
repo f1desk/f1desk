@@ -1,4 +1,11 @@
 <?php
+function getCurrentTemplate(){
+  $Dom = new DOMDocument();
+  $Dom->load( dirname(__FILE__) . '/option.xml');
+  $StChoosenTemplate = $Dom->getElementsByTagName('avail_templates')->item(0)->getAttribute('choosen');
+  return $Dom->getElementById($StChoosenTemplate)->nodeValue;
+}
+
 /**
  * get options
  *
@@ -275,15 +282,6 @@ function f1desk_escape_html($toEscape){
 	  $StHTML .= sprintf('<%s>', $item->nodeValue);
 	}
 	return f1desk_strip_tags($toEscape, $StHTML);
-}
-
-function returnData($StReturnType, $StReturnURL){
-  if ($StReturnType == 'redirect') {
-  	header("Location: ".TEMPLATEDIR."$StReturnURL");
-  } else {
-    if (file_exists(TEMPLATEDIR.$StReturnURL))
-      include_once(TEMPLATEDIR.$StReturnURL);
-  }
 }
 
 ?>

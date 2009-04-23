@@ -11,6 +11,9 @@
       <a href='javascript:void(0);' onclick="Admin.changeOption('manageDepartments.php')">Administrar Departamentos</a>
     </li>
     <li>
+      <a href='javascript:void(0);' onclick="Admin.changeOption('manageTemplates.php')">Administrar Templates</a>
+    </li>
+    <li>
       <a href='javascript:void(0);' onclick="Admin.changeOption('manageUnits.php')">Administrar Grupos</a>
     </li>
     <li>

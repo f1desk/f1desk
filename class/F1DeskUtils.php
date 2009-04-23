@@ -408,11 +408,8 @@ FROM
       $Option = getOption($NodeName);
     }
 
-
     return $ArGeneralOptions;
   }
-
-
 
   /**
    * Lists All Categories
@@ -900,14 +897,14 @@ WHERE
     return $ArFormatted;
   }
 
-    /**
+  /**
    * Return the non-internal departments or all departments
    *
    * @return Array
    *
    * @author Matheus Ashton <matheus@digirati.com.br>
    */
-  public function getPublicDepartments($BoPublic = true) {
+  public static function getPublicDepartments($BoPublic = true) {
 
     self::getDBinstance();
     $ArDepartments = array();
@@ -975,5 +972,47 @@ GROUP BY
 
     return $ArDepartments;
   }
+  
+  public static function editOption($StOption, $StValue){
+    return setOption($StOption, array('text'=>$StValue), 'name');
+  }
+  
+  public static function getTemplates(){
+    $DomTemplateNode = getOption('avail_templates', 'node');
+    $StChoosenTemplate = $DomTemplateNode->item(0)->getAttribute('choosen');
+    $DomAvailTemplates = $DomTemplateNode->item(0)->getElementsByTagName('template');
+    $ArTemplates = array();
+    foreach ($DomAvailTemplates as $elementTemplate) {
+    	$ArTemplates[] = array(
+        "StName" => $elementTemplate->nodeValue,
+        "StPath" => $elementTemplate->getAttribute('path'),
+        "StThumbnail" => $elementTemplate->getAttribute('thumbnail'),
+        "StDescription" => $elementTemplate->getAttribute('description'),
+        "BoSelected" => ($elementTemplate->nodeValue == $StChoosenTemplate)?true:false
+    	);
+    }
+    return $ArTemplates;
+  }
+  
+  public static function setCurrentTemplate($StName){
+    $Dom = new DOMDocument();
+    $Dom->load( INCLUDESDIR . '/option.xml');
+    $Dom->formatOutput = true;
+    $DomTemplateNode = $Dom->getElementsByTagName('avail_templates');
+    $DomTemplateNode->item(0)->setAttribute('choosen', $StName);
+    return ($Dom->save( INCLUDESDIR . '/option.xml'));
+  }
+  
+  public static function createTemplate($StName, $StPath, $StThumbnail, $TxDescription){
+    return createOption('avail_templates', 'template', $StName, array(
+      'xml:id' => $StName, 'path'=> $StPath, 
+      'thumbnail' => $StThumbnail, 'description' => $TxDescription
+    ));
+  }
+  
+  public static function removeTemplate($StName){
+    return removeOption($StName, 'id');
+  }
+  
 }
 ?>
