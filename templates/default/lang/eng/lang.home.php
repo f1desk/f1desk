@@ -1,0 +1,3 @@
+<?php
+	define('LOAD','Loading...');
+?>
