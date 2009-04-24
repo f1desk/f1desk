@@ -1,31 +1,34 @@
-<?php require_once(dirname(__FILE__).'/../../../adminData.php');?>
+<?php 
+  require_once(dirname(__FILE__).'/../../../adminData.php');
+  handleLanguage(__FILE__);
+?>
 <div id='adminWrapper'>
   
   <!--[LANGUAGE MANAGER]-->
   <div id="content2" style="width:100%;">
     <?=ErrorHandler::getNotice('language');?>
     <div id="insertLanguage">
-      <h3>Cadastrar Língua</h3>
+      <h3><?=ADD_LANGUAGE?></h3>
       <form id="insertLanguageForm" onsubmit="return false;">
-        T&iacute;tulo:
+        <?=TITLE?>:
         <p><input type="text" name="StTitle" class="inputCombo"></p>
-        Nome do Diret&oacute;rio:
+        <?=PATH?>:
         <p><input type="text" name="StPath" class="inputCombo"></p>
         <p>
-          <button class="button" onclick="Admin.submitManageLanguage('create');">Cadastrar</button>
-          <button class="button" type="reset">Limpar</button>
+          <button class="button" onclick="Admin.submitManageLanguage('create');"><?=ADD_LANGUAGE?></button>
+          <button class="button" type="reset"><?=CLEAR?></button>
         </p>
       </form>
       
     </div>
     
     <div id='manageLanguages' class='Left'>
-      <h3>Gerenciar Línguas</h3>
+      <h3><?=MANAGE_LANGUAGE?></h3>
       <table class='tableTickets'>
         <thead>
-          <th>T&iacute;tulo</th>
-          <th>Diret&oacute;rio</th>
-          <th>A&ccedil;&otilde;es</th>
+          <th><?=TITLE?></th>
+          <th><?=PATH?></th>
+          <th><?=ACTIONS?></th>
         </thead>
         <tbody>
           <? foreach ($ArLanguages as $i => $ArLanguageOptions) : ?>
@@ -57,22 +60,22 @@
       </table>
     </div>
     <div id="manageEditLanguages" class="Left Invisible">
-      <h3>Editar Língua</h3>
+      <h3><?=EDIT_LANGUAGE?></h3>
       <form onsubmit="return false;">
-        <p>Título:</p>
+        <p><?=TITLE?>:</p>
         <p>
           <input type="text" id="languageEditTitle" class="inputCombo">
         </p>
-        <p>Diretório:</p>
+        <p><?=PATH?>:</p>
         <p>
           <input type="text" id="languageEditPath" class="inputCombo">
         </p>
         <p>
           <button class="button" onclick="Admin.submitManageLanguage('edit');">
-            Editar
+            <?=EDIT_LANGUAGE?>
           </button>
           <button class="button" onclick="gID('manageEditLanguages').className += ' Invisible';">
-            Limpar
+            <?=CLEAR?>
           </button>
         </p>
       </form>
@@ -84,12 +87,12 @@
   <div id="content1" style="width:100%;padding-top:215px;">
     <?=ErrorHandler::getNotice('option');?>
     <div id='manageOptions' class='Left'>
-      <h3>Gerenciar Preferências</h3>
+      <h3><?=MANAGE_PREFERENCES?></h3>
       <table class='tableTickets'>
         <thead>
-          <th>Op&ccedil;&otilde;es</th>
-          <th>Valores</th>
-          <th>A&ccedil;&otilde;es</th>
+          <th><?=OPTION?></th>
+          <th><?=VALUE?></th>
+          <th><?=ACTIONS?></th>
         </thead>
         <tbody>
           <? $i = 0; ?>
@@ -110,22 +113,22 @@
       </table>
     </div>
     <div id="manageEditOptions" class="Left Invisible">
-      <h3>Editar Opção</h3>
+      <h3><?=EDIT_OPTION?></h3>
       <form onsubmit="return false;">
-        <p>Opção:</p>
+        <p><?=OPTION?>:</p>
         <p>
           <label id="optionEditTitle"></label>
         </p>
-        <p>Valor:</p>
+        <p><?=VALUE?>:</p>
         <p>
           <input type="text" id="optionEditValue" class="inputCombo">
         </p>
         <p>
           <button class="button" onclick="Admin.submitManageOption()">
-            Editar
+            <?=EDIT_OPTION?>
           </button>
           <button class="button" onclick="gID('manageEditOptions').className += ' Invisible';">
-            Limpar
+            <?=CLEAR?>
           </button>
         </p>
       </form>
