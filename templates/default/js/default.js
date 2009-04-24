@@ -1169,6 +1169,39 @@ var Admin = {
     }
   },
   
+  'removeLanguage': function(StPath){
+    var tFunction = function(ok) {
+      if(ok) {
+        var tParams = {
+          'method':'post',
+          'content':{
+            'StAction': 'removeLanguage',
+            'StPath': StPath
+          },
+          'okCallBack':function(response) {
+            appendHTML(response, gID('adminWrapper'), true);
+          }
+        };
+        xhr.makeRequest('Edit Language', Admin.adminDir + 'preferences.php',tParams);
+      }
+    };
+    flowWindow.confirm(i18n.deleteLanguage,tFunction);
+  },
+  
+  'setCurrentLanguage': function(StPath){
+    var tParams = {
+      'method':'post',
+      'content':{
+        'StAction': 'setCurrentLanguage',
+        'StPath': StPath
+      },
+      'okCallBack':function(response) {
+        appendHTML(response, gID('adminWrapper'), true);
+      }
+    };
+    xhr.makeRequest('Edit Language', this.adminDir + 'preferences.php',tParams);
+  },
+  
   'setCurrentTemplate': function(StName){
     var tParams = {
       'method':'post',
@@ -1195,6 +1228,12 @@ var Admin = {
     gID('StDepartmentEdit').value = gID('StDepartment'+IDDepartment).value;
     gID('StDescriptionEdit').value = gID('StDescription'+IDDepartment).value;
     gID('DepartmentID').value = IDDepartment;
+  },
+  
+  'startEditingLanguage': function(StTitle, StPath){
+    gID('manageEditLanguages').className = 'Left';
+    gID('languageEditTitle').value = unescape(StTitle);
+    gID('languageEditPath').value = unescape(StPath);
   },
   
   'startEditingOption': function(StTitle, StValue){
@@ -1267,6 +1306,31 @@ var Admin = {
     } else {
       return false;
     }
+  },
+  
+  'submitManageLanguage': function(StAction){
+    if (StAction == 'edit'){
+      var content = {
+        'StAction': 'editLanguage',
+        'StTitle': gID('languageEditTitle').value,
+        'StPath': gID('languageEditPath').value
+      };
+    } else {
+      var tForm = gID('insertLanguageForm');
+      var content = {
+        'StAction': 'createLanguage',
+        'StTitle': tForm.StTitle.value,
+        'StPath': tForm.StPath.value
+      };
+    }
+    var tParams = {
+      'method':'post',
+      'content': content,
+      'okCallBack':function(response) {
+        appendHTML(response, gID('adminWrapper'), true);
+      }
+    };
+    xhr.makeRequest('Work Language', this.adminDir + 'preferences.php',tParams);
   },
   
   'submitManageOption': function(){

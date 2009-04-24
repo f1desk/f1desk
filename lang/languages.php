@@ -8,7 +8,7 @@
    * @param string $StFilePath
    */
   function handleLanguage($StFilePath, $Debug = false) {
-    $Lang = getOption('lang');
+    $Lang = getCurrentLanguage();
     $FilePath = '';
 
     $ArFilePath = preg_split('/[\/|\\\]/',$StFilePath);

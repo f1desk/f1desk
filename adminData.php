@@ -19,28 +19,32 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
     break;
 
     case 'editDepartment':
-      if (!isset($_POST['IDDepartment']))
+      if (!isset($_POST['IDDepartment'])){
       	ErrorHandler::setNotice('department',NO_EDIT_ID,'error');
-      $ArData = array(
-        'StDepartment' => f1desk_escape_string($_POST['StDepartment']),
-        'StDescription' => f1desk_escape_string($_POST['StDescription'])
-      );
-      $ItAffedcted = F1DeskUtils::editDepartment($_POST['IDDepartment'], $ArData);
-      if(!$ItAffedcted){
-        ErrorHandler::setNotice('department', DEPTO_EDIT_ERROR,'error');
       } else {
-        ErrorHandler::setNotice('department', DEPTO_EDIT_OK,'ok');
+        $ArData = array(
+          'StDepartment' => f1desk_escape_string($_POST['StDepartment']),
+          'StDescription' => f1desk_escape_string($_POST['StDescription'])
+        );
+        $ItAffedcted = F1DeskUtils::editDepartment($_POST['IDDepartment'], $ArData);
+        if(!$ItAffedcted){
+          ErrorHandler::setNotice('department', DEPTO_EDIT_ERROR,'error');
+        } else {
+          ErrorHandler::setNotice('department', DEPTO_EDIT_OK,'ok');
+        }
       }
     break;
 
     case 'removeDepartment':
-      if (!isset($_POST['IDDepartment']))
+      if (!isset($_POST['IDDepartment'])){
       	ErrorHandler::setNotice('department', NO_EDIT_ID,'error');
-      $ItAffedcted = F1DeskUtils::removeDepartment($_POST['IDDepartment']);
-      if(!$ItAffedcted){
-        ErrorHandler::setNotice('department', DEPTO_REMOVE_ERROR,'error');
       } else {
-        ErrorHandler::setNotice('department', DEPTO_REMOVE_OK,'ok');
+        $ItAffedcted = F1DeskUtils::removeDepartment($_POST['IDDepartment']);
+        if(!$ItAffedcted){
+          ErrorHandler::setNotice('department', DEPTO_REMOVE_ERROR,'error');
+        } else {
+          ErrorHandler::setNotice('department', DEPTO_REMOVE_OK,'ok');
+        }
       }
     break;
 
@@ -88,59 +92,64 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
           return '0';
         }
       }
-      if (!isset($_POST['IDUnit']))
+      if (!isset($_POST['IDUnit'])){
       	ErrorHandler::setNotice('unit', NO_EDIT_ID,'error');
-      $IDUnit = $_POST['IDUnit'];
-      $ArData = array(
-        'StUnit' => f1desk_escape_string($_POST['StUnit']),
-        'BoAnswer' => validateBooleanPost('BoAnswer'),
-        'BoAttachTicket' => validateBooleanPost('BoAttachTicket'),
-        'BoCreateTicket' => validateBooleanPost('BoCreateTicket'),
-        'BoDeleteTicket' => validateBooleanPost('BoDeleteTicket'),
-        'BoViewTicket' => validateBooleanPost('BoViewTicket'),
-        'BoReleaseAnswer' => validateBooleanPost('BoReleaseAnswer'),
-        'BoMailError' => validateBooleanPost('BoMailError'),
-        'BoCannedResponse' => validateBooleanPost('BoCannedResponse')
-      );
-      $ItAffedcted = F1DeskUtils::editUnit($IDUnit, $ArData);
-      if(!$ItAffedcted){
-        ErrorHandler::setNotice('unit',UNIT_EDIT_ERROR,'error');
       } else {
-        ErrorHandler::setNotice('unit',UNIT_EDIT_OK,'ok');
+        $IDUnit = $_POST['IDUnit'];
+        $ArData = array(
+          'StUnit' => f1desk_escape_string($_POST['StUnit']),
+          'BoAnswer' => validateBooleanPost('BoAnswer'),
+          'BoAttachTicket' => validateBooleanPost('BoAttachTicket'),
+          'BoCreateTicket' => validateBooleanPost('BoCreateTicket'),
+          'BoDeleteTicket' => validateBooleanPost('BoDeleteTicket'),
+          'BoViewTicket' => validateBooleanPost('BoViewTicket'),
+          'BoReleaseAnswer' => validateBooleanPost('BoReleaseAnswer'),
+          'BoMailError' => validateBooleanPost('BoMailError'),
+          'BoCannedResponse' => validateBooleanPost('BoCannedResponse')
+        );
+        $ItAffedcted = F1DeskUtils::editUnit($IDUnit, $ArData);
+        if(!$ItAffedcted){
+          ErrorHandler::setNotice('unit',UNIT_EDIT_ERROR,'error');
+        } else {
+          ErrorHandler::setNotice('unit',UNIT_EDIT_OK,'ok');
+        }
       }
     break;
 
     case 'removeUnit':
       if (!isset($_POST['IDUnit'])){
       	ErrorHandler::setNotice('unit', NO_EDIT_ID,'error');
-      }
-      $ItAffedcted = F1DeskUtils::removeUnit($_POST['IDUnit']);
-      if(!$ItAffedcted){
-        ErrorHandler::setNotice('unit',UNIT_REMOVE_ERROR,'error');
       } else {
-        ErrorHandler::setNotice('unit',UNIT_REMOVE_OK,'ok');
+        $ItAffedcted = F1DeskUtils::removeUnit($_POST['IDUnit']);
+        if(!$ItAffedcted){
+          ErrorHandler::setNotice('unit',UNIT_REMOVE_ERROR,'error');
+        } else {
+          ErrorHandler::setNotice('unit',UNIT_REMOVE_OK,'ok');
+        }
       }
     break;
     
     case 'editOption':
       if (!isset($_POST['StOption'])) {
       	ErrorHandler::setNotice('option', NO_EDIT_ID,'error');
-      }
-      if (!F1DeskUtils::editOption($_POST['StOption'], $_POST['StValue'])) {
-      	ErrorHandler::setNotice('option', ERROR_EDIT_OPTION,'error');
       } else {
-        ErrorHandler::setNotice('option', SUCESS_EDIT_OPTION,'ok');
+        if (!F1DeskUtils::editOption($_POST['StOption'], $_POST['StValue'])) {
+        	ErrorHandler::setNotice('option', ERROR_EDIT_OPTION,'error');
+        } else {
+          ErrorHandler::setNotice('option', SUCESS_EDIT_OPTION,'ok');
+        }
       }
     break;
     
     case 'setCurrentTemplate':
       if (!isset($_POST['StTemplateName'])) {
       	ErrorHandler::setNotice('template', NO_ID_SET_TEMPLATE,'error');
-      }
-      if ( !F1DeskUtils::setCurrentTemplate($_POST['StTemplateName']) ) {
-      	ErrorHandler::setNotice('template', ERROR_SET_TEMPLATE,'error');
       } else {
-        ErrorHandler::setNotice('template', SUCESS_SET_TEMPLATE,'ok');
+        if ( !F1DeskUtils::setCurrentTemplate($_POST['StTemplateName']) ) {
+        	ErrorHandler::setNotice('template', ERROR_SET_TEMPLATE,'error');
+        } else {
+          ErrorHandler::setNotice('template', SUCESS_SET_TEMPLATE,'ok');
+        }
       }
     break;
     
@@ -155,17 +164,65 @@ if (isset($_POST) && !empty($_POST['StAction'])) {
     case 'removeTemplate':
       if (!isset($_POST['StTemplateName'])) {
       	ErrorHandler::setNotice('template', NO_ID_SET_TEMPLATE,'error');
-      }
-      if ( !F1DeskUtils::removeTemplate($_POST['StTemplateName']) ) {
-      	ErrorHandler::setNotice('template', ERROR_REMOVE_TEMPLATE,'error');
       } else {
-        ErrorHandler::setNotice('template', SUCESS_REMOVE_TEMPLATE,'ok');
+        if ( !F1DeskUtils::removeTemplate($_POST['StTemplateName']) ) {
+        	ErrorHandler::setNotice('template', ERROR_REMOVE_TEMPLATE,'error');
+        } else {
+          ErrorHandler::setNotice('template', SUCESS_REMOVE_TEMPLATE,'ok');
+        }
+      }
+    break;
+
+    case 'editLanguage':
+      if (!isset($_POST['StTitle']) || !isset($_POST['StPath'])) {
+      	ErrorHandler::setNotice('language', DATA_NEEDED_TO_LANGUAGE,'error');
+      } else {
+        if ( !F1DeskUtils::editLanguage($_POST['StTitle'], $_POST['StPath']) ) {
+        	ErrorHandler::setNotice('language', ERROR_EDIT_LANGUAGE,'error');
+        } else {
+          ErrorHandler::setNotice('language', SUCESS_EDIT_LANGUAGE,'ok');
+        }
+      }
+    break;
+    
+    case 'removeLanguage':
+      if (!isset($_POST['StPath'])) {
+      	ErrorHandler::setNotice('language', DATA_NEEDED_TO_LANGUAGE,'error');
+      } else {
+        if ( !F1DeskUtils::removeLanguage($_POST['StPath']) ) {
+        	ErrorHandler::setNotice('language', ERROR_REMOVE_LANGUAGE,'error');
+        } else {
+          ErrorHandler::setNotice('language', SUCESS_REMOVE_LANGUAGE,'ok');
+        }
+      }
+    break;
+    
+    case 'setCurrentLanguage':
+      if (!isset($_POST['StPath'])) {
+      	ErrorHandler::setNotice('language', DATA_NEEDED_TO_LANGUAGE,'error');
+      } else {
+        if ( !F1DeskUtils::setCurrentLanguage($_POST['StPath']) ) {
+        	ErrorHandler::setNotice('language', ERROR_SET_LANGUAGE,'error');
+        } else {
+          ErrorHandler::setNotice('language', SUCESS_SET_LANGUAGE,'ok');
+        }
+      }
+    break;
+    
+    case 'createLanguage':
+      if (!isset($_POST['StTitle']) || !isset($_POST['StPath'])) {
+      	ErrorHandler::setNotice('language', DATA_NEEDED_TO_LANGUAGE,'error');
+      } else {
+        if ( !F1DeskUtils::createLanguage($_POST['StTitle'], $_POST['StPath']) ) {
+        	ErrorHandler::setNotice('language', ERROR_CREATE_LANGUAGE,'error');
+        } else {
+          ErrorHandler::setNotice('language', SUCESS_CREATE_LANGUAGE,'ok');
+        }
       }
     break;
 
   }
 }
-
 
 $ArMenus = F1DeskUtils::getMenuTab('admin');
 $ArDepartments = F1DeskUtils::getPublicDepartments(false);

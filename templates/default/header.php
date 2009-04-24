@@ -22,7 +22,7 @@
       </style>
       <?= defaultCSS() ?>
       <?= defaultJS() ?>
-      <script type='text/javascript' src='<?= TEMPLATEDIR ?>js/lang/<?=getOption('lang')?>/i18n.js'></script>
+      <script type='text/javascript' src='<?= TEMPLATEDIR ?>js/lang/<?=getCurrentLanguage()?>/i18n.js'></script>
       <script type='text/javascript' src='<?= TEMPLATEDIR ?>js/default.js'></script>
    </head>
 

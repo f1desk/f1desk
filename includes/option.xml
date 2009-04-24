@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <options>
   <title>MarioDesk</title>
-  <lang>pt_BR</lang>
   <date_format>d/m/Y</date_format>
   <time_format>H:i</time_format>
   <datetime_format>d/m/Y H:i</datetime_format>
@@ -25,7 +24,7 @@
   </menu>
 
   <avail_languages choosen="pt_BR">
-    <language xml:id="pt_BR" title="Português (BR)">pt_BR</language>
+    <language xml:id="pt_br" title="Português (BR)">pt_BR</language>
     <language xml:id="eng" title="Inglês">eng</language>
   </avail_languages>
   

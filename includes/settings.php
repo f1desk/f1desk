@@ -6,6 +6,13 @@ function getCurrentTemplate(){
   return $Dom->getElementById($StChoosenTemplate)->nodeValue;
 }
 
+function getCurrentLanguage(){
+  $Dom = new DOMDocument();
+  $Dom->load( dirname(__FILE__) . '/option.xml');
+  $StChoosenLanguage = $Dom->getElementsByTagName('avail_languages')->item(0)->getAttribute('choosen');
+  return $Dom->getElementById(strtolower($StChoosenLanguage))->nodeValue;
+}
+
 /**
  * get options
  *
@@ -22,7 +29,6 @@ function getOption($StSetting, $StReturnType = "string") {
   $StSetting = strtolower($StSetting);
 
   $Node = $Dom->getElementsByTagName($StSetting);
-
   if ( $StReturnType == "string" ) {
   	return $Node->item(0)->nodeValue;
   } else {

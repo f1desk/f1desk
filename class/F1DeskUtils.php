@@ -1029,5 +1029,29 @@ GROUP BY
     return $ArLanguages;
   }
   
+  public static function editLanguage($StTitle, $StPath){
+    return setOption($StPath,array(
+      'text' => $StPath, 'title' => $StTitle, 'id' => strtolower($StPath)
+    ),'id');
+  }
+  
+  public static function removeLanguage($StPath){
+    return removeOption(strtolower($StPath), 'id');
+  }
+  
+  public static function setCurrentLanguage($StPath){
+    $Dom = new DOMDocument();
+    $Dom->load( INCLUDESDIR . '/option.xml');
+    $Dom->formatOutput = true;
+    $DomLanguageNode = $Dom->getElementsByTagName('avail_languages');
+    $DomLanguageNode->item(0)->setAttribute('choosen', $StPath);
+    return ($Dom->save( INCLUDESDIR . '/option.xml'));
+  }
+  
+  public static function createLanguage($StTitle, $StPath){
+    return createOption('avail_languages', 'language', $StPath, array(
+      'xml:id' => strtolower($StPath), 'title' => $StTitle
+    ));
+  }
 }
 ?>
