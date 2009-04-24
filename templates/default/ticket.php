@@ -82,6 +82,7 @@
                   <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Ticket' title='Bookmark Ticket'>
                </a>
                <? endif; ?>
+               <? throw new ErrorHandler('Teste do dimitri'); ?>
               </td>
               <? endif; ?>
             </tr>
