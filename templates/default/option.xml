@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu>
+  <menu_tabs xml:id="home">Home</menu_tabs>
+  <menu_tabs xml:id="createTicket">Escrever</menu_tabs>
+  <menu_tabs xml:id="departmentTickets">Listar</menu_tabs>
+  <menu_tabs xml:id="search">Busca Avançada</menu_tabs>
+  <menu_tabs xml:id="admin">Administração</menu_tabs>
+  <menu_tabs xml:id="logout">Logout</menu_tabs>
+</menu>
