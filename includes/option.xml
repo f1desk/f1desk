@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <options>
-  <title>MarioDesk</title>
+  <title>F!Desk</title>
   <date_format>d/m/Y</date_format>
   <time_format>H:i</time_format>
   <datetime_format>d/m/Y H:i</datetime_format>
@@ -14,18 +14,9 @@
     <tag>i</tag>
   </html_permited>
 
-  <menu>
-    <menu_tabs xml:id="home">Home</menu_tabs>
-    <menu_tabs xml:id="createTicket">Escrever</menu_tabs>
-    <menu_tabs xml:id="departmentTickets">Listar</menu_tabs>
-    <menu_tabs xml:id="search">Busca Avançada</menu_tabs>
-    <menu_tabs xml:id="admin">Administração</menu_tabs>
-    <menu_tabs xml:id="logout">Logout</menu_tabs>
-  </menu>
-
   <avail_languages choosen="pt_BR">
     <language xml:id="pt_br" title="Português (BR)">pt_BR</language>
-    <language xml:id="eng" title="Inglês">eng</language>
+    <language xml:id="en_us" title="Inglês">en_us</language>
   </avail_languages>
   
   <avail_templates choosen="default">

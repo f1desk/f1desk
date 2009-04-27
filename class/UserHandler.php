@@ -2,7 +2,6 @@
 
 class UserHandler extends DBHandler {
 
-  private static $ArHash = array('MD5'=>'MD5','SHA1'=>'SHA1');
   private $StHash = "";
   private $StLogin = "";
 
@@ -28,7 +27,15 @@ class UserHandler extends DBHandler {
    */
   private static function myHash($StHash, $StData) {
     $StHash = strtolower($StHash);
-    eval('$StEncryptedData = ' . $StHash . '("' . $StData . '");');
+    switch ($StHash) {
+      case 'md5' :
+        $StEncryptedData = md5($StData);
+        break;
+      case 'sha1' :
+        $StEncryptedData = sha1($StData);
+        break;
+    }
+    
     return $StEncryptedData;
   }
 
@@ -43,26 +50,11 @@ class UserHandler extends DBHandler {
    */
   public static function generateHash( $StPwd ) {
     $ItCodhash = mt_rand(0,1);
-    $StCodhash = ($ItCodhash == 0) ? 'MD5' : 'SHA1';
-    $StHash = self::$ArHash[$StCodhash];
+    $StHash = ($ItCodhash == 0) ? 'MD5' : 'SHA1';    
     $StPwd = self::myHash($StHash,$StPwd);
     $ArData = array('codHash' => $StHash, 'cryptPwd' => $StPwd);
     return $ArData;
-  }
-
-  /**
-   * Encript a string given
-   *
-   * @param string $StData
-   *
-   * @return string $StCrypt
-   *
-   * @author Matheus Ashton <matheus[at]digirati.com.br>
-   */
-  private function hashEncrypt($StData) {
-    $StCrypt = $this->myHash(self::$ArHash[$this->StHash],$StData);
-    return $StCrypt;
-  }
+  }  
 
   /**
    * Avoid SQL Injection on login
@@ -105,9 +97,8 @@ WHERE
     }
 
     $ArResult = $this->getResult('string');
-    $this->StHash = $ArResult[0]['StHash'];
 
-    if($ArResult[0]['StPassword'] == $this->hashEncrypt($StPwd)) {
+    if($ArResult[0]['StPassword'] == $this->myHash($ArResult[0]['StHash'],$StPwd)) {
       $StSQL = "
 SELECT
   C.IDClient, S.IDSupporter

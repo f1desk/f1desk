@@ -48,8 +48,9 @@ abstract class F1DeskUtils {
 	 * @return array
 	 */
 	public static function getMenuTab( $StPage ) {
-		$ArMenu = array();
-		$ObMenu = getOption( 'menu_tabs', 'node' );
+		$ArMenu = array();  $Dom = new DOMDocument();
+    $Dom->load( ABSTEMPLATEDIR . 'option.xml');
+		$ObMenu = $Dom->getElementsByTagName('menu_tabs');
 		foreach ( $ObMenu as $Item ){
 			if ( $StPage == $Item->getAttribute('xml:id') ) $StCurrent = "current";
 			else $StCurrent = "";
@@ -59,7 +60,7 @@ abstract class F1DeskUtils {
 				"Current" => $StCurrent
 			);
 		}
-
+		
 		return $ArMenu;
 	}
 
@@ -1005,13 +1006,13 @@ GROUP BY
   
   public static function createTemplate($StName, $StPath, $StThumbnail, $TxDescription){
     return createOption('avail_templates', 'template', $StName, array(
-      'xml:id' => $StName, 'path'=> $StPath, 
+      'xml:id' => str_replace(' ','_',strtolower($StName)), 'path'=> $StPath, 
       'thumbnail' => $StThumbnail, 'description' => $TxDescription
     ));
   }
   
   public static function removeTemplate($StName){
-    return removeOption($StName, 'id');
+    return removeOption(str_replace(' ', '_',strtolower($StName)), 'id');
   }
   
   public static function getLanguages(){
