@@ -82,7 +82,6 @@
                   <img src='<?= TEMPLATEDIR ?>images/bookmark.png' alt='Bookmark Ticket' title='Bookmark Ticket'>
                </a>
                <? endif; ?>
-               <? throw new ErrorHandler('Teste do dimitri'); ?>
               </td>
               <? endif; ?>
             </tr>
@@ -195,7 +194,7 @@
     	      		<div class='Right' id='answerAttach'>
     	      		  <label for='Attachment'><?=ATTACHMENT?>: </label>
     	      			<input id='Attachment' name='Attachment' class='inputFile' type="file" value="Anexo" />
-    	      			<iframe onLoad="top.Ticket.submitTicketForm();" id='ajaxSubmit' name='ajaxSubmit' src='<?=TEMPLATEDIR?>ticket.php' class="Invisible"></iframe>
+    	      			<iframe onLoad="top.Ticket.submitTicketForm();" id='ajaxSubmit' name='ajaxSubmit' src='<?=TEMPLATEDIR?>ticket.php' style="display:none;"></iframe>
     	      		</div>
     	    		  <div>
     	    		    <input type='hidden' name='IDDepartment' id='IDDepartment' value='<?= $IDDepartment ?>' />
