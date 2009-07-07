@@ -573,6 +573,24 @@ var Ticket = {
     };
     xhr.makeRequest('Bookmark Ticket', templateDir + 'ticket.php',tParams);
   },
+  
+  'closeTicket': function(IDTicket){
+    var tForm = gID('closeOption');
+    var tParams = {
+      'method':'post',
+      'content': {
+        'StAction':'close',
+        'IDTicket':IDTicket,
+        'IDRate': tForm.inputOption.value,
+        'TxMessageRate':tForm.TxMessageRate.value
+      },
+      'okCallBack':function(htmlReturn) {
+        var contentDisplay = gID('contentDisplay');
+        appendHTML(htmlReturn, contentDisplay, true);
+      }
+    };
+    xhr.makeRequest('close Ticket', templateDir + 'ticket.php',tParams);
+  },
 
   'removeBookmark': function(IDSupporter, IDTicket, IDDepartment) {
     var tParams = {
@@ -1004,6 +1022,27 @@ var Search = {
 
 };
 
+
+/**
+ *  OBJECT CONTAIN METHODS FROM WRITING TEMPLATE
+ */
+var Report = {
+  'reportDir': templateDir + 'report/',
+  
+  'changeOption': function(StPageName){
+    var tParams = {
+      'method':'get',
+      'okCallBack':function(response) {
+        appendHTML(response,gID('contentReportMenu'),true);
+      }
+    };
+    xhr.makeRequest('Change Menu', Report.reportDir + StPageName + '.php', tParams);
+  }
+};
+
+/**
+ *  OBJECT CONTAIN METHODS FROM WRITING TEMPLATE
+ */
 var Admin = {
 
   'adminDir': templateDir + 'admin/' ,

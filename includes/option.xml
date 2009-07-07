@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <options>
-  <title>F!Desk</title>
+  <title>MarioDesk</title>
   <date_format>d/m/Y</date_format>
   <time_format>H:i</time_format>
   <datetime_format>d/m/Y H:i</datetime_format>
@@ -14,13 +14,13 @@
     <tag>i</tag>
   </html_permited>
 
-  <avail_languages choosen="pt_BR">
+  <avail_languages choosen="pt_br">
     <language xml:id="pt_br" title="Português (BR)">pt_BR</language>
     <language xml:id="en_us" title="Inglês">en_us</language>
   </avail_languages>
   
   <avail_templates choosen="default">
-    <template xml:id="default" path="default" thumbnail="defaultTemplate.jpg" description="Template default para uso do mais novo sistema de HelpDesk do mercado.">default</template>
+    <template xml:id="default" path="default" thumbnail="includes/defaultTemplate.jpg" description="Template default para uso do mais novo sistema de HelpDesk do mercado.">default</template>
   </avail_templates>
 
 </options>

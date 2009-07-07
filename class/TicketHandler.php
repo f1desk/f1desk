@@ -432,7 +432,7 @@ AND
    * @return array
    * @author Dimitri Lameri <dimitri@digirati.com.br>
    */
-   private function _getUserReadTickets($IDUser) {
+  private function _getUserReadTickets($IDUser) {
 
   	$StSQL = "
 SELECT
@@ -547,7 +547,6 @@ AND
 
   }
 
-
   /**
    * Set a Call as read for a certain supporter
    *
@@ -643,6 +642,14 @@ AND
     return ($ItAffected < 0) ? false : true;
   }
 
+  /**
+   * removes a bookmarked ticket
+   *
+   * @param int $IDSupporter
+   * @param int $IDTicket
+   * 
+   * @return boolean
+   */
   public function removeBookmark( $IDSupporter, $IDTicket ) {
 		$StTableName = DBPREFIX . 'Bookmark';
 		$StCondition = 'IDTicket = ' . $IDTicket . ' AND IDSupporter = ' . $IDSupporter;
@@ -1565,6 +1572,90 @@ WHERE
     $ArResult = $this->getResult('string');
     return  $ArResult[0]['StType'];
   }
-
+  
+  /*colocar esse aqui na classe de busca!!!!!!!!!!!!!!!!!!!*/
+  public function reportTicketsByDepartment(){
+    $StSQl = ' 
+SELECT 
+  D.StDepartment as StDepartment, count(TD.IDTicket) as ItTotal, group_concat(T.StSituation) as ArSituation
+FROM 
+  '.DBPREFIX.'Department D
+    LEFT JOIN 
+      '.DBPREFIX.'TicketDepartment TD on(D.IDDepartment = TD.IDDepartment)
+    LEFT JOIN 
+      '.DBPREFIX.'Ticket T on(T.IDTicket = TD.IDTicket)
+WHERE
+  T.StSituation != "CLOSED"
+GROUP BY 
+  D.IDDepartment';
+    $this->execSQL($StSQl);
+    $ArResult = $this->getResult('string');
+    foreach ($ArResult as &$ArSingleResult){
+      $ArSituation = explode(',',$ArSingleResult['ArSituation']);
+      $ArSingleResult['ArSituation'] = array_count_values($ArSituation);
+    }
+    
+    return $ArResult;
+  }
+  
+  public function reportAnswersByDepartment(){
+    $StSQL = '
+SELECT 
+  D.StDepartment as StDepartment, count(M.IDTicket) as ItTotal
+FROM 
+  '.DBPREFIX.'Department D
+    LEFT JOIN 
+      '.DBPREFIX.'TicketDepartment TD on(D.IDDepartment = TD.IDDepartment)
+    LEFT JOIN 
+      '.DBPREFIX.'Ticket T on(T.IDTicket = TD.IDTicket)
+    LEFT JOIN
+      '.DBPREFIX.'Message M on(T.IDTicket = M.IDTicket)
+GROUP BY 
+  D.IDDepartment
+    ';
+    $this->execSQL($StSQL);
+    return $this->getResult('string');
+  }
+  
+  public function reportAnswerBySupporter(){
+    $StSQL = '
+SELECT
+  U.StName, U.StEmail, count(M.IDTicket) as ItTotal
+FROM 
+  '.DBPREFIX.'User U
+    LEFT JOIN 
+      '.DBPREFIX.'Message M on(U.IDUser = M.IDUser)
+GROUP BY 
+  U.IDUser
+    ';
+    $this->execSQL($StSQL);
+    return $this->getResult('string');
+  }
+  
+  public function reportSupportersByDepartments(){
+    $StSQL = '
+SELECT
+  D.StDepartment, D.IDDepartment, group_concat(U.StName," <",U.StEmail,">" ) as Supporter
+FROM
+  '.DBPREFIX.'Department D
+  LEFT JOIN  
+    '.DBPREFIX.'DepartmentSupporter DS on(DS.IDDepartment = D.IDDepartment)
+  LEFT JOIN
+    '.DBPREFIX.'Supporter S on(S.IDSupporter = DS.IDSupporter)
+  LEFT JOIN
+    '.DBPREFIX.'User U on(U.IDUser = S.IDUser)
+GROUP BY
+  D.IDDepartment
+    ';
+    $this->execSQL($StSQL);
+    $ArResult = $this->getResult('string');
+    foreach ($ArResult as &$ArDepartment){
+      $ArSupporter = explode(',', $ArDepartment['Supporter']);
+      $ArDepartment['Supporter'] = (empty($ArSupporter[0]))?array():$ArSupporter;
+    }
+    
+    return $ArResult;
+  }
+  
 }
 ?>

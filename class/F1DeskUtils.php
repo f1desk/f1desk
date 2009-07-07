@@ -49,7 +49,7 @@ abstract class F1DeskUtils {
 	 */
 	public static function getMenuTab( $StPage ) {
 		$ArMenu = array();  $Dom = new DOMDocument();
-    $Dom->load( ABSTEMPLATEDIR . 'option.xml');
+    $Dom->load( ABSTEMPLATEDIR  . 'includes/option.xml');
 		$ObMenu = $Dom->getElementsByTagName('menu_tabs');
 		foreach ( $ObMenu as $Item ){
 			if ( $StPage == $Item->getAttribute('xml:id') ) $StCurrent = "current";
@@ -462,17 +462,12 @@ FROM
   public static function listRate(){
     $StSQL = "
 SELECT
-  *
+  R.*
 FROM
-" . DBPREFIX . "Rate";
+  ".DBPREFIX."Rate R";
     self::getDBinstance();
     self::$DBHandler->execSQL($StSQL);
-    self::$DBHandler->getResult('string');
-
-    for($i=0; $i < count($ArRates); $i++ ) {
-      $ArReturn [ $ArRates[$i]['IDRate'] ] = $ArRates[$i]['StRate'];
-    }
-    return $ArReturn;
+    return self::$DBHandler->getResult('string');
   }
 
   /**
@@ -1054,5 +1049,6 @@ GROUP BY
       'xml:id' => strtolower($StPath), 'title' => $StTitle
     ));
   }
+  
 }
 ?>

@@ -12,7 +12,7 @@ handleLanguage(__FILE__);
     <div id='AttachTickets'>
       <h3><?=ATTACH_TICKET?></h3>
       <p><?=CLICK?><a href='javascript:void(0)' class='Link' onclick='Writing.attachTicket()'><?=HERE?></a><?=TO_ATTACH?></p>
-      <div id='AttachedTickets' class='Invisible'>
+      <div id='AttachedTickets' class='NoDisplay'>
         <h4><?=ATTACHED_TIC?></h4>
       </div>
     </div>
@@ -31,7 +31,7 @@ handleLanguage(__FILE__);
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDRecipient','IDRecipient','inputCombo');?>
       <?php if (F1DeskUtils::IsSupporter()):?>
       <p><?=CLICK?> <a href='javascript:void(0);' class='Link' onclick='Writing.listSupporters("Recipients")'><?=HERE?></a><?=ADD_SUPPORTER?></p>
-      <div id='addedRecipients' class='Invisible'>
+      <div id='addedRecipients' class='NoDisplay'>
         <h4><?=ADDED_SUP?></h4>
       </div>
       <?php endif; ?>
@@ -42,7 +42,7 @@ handleLanguage(__FILE__);
       <h3><?=REPLY_TO?></h3>
       <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDReader','IDReader','inputCombo');?>
       <p><?=CLICK?><a href='javascript:void(0);' class='Link' onclick='Writing.listSupporters("Readers")'><?=HERE?></a><?=ADD_SUPPORTER?>
-      <div id='addedReaders' class='Invisible'>
+      <div id='addedReaders' class='NoDisplay'>
         <h4><?=ADDED_SUP?></h4>
       </div>
     </div>

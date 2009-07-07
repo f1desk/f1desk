@@ -34,10 +34,17 @@
   define('MSGTYPE_INTERNAL','Observa&ccedil;&atilde;o Interna');
   define('MSGTYPE_SYSTEM','Mensagem do Sistema');
   define('MSGTYPE_SATISFACTION','Satisfa&ccedil;&atilde;o ao Cliente');
+  
+  #
+  # Closing Ticket
+  #
+  define('CLOSING', 'Fechar');
 
   #
   # Buttons
   #
   define('ADD','Incluir');
   define('PREVIEW','Visualizar');
+  
+  
 ?>

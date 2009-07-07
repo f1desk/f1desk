@@ -37,7 +37,7 @@ var Flow={
 
 'outline':[],
 
-'newID':-1,
+'newID': 300,
 
 'WindowBKP':[],
 
@@ -85,7 +85,7 @@ var Flow={
 		'top':tParams.y + 'px',
 		'width':tParams.width + 'px',
 		'height':tParams.height + 'px',
-		'zIndex':1000+NewID
+		'zIndex':NewID
 	});
 
 	this.Objects.WindigBase[NewID] = WindigBase;
@@ -356,13 +356,14 @@ var Flow={
 },
 
 'MakeID':function(){
-  var newID = 1;
-  for(var aux in this.Objects.WindigBase) {
-    if(this.Objects.WindigBase[aux].style.zIndex > newID){
-      newID = this.Objects.WindigBase[aux].style.zIndex;
+  if(this.Objects.WindigBase.length != 0){
+    for(var aux in this.Objects.WindigBase) {
+      if(this.Objects.WindigBase[aux].style && this.Objects.WindigBase[aux].style.zIndex > this.newID){
+        this.newID = this.Objects.WindigBase[aux].style.zIndex;
+      }
     }
   }
-	return newID;
+	return this.newID++;
 },
 
 'doIframe':function(url, Window, NewID){

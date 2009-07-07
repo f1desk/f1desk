@@ -194,7 +194,7 @@
     	      		<div class='Right' id='answerAttach'>
     	      		  <label for='Attachment'><?=ATTACHMENT?>: </label>
     	      			<input id='Attachment' name='Attachment' class='inputFile' type="file" value="Anexo" />
-    	      			<iframe onLoad="top.Ticket.submitTicketForm();" id='ajaxSubmit' name='ajaxSubmit' src='<?=TEMPLATEDIR?>ticket.php' style="display:none;"></iframe>
+    	      			<iframe onLoad="top.Ticket.submitTicketForm();" id='ajaxSubmit' name='ajaxSubmit' src='<?=TEMPLATEDIR?>ticket.php' class="NoDisplay"></iframe>
     	      		</div>
     	    		  <div>
     	    		    <input type='hidden' name='IDDepartment' id='IDDepartment' value='<?= $IDDepartment ?>' />
@@ -206,15 +206,48 @@
     	    	</div>
 
     	    	<div>
-    	    	    <input type='hidden' name='StAction' value='answer'>
-    	    	    <input type="hidden" id='didSubmit' name='didSubmit' value="false">
-        	      <input type='submit' class='button' value='<?=ANSWER?>' name='Responder'>
-        	      <button type="button" class='button' onclick='flowWindow.previewAnswer(gID("TxMessage").value, <?=$IDTicket?>, "<?=$IDDepartment?>", gID("StMessageType").value);'><?=PREVIEW?></button>
+  	    	    <input type='hidden' name='StAction' value='answer'>
+  	    	    <input type="hidden" id='didSubmit' name='didSubmit' value="false">
+      	      <input type='submit' class='button' value='<?=ANSWER?>' name='Responder'>
+      	      <button type="button" class='button' onclick='flowWindow.previewAnswer(gID("TxMessage").value, <?=$IDTicket?>, "<?=$IDDepartment?>", gID("StMessageType").value);'><?=PREVIEW?></button>
     	    	</div>
     	    </div>
     	    </form>
     	  </div>
     	</div>
-    <?endif;?>
     <!--[/TICKET ANSWER]-->
+    
+    <!--[CLOSING TICKET]-->
+    	<div id='ticketClose' class='defaultBody'>
+    	  <div id='closeCaption' class='defaultCaption'>
+    	  	<img alt="Ticket" id='arrowClose<?=$uid?>' src="<?= TEMPLATEDIR ?>images/arrow_show.gif" onclick='baseActions.toogleArrow( this.id, "closeContent<?=$uid?>")' class="menuArrow"/>
+    	  	<span><?=CLOSING?></span>
+    	  </div>
+
+    	  <div id="closeContent<?=$uid?>" style="display:none;">
+          <form id="closeOption" onsubmit="return false;">
+            <table class="tableTickets">
+              <thead><th>Avaliação:</th></thead>
+            </table>
+            <ul id="closeListOptions">
+            <?foreach ($ArRates as $ArRateOptions):?>
+             <li>
+                <label>
+                  <input type="radio" name="inputOption" value="<?=$ArRateOptions['IDRate']?>"><?=$ArRateOptions['StRate']?>
+                </label>
+             </li>
+            <?endforeach;?>
+            </ul>
+            <table class="tableTickets">
+              <thead><th>Comentário:</th></thead>
+            </table>
+            <textarea id='TxMessageRate' name='TxMessageRate' cols='65' rows='33' class='answerArea'></textarea>
+            <button class="button" onclick="Ticket.closeTicket('<?=$IDTicket?>')">Fechar Chamado</button>
+          </form>
+    	  </div>
+    	</div>
+    <?endif;?>
+    <!--[/CLOSING TICKET]-->
+    
+    
   <? endif; ?>

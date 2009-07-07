@@ -154,6 +154,14 @@ if (isset($_POST['StAction'])) {
         $TxMessagePreview = $ObjTicket->getPreviewAnswer(getSessionProp('IDUser'), $_POST['TxMessage'], $isSupporter);
       }
     break;
+    
+    case 'close':
+      if (empty($_POST['IDTicket'])) {
+        ErrorHandler::setNotice('ticket',EXC_GLOBAL_EXPPARAM, 'error');
+      } else {
+        
+      }
+    break;
   }
 
 }
@@ -235,6 +243,7 @@ if ($isVisible) {
   $StTicketCategory = $ObjTicket->getTicketCategory($IDTicket);
   $StTicketPriority = $ObjTicket->getTicketPriority($IDTicket);
   $StTicketType = $ObjTicket->getTicketType($IDTicket);
+  $ArRates = F1DeskUtils::listRate();
 
   if ($isSupporter) {
     $ArResponses = F1DeskUtils::listCannedResponses($IDSupporter,$IDDepartment);
