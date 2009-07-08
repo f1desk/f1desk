@@ -5,23 +5,25 @@ require_once('../lang/pt_BR/lang.SearchHandler.php');
 
 abstract class SearchHandler{
   private static $DBHandler;
-  private static $IDTicket;
-  private static $IDDepartment;
-  private static $IDSupporter;
+//  private static $IDTicket;
+  private static $IDDepartment = NULL;
+//  private static $IDSupporterTicket;
+  private static $IDSupporterLogged = NULL;
   /*private static $DtStart;
   private static $DtEnd;*/
-  private static $ItPage;
-  private static $ItLimit;
+/*  private static $ItPage = NULL;
+  private static $ItLimit = NULL;*/
   private static $ArStWord;
   private static $ArIDWord;
   private static $ArData;
-  private static $ArIDDepartment;  
+//  private static $ArIDDepartment;  
   private static $ArCustomField;
   private static $ArWhere;
-  private static $ArOrderBy;
+  private static $StOrderBy;
   private static $StLimit;
   private static $StGroupBy;
   private static $StSQL;
+  
   
   private static function DateValidate( $StDate, $StError = NULL ){
     if ( !empty($StDate) ){
@@ -48,14 +50,19 @@ abstract class SearchHandler{
     return (string)$StDate;   
   }
   
-  private static function IDValidate( $ItID, $StError = NULL ){
-    # se o argumento foi informado, mas nao e' numerico
+  private static function NumberValidate( $ItID, $StError = NULL, $BoPositive = false ){
+    #
+    ## if the argument has given but isnt a number
+    #
     if ( !empty($ItID) && !is_numeric($ItID) ){
       if ( empty($StError)){
         $StError = EXC_BAD_ARGUMENT;
       }
       throw new errorHandler( sprintf($StError, $ItID) );
-    }    
+    }
+    elseif (empty($ItID) && $BoPositive){
+      throw new errorHandler( EXC_NUMBER_SHOULD_BE_BIGGER_THAN_ZERO );
+    }
     return (int)$ItID;
   }
      
@@ -65,7 +72,7 @@ abstract class SearchHandler{
 		}
 	}
 	
-	private static function makeSelectCustomField(){
+	private static function getSelectCustomField(){
 	  $ArCustomField = self::$ArCustomField;
 	  self::$ArCustomField = NULL;
 	  
@@ -85,27 +92,34 @@ abstract class SearchHandler{
 	  return $StSelectCustomField;
 	}
 	
-	private static function makeWhere(){
+	private static function getWhere(){
 	  $ArWhere = self::$ArWhere;
 	  self::$ArWhere = NULL;
 	  
 	  if (empty($ArWhere) || !is_array($ArWhere)){
 	    return '';
 	  }
+	  
+	  if ( self::$IDDepartment !== TRUE ){
+	    self::setDepartment(NULL);
+	  }
 	  $StWhere = implode( ' AND ', $ArWhere );
 	  return $StWhere;
 	}
 	
-	private static function makeGroupBy(){
+	private static function getGroupBy(){
 	  
 	}
 	
-	private static function makeOrderBy(){
+	private static function getOrderBy(){
 	  
 	}
 	
-	private static function makeLimit(){
-	  
+	private static function getLimit(){
+	  if (empty(self::$StLimit)){
+	    self::setLimit();
+	  }
+	  return self::$StLimit;
 	}
 	
 	private static function ArWhereAdd( $StElement ){
@@ -115,21 +129,78 @@ abstract class SearchHandler{
 	    self::$ArWhere = $ArWhere;
 	  }
 	}
-
-	public static function setDepartment( $IDDepartment = NULL ){
-	  $IDDepartment = self::IDValidate($IDDepartment,EXC_INVALID_IDDEPARTMENT);
-	  if (!empty($IDDepartment)){
-  	  $StWhere = " T.IDDeparment IN ( $IDDepartment ) ";
-  	  self::ArWhereAdd($StWhere);
-	  } 
+	
+	private static function FieldTableValidate( $StTable ){
+	  #
+	  ## verify if the field exists and return the alias respective
+	  #
+	  if (empty($StTable)){
+	    throw new errorHandler( EXC_BAD_ARGUMENT );
+	  }
+	  $ArSortTableFieldAlias = array( 'TICKET'=>'T', 'TICKETDEPARMENT'=>'TD', 'USER'=>'U', 'CATEGORY'=>'C', 'DEPARTMENT'=>'D');
+    $StTable = strtoupper($StTable);
+	  if ( key_exists( $StTable, $ArSortTableFieldAlias ) ){
+	    return $ArSortTableFieldAlias[$StTable];
+	  }
+	  else{
+	    throw new errorHandler( sprintf(EXC_TABLE_NOT_AVAILABLE, $StTable) );
+	  }
 	}
 	
-	public static function setSupporter( $IDSupporter = NULL ){
-	  self::$IDSupporter = self::IDValidate($IDSupporter, EXC_INVALID_IDSUPPORTER);
+	public static function reset(){
+    $ArSearchHandlerVar = array_keys(get_class_vars('SearchHandler'));    
+    foreach ($ArSearchHandlerVar as $Var){
+      self::$$Var = NULL;
+    }
+  }
+
+	public static function setDepartment( $IDDepartment = NULL ){
+	  $IDDepartment = self::NumberValidate($IDDepartment, EXC_INVALID_IDDEPARTMENT);
+	  if ( !empty($IDDepartment) ){
+  	  $StWhere = " TD.IDDeparment = $IDDepartment ";
+	  } 
+	  else{
+	    if (empty(self::$IDSupporterLogged)){
+	      throw new errorHandler( EXC_BAD_ARGUMENT . ' "IDSupporterLogged" ');
+	    }
+      $ArDepartment = F1DeskUtils::getDepartments(self::$IDSupporterLogged);
+	    $ArDepartment = array_keys($ArDepartment);
+      
+      foreach ($ArDepartment as $StDepartment){
+        if ( is_numeric($StDepartment) ){
+          $ArIDDepartment[] = $StDepartment;
+        }
+      }
+      unset($ArDepartment);
+      $StInDepartment = implode(',', $ArIDDepartment); 
+      $StWhere = " TD.IDeparment IN ( $StInDepartment ) ";
+	  }
+	  $IDDepartment = TRUE;
+ 	  self::ArWhereAdd($StWhere);
+	}
+	
+	public static function setIDLogged( $IDSupporterLogged ){
+    #
+    ## Here, $IDSupporterLogged is obrigatory
+    #
+    $IDSupporterLogged = empty($IDSupporterLogged) ? NULL : $IDSupporterLogged;
+    
+    if ( !is_numeric($IDSupporterLogged) ){
+       throw new errorHandler( sprintf( EXC_INVALID_IDSUPPORTER, $IDSupporterLogged ) );         
+    } 
+    self::$IDSupporterLogged = $IDSupporterLogged;    
+	}
+	
+	public static function setSupporter( $IDSupporterTicket = NULL ){
+	  $IDSupporterTicket = self::NumberValidate($IDSupporterTicket, EXC_INVALID_IDSUPPORTER);
+	  if ($IDSupporterTicket){
+	    $StWhere = " T.IDSupporter = $IDSupporterTicket ";
+	    self::ArWhereAdd($StWhere);
+	  }
 	}
 	
 	public static function setTicket( $IDTicket = NULL ){
-	  self::$IDTicket = self::IDValidate($IDTicket, EXC_INVALID_IDTICKET);
+	  self::$IDTicket = self::NumberValidate($IDTicket, EXC_INVALID_IDTICKET);
 	}
    
 	public static function setDtStartEnd( $DtStart = NULL, $DtEnd = NULL ){
@@ -141,12 +212,12 @@ abstract class SearchHandler{
         ## Change values if DtStart > DtEnd
         #
         if (strtotime($DtStart)>strtotime($DtEnd)){
-          $Dt = $DtStart;
+          throw new errorHandler(EXC_DTSTART_BIGGER_THAN_DTEND);
+          /*$Dt = $DtStart;
           $DtStart = $DtEnd;
           $DtEnd = $Dt;
-          unset($Dt);
+          unset($Dt);*/
         }
-        
         $StWhere = " T.DtOpened >= '" . $DtStart . 
                    "' AND T.DtOpened <= '" . $DtEnd . "' " ;
       }
@@ -163,25 +234,68 @@ abstract class SearchHandler{
       array_unshift($ArWhere, $StWhere);
       self::$ArWhere = $ArWhere;      
 	}
-	
-	public static function setGroupBy( $StGroupBy = NULL ){
-	  self::$StGroupBy = $StGroupBy;
+		# EX: array( 'Ticket'=> IDSupporter )	
+	public static function setGroupBy( $ArGroupBy = array(), $ArHaving = NULL ){
+	  if ( !empty($ArGroupBy) && is_array($ArGroupBy)){
+	    $ArField = array_keys($ArGroupBy);
+	    $StTableBy = $ArField[0]; unset($ArField);
+	    $StAliasBy = self::FieldTableValidate($StTableBy);
+	    $StHaving = '';
+	    
+	    if ( !empty($ArHaving) && is_array($ArHaving)){
+	      if (empty($ArHaving['Alias'])){
+  	      $ArField = array_keys($ArHaving);
+  	      $StTable = $ArField[0]; unset($ArField);
+  	      $StAlias = self::FieldTableValidate($StTable);
+  	      $StAlias = "$StAlias.$StTable";
+	      }
+	      else{
+	        $StAlias = $ArHaving['Alias'];
+	      }
+	      
+	      if ( empty($ArHaving['Operator']) || count($ArHaving['Operator'])>4 ){
+	        throw new Exception(EXC_BAD_ARGUMENT);
+	      }
+	      $StOperator = addslashes($ArHaving['Operator']);
+	      $StValue = addslashes($ArHaving['Value']);
+	      $StHaving = " HAVING $StAlias $StOperator $StValue ";
+	    }
+	    self::$StGroupBy = " GROUP BY $StAliasBy.$ArGroupBy[$StTableBy] $StHaving ";
+	  }
+	  else{
+	    self::$StGroupBy = '';
+	  }
 	}
-		
-	public static function setOrderBy( $StOrderBy = NULL ){
-	  self::$StOrderBy = $StOrderBy;
+	# EX: array( 'Ticket'=> IDSupporter )	
+	public static function setOrderBy( $ArOrderBy = array() ){
+	  if ( !empty($ArOrderBy) && is_array($ArOrderBy)){
+	    $ArField = array_keys($ArOrderBy);
+	    $ArOrderByValidated = array();
+
+	    foreach ((array)$ArField as $Table){
+	      $StTableAlias = self::FieldTableValidate($Table);
+	      $StField = addslashes($ArOrderBy[$Table]);	      
+	      $ArOrderByValidated[] = "$StTableAlias.$StField";
+	    }
+	    $StOrderBy = implode(', ', $ArOrderByValidated);
+	    if (!empty($StOrderBy)){
+	      self::$StOrderBy = ' ORDER BY ' . $StOrderBy;
+	    }
+	  }
+	  else {
+	    self::$StOrderBy = '';
+	  }
 	}
 
-	public static function setLimit( $ItLimit = NULL, $ItPage = NULL ){
-    self::$ItLimit = 50;
-	  if ( $ItLimit = self::IDValidate($ItLimit, EXC_INVALID_LIMIT) ){
-	    self::$ItLimit = $ItLimit;
-	  }	  
-	  
-	  self::$ItPage = 1;
-	  if ( $ItPage = self::IDValidate($ItPage, EXC_INVALID_PAGE) ){
-	    self::$ItPage = $ItPage;
-	  }	  	  
+	public static function setLimit( $ItLimit = 50, $ItPage = 1 ){
+	  if ( !empty(self::$StLimit)){ 
+	    self::$StLimit = NULL;
+	  }
+	  $ItLimit = self::NumberValidate($ItLimit, EXC_INVALID_LIMIT, TRUE);	  
+	  $ItPage = self::NumberValidate($ItPage, EXC_INVALID_PAGE, TRUE);	  
+    $ItStart = ($ItPage - 1)  * $ItLimit;
+
+	  self::$StLimit = " LIMIT $ItStart, $ItLimit; ";  
 	}	
 	
 	public static function setArWord( $ArWord = array() ){
@@ -192,7 +306,8 @@ abstract class SearchHandler{
 	  self::$ArCustomField = (array)$ArCustomField;
 	}
    
-  public static function setData( $IDDepartment = NULL , $IDSupporter = NULL, $DtStart = NULL, $DtEnd = NULL, $ArWord = NULL, $ItPage = 1, $StOrderBy = NULL, $StGroupBy = NULL, $ItLimit = NULL ){    
+  public static function setData( $IDSupporterLogged, $IDDepartment = NULL , $IDSupporterTicket = NULL, $DtStart = NULL, $DtEnd = NULL, $ArWord = NULL, $ItPage = 1, $StOrderBy = NULL, $StGroupBy = NULL, $ItLimit = NULL ){    
+    self::setIDLogged($IDSupporterLogged);
     self::getDBinstance();
     self::setDtStartEnd($DtStart, $DtEnd);
     self::setDepartment($IDDepartment);
@@ -202,11 +317,11 @@ abstract class SearchHandler{
   }
   
   public static function Search(){
-    $StSelectCustomField = self::makeSelectCustomField();
-    $StWhere = self::makeWhere();
-    $StGroupBy = self::makeGroupBy();
-    $StOrderBy = self::makeOrderBy();
-    $StLimit = self::makeLimit();
+    $StSelectCustomField = self::getSelectCustomField();
+    $StWhere = self::getWhere();
+    $StGroupBy = self::getGroupBy();
+    $StOrderBy = self::getOrderBy();
+    $StLimit = self::getLimit();
     
     $SQL = 
     'SELECT ' . $StSelectCustomField .
@@ -221,7 +336,8 @@ abstract class SearchHandler{
     $StGroupBy .
     $StOrderBy .
     $StLimit;
-    
+   
+    self::reset(); 
   }
   
   public static function debug($StVariable = NULL, $StMethod = NULL, $BoPrint = TRUE ){
@@ -240,22 +356,19 @@ abstract class SearchHandler{
   }
   
 }
-/*
 
-SearchHandler::debug(NULL, 'setDepartment()');
-SearchHandler::debug('ArWhere');*/
+//SearchHandler::setIDLogged(5);
 
-$ArDepartment = F1DeskUtils::getDepartments(2);
-$ArDepartment = array_keys($ArDepartment);
 
-$ArIDDepartment = array();
+SearchHandler::reset();
+//SearchHandler::setIDLogged(3);
+SearchHandler::debug(NULL, "setGroupBy( array( 'Ticket' => 'IDSupporter'), array('Department'=>'StDeparment', 'Operator'=>'>', 'Value'=>4))");
+SearchHandler::debug('StGroupBy');
 
-foreach ($ArDepartment as $IDDepartment=>$StDepartment){
-  if ( is_numeric($IDDepartment) ){
-    $ArIDDepartment[] = $IDDepartment;
-  }
-}
-
-print_R($ArIDDepartment);
+SearchHandler::reset();
+/*SearchHandler::debug(NULL, 'setLimit(30,9)');
+SearchHandler::debug('StLimit');*/
+//print_R($ArIDDepartment);
+//print_R($ArDepartment);
 
 ?>
