@@ -103,16 +103,26 @@ abstract class SearchHandler{
 	  if ( self::$IDDepartment !== TRUE ){
 	    self::setDepartment(NULL);
 	  }
-	  $StWhere = implode( ' AND ', $ArWhere );
+	  $StWhere = " \n WHERE " . implode( "\n AND ", $ArWhere );
 	  return $StWhere;
 	}
 	
 	private static function getGroupBy(){
-	  
+	  if (empty(self::$StGroupBy)){
+	    return '';
+	  }
+	  else{
+	    return addslashes(self::$StGroupBy);
+	  }  
 	}
 	
 	private static function getOrderBy(){
-	  
+	  if (empty(self::$StOrderBy)){
+	    return '';
+	  }
+	  else{
+	    return addslashes(self::$StOrderBy);
+	  }
 	}
 	
 	private static function getLimit(){
@@ -122,10 +132,15 @@ abstract class SearchHandler{
 	  return self::$StLimit;
 	}
 	
-	private static function ArWhereAdd( $StElement ){
-	  if (!empty($StElement)){
-   	  $ArWhere = self::$ArWhere;
-	    $ArWhere[] = $StElement;
+	private static function ArWhereAdd( $StWhere, $BoFirst = FALSE ){
+	  if (!empty($StWhere)){
+   	  $ArWhere = (array)self::$ArWhere;
+   	  if ($BoFirst){
+   	    array_unshift($ArWhere, $StWhere);
+   	  }
+   	  else{
+   	    $ArWhere[] = $StWhere;
+   	  }
 	    self::$ArWhere = $ArWhere;
 	  }
 	}
@@ -157,7 +172,7 @@ abstract class SearchHandler{
 	public static function setDepartment( $IDDepartment = NULL ){
 	  $IDDepartment = self::NumberValidate($IDDepartment, EXC_INVALID_IDDEPARTMENT);
 	  if ( !empty($IDDepartment) ){
-  	  $StWhere = " TD.IDDeparment = $IDDepartment ";
+  	  $StWhere = " TD.IDDepartment = $IDDepartment ";
 	  } 
 	  else{
 	    if (empty(self::$IDSupporterLogged)){
@@ -173,13 +188,13 @@ abstract class SearchHandler{
       }
       unset($ArDepartment);
       $StInDepartment = implode(',', $ArIDDepartment); 
-      $StWhere = " TD.IDeparment IN ( $StInDepartment ) ";
+      $StWhere = " TD.IDepartment IN ( $StInDepartment ) ";
 	  }
 	  $IDDepartment = TRUE;
  	  self::ArWhereAdd($StWhere);
 	}
 	
-	public static function setIDLogged( $IDSupporterLogged ){
+	public static function setLogged( $IDSupporterLogged ){
     #
     ## Here, $IDSupporterLogged is obrigatory
     #
@@ -199,8 +214,32 @@ abstract class SearchHandler{
 	  }
 	}
 	
+	public static function setUser( $StUserTicket = NULL ){
+	  if (empty($StUserTicket)){	    
+	    return false;
+	  }
+	  $StUserTicket = addslashes($StUserTicket);
+	  $StWhere = " U2.StName LIKE '$StUserTicket' ";
+    self::ArWhereAdd($StWhere);
+	}
+	
 	public static function setTicket( $IDTicket = NULL ){
-	  self::$IDTicket = self::NumberValidate($IDTicket, EXC_INVALID_IDTICKET);
+	  $IDTicket = self::NumberValidate($IDTicket, EXC_INVALID_IDTICKET);
+	  #
+	  ## If IDTicket exists, it will go to first place in sql
+	  #
+	  if (!empty($IDTicket)){
+  	  $StWhere = " T.IDTicket = $IDTicket ";
+  	  self::ArWhereAdd( $StWhere, TRUE );
+	  }
+	}
+	
+	public static function setCategory( $IDCategory = NULL ){
+	  $IDCategory = self::NumberValidate($IDCategory, EXC_INVALID_IDCATEGORY);
+	  if (!empty($IDCategory)){
+  	  $StWhere = " T.IDCategory = $IDCategory ";
+  	  self::ArWhereAdd( $StWhere );
+	  }
 	}
    
 	public static function setDtStartEnd( $DtStart = NULL, $DtEnd = NULL ){
@@ -213,10 +252,6 @@ abstract class SearchHandler{
         #
         if (strtotime($DtStart)>strtotime($DtEnd)){
           throw new errorHandler(EXC_DTSTART_BIGGER_THAN_DTEND);
-          /*$Dt = $DtStart;
-          $DtStart = $DtEnd;
-          $DtEnd = $Dt;
-          unset($Dt);*/
         }
         $StWhere = " T.DtOpened >= '" . $DtStart . 
                    "' AND T.DtOpened <= '" . $DtEnd . "' " ;
@@ -230,9 +265,7 @@ abstract class SearchHandler{
       else{
         return false;
       }
-      $ArWhere = (array)self::$ArWhere;
-      array_unshift($ArWhere, $StWhere);
-      self::$ArWhere = $ArWhere;      
+      self::ArWhereAdd( $StWhere, TRUE );      
 	}
 		# EX: array( 'Ticket'=> IDSupporter )	
 	public static function setGroupBy( $ArGroupBy = array(), $ArHaving = NULL ){
@@ -267,8 +300,14 @@ abstract class SearchHandler{
 	  }
 	}
 	# EX: array( 'Ticket'=> IDSupporter )	
-	public static function setOrderBy( $ArOrderBy = array() ){
+	public static function setOrderBy( $ArOrderBy = array(), $BoAsc = TRUE ){
 	  if ( !empty($ArOrderBy) && is_array($ArOrderBy)){
+	    if (empty($BoAsc)){
+	      $StSort = 'DESC';
+	    }
+	    else {
+	      $StSort = 'ASC';
+	    }
 	    $ArField = array_keys($ArOrderBy);
 	    $ArOrderByValidated = array();
 
@@ -279,7 +318,7 @@ abstract class SearchHandler{
 	    }
 	    $StOrderBy = implode(', ', $ArOrderByValidated);
 	    if (!empty($StOrderBy)){
-	      self::$StOrderBy = ' ORDER BY ' . $StOrderBy;
+	      self::$StOrderBy = " ORDER BY $StOrderBy $StSort";
 	    }
 	  }
 	  else {
@@ -306,12 +345,14 @@ abstract class SearchHandler{
 	  self::$ArCustomField = (array)$ArCustomField;
 	}
    
-  public static function setData( $IDSupporterLogged, $IDDepartment = NULL , $IDSupporterTicket = NULL, $DtStart = NULL, $DtEnd = NULL, $ArWord = NULL, $ItPage = 1, $StOrderBy = NULL, $StGroupBy = NULL, $ItLimit = NULL ){    
-    self::setIDLogged($IDSupporterLogged);
+  public static function setData( $IDSupporterLogged, $IDDepartment = NULL , $IDCategory = NULL, $IDSupporterTicket = NULL, $StUser = NULL, $DtStart = NULL, $DtEnd = NULL, $ArWord = NULL, $ItPage = 1, $StOrderBy = NULL, $StGroupBy = NULL, $ItLimit = NULL ){    
+    self::setLogged($IDSupporterLogged);
     self::getDBinstance();
     self::setDtStartEnd($DtStart, $DtEnd);
     self::setDepartment($IDDepartment);
+    self::setCategory($IDCategory);
     self::setSupporter($IDSupporter);
+    self::setUser($StUser);
     self::setArWord($ArWord);
     self::setLimit($ItLimit, $ItPage);
   }
@@ -323,15 +364,17 @@ abstract class SearchHandler{
     $StOrderBy = self::getOrderBy();
     $StLimit = self::getLimit();
     
-    $SQL = 
+    print $SQL = 
     'SELECT ' . $StSelectCustomField .
-    ' T.IDTicket, T.StTitle, T.DtOpened, T.IDSupporter U.IDUser, D.StDepartment, C.StCategory
+    ' T.IDTicket, T.StTitle, T.DtOpened, U1.StName AS Supporter, U2.StName AS User, D.StDepartment, C.StCategory
      FROM
       Ticket AS T
-      LEFT JOIN User AS U ON (U.IDUser = T.IDUser)
+      LEFT JOIN Supporter AS S ON ( S.IDSupporter = T.IDSupporter )
+      LEFT JOIN User AS U1 ON (S.IDUser = U1.IDUser)
+      LEFT JOIN User AS U2 ON (U2.IDUser = T.IDUser)
       LEFT JOIN Category AS C ON (C.IDCategory = T.IDCategory)
-      LEFT JOIN TicketDeparment AS TD ON (TD.IDTicket = T.IDTicket)
-      LEFT JOIN Department AS D ON (D.IDDeparment = TD.IDDeparment) ' .
+      LEFT JOIN TicketDepartment AS TD ON (TD.IDTicket = T.IDTicket)
+      LEFT JOIN Department AS D ON (D.IDDepartment = TD.IDDepartment) ' .
     $StWhere   .
     $StGroupBy .
     $StOrderBy .
@@ -357,16 +400,30 @@ abstract class SearchHandler{
   
 }
 
-//SearchHandler::setIDLogged(5);
+//SearchHandler::setLogged(5);
 
 
 SearchHandler::reset();
-//SearchHandler::setIDLogged(3);
-SearchHandler::debug(NULL, "setGroupBy( array( 'Ticket' => 'IDSupporter'), array('Department'=>'StDeparment', 'Operator'=>'>', 'Value'=>4))");
-SearchHandler::debug('StGroupBy');
+SearchHandler::setLogged(3);
+SearchHandler::debug(NULL, "setSupporter(2)");
+SearchHandler::debug(NULL, "setUser('cli%')");
+//SearchHandler::debug(NULL, "setDepartment(8)");
+//SearchHandler::debug(NULL, "setCategory(8)");
+SearchHandler::debug(NULL, "setDtStartEnd('2009-01-01','2009-03-03')");
+//SearchHandler::debug(NULL, "setTicket(2)");
+//SearchHandler::debug(NULL, 'setLimit(30,9)');
+SearchHandler::debug(NULL, 'setOrderBy(array("Ticket"=>"DtOpened"))');
+//SearchHandler::debug(NULL, 'setGroupBy(array("Ticket"=>"IDUser", "Ticket"=>"IDSupporter"))');
+
+
+//SearchHandler::debug('ArWhere');
+print '<pre>';
+SearchHandler::Search();
+print '</pre>';
+
 
 SearchHandler::reset();
-/*SearchHandler::debug(NULL, 'setLimit(30,9)');
+/*
 SearchHandler::debug('StLimit');*/
 //print_R($ArIDDepartment);
 //print_R($ArDepartment);
