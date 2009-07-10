@@ -6,7 +6,7 @@ require_once('../lang/pt_BR/lang.SearchHandler.php');
 abstract class SearchHandler{
   private static $DBHandler;
 //  private static $IDTicket;
-  private static $IDDepartment = NULL;
+  private static $BoSetDepartment = FALSE;
 //  private static $IDSupporterTicket;
   private static $IDSupporterLogged = NULL;
   /*private static $DtStart;
@@ -16,8 +16,8 @@ abstract class SearchHandler{
   private static $ArStWord;
   private static $ArIDWord;
   private static $ArData;
-//  private static $ArIDDepartment;  
-  private static $ArCustomField;
+//  private static $ArIDent;  
+  private static $StSelectCustomField;
   private static $ArWhere;
   private static $StOrderBy;
   private static $StLimit;
@@ -72,38 +72,63 @@ abstract class SearchHandler{
 		}
 	}
 	
-	private static function getSelectCustomField(){
-	  $ArCustomField = self::$ArCustomField;
-	  self::$ArCustomField = NULL;
-	  
-	  if ( empty($ArCustomField) || !is_array($ArCustomField)){
-	    return '';
+	#
+	## Example: $ArFieldValue = array ('LastName'=>'Gomes', 'Occupation'=>'Programmer')
+	#
+	private static function setWhereCustomField( $ArFieldValue, $BoUser = TRUE ){
+	  if ( empty($ArFieldValue) || !is_array($ArFieldValue)){
+	    return NULL;
 	  }
+	  $StWhere = '';
+	  
+	  if ($BoUser){
+	    $StAlias = 'U2';
+	  }
+	  else {
+	    $StAlias = 'U1';
+	  }
+	  
 	  #
 	  ## User Table Alias 'U.' is not required in call time
 	  #
-	  foreach ($ArCustomField as &$StField ){
-	    $StField = 'U.' . addslashes($StField);
+	  foreach ($ArFieldValue as $StField => $StValue ){
+	    $StField = addslashes($StField);
+	    $StValue = addslashes($StValue);
+	    $StWhere = " $StAlias.$StField = '$StValue' ";
+	    self::ArWhereAdd($StWhere);
+	  }	 
+	}
+	
+	private static function setSelectCustomField( $ArField = array(), $BoUser = TRUE ){
+	  if (empty($ArField) || !is_array($ArField)){
+	    self::$StSelectCustomField = '';
+	    return NULL;
 	  }
-	  #
-	  ## $StSelectCustomField starts select sentence, so, we put ',' in the end
-	  #
-	  $StSelectCustomField = implode(',', $ArCustomField) . ',';
-	  return $StSelectCustomField;
+	  
+	  if ($BoUser){
+	    $StAlias = 'U2';
+	  }
+	  else {
+	    $StAlias = 'U1';
+	  }	  
+//	  (print_r($ArField,1));
+	  foreach ($ArField as $key=>$StField){
+	    $ArField[$key] = "$StAlias.$StField";
+	  }
+	  
+	  $StSelectCustomField = implode(',', $ArField) . ',';	  
+  	self::$StSelectCustomField = addslashes($StSelectCustomField);
 	}
 	
 	private static function getWhere(){
-	  $ArWhere = self::$ArWhere;
-	  self::$ArWhere = NULL;
-	  
-	  if (empty($ArWhere) || !is_array($ArWhere)){
+	  if (empty(self::$ArWhere) || !is_array(self::$ArWhere)){
 	    return '';
 	  }
 	  
-	  if ( self::$IDDepartment !== TRUE ){
+	  if ( empty(self::$BoSetDepartment) ){
 	    self::setDepartment(NULL);
 	  }
-	  $StWhere = " \n WHERE " . implode( "\n AND ", $ArWhere );
+	  $StWhere = " \n WHERE " . implode( "\n AND ", self::$ArWhere );
 	  return $StWhere;
 	}
 	
@@ -178,9 +203,10 @@ abstract class SearchHandler{
 	    if (empty(self::$IDSupporterLogged)){
 	      throw new errorHandler( EXC_BAD_ARGUMENT . ' "IDSupporterLogged" ');
 	    }
+//	    die('aqui >> '. self::$IDSupporterLogged);
       $ArDepartment = F1DeskUtils::getDepartments(self::$IDSupporterLogged);
 	    $ArDepartment = array_keys($ArDepartment);
-      
+//      print_R($ArDepartment);
       foreach ($ArDepartment as $StDepartment){
         if ( is_numeric($StDepartment) ){
           $ArIDDepartment[] = $StDepartment;
@@ -190,8 +216,9 @@ abstract class SearchHandler{
       $StInDepartment = implode(',', $ArIDDepartment); 
       $StWhere = " TD.IDepartment IN ( $StInDepartment ) ";
 	  }
-	  $IDDepartment = TRUE;
+	  self::$BoSetDepartment = TRUE;
  	  self::ArWhereAdd($StWhere);
+ 	  print_R(self::$ArWhere);
 	}
 	
 	public static function setLogged( $IDSupporterLogged ){
@@ -267,7 +294,7 @@ abstract class SearchHandler{
       }
       self::ArWhereAdd( $StWhere, TRUE );      
 	}
-		# EX: array( 'Ticket'=> IDSupporter )	
+	# EX: array( 'Ticket'=> IDSupporter )	
 	public static function setGroupBy( $ArGroupBy = array(), $ArHaving = NULL ){
 	  if ( !empty($ArGroupBy) && is_array($ArGroupBy)){
 	    $ArField = array_keys($ArGroupBy);
@@ -340,25 +367,9 @@ abstract class SearchHandler{
 	public static function setArWord( $ArWord = array() ){
 	  self::$ArStWord = (array)$ArWord;
 	}
-	
-	public static function setArCustomField( $ArCustomField = array() ){
-	  self::$ArCustomField = (array)$ArCustomField;
-	}
-   
-  public static function setData( $IDSupporterLogged, $IDDepartment = NULL , $IDCategory = NULL, $IDSupporterTicket = NULL, $StUser = NULL, $DtStart = NULL, $DtEnd = NULL, $ArWord = NULL, $ItPage = 1, $StOrderBy = NULL, $StGroupBy = NULL, $ItLimit = NULL ){    
-    self::setLogged($IDSupporterLogged);
-    self::getDBinstance();
-    self::setDtStartEnd($DtStart, $DtEnd);
-    self::setDepartment($IDDepartment);
-    self::setCategory($IDCategory);
-    self::setSupporter($IDSupporter);
-    self::setUser($StUser);
-    self::setArWord($ArWord);
-    self::setLimit($ItLimit, $ItPage);
-  }
   
   public static function Search(){
-    $StSelectCustomField = self::getSelectCustomField();
+    $StSelectCustomField = self::$StSelectCustomField;
     $StWhere = self::getWhere();
     $StGroupBy = self::getGroupBy();
     $StOrderBy = self::getOrderBy();
@@ -398,34 +409,34 @@ abstract class SearchHandler{
     }   
   }
   
+
+  
 }
 
-//SearchHandler::setLogged(5);
-
-
-SearchHandler::reset();
+/*SearchHandler::reset();
 SearchHandler::setLogged(3);
 SearchHandler::debug(NULL, "setSupporter(2)");
+SearchHandler::debug(NULL, "setSelectCustomField(array('F1', 'F2'))");
+SearchHandler::debug(NULL, "setWhereCustomField(array('LastName'=>'Gomes', 'Occupation'=>'Programmer'))");
 SearchHandler::debug(NULL, "setUser('cli%')");
-//SearchHandler::debug(NULL, "setDepartment(8)");
-//SearchHandler::debug(NULL, "setCategory(8)");
+SearchHandler::debug(NULL, "setDepartment(8)");
+SearchHandler::debug(NULL, "setCategory(8)");
 SearchHandler::debug(NULL, "setDtStartEnd('2009-01-01','2009-03-03')");
-//SearchHandler::debug(NULL, "setTicket(2)");
-//SearchHandler::debug(NULL, 'setLimit(30,9)');
+SearchHandler::debug(NULL, "setTicket(2)");
+SearchHandler::debug(NULL, 'setLimit(30,9)');
 SearchHandler::debug(NULL, 'setOrderBy(array("Ticket"=>"DtOpened"))');
-//SearchHandler::debug(NULL, 'setGroupBy(array("Ticket"=>"IDUser", "Ticket"=>"IDSupporter"))');
+SearchHandler::debug(NULL, 'setGroupBy(array("Ticket"=>"IDUser", "Ticket"=>"IDSupporter"))');
 
-
-//SearchHandler::debug('ArWhere');
 print '<pre>';
+SearchHandler::debug('ArWhere');
 SearchHandler::Search();
 print '</pre>';
 
 
-SearchHandler::reset();
+SearchHandler::reset();*/
 /*
 SearchHandler::debug('StLimit');*/
-//print_R($ArIDDepartment);
+//print_R($ArIDent);
 //print_R($ArDepartment);
 
 ?>
