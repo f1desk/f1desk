@@ -14,6 +14,13 @@ abstract class F1DeskUtils {
 			self::$DBHandler = new DBHandler();
 		}
 	}
+	
+	public static function getDBHandler(){
+	  self::getDBinstance();
+	  return $DBHandler;
+	}
+
+	
 
 	/**
 	 * outputs the right page, handling templates

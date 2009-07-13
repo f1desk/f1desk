@@ -4,19 +4,12 @@ require_once('../main.php');
 require_once('../lang/pt_BR/lang.SearchHandler.php');
 
 abstract class SearchHandler{
-  private static $DBHandler;
-//  private static $IDTicket;
+  public  static $DBHandler;
   private static $BoSetDepartment = FALSE;
-//  private static $IDSupporterTicket;
   private static $IDSupporterLogged = NULL;
-  /*private static $DtStart;
-  private static $DtEnd;*/
-/*  private static $ItPage = NULL;
-  private static $ItLimit = NULL;*/
   private static $ArStWord;
   private static $ArIDWord;
   private static $ArData;
-//  private static $ArIDent;  
   private static $StSelectCustomField;
   private static $ArWhere;
   private static $StOrderBy;
@@ -66,7 +59,7 @@ abstract class SearchHandler{
     return (int)$ItID;
   }
      
-  private static function getDBinstance(){
+  public static function getDBinstance(){
 		if ( ! self::$DBHandler instanceof DBHandler ) {
 			self::$DBHandler = new DBHandler();
 		}
