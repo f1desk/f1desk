@@ -40,8 +40,7 @@ abstract class WordHandler{
       $StWord = preg_replace('/[^ [:alnum:]]/', ' ', $StWord );
       $StWord = trim( strtoupper($StWord) );
       $ArWordValidated[] = $StText;
-    }
-    
+    }  
     self::$ArWord = NULL;
     self::$ArWordValidated = (array)$ArWordValidated;
   }
@@ -93,32 +92,24 @@ abstract class WordHandler{
   }
   
   private static function WordSearchID(){
-    $ArWord = self::$ArWordValidated;
+    $ArWord = (array)self::$ArWordValidated;  
+    $StText = implode( ',' , $ArWord);
     
-          $StText = implode( ',' , $ArWord);
-      
-      #
-      # Search for IDWords in Word Table
-      #
-      
-      $StSQL = 
-      'SELECT 
-         IDWord 
-       FROM 
-         Word 
-       WHERE 
-         StWord
-       IN (' . $StText . ')';
-      
-       SearchHandler::$DBHandler->execSQL( $StSQL );
-       $Result = $this->getResult('string');
-       
-       $ArWord = array();
-       foreach ( (array)$Result as $ArResult ){
-          $ArWord[] = $ArResult;
-       }
-      
-       return $ArWord;
+    #
+    # Search for IDWords in Word Table
+    #
+        
+    $StSQL = 'SELECT IDWord FROM Word WHERE StWord IN (' . $StText . ')';
+    
+    SearchHandler::getDBInstance();
+    SearchHandler::$DBHandler->execSQL( $StSQL );
+    $Result = $this->getResult('string');
+
+    $ArWord = array();
+    foreach ( (array)$Result as $ArResult ){
+       $ArWord[] = $ArResult;
+    }
+    self::$ArIDWord = $ArWord[];
   }
   
   public static function getIDWords( $StText ){
