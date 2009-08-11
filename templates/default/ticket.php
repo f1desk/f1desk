@@ -230,6 +230,7 @@
               <thead><th>Avaliação:</th></thead>
             </table>
             <ul id="closeListOptions">
+            <?=die('<pre>' . print_r( $ArRates,1 ))?>
             <?foreach ($ArRates as $ArRateOptions):?>
              <li>
                 <label>

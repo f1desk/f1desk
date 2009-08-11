@@ -20,8 +20,6 @@ abstract class F1DeskUtils {
 	  return $DBHandler;
 	}
 
-	
-
 	/**
 	 * outputs the right page, handling templates
 	 *

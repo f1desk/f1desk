@@ -14,3 +14,24 @@
 - VERIFICAR O PQ QUANDO DA ERRO 500 TODO O JAVASCRIPT PARA
 
 - BOTAR A TRADUCAO NO ARQUIVO TICKETLIST.PHP
+
+
+
+:::IDEIA MANERA:::
+
+* Galerinha, tive uma ideia no que diz respeito a plugins:
+
+Poderíamos estruturar plugins como se fossem as abinhas do sistema ( to usando essa comparação só de exmplo ).
+
+Aí, cada plugin seria na verdade um menu a mais nas abinhas.
+
+Encaxaria legal ( eu axo ).  Ex:
+
+- Quero um plugin que tenha um chat na hora de listar chamdos.
+R: Ele desenvolveria, ou editaria, o plugin de listar chamados inserindo nele um software de chat. O F!Chat que sabe!? :P
+
+Sacaram?
+
+Att.
+[]'s M. Vítor
+:* :P :) :D \o/
