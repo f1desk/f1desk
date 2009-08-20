@@ -7,7 +7,6 @@ abstract class SearchHandler{
   public  static $DBHandler;
   private static $BoSetDepartment = FALSE;
   private static $IDSupporterLogged = NULL;
-  private static $ArStWord;
   private static $ArIDWord;
   private static $ArData;
   private static $StSelectCustomField;
@@ -127,7 +126,7 @@ abstract class SearchHandler{
 	
 	private static function getGroupBy(){
 	  if (empty(self::$StGroupBy)){
-	    return '';
+	    return ' GROUP BY T.IDTicket ';
 	  }
 	  else{
 	    return addslashes(self::$StGroupBy);
@@ -200,18 +199,17 @@ abstract class SearchHandler{
       $ArDepartment = F1DeskUtils::getDepartments(self::$IDSupporterLogged);
 	    $ArDepartment = array_keys($ArDepartment);
 //      print_R($ArDepartment);
-      foreach ($ArDepartment as $StDepartment){
+      foreach ((array)$ArDepartment as $StDepartment){
         if ( is_numeric($StDepartment) ){
           $ArIDDepartment[] = $StDepartment;
         }
       }
       unset($ArDepartment);
       $StInDepartment = implode(',', $ArIDDepartment); 
-      $StWhere = " TD.IDepartment IN ( $StInDepartment ) ";
+      $StWhere = " TD.IDDepartment IN ( $StInDepartment ) ";
 	  }
 	  self::$BoSetDepartment = TRUE;
  	  self::ArWhereAdd($StWhere);
- 	  print_R(self::$ArWhere);
 	}
 	
 	public static function setLogged( $IDSupporterLogged ){
@@ -315,9 +313,6 @@ abstract class SearchHandler{
 	    }
 	    self::$StGroupBy = " GROUP BY $StAliasBy.$ArGroupBy[$StTableBy] $StHaving ";
 	  }
-	  else{
-	    self::$StGroupBy = '';
-	  }
 	}
 	# EX: array( 'Ticket'=> IDSupporter )	
 	public static function setOrderBy( $ArOrderBy = array(), $BoAsc = TRUE ){
@@ -357,8 +352,14 @@ abstract class SearchHandler{
 	  self::$StLimit = " LIMIT $ItStart, $ItLimit; ";  
 	}	
 	
-	public static function setArWord( $ArWord = array() ){
-	  self::$ArStWord = (array)$ArWord;
+	public static function setWord( $StWord = NULL ){
+	  if (empty($StWord) || !is_string($StWord)){
+	    return FALSE;
+	  }
+    $ArIDWord = WordHandler::getIDWords( $StWord );
+    $StIN = implode(',', $ArIDWord);
+    $StWhere = " W.IDWord IN ( $StIN ) ";
+    self::ArWhereAdd($StWhere);
 	}
   
   public static function Search(){
@@ -367,8 +368,7 @@ abstract class SearchHandler{
     $StGroupBy = self::getGroupBy();
     $StOrderBy = self::getOrderBy();
     $StLimit = self::getLimit();
-    
-    print $SQL = 
+    $StSQL = 
     'SELECT ' . $StSelectCustomField .
     ' T.IDTicket, T.StTitle, T.DtOpened, U1.StName AS Supporter, U2.StName AS User, D.StDepartment, C.StCategory
      FROM
@@ -378,23 +378,32 @@ abstract class SearchHandler{
       LEFT JOIN User AS U2 ON (U2.IDUser = T.IDUser)
       LEFT JOIN Category AS C ON (C.IDCategory = T.IDCategory)
       LEFT JOIN TicketDepartment AS TD ON (TD.IDTicket = T.IDTicket)
-      LEFT JOIN Department AS D ON (D.IDDepartment = TD.IDDepartment) ' .
+      LEFT JOIN Department AS D ON (D.IDDepartment = TD.IDDepartment)
+      LEFT JOIN WordTicket AS WT ON (T.IDTicket = WT.IDTicket) 
+      LEFT JOIN Word AS W ON (W.IDWord = WT.IDWord)' .
     $StWhere   .
     $StGroupBy .
     $StOrderBy .
     $StLimit;
+    
+    print "<pre>$StSQL</pre>";die;
    
     self::reset(); 
   }
   
   public static function debug($StVariable = NULL, $StMethod = NULL, $BoPrint = TRUE ){
     if (!empty($StVariable)){
+      print '<pre>';
       print_r(self::$$StVariable);
+      print '</pre>';
     }
         
     if ( !empty($StMethod) && $BoPrint ){
       try{
-        eval('print_r(self::' . $StMethod . ');');
+        eval('
+        print "<pre>";
+        print_r(self::' . $StMethod . ');
+        print "</pre>";');
       }
       catch (ErrorException $e){
         print_r($e);
@@ -406,10 +415,12 @@ abstract class SearchHandler{
   
 }
 
-/*SearchHandler::reset();
+SearchHandler::reset();
 SearchHandler::setLogged(3);
-SearchHandler::debug(NULL, "setSupporter(2)");
-SearchHandler::debug(NULL, "setSelectCustomField(array('F1', 'F2'))");
+SearchHandler::setSupporter(2);
+SearchHandler::setWord('Danilo john dimiTRI MArio');
+SearchHandler::Search();
+/*SearchHandler::debug(NULL, "setSelectCustomField(array('F1', 'F2'))");
 SearchHandler::debug(NULL, "setWhereCustomField(array('LastName'=>'Gomes', 'Occupation'=>'Programmer'))");
 SearchHandler::debug(NULL, "setUser('cli%')");
 SearchHandler::debug(NULL, "setDepartment(8)");
@@ -429,7 +440,7 @@ print '</pre>';
 SearchHandler::reset();*/
 /*
 SearchHandler::debug('StLimit');*/
-//print_R($ArIDent);
-//print_R($ArDepartment);
+/*SearchHandler::Search();
+SearchHandler::debug('StSQL');*/
 
 ?>

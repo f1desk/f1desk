@@ -22,5 +22,6 @@
   <avail_templates choosen="default">
     <template xml:id="default" path="default" thumbnail="includes/defaultTemplate.jpg" description="Template default para uso do mais novo sistema de HelpDesk do mercado.">default</template>
   </avail_templates>
+  <word_min_size>2</word_min_size>
 
 </options>
