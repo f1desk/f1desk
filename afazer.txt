@@ -1,3 +1,24 @@
+* Ítens Necessários:
+	- Verificar se o chamado está fechado antes de setá-lo como lido.
+	- Remover as referências de "lidos" dos chamados ao fechá-los e deixar marcado o "BoRead".
+	- Organizar uma forma de bloquear um usuário, a princípio, com um grupo.
+	- Busca de Chamados
+	- Terminar a Administração
+	- Bolar uma forma de tratamento de erros gerados pelo sistema
+	- Encontrar espaço na interface para uma espécie de "carregando"
+	- Estudar uma forma de desabilitar certos link quando o usuario clicar nele
+	- Possibilitar a configuração de tags permitidas em "preferências"
+	- Permitir a criação de relatórios próprios
+	- Colocar a tradução da porra toda
+		
+
+* Ítens Para Depois:
+	-
+
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
 - VERIFICAR TAMBEM A UNIFICACAO DA HOME (EM PROL DA REDUCAO DE ARQUIVOS)
   * Complicado. A cada requisição de inserção, edição ou exclusão nas partes da home, obrigaria
     a recarregar todo o resto da página. Hoje, ele recarrega somente o necessário.
