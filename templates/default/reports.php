@@ -13,9 +13,6 @@
     <li>
       <a href='javascript:void(0);' onclick="Report.changeOption('supportersByDepartments')">Atendentes por departamento</a>
     </li>
-    <li>
-      <a href='javascript:void(0);' onclick="Admin.changeOption('preferences.php')">Criar minha estat&iacute;stica</a>
-    </li>
   </ul>
 </div>
 <div id='contentReportMenu'></div>
