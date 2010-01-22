@@ -15,7 +15,7 @@
     <tag>i</tag>
   </html_permited>
 
-  <avail_languages choosen="pt_br">
+  <avail_languages choosen="pt_BR">
     <language xml:id="pt_br" title="Português (BR)">pt_BR</language>
     <language xml:id="en_us" title="Inglês">en_us</language>
   </avail_languages>

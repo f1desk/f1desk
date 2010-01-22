@@ -279,6 +279,7 @@ function br2nl(Text){
 /**
  * trim
  * @param Text < text >
+ * @author Mario Vítor <mari[at]digirati.com.br
  */
 function trim(Text) {
   return Text.replace(/^\s*/, "").replace(/\s*$/, "");

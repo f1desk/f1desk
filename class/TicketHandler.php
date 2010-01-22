@@ -561,6 +561,14 @@ AND
     if ( empty($IDUser) || empty($IDTicket) ) {
     	throw new ErrorHandler(EXC_CALL_INVALIDREADID);
     }
+    
+    #
+    #  A closed ticket do not need to be seted as not Read
+    #
+    $ArHeaders = $this->getTicketHeaders($IDTicket);
+    if ($ArHeaders['StSituation']=='CLOSED') {
+    	return true;
+    }
 
     $StSQL = "
 SELECT
@@ -591,10 +599,9 @@ AND
 
       $ItAffected = $this->insertIntoTable($StTableName, $ArFields, $ArInsert);
 
-      return true;
   	}
 
-    return false;
+    return true;
 
   }
 
@@ -785,7 +792,7 @@ AND
   public function createSupporterTicket ($IDSupporter, $IDCategory, $IDPriority, $StTitle, $StMessage, $IDDepartment = '', $IDReader = '', $ArUsers = array(), $ArReaders = array(), $BoInternal = false, $ArFiles = array()) {
 
     if (empty($ArUsers) && $IDDepartment == '') {
-      throw new ErrorHandler(EXC_GLOBAL_EXPPARAM . 'aaaaa');
+      throw new ErrorHandler(EXC_GLOBAL_EXPPARAM);
     }
 
     #

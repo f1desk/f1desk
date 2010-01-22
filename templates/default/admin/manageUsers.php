@@ -1,51 +1,81 @@
-<?php require_once(dirname(__FILE__).'/../../../adminData.php');?>
+<?php 
+  require_once(dirname(__FILE__).'/../../../adminData.php');
+  handleLanguage(__FILE__);
+?>
 <div id='adminWrapper'>
   <div id='createSupporter' class='Left'>
-    <h3>Cadastrar Atendente</h3>
+    <h3><?=SUP_SINGUP?></h3>
     <div id='newSupporterData' class='Left'>
-      Nome:
+      <?=SUP_NAME?>:
       <p><input type='text' id='StName' name='StName' class='inputCombo' /></p>
-      Email:
+      <?=SUP_EMAIL?>:
       <p><input type='text' id='StEmail' name='StEmail' class='inputCombo' /></p>
-      Senha:
+      <?=SUP_PASS?>:
       <p><input type='password' id='StPassword' name='StPassword' class='inputCombo' /></p>
       <p>
-        <button class='button'>Cadastrar</button>
-        <button class='button' onclick='Admin.clearUserForm();'>Limpar</button>
+        <button class='button'><?=SINGUP?></button>
+        <button class='button' onclick='Admin.clearUserForm();'><?=CLEAR?></button>
       </p>
     </div>
     <div id='SupporterDepartment' class='Left'>
-      Departamento:
+      <?=SUP_DEPARTMENT?>:
       <p>
         <?=TemplateHandler::createFormattedCombo($ArDepartments,'IDDepartment','IDDepartment');?>
         <a href='javascript:void(0);' onclick='Admin.addDepartment()'><img src='templates/default/images/add.png'></a>
         <p>
           <fieldset id='Departments'>
-            <legend>Departamentos atribu&iacute;dos</legend>
-            <span id='null'>N&atilde;o h&aacute; departamentos atribu&iacute;dos</span>
+            <legend><?=SUP_DEPARTMENTS_ADDED?></legend>
+            <span id='null'><?=NO_DEPARTMENTS_ADDED?></span>
           </fieldset>
         </p>
       </p>
     </div>
   </div>
+  
   <div id='manageSupporter' class='Left'>
-    <h3>Gerenciar Usu&aacute;rios</h3>
+    <h3><?=SUP_MANAGER?></h3>
+    <?//=die('<pre>' . print_r( asd,1 ))?>
     <?php foreach ($ArDepartments as $ID => $ArDepartment): ?>
-    <div id='menuTitle' class='departmentRows adminDptRows'>
-      <img id='arrow<?=$ID?>' class='menuArrow' src='templates/default/images/arrow_show.gif' alt='Show' onclick="Ticket.showDepartmentTickets('<?=$ID?>')"/>
-      <span class='TxPadrao'><?=$ArDepartment['StDepartment']?></span>
-    </div>
-    <div style='display:none;' id="departmentContent<?=$ID?>">
-      <table class="tableTickets">
-      <?php foreach ($ArSupporters as $ArSupporter): ?>
-        <tr>
-          <td><?=$ArSupporter['StName']?></td>
-          <td><img src="templates/default/images/button_editar.png"></td>
-          <td><img src="templates/default/images/button_excluir.png"></td>
-        </tr>
-      <?php endforeach ?>
-      </table>
-    </div>
+      <!-- DEPARTMENT -->
+      <div id='menuTitle' class='departmentRows adminDptRows'>
+        <img id='arrow<?=$ID?>' class='menuArrow' src='templates/default/images/arrow_show.gif' alt='Show' onclick="Ticket.showDepartmentTickets('<?=$ID?>')"/>
+        <span class='TxPadrao'><?=$ArDepartment['StDepartment']?></span>
+      </div>
+      <div style='display:none;' id="departmentContent<?=$ID?>" class="adminDptRows">
+        <table class="tableTickets">
+          <thead>
+            <tr>
+              <th><?=SUP_NAME?></th>
+              <th><?=ACTIONS?></th>
+            </tr>
+          </thead>
+        <? if (isset($ArSupporters[$ID]) && is_array($ArSupporters[$ID]) && count($ArSupporters[$ID])>0): //Is there any supporters in this department? ?>
+          <?php foreach ($ArSupporters[$ID] as $ArSupporter): ?>
+            <tbody>
+              <tr>
+                <td><?=$ArSupporter['StName']?></td>
+                <td>
+                    <img style="cursor:pointer;" src="templates/default/images/button_edit.png">
+                    <img style="cursor:pointer;" src="templates/default/images/button_cancel.png">
+                </td>
+              </tr>
+            </tbody>
+          <?php endforeach; ?>
+        <? else: ?>
+          <tbody>
+            <tr>
+              <td colspan="2" align="center"><?=NO_SUPPORTERS?></td>
+            </tr>
+          </tbody>
+        <? endif; ?>
+        </table>
+      </div>
+      <!-- /DEPARTMENT -->
+      <!-- SUB-DEPARTMENT -->
+      <? if (isset($ArDepartment['SubDepartments']) && is_array($ArDepartment['SubDepartments'])): ?>
+        
+      <? endif; ?>
+      <!-- /SUB-DEPARTMENT -->
     <?php endforeach; ?>
   </div>
 </div>
